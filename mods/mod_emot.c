@@ -28,8 +28,8 @@
 void
 __emot_init__ (void)
 {
-strlcpy_buf(mod_emot_info.name, "mod_emot");
-strlcpy_buf(mod_emot_info.trigger, "^emot");
+  strlcpy_buf (mod_emot_info.name, "mod_emot");
+  strlcpy_buf (mod_emot_info.trigger, "^emot");
 
   mod_emot_info.init = emot_init;
   mod_emot_info.fini = emot_fini;
@@ -139,7 +139,7 @@ emot_print_toc (bot_t * bot)
   for (i = 0; i < emot_info.max_toc; i++)
     {
       debug (bot, "emot_print_toc: toc[%i].%s = %s\n", i,
-		 emot_info.toc[i].emot, emot_info.toc[i].desc);
+	     emot_info.toc[i].emot, emot_info.toc[i].desc);
     }
 
   debug (bot, "emot_print_toc: max_toc=%i\n", emot_info.max_toc);
@@ -224,11 +224,11 @@ emot_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "emot_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "emot_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
   if (bot_shouldreturn (bot))
     return NULL;

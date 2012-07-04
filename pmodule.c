@@ -95,7 +95,7 @@ pmodule_path (char *name)
 }
 
 module_t *
-pmodule_load (char * name)
+pmodule_load (char *name)
 {
   return xmodule_load (XMODULE_TYPE_PMODULE, name);
 }
@@ -104,7 +104,7 @@ pmodule_load (char * name)
 module_t *
 pmodule_unload (module_t * mod)
 {
-  return xmodule_unload (XMODULE_TYPE_PMODULE,mod,NULL);
+  return xmodule_unload (XMODULE_TYPE_PMODULE, mod, NULL);
 }
 
 

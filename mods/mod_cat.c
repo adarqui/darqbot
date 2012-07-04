@@ -29,8 +29,8 @@ void
 __cat_init__ (void)
 {
 
-strlcpy_buf(mod_cat_info.name, "mod_cat");
-strlcpy_buf(mod_cat_info.trigger, "^cat");
+  strlcpy_buf (mod_cat_info.name, "mod_cat");
+  strlcpy_buf (mod_cat_info.trigger, "^cat");
 
   mod_cat_info.init = cat_init;
   mod_cat_info.fini = cat_fini;
@@ -88,11 +88,11 @@ cat_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "cat_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "cat_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -102,17 +102,20 @@ cat_run (dlist_t * dlist_node, bot_t * bot)
 
   MOD_OPTIONS_TOP_HALF;
 
-dl_options_ptr= eat_whitespace(dl_options_ptr);
+  dl_options_ptr = eat_whitespace (dl_options_ptr);
 
-if(!strcasecmp(dl_options_ptr, "<")) {
-opt = MOD_CAT_OPT_READ;
-}
-else if(!strcasecmp(dl_options_ptr, ">")) {
-opt = MOD_CAT_OPT_WRITE;
-}
-else if(!strcasecmp(dl_options_ptr, ">>")) {
-opt = MOD_CAT_OPT_APPEND;
-}
+  if (!strcasecmp (dl_options_ptr, "<"))
+    {
+      opt = MOD_CAT_OPT_READ;
+    }
+  else if (!strcasecmp (dl_options_ptr, ">"))
+    {
+      opt = MOD_CAT_OPT_WRITE;
+    }
+  else if (!strcasecmp (dl_options_ptr, ">>"))
+    {
+      opt = MOD_CAT_OPT_APPEND;
+    }
 
   MOD_OPTIONS_BOTTOM_HALF;
 
@@ -132,7 +135,7 @@ cat_change_string (bot_t * bot, char *string, int opt)
 
   char *sep_ptr;
 
-debug(NULL, "cat_change_string: Entered\n");
+  debug (NULL, "cat_change_string: Entered\n");
 
   if (!string || !bot)
     return NULL;
@@ -142,115 +145,138 @@ debug(NULL, "cat_change_string: Entered\n");
   if (sep_ptr)
     string = sep_ptr;
 
-if(opt == MOD_CAT_OPT_READ) {
-str = cat_op_read(string);
-}
-else
-{
-str = cat_op_write(bot,string, opt);
-}
+  if (opt == MOD_CAT_OPT_READ)
+    {
+      str = cat_op_read (string);
+    }
+  else
+    {
+      str = cat_op_write (bot, string, opt);
+    }
 
   return str;
 }
 
 
 
-char * cat_op_write(bot_t * bot, char *files, int opt) {
-dlist_t * dl_files=NULL, *dptr;
-FILE * fp=NULL;
-char *str=NULL,* open_opt=NULL, *fname=NULL;
+char *
+cat_op_write (bot_t * bot, char *files, int opt)
+{
+  dlist_t *dl_files = NULL, *dptr;
+  FILE *fp = NULL;
+  char *str = NULL, *open_opt = NULL, *fname = NULL;
 
-debug(NULL, "cat_op_write: Entered\n");
+  debug (NULL, "cat_op_write: Entered\n");
 
-if(!bot || !files) return NULL;
+  if (!bot || !files)
+    return NULL;
 
-if(opt == MOD_CAT_OPT_WRITE)
-open_opt = "w";
-else if(opt == MOD_CAT_OPT_APPEND)
-open_opt = "a";
-else
-return NULL;
+  if (opt == MOD_CAT_OPT_WRITE)
+    open_opt = "w";
+  else if (opt == MOD_CAT_OPT_APPEND)
+    open_opt = "a";
+  else
+    return NULL;
 
-dl_files = tokenize(NULL, files, TOKENIZE_NORMAL|TOKENIZE_EATWHITESPACE, " ");
-if(!dl_files) return NULL;
+  dl_files =
+    tokenize (NULL, files, TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, " ");
+  if (!dl_files)
+    return NULL;
 
-dlist_fornext(dl_files,dptr){
-fname = (char *)dlist_data(dptr);
-if(!fname) continue;
+  dlist_fornext (dl_files, dptr)
+  {
+    fname = (char *) dlist_data (dptr);
+    if (!fname)
+      continue;
 
-if(cat_illegal_fname(fname)) continue;
+    if (cat_illegal_fname (fname))
+      continue;
 
-fname = str_unite_static("%s/mods/mod_cat_files/%s", gi->confdir, fname);
-debug(NULL, "cat_op_write: fname=%s\n", fname);
-fp = fopen(fname, open_opt);
-if(!fp) continue;
+    fname = str_unite_static ("%s/mods/mod_cat_files/%s", gi->confdir, fname);
+    debug (NULL, "cat_op_write: fname=%s\n", fname);
+    fp = fopen (fname, open_opt);
+    if (!fp)
+      continue;
 
-fwrite(bot->txt_data_out, 1, strlen(bot->txt_data_out), fp);
-fflush(fp);
-fclose(fp);
-}
+    fwrite (bot->txt_data_out, 1, strlen (bot->txt_data_out), fp);
+    fflush (fp);
+    fclose (fp);
+  }
 
-tokenize_destroy(NULL, &dl_files);
+  tokenize_destroy (NULL, &dl_files);
 
-strzero_bot(bot->txt_data_out);
+  strzero_bot (bot->txt_data_out);
 
-return str;
-}
-
-
-
-
-char * cat_op_read(char *files) {
-dlist_t * dl_text=NULL, *dl_files=NULL, *dptr=NULL;
-FILE * fp=NULL;
-char * str=NULL,buf[1024], *buf_str, *fname;
-
-debug(NULL, "cat_op_read: Entered\n");
-
-if(!files) return NULL;
-
-dl_files=tokenize(NULL, files, TOKENIZE_NORMAL|TOKENIZE_EATWHITESPACE, " ");
-if(!dl_files) return NULL;
-
-dlist_fornext(dl_files, dptr) {
-fname = (char *)dlist_data(dptr);
-if(cat_illegal_fname(fname)) continue;
-
-fname = str_unite_static("%s/mods/mod_cat_files/%s", gi->confdir, fname);
-fp = fopen(fname, "r");
-if(!fp) continue;
-
-debug(NULL, "cat_op_read: fname=%s\n",fname);
-
-while(1) {
-memset(buf,0,sizeof(buf));
-if(fgets(buf,sizeof(buf)-1,fp)==NULL) break;
-buf_str = strdup(buf);
-dlist_Dinsert_after(&dl_text, buf_str);
-}
-
-fclose(fp);
-}
-
-
-str = dlist_to_str(dl_text);
-dlist_fini(&dl_text, free);
-tokenize_destroy(NULL, &dl_files);
-
-return str;
+  return str;
 }
 
 
 
 
-int cat_illegal_fname(char * f) {
-char * s;
+char *
+cat_op_read (char *files)
+{
+  dlist_t *dl_text = NULL, *dl_files = NULL, *dptr = NULL;
+  FILE *fp = NULL;
+  char *str = NULL, buf[1024], *buf_str, *fname;
 
-if(!f) return 1;
+  debug (NULL, "cat_op_read: Entered\n");
 
-s= strchr(f,'/');
-if(s)
-return 1;
+  if (!files)
+    return NULL;
 
-return 0;
+  dl_files =
+    tokenize (NULL, files, TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, " ");
+  if (!dl_files)
+    return NULL;
+
+  dlist_fornext (dl_files, dptr)
+  {
+    fname = (char *) dlist_data (dptr);
+    if (cat_illegal_fname (fname))
+      continue;
+
+    fname = str_unite_static ("%s/mods/mod_cat_files/%s", gi->confdir, fname);
+    fp = fopen (fname, "r");
+    if (!fp)
+      continue;
+
+    debug (NULL, "cat_op_read: fname=%s\n", fname);
+
+    while (1)
+      {
+	memset (buf, 0, sizeof (buf));
+	if (fgets (buf, sizeof (buf) - 1, fp) == NULL)
+	  break;
+	buf_str = strdup (buf);
+	dlist_Dinsert_after (&dl_text, buf_str);
+      }
+
+    fclose (fp);
+  }
+
+
+  str = dlist_to_str (dl_text);
+  dlist_fini (&dl_text, free);
+  tokenize_destroy (NULL, &dl_files);
+
+  return str;
+}
+
+
+
+
+int
+cat_illegal_fname (char *f)
+{
+  char *s;
+
+  if (!f)
+    return 1;
+
+  s = strchr (f, '/');
+  if (s)
+    return 1;
+
+  return 0;
 }

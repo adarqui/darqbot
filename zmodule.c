@@ -27,7 +27,7 @@ void
 zmodule_lock_arg (char *arg)
 {
 
-debug(NULL, "zmodule_lock_arg: Entered\n");
+  debug (NULL, "zmodule_lock_arg: Entered\n");
 
   xmodule_lock (XMODULE_TYPE_MODULE, arg);
   xmodule_lock (XMODULE_TYPE_PMODULE, arg);
@@ -40,7 +40,7 @@ void
 zmodule_unlock_arg (char *arg)
 {
 
-debug(NULL, "zmodule_unlock_arg: Entered\n");
+  debug (NULL, "zmodule_unlock_arg: Entered\n");
 
   xmodule_unlock (XMODULE_TYPE_MODULE, arg);
   xmodule_unlock (XMODULE_TYPE_PMODULE, arg);
@@ -126,7 +126,7 @@ zmodule_lock (void)
   dlist_t *dl_pointer, *dlist_pointers[4], *dptr;
   int i;
 
-debug(NULL, "zmodule_lock: Entered\n");
+  debug (NULL, "zmodule_lock: Entered\n");
 
 
   dlist_pointers[0] = gi->dl_module;
@@ -157,7 +157,7 @@ zmodule_unlock (void)
   dlist_t *dl_pointer, *dlist_pointers[4], *dptr;
   int i;
 
-debug(NULL, "zmodule_unlock: Entered\n");
+  debug (NULL, "zmodule_unlock: Entered\n");
 
   dlist_pointers[0] = gi->dl_module;
   dlist_pointers[1] = gi->dl_pmodule;
@@ -182,7 +182,9 @@ debug(NULL, "zmodule_unlock: Entered\n");
 
 
 
-void zmodule_prune(void) {
+void
+zmodule_prune (void)
+{
 /* removes 'inactive modules' */
 
 /*
@@ -208,6 +210,5 @@ dlist_remove_and_free(&gi->dl_gmodule, &dptr, xmodule_free);
 }
 */
 
-return;
+  return;
 }
-

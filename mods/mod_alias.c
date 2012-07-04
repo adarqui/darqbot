@@ -30,10 +30,10 @@ void
 __alias_init__ (void)
 {
 
-strlcpy_buf(mod_alias_info.name, "mod_alias");
-strlcpy_buf(mod_alias_info.trigger, "^alias");
+  strlcpy_buf (mod_alias_info.name, "mod_alias");
+  strlcpy_buf (mod_alias_info.trigger, "^alias");
 
-module_add_subtrigs(&mod_alias_info, "^a");
+  module_add_subtrigs (&mod_alias_info, "^a");
 
   mod_alias_info.init = alias_init;
   mod_alias_info.fini = alias_fini;
@@ -102,11 +102,11 @@ alias_run (dlist_t * dlist_node, bot_t * bot)
       return NULL;
     }
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "alias_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "alias_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
 
@@ -269,8 +269,8 @@ alias_op_run (dlist_t * dlist_node, bot_t * bot, char *string)
 
   str_untransform_pipes (str);
 
-bz(bot->txt_data_in);
-strlcat_bot(bot->txt_data_in,bot->txt_data_out);
+  bz (bot->txt_data_in);
+  strlcat_bot (bot->txt_data_in, bot->txt_data_out);
   strlcat_bot (bot->txt_data_in, new_str_subbed);
 
   dlist_fornext (dlist_next (dlist_node), dptr)
@@ -339,8 +339,7 @@ alias_op_add (bot_t * bot, char *string, char *value)
   char *str = NULL;
 
 
-  debug (NULL, "alias_op_add: Entered, string=%s, value=%s\n", string,
-	     value);
+  debug (NULL, "alias_op_add: Entered, string=%s, value=%s\n", string, value);
 
   if (!bot || !string || !value)
     return NULL;
@@ -348,8 +347,8 @@ alias_op_add (bot_t * bot, char *string, char *value)
 
   str_transform_pipes (value);
   mongodb_insert_key (bot, "test.darqbotalias", string, value,
-			"%s!%s@%s!%s", bot->txt_nick, bot->txt_ident,
-			bot->txt_host, bot->txt_to);
+		      "%s!%s@%s!%s", bot->txt_nick, bot->txt_ident,
+		      bot->txt_host, bot->txt_to);
 
   return str;
 }

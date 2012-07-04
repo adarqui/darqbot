@@ -29,8 +29,8 @@ void
 __map_init__ (void)
 {
 
-strlcpy_buf(mod_map_info.name, "mod_map");
-strlcpy_buf(mod_map_info.trigger, "^map");
+  strlcpy_buf (mod_map_info.name, "mod_map");
+  strlcpy_buf (mod_map_info.trigger, "^map");
 
   mod_map_info.init = map_init;
   mod_map_info.fini = map_fini;
@@ -90,11 +90,11 @@ map_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "map_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "map_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -161,8 +161,8 @@ map_change_string (dlist_t * dlist_node, bot_t * bot, char *string, int opt,
 
   dl =
     tokenize (bot, string,
-		  TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES |
-		  TOKENIZE_LEAVESEP, opt_sep);
+	      TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES |
+	      TOKENIZE_LEAVESEP, opt_sep);
   if (!dl)
     return NULL;
 
@@ -174,8 +174,7 @@ map_change_string (dlist_t * dlist_node, bot_t * bot, char *string, int opt,
     if (!tok_ptr)
       continue;
 
-    strlcatfmt_buf (buf, "%s %s%s", opt_str, tok_ptr,
-		    opt_append);
+    strlcatfmt_buf (buf, "%s %s%s", opt_str, tok_ptr, opt_append);
   }
 
   tokenize_destroy (bot, &dl);

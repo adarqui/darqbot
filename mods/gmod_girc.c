@@ -37,8 +37,8 @@ void
 __girc_init__ (void)
 {
 
-strlcpy_buf(gmod_girc_info.name, "gmod_girc");
-strlcpy_buf(gmod_girc_info.trigger, "^girc");
+  strlcpy_buf (gmod_girc_info.name, "gmod_girc");
+  strlcpy_buf (gmod_girc_info.trigger, "^girc");
   gmod_girc_info.init = girc_init;
   gmod_girc_info.fini = girc_fini;
   gmod_girc_info.help = girc_help;
@@ -129,11 +129,11 @@ girc_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "irc_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "irc_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -222,7 +222,7 @@ girc_process_options (girc_t * girc, char *string)
 
   debug (NULL, "girc_process_options: Entered\n");
 
-  if (!girc || !sNULL(string))
+  if (!girc || !sNULL (string))
     return NULL;
 
   sep_ptr = str_find_sep (string);
@@ -231,9 +231,7 @@ girc_process_options (girc_t * girc, char *string)
 
   memset (buf, 0, sizeof (buf));
 
-  dl =
-    tokenize (NULL, string,
-		  TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
+  dl = tokenize (NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
   if (!dl)
     return NULL;
 
@@ -256,7 +254,7 @@ void
 girc_process_options_parse (girc_t * girc, char *string)
 {
 
-  if (!girc || !sNULL(string))
+  if (!girc || !sNULL (string))
     return;
 
   debug (NULL, "girc_process_options_parse: Entered\n");
@@ -287,7 +285,7 @@ girc_process_options_parse_nick (girc_t * girc, char *string)
   nick_t *nick;
   char *tok_1, *tok_2, *tok_3, *tok_4, *tok_5;
 
-  if (!girc || !sNULL(string))
+  if (!girc || !sNULL (string))
     return;
 
 
@@ -332,13 +330,11 @@ girc_process_options_parse_channel (girc_t * girc, char *string)
   dlist_t *dl, *dptr;
   char *tok_1, *tok_2;
 
-  if (!girc || !sNULL(string))
+  if (!girc || !sNULL (string))
     return;
 
 
-  dl =
-    tokenize (NULL, string,
-		  TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, ",");
+  dl = tokenize (NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, ",");
   if (!dl)
     return;
 
@@ -385,27 +381,31 @@ girc_output (dlist_t * dlist_node, bot_t * bot)
 
 
 
-void * girc_input_iohooks(void * pa, void * pb) {
-dlist_t * dptr_mod=NULL;
-module_t * mod=NULL;
-bot_t * bot=NULL;
+void *
+girc_input_iohooks (void *pa, void *pb)
+{
+  dlist_t *dptr_mod = NULL;
+  module_t *mod = NULL;
+  bot_t *bot = NULL;
 
-debug(NULL, "girc_input_iohooks: Entered\n");
+  debug (NULL, "girc_input_iohooks: Entered\n");
 
-if(!pa || !pb ) return NULL;
+  if (!pa || !pb)
+    return NULL;
 
-bot = (bot_t *) pa;
-if(!bot) return NULL;
+  bot = (bot_t *) pa;
+  if (!bot)
+    return NULL;
 
-dptr_mod = (dlist_t *) pb;
-mod = (module_t *) dlist_data(dptr_mod);
-if(!mod)
-return NULL;
+  dptr_mod = (dlist_t *) pb;
+  mod = (module_t *) dlist_data (dptr_mod);
+  if (!mod)
+    return NULL;
 
-if(mod->input)
-mod->input(dptr_mod, bot);
+  if (mod->input)
+    mod->input (dptr_mod, bot);
 
-return NULL;
+  return NULL;
 }
 
 
@@ -449,9 +449,7 @@ girc_input (dlist_t * dlist_node, bot_t * bot)
   n = bot->txt_data_in_sz;
   buf[n] = '\0';
 
-  dl =
-    tokenize (bot, buf, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES,
-		  "\n");
+  dl = tokenize (bot, buf, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "\n");
   if (!dl)
     return NULL;
 
@@ -475,14 +473,14 @@ girc_input (dlist_t * dlist_node, bot_t * bot)
 
 /* hook raw input module processing */
     strstrip_nl (bot->txt_data_in);
-dlist_traverse(&gi->dl_mod_iohooks, girc_input_iohooks, bot);
+    dlist_traverse (&gi->dl_mod_iohooks, girc_input_iohooks, bot);
 
     if (bot->isprivmsg)
       {
 	debug (bot,
-		   "girc_evhook_link: privmsg caught: nick=%s, ident=%s, host=%s, to=%s, message=%s\n",
-		   bot->txt_nick, bot->txt_ident, bot->txt_host,
-		   bot->txt_to, bot->txt_data_in);
+	       "girc_evhook_link: privmsg caught: nick=%s, ident=%s, host=%s, to=%s, message=%s\n",
+	       bot->txt_nick, bot->txt_ident, bot->txt_host,
+	       bot->txt_to, bot->txt_data_in);
       }
 
 
@@ -508,7 +506,7 @@ dlist_traverse(&gi->dl_mod_iohooks, girc_input_iohooks, bot);
 
 	debug (bot, "girc_evhook_link: MATCHED PING: sending %s", str);
 
-girc_send_autojoins(girc);
+	girc_send_autojoins (girc);
 
 	continue;
       }
@@ -516,9 +514,9 @@ girc_send_autojoins(girc);
       {
 /* SPECIAL CASE: this is for replying to already-replied-to relinkc/ircpong's */
 
-girc_send_autojoins(girc);
+	girc_send_autojoins (girc);
 
-        continue;
+	continue;
       }
 
 
@@ -543,8 +541,8 @@ girc_send_autojoins(girc);
 
 	gmodule_up (dlist_node, bot);
 
-	if (sNULL(bot->txt_data_out) != NULL && bot->shouldsend
-	    && sNULL(bot->txt_to) != NULL)
+	if (sNULL (bot->txt_data_out) != NULL && bot->shouldsend
+	    && sNULL (bot->txt_to) != NULL)
 	  {
 
 
@@ -553,7 +551,7 @@ girc_send_autojoins(girc);
 	  }
 
 	if (bot->isforked)
-bot_fork_clean_exit(bot);
+	  bot_fork_clean_exit (bot);
       }
   }
 
@@ -601,7 +599,7 @@ girc_send_nickinfo (girc_t * girc)
 
   str =
     str_unite_static ("USER %s %s %s %s\n", nick->username, nick->hostname,
-	       nick->servername, nick->realname);
+		      nick->servername, nick->realname);
 
   debug (NULL, "girc_send_nickinfo: sending %s", str);
 
@@ -690,7 +688,7 @@ girc_line_info (girc_t * girc, char *line, int len)
 
   line_dup = strdup (line);
 
-  if (!girc || !sNULL(line) || len <= 0)
+  if (!girc || !sNULL (line) || len <= 0)
     return -1;
 
   bot = girc->bot_root;
@@ -699,7 +697,7 @@ girc_line_info (girc_t * girc, char *line, int len)
 
 /* nick or server */
   tok_1 = strtok (line_dup_ptr, " ");
-  if (!sNULL(tok_1))
+  if (!sNULL (tok_1))
     goto cleanup;
 
   tok_rest = tok_1 + fn_strlen (tok_1) + 1;
@@ -717,7 +715,7 @@ girc_line_info (girc_t * girc, char *line, int len)
 
 /* ident */
       tok_2 = strtok (NULL, "@");
-      if (!sNULL(tok_2))
+      if (!sNULL (tok_2))
 	goto cleanup;
 
       debug (bot, "2=%s\n", tok_2);
@@ -725,7 +723,7 @@ girc_line_info (girc_t * girc, char *line, int len)
 
 /* host */
       tok_3 = strtok (NULL, " ");
-      if (!sNULL(tok_3))
+      if (!sNULL (tok_3))
 	goto cleanup;
 
 
@@ -733,7 +731,7 @@ girc_line_info (girc_t * girc, char *line, int len)
 
 /* command */
       tok_4 = strtok (tok_rest, " ");
-      if (!sNULL(tok_4))
+      if (!sNULL (tok_4))
 	goto cleanup;
 
       debug (bot, "4=%s\n", tok_4);
@@ -793,7 +791,7 @@ girc_line_info (girc_t * girc, char *line, int len)
 
 /* to */
       tok_5 = strtok (NULL, " ");
-      if (!sNULL(tok_5))
+      if (!sNULL (tok_5))
 	{
 	  goto cleanup;
 	}
@@ -850,16 +848,16 @@ girc_line_info (girc_t * girc, char *line, int len)
 	tok_1++;
 
       tok_2 = strtok (NULL, " ");
-      if (!sNULL(tok_2))
+      if (!sNULL (tok_2))
 	goto cleanup;
 
 
       tok_3 = strtok (NULL, " ");
-      if (!sNULL(tok_3))
+      if (!sNULL (tok_3))
 	goto cleanup;
 
       tok_4 = strtok (NULL, "");
-      if (!sNULL(tok_4))
+      if (!sNULL (tok_4))
 	goto cleanup;
 
 
@@ -873,7 +871,7 @@ girc_line_info (girc_t * girc, char *line, int len)
 
 
   free (line_dup);
-line_dup=NULL;
+  line_dup = NULL;
   return 0;
 
 
@@ -955,7 +953,8 @@ girc_send (girc_t * girc)
       if (bot->isprivmsg)
 	{
 	  str_ptr =
-	    str_unite_static ("PRIVMSG %s :%s\n", bot->txt_to, bot->txt_data_out);
+	    str_unite_static ("PRIVMSG %s :%s\n", bot->txt_to,
+			      bot->txt_data_out);
 	}
       else
 	{
@@ -980,8 +979,8 @@ girc_send (girc_t * girc)
 /* multi line */
       dl =
 	tokenize (bot, bot->txt_data_out,
-		      TOKENIZE_NORMAL | TOKENIZE_LEAVESEP |
-		      TOKENIZE_LEAVEQUOTES, "\n");
+		  TOKENIZE_NORMAL | TOKENIZE_LEAVESEP |
+		  TOKENIZE_LEAVEQUOTES, "\n");
       if (!dl)
 	return 0;
 
@@ -1020,8 +1019,7 @@ girc_send (girc_t * girc)
 	    bot->txt_data_out_sz = strlen (bot->txt_data_out);
 	    gmodule_down (dlist_node, bot);
 
-	    debug (NULL, "girc_send: (girc2) SENDING [%s]\n",
-		       str_ptr_new);
+	    debug (NULL, "girc_send: (girc2) SENDING [%s]\n", str_ptr_new);
 	  }
 
 	o++;

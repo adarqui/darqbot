@@ -29,10 +29,10 @@ void
 __bitvec_init__ (void)
 {
 
-strlcpy_buf(mod_bitvec_info.name, "mod_bitvec");
-strlcpy_buf(mod_bitvec_info.trigger, "^bv");
+  strlcpy_buf (mod_bitvec_info.name, "mod_bitvec");
+  strlcpy_buf (mod_bitvec_info.trigger, "^bv");
 
-module_add_subtrigs(&mod_bitvec_info, "^bv");
+  module_add_subtrigs (&mod_bitvec_info, "^bv");
 
   mod_bitvec_info.init = bitvec_init;
   mod_bitvec_info.fini = bitvec_fini;
@@ -57,7 +57,7 @@ bitvec_init (dlist_t * dlist_node, bot_t * bot)
   debug (bot, "bitvec_init: Entered\n");
 
   swap_inmem_get_assign_and_remove ("mod_bitvec_bv", 1,
-					(void **) &mod_bv_unique);
+				    (void **) &mod_bv_unique);
 
   return NULL;
 }
@@ -81,7 +81,8 @@ bitvec_help (dlist_t * dlist_node, bot_t * bot)
   if (!bot)
     return NULL;
 
-  bot->dl_module_help = "^bitvec || ^bv(init,fini,set,clr,or,xor,and,not,eq,zero,copy) ...";
+  bot->dl_module_help =
+    "^bitvec || ^bv(init,fini,set,clr,or,xor,and,not,eq,zero,copy) ...";
 
   return NULL;
 }
@@ -97,11 +98,11 @@ bitvec_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "bitvec_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "bitvec_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -192,9 +193,7 @@ bitvec_change_string (bot_t * bot, char *string, int opt)
   if (sep_ptr)
     string = sep_ptr;
 
-  bu =
-    unique_create (bot, &mod_bv_unique,
-		       UNIQUE_ID_TAG | UNIQUE_ID_CHAN);
+  bu = unique_create (bot, &mod_bv_unique, UNIQUE_ID_TAG | UNIQUE_ID_CHAN);
   if (!bu)
     return NULL;
 

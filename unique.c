@@ -56,9 +56,10 @@ unique_create (bot_t * bot, dlist_t ** dl_unique, int id_flags)
     {
       bu->tag = strdup (bot->tag);
     }
-if(id_flags & UNIQUE_ID_ID) {
-bu->ID = bot->ID;
-}
+  if (id_flags & UNIQUE_ID_ID)
+    {
+      bu->ID = bot->ID;
+    }
 
   dptr_bu = dlist_Dinsert_after (dl_unique, bu);
   bu->dptr_self = dptr_bu;
@@ -105,9 +106,11 @@ unique_find (bot_t * bot, dlist_t ** dl_unique)
 	if (strcasecmp (bu->tag, bot->tag))
 	  continue;
       }
-if(bu->id_flags & UNIQUE_ID_ID) {
-if(bu->ID != bot->ID) continue;
-}
+    if (bu->id_flags & UNIQUE_ID_ID)
+      {
+	if (bu->ID != bot->ID)
+	  continue;
+      }
 
 
     return bu;

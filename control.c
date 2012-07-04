@@ -136,7 +136,7 @@ control_get_fdpass (dlist_t ** dl_control)
 	{
 	  fd = control_sub->val;
 	  debug (NULL, "control_get_fdpass_find; FOUND %i\n",
-		     control_sub->val);
+		 control_sub->val);
 	  dlist_remove_and_free (&control->dl_subs, &dptr_control_sub,
 				 control_sub_fini);
 	  return fd;
@@ -175,7 +175,7 @@ control_get_fdpass_find (dlist_t ** dl_control)
       if (control_sub->type == CONTROL_SUB_FDPASS)
 	{
 	  debug (NULL, "control_get_fdpass_find; FOUND %i\n",
-		     control_sub->val);
+		 control_sub->val);
 	  fd = control_sub->val;
 	  return fd;
 	}

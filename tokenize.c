@@ -32,7 +32,7 @@ tokenize (bot_t * bot, char *string, int opt, char *sep)
 
   int sep_len, sep_prefix_len;
 
-  if (!sNULL(string) || !opt || !sNULL(sep))
+  if (!sNULL (string) || !opt || !sNULL (sep))
     return NULL;
 
   sep_len = strlen (sep);
@@ -54,7 +54,7 @@ tokenize (bot_t * bot, char *string, int opt, char *sep)
     {
       sep_prefix_len = 0;
       sep = sep_orig;
-      bz(buf);
+      bz (buf);
 
       if (opt & TOKENIZE_EATWHITESPACE)
 	str_a = eat_whitespace (str_a);
@@ -101,7 +101,7 @@ tokenize (bot_t * bot, char *string, int opt, char *sep)
 
 	  memcopy (buf, str_a, sizeof (buf) - 1,
 		   (opt & TOKENIZE_LEAVESEP) ? ((str_b + sep_len) -
-						    str_a) : (str_b - str_a));
+						str_a) : (str_b - str_a));
 
 
 	  if (fn_strlen (buf) > 0)
@@ -158,8 +158,7 @@ tokenize_destroy (bot_t * bot, dlist_t ** dl)
 
 
 char **
-tokenize_array (bot_t * bot, char *string, int opt, char *sep,
-		    int *expecting)
+tokenize_array (bot_t * bot, char *string, int opt, char *sep, int *expecting)
 {
   dlist_t *dl, *dptr;
   char **array, *str_ptr;
@@ -363,33 +362,40 @@ tokenize_find_inside_of_brackets (char *str, int c)
 
 
 
-char ** tokenize_str2argv(char * string, int *argc, int opt) {
-dlist_t * dl=NULL;
-char **argv=NULL;
+char **
+tokenize_str2argv (char *string, int *argc, int opt)
+{
+  dlist_t *dl = NULL;
+  char **argv = NULL;
 
-debug(NULL, "tokenize_str2argv: Entered\n");
+  debug (NULL, "tokenize_str2argv: Entered\n");
 
-if(!string || !argc) return NULL;
+  if (!string || !argc)
+    return NULL;
 
 /*
 *argc = 0;
 
 argv = (char **) tokenize_array(NULL, string, TOKENIZE_NORMAL, " ", argc);
 */
-dl = tokenize(NULL, string, TOKENIZE_NORMAL, " ");
-if(!dl) goto cleanup;
+  dl = tokenize (NULL, string, TOKENIZE_NORMAL, " ");
+  if (!dl)
+    goto cleanup;
 
-if(opt & TOKENIZE_STR2ARGV_ARGV0) {
-dlist_Dinsert_before(&dl, strdup("argv0"));
-}
+  if (opt & TOKENIZE_STR2ARGV_ARGV0)
+    {
+      dlist_Dinsert_before (&dl, strdup ("argv0"));
+    }
 
-argv = (char **) dlist_convert_dlist_to_array_new(dl);
-if(!argv) goto cleanup;
+  argv = (char **) dlist_convert_dlist_to_array_new (dl);
+  if (!argv)
+    goto cleanup;
 
-*argc = dlist_size(dl);
+  *argc = dlist_size (dl);
 
 cleanup:
-if(dl) tokenize_destroy(NULL, &dl);
+  if (dl)
+    tokenize_destroy (NULL, &dl);
 
-return argv;
+  return argv;
 }

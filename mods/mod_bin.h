@@ -37,8 +37,8 @@ bot_t *bin_run (dlist_t *, bot_t *);
 
 void __bin_init__ (void) __attribute__ ((constructor));
 
-char *bin_change_string (bot_t *, char *, char *, char * , dlist_t *);
-char * bin_op_run(bot_t *, char *, char *, char *,dlist_t *);
+char *bin_change_string (bot_t *, char *, char *, char *, dlist_t *);
+char *bin_op_run (bot_t *, char *, char *, char *, dlist_t *);
 
 void bin_sig_handler (int);
 

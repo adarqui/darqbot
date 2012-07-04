@@ -29,8 +29,8 @@ void
 __sort_init__ (void)
 {
 
-strlcpy_buf(mod_sort_info.name, "mod_sort");
-strlcpy_buf(mod_sort_info.trigger, "^sort");
+  strlcpy_buf (mod_sort_info.name, "mod_sort");
+  strlcpy_buf (mod_sort_info.trigger, "^sort");
 
   mod_sort_info.init = sort_init;
   mod_sort_info.fini = sort_fini;
@@ -72,7 +72,8 @@ sort_help (dlist_t * dlist_node, bot_t * bot)
   if (!bot)
     return NULL;
 
-  bot->dl_module_help = "^sort || ^sort(forw:backw:randw:forc:backc:randc) || ^sort(...,<optional_delim>)";
+  bot->dl_module_help =
+    "^sort || ^sort(forw:backw:randw:forc:backc:randc) || ^sort(...,<optional_delim>)";
 
   return NULL;
 }
@@ -80,7 +81,7 @@ sort_help (dlist_t * dlist_node, bot_t * bot)
 bot_t *
 sort_run (dlist_t * dlist_node, bot_t * bot)
 {
-  char *dl_module_arg_after_options, *dl_options_ptr, *opt_delim=NULL;
+  char *dl_module_arg_after_options, *dl_options_ptr, *opt_delim = NULL;
   int opt;
 
   debug (bot, "sort_run: Entered\n");
@@ -88,11 +89,11 @@ sort_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "sort_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "sort_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -116,15 +117,16 @@ sort_run (dlist_t * dlist_node, bot_t * bot)
   else if (!strncasecmp_len (dl_options_ptr, "randc"))
     opt = SORT_RANDC;
 
-opt_delim = strchr(dl_options_ptr,',');
-if(opt_delim)
-opt_delim=opt_delim+1;
+  opt_delim = strchr (dl_options_ptr, ',');
+  if (opt_delim)
+    opt_delim = opt_delim + 1;
 
   MOD_OPTIONS_BOTTOM_HALF;
 
 
   MOD_PARSE_TOP_HALF;
-  l_new_str = sort_change_string (l_str_ptr, strlen (l_str_ptr), opt,opt_delim);
+  l_new_str =
+    sort_change_string (l_str_ptr, strlen (l_str_ptr), opt, opt_delim);
   MOD_PARSE_BOTTOM_HALF;
 
   return bot;
@@ -157,8 +159,8 @@ sort_compare_randword (const void *c1, const void *c2)
 char *
 sort_change_string (char *string, int string_size, int opt, char *delim)
 {
-  int i, word=0;
-char * str=NULL;
+  int i, word = 0;
+  char *str = NULL;
   char **str_p_array;
   char *sep_ptr;
   str_p_array = NULL;
@@ -171,58 +173,57 @@ char * str=NULL;
     string = sep_ptr;
 
   debug (NULL,
-	     "sort_change_string: Entered: string=%s, string_size=%i, opt=%i\n",
-	     string, string_size, opt);
+	 "sort_change_string: Entered: string=%s, string_size=%i, opt=%i\n",
+	 string, string_size, opt);
 
   word = 0;
 /* find words */
 
-if(!sNULL(delim))
-delim=" ";
+  if (!sNULL (delim))
+    delim = " ";
 
   if (opt == SORT_FORC || opt == SORT_BACKC || opt == SORT_RANDC)
     {
-delim = "";
-str_p_array = (char **) calloc(strlen(string)+1,sizeof(char *));
-if(!str_p_array) return NULL;
+      delim = "";
+      str_p_array = (char **) calloc (strlen (string) + 1, sizeof (char *));
+      if (!str_p_array)
+	return NULL;
 
-for(i=0;i<strlen(string);i++) {
-str_p_array[i] = strdup_char(string[i]);
-word++;
-}
+      for (i = 0; i < strlen (string); i++)
+	{
+	  str_p_array[i] = strdup_char (string[i]);
+	  word++;
+	}
 
-}
-else 
-  if (opt == SORT_FORW || opt == SORT_BACKW || opt == SORT_RANDW)
+    }
+  else if (opt == SORT_FORW || opt == SORT_BACKW || opt == SORT_RANDW)
     {
 
       str_p_array =
 	tokenize_array (NULL, string,
-		      TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE |
-		      TOKENIZE_LEAVEQUOTES, delim, &word);
-}
+			TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE |
+			TOKENIZE_LEAVEQUOTES, delim, &word);
+    }
 
-if(!str_p_array) return NULL;
+  if (!str_p_array)
+    return NULL;
 
-      if (opt == SORT_FORW || opt == SORT_FORC)
-	{
-	  qsort (&str_p_array[0], word, sizeof (char *),
-		 sort_compare_forword);
-	}
-      else if (opt == SORT_BACKW || opt == SORT_BACKC)
-	{
-	  qsort (&str_p_array[0], word, sizeof (char *),
-		 sort_compare_backword);
-	}
-      else if (opt == SORT_RANDW || opt == SORT_RANDC)
-	{
-	  qsort (&str_p_array[0], word, sizeof (char *),
-		 sort_compare_randword);
-	}
+  if (opt == SORT_FORW || opt == SORT_FORC)
+    {
+      qsort (&str_p_array[0], word, sizeof (char *), sort_compare_forword);
+    }
+  else if (opt == SORT_BACKW || opt == SORT_BACKC)
+    {
+      qsort (&str_p_array[0], word, sizeof (char *), sort_compare_backword);
+    }
+  else if (opt == SORT_RANDW || opt == SORT_RANDC)
+    {
+      qsort (&str_p_array[0], word, sizeof (char *), sort_compare_randword);
+    }
 
-str = arraystr_to_str(str_p_array, word, delim);
+  str = arraystr_to_str (str_p_array, word, delim);
 
-tokenize_destroy_array(NULL, str_p_array);
+  tokenize_destroy_array (NULL, str_p_array);
 
   return str;
 }

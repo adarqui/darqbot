@@ -57,7 +57,7 @@ moby_info_t moby_info;
 
 char *moby_change_string (char *, int);
 void moby_create_db (bot_t *);
-char *moby_get_syn (DB * ,char *, int);
+char *moby_get_syn (DB *, char *, int);
 int moby_transform_word (char *, char *);
 
 

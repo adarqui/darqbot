@@ -41,7 +41,7 @@ char *help_change_string (bot_t *, char *, int);
 
 void __help_init__ (void) __attribute__ ((constructor));
 
-void * help_traverse(void * , void * ) ;
-void help_get(bot_t * , dlist_t ** , char * ) ;
+void *help_traverse (void *, void *);
+void help_get (bot_t *, dlist_t **, char *);
 
 #endif

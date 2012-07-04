@@ -29,8 +29,8 @@ void
 __help_init__ (void)
 {
 
-strlcpy_buf(mod_help_info.name, "mod_help");
-strlcpy_buf(mod_help_info.trigger, "^help");
+  strlcpy_buf (mod_help_info.name, "mod_help");
+  strlcpy_buf (mod_help_info.trigger, "^help");
 
   mod_help_info.init = help_init;
   mod_help_info.fini = help_fini;
@@ -87,11 +87,11 @@ help_run (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "help_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "help_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
   if (bot_shouldreturn (bot))
     return NULL;
@@ -113,7 +113,7 @@ help_run (dlist_t * dlist_node, bot_t * bot)
 char *
 help_change_string (bot_t * bot, char *string, int opt)
 {
-dlist_t  * dl_text=NULL;
+  dlist_t *dl_text = NULL;
   char *str = NULL, *tok;
   char *sep_ptr;
 
@@ -126,70 +126,82 @@ dlist_t  * dl_text=NULL;
   if (!bot || !string)
     return NULL;
 
-if(sNULL(tok)) {
-help_get(bot, &dl_text, tok);
-}
-else {
-dlist_traverse(&gi->dl_module, help_traverse, &dl_text);
-}
+  if (sNULL (tok))
+    {
+      help_get (bot, &dl_text, tok);
+    }
+  else
+    {
+      dlist_traverse (&gi->dl_module, help_traverse, &dl_text);
+    }
 
-str = dlist_to_str(dl_text);
-dl_str_destroy(&dl_text);
+  str = dlist_to_str (dl_text);
+  dl_str_destroy (&dl_text);
 
   return str;
 }
 
 
 
-void * help_traverse(void * pa, void * pb) {
-dlist_t ** dl_text=(dlist_t **) pa, *dptr_mod=(dlist_t *) pb;
-module_t * mod=NULL, *mod_root=NULL;
-int cntval=0;
-
-if(!pa || !pb) return NULL;
-
-mod = (module_t *) dlist_data(dptr_mod);
-
-if(!mod) return NULL;
-if(mod->trigger == NULL) return NULL;
-
-printf("mod->trigger=%s\n", mod->trigger);
-
-mod_root = mod;
-
-if(mod->type & XMODULE_TYPE_MIRROR) {
-mod_root = mod->self;
-printf("mod_root->trigger=%s\n", mod_root->trigger);
-}
-
- cntval = stat_retcnt (NULL,  mod_root->trigger);
-
-dl_str_unite(dl_text, "%s (%i),", mod->trigger, cntval);
-
-return NULL;
-}
-
-
-void help_get(bot_t * bot, dlist_t ** dl_text,char * trigger) {
-module_t * mod=NULL;
-char trigger_orig[32];
-
-
-if(!bot || !dl_text || !sNULL(trigger)) return;
-
-mod = xmodule_find_by_trig(XMODULE_TYPE_MODULE, trigger);
-if(!mod) return;
-
-strlcpy_buf(trigger_orig, bot->trig_called);
-strlcpy_buf(bot->trig_called, trigger);
-
-     mod->help (NULL, bot);
-            if (bot->dl_module_help)
+void *
+help_traverse (void *pa, void *pb)
 {
-dl_str_unite(dl_text, "%s", bot->dl_module_help);
+  dlist_t **dl_text = (dlist_t **) pa, *dptr_mod = (dlist_t *) pb;
+  module_t *mod = NULL, *mod_root = NULL;
+  int cntval = 0;
+
+  if (!pa || !pb)
+    return NULL;
+
+  mod = (module_t *) dlist_data (dptr_mod);
+
+  if (!mod)
+    return NULL;
+  if (mod->trigger == NULL)
+    return NULL;
+
+  printf ("mod->trigger=%s\n", mod->trigger);
+
+  mod_root = mod;
+
+  if (mod->type & XMODULE_TYPE_MIRROR)
+    {
+      mod_root = mod->self;
+      printf ("mod_root->trigger=%s\n", mod_root->trigger);
+    }
+
+  cntval = stat_retcnt (NULL, mod_root->trigger);
+
+  dl_str_unite (dl_text, "%s (%i),", mod->trigger, cntval);
+
+  return NULL;
 }
 
-strlcpy_buf(bot->trig_called, trigger_orig);
 
-return;
+void
+help_get (bot_t * bot, dlist_t ** dl_text, char *trigger)
+{
+  module_t *mod = NULL;
+  char trigger_orig[32];
+
+
+  if (!bot || !dl_text || !sNULL (trigger))
+    return;
+
+  mod = xmodule_find_by_trig (XMODULE_TYPE_MODULE, trigger);
+  if (!mod)
+    return;
+
+  strlcpy_buf (trigger_orig, bot->trig_called);
+  strlcpy_buf (bot->trig_called, trigger);
+
+  mod->help (NULL, bot);
+  if (bot->dl_module_help)
+    {
+      dl_str_unite (dl_text, "%s", bot->dl_module_help);
+    }
+
+  strlcpy_buf (bot->trig_called, trigger_orig);
+
+  return;
 }

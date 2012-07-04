@@ -42,7 +42,7 @@ bot_init (void)
 
   bot->node_type = BOT_NODE_TYPE_ROOT;
 
-bot->ID = rand();
+  bot->ID = rand ();
 
   return (bot);
 }
@@ -80,7 +80,7 @@ void
 bot_fini (void *bot_arg)
 {
   dlist_t *dptr_sub = NULL, *dptr_sub_tmp = NULL;
-  bot_t *bot = (bot_t *) bot_arg, *bot_orig=NULL;
+  bot_t *bot = (bot_t *) bot_arg, *bot_orig = NULL;
 
 
   debug (bot, "bot_fini: Entered\n");
@@ -90,7 +90,7 @@ bot_fini (void *bot_arg)
     return;
 
   if (bot->isforked)
-bot_fork_clean_exit(bot);
+    bot_fork_clean_exit (bot);
 
 
   if (bot->node_type == BOT_NODE_TYPE_ROOT)
@@ -107,12 +107,12 @@ bot_fork_clean_exit(bot);
 	{
 	  dlist_remove (&gi->bots, bot->dptr_self);
 	  free (bot->dptr_self);
-bot->dptr_self = NULL;
+	  bot->dptr_self = NULL;
 	}
 
-bz(bot->trig_prefix);
+      bz (bot->trig_prefix);
 
-gmodule_off(bot);
+      gmodule_off (bot);
 
       memset (bot, 0, sizeof (bot_t));
 
@@ -123,11 +123,11 @@ gmodule_off(bot);
       debug (bot, "bot_fini: NODE SUB\n");
 
 
-    gmodule_off (bot);
+      gmodule_off (bot);
 
 /* free the damn bot */
 
-bot_orig = bot;
+      bot_orig = bot;
 
       dlist_fornext_retarded (bot->dl_subs, dptr_sub, dptr_sub_tmp)
       {
@@ -141,7 +141,7 @@ bot_orig = bot;
       }
 
       dlist_remove_and_free (&bot_orig->parent->dl_subs, &bot_orig->dptr_self,
-                             free);
+			     free);
 
 
 
@@ -171,9 +171,9 @@ bot_atexit_handler (void)
 
   xpid_waitpid ();
 
-ERR_free_strings();
+  ERR_free_strings ();
 
-global_off();
+  global_off ();
 
   exit (gi->atexit_code);
 
@@ -190,8 +190,8 @@ bot_sigend_handler (int num)
 
   sig_str = sig_itos (num);
   debug (NULL,
-	     "bot_sigend_handler: caught signum=%i (%s) ::: sleeping for 15 seconds\n",
-	     num, sig_str);
+	 "bot_sigend_handler: caught signum=%i (%s) ::: sleeping for 15 seconds\n",
+	 num, sig_str);
 
   debug_print_backtrace ();
 
@@ -200,7 +200,7 @@ bot_sigend_handler (int num)
 /*
       longjmp (gi->sigprotect_buf, 1);
 */
-siglongjmp(gi->sigprotect_sigbuf, 1);
+      siglongjmp (gi->sigprotect_sigbuf, 1);
     }
 
 /*
@@ -209,7 +209,7 @@ siglongjmp(gi->sigprotect_sigbuf, 1);
 
   exit (0);
 */
-return;
+  return;
 }
 
 void
@@ -297,14 +297,14 @@ bot_line_clear (bot_t * bot)
   debug (bot, "bot_line_clear: Entered\n");
 
 /* FIX, too much memsetting */
-bz(bot->irc_command);
-bz(bot->txt_nick);
-bz(bot->txt_ident);
-bz(bot->txt_host);
-bz(bot->txt_to);
-bz(bot->txt_data_in);
-bz(bot->txt_data_out);
-bz(bot->trig_called);
+  bz (bot->irc_command);
+  bz (bot->txt_nick);
+  bz (bot->txt_ident);
+  bz (bot->txt_host);
+  bz (bot->txt_to);
+  bz (bot->txt_data_in);
+  bz (bot->txt_data_out);
+  bz (bot->trig_called);
 
   bot->txt_data_in_sz = 0;
   bot->txt_data_out_sz = 0;
@@ -339,8 +339,8 @@ bot_line_clear_bufs (bot_t * bot)
   debug (bot, "bot_line_clear_bufs: Entered\n");
 
 /* FIX, too much memsetting */
-bz(bot->txt_data_in);
-bz(bot->txt_data_out);
+  bz (bot->txt_data_in);
+  bz (bot->txt_data_out);
 
   bot->txt_data_in_sz = 0;
   bot->txt_data_out_sz = 0;
@@ -396,17 +396,17 @@ bot_find_and_set_fd (char *tag, int fd)
 
   debug (NULL, "bot_find_and_set_fd: Entred: tag=%s\n", tag);
 
-  if (!sNULL(tag) || fd < 0)
+  if (!sNULL (tag) || fd < 0)
     {
       return;
     }
 
   tok_tag = strtok (tag, ",");
-  if (!sNULL(tok_tag))
+  if (!sNULL (tok_tag))
     return;
 
   tok_id = strtok (NULL, ",");
-  if (!sNULL(tok_id))
+  if (!sNULL (tok_id))
     return;
 
   tok_id_val = atoi (tok_id);
@@ -427,7 +427,7 @@ bot_find_and_set_fd (char *tag, int fd)
       control_add_fdpass (control, fd);
       dptr_control = control_bot_add (bot, control);
 
-      if (sNULL(tok_tag_ext))
+      if (sNULL (tok_tag_ext))
 	{
 	  dptr_gmod = gmodule_find_gmod_dptr (bot, NULL, tok_tag_ext);
 	  if (dptr_gmod)
@@ -454,36 +454,41 @@ bot_find_and_set_fd (char *tag, int fd)
 
 
 
-bot_t * bot_init_and_turn_on(char * tag) {
-bot_t * bot=NULL;
-char filepath[132];
-struct stat st;
+bot_t *
+bot_init_and_turn_on (char *tag)
+{
+  bot_t *bot = NULL;
+  char filepath[132];
+  struct stat st;
 
-if(strstr(tag, ".conf")==NULL) {
-tag = str_unite_static("%s.conf");
-}
+  if (strstr (tag, ".conf") == NULL)
+    {
+      tag = str_unite_static ("%s.conf");
+    }
 
-if(!sNULL(tag)) return NULL;
+  if (!sNULL (tag))
+    return NULL;
 
-bz(filepath);
+  bz (filepath);
 
-snprintf_buf(filepath, "%s%s", gi->confdir, tag);
+  snprintf_buf (filepath, "%s%s", gi->confdir, tag);
 
-bz2(st);
+  bz2 (st);
 
-if(stat(filepath, &st) != 0) return NULL;
+  if (stat (filepath, &st) != 0)
+    return NULL;
 
-      bot = bot_init ();
-      if (!bot)
-        {
-          debug (NULL, "main: bot_init\n");
-        }
+  bot = bot_init ();
+  if (!bot)
+    {
+      debug (NULL, "main: bot_init\n");
+    }
 
-strlcpy_buf(bot->confdir, "/.darqbot/");
-strlcpy_buf(bot->conffile, filepath);
+  strlcpy_buf (bot->confdir, "/.darqbot/");
+  strlcpy_buf (bot->conffile, filepath);
 
-      bot_turn_on (bot, -1);
-return NULL;
+  bot_turn_on (bot, -1);
+  return NULL;
 }
 
 
@@ -500,7 +505,7 @@ bot_turn_on (bot_t * bot, int on_or_off)
     return;
 
   debug (NULL, "bot_turn_on: bot_find_confdir=success, confdir=%s\n",
-	     bot->confdir);
+	 bot->confdir);
 
   if (on_or_off > 0)
     {
@@ -558,7 +563,7 @@ bot_turn_off (bot_t * bot)
     return;
 
   if (bot->isforked)
-bot_fork_clean_exit(bot);
+    bot_fork_clean_exit (bot);
 
   bot->on = 0;
 
@@ -598,12 +603,12 @@ bot_exchange_data (bot_t * dst, bot_t * src)
 
   bz2 (bot_inter);
 
-strlcpy_buf(bot_inter.irc_command,src->irc_command);
-strlcpy_buf(bot_inter.txt_nick,src->txt_nick);
-strlcpy_buf(bot_inter.txt_ident,src->txt_ident);
-strlcpy_buf(bot_inter.txt_to,src->txt_to);
-strlcpy_buf(bot_inter.txt_data_in,src->txt_data_in);
-strlcpy_buf(bot_inter.txt_data_out,src->txt_data_out);
+  strlcpy_buf (bot_inter.irc_command, src->irc_command);
+  strlcpy_buf (bot_inter.txt_nick, src->txt_nick);
+  strlcpy_buf (bot_inter.txt_ident, src->txt_ident);
+  strlcpy_buf (bot_inter.txt_to, src->txt_to);
+  strlcpy_buf (bot_inter.txt_data_in, src->txt_data_in);
+  strlcpy_buf (bot_inter.txt_data_out, src->txt_data_out);
 
   bot_inter.isprivmsg = src->isprivmsg;
   bot_inter.shouldsend = src->shouldsend;
@@ -617,13 +622,13 @@ strlcpy_buf(bot_inter.txt_data_out,src->txt_data_out);
 
   bot_line_clear (dst);
 
-strlcpy_buf(dst->irc_command,bot_inter.irc_command);
-strlcpy_buf(dst->txt_nick,bot_inter.txt_nick);
-strlcpy_buf(dst->txt_ident,bot_inter.txt_ident);
-strlcpy_buf(dst->txt_host,bot_inter.txt_host);
-strlcpy_buf(dst->txt_to,bot_inter.txt_to);
-strlcpy_buf(dst->txt_data_in,bot_inter.txt_data_in);
-strlcpy_buf(dst->txt_data_out,bot_inter.txt_data_out);
+  strlcpy_buf (dst->irc_command, bot_inter.irc_command);
+  strlcpy_buf (dst->txt_nick, bot_inter.txt_nick);
+  strlcpy_buf (dst->txt_ident, bot_inter.txt_ident);
+  strlcpy_buf (dst->txt_host, bot_inter.txt_host);
+  strlcpy_buf (dst->txt_to, bot_inter.txt_to);
+  strlcpy_buf (dst->txt_data_in, bot_inter.txt_data_in);
+  strlcpy_buf (dst->txt_data_out, bot_inter.txt_data_out);
 
   dst->isprivmsg = bot_inter.isprivmsg;
   dst->shouldsend = bot_inter.shouldsend;
@@ -710,7 +715,8 @@ bot_dup_sub (bot_t * bot)
     return (NULL);
 
   bot_sub = (bot_t *) calloc (1, sizeof (bot_t));
-if(!bot_sub) return NULL;
+  if (!bot_sub)
+    return NULL;
   memcpy (bot_sub, bot, sizeof (bot_t));
 
   bot_sub->parent = bot;
@@ -739,7 +745,8 @@ bot_dup (bot_t * bot)
     return (NULL);
 
   bot_copy = (bot_t *) calloc (1, sizeof (bot_t));
-if(!bot_copy) return NULL;
+  if (!bot_copy)
+    return NULL;
 
   memcpy (bot_copy, bot, sizeof (bot_t));
 
@@ -759,9 +766,9 @@ bot_find_tag (char *tag)
   dlist_t *dptr;
   bot_t *bot = NULL;
 
-debug(NULL, "bot_find_tag: Entered: tag=%s\n",tag);
+  debug (NULL, "bot_find_tag: Entered: tag=%s\n", tag);
 
-  if (!sNULL(tag))
+  if (!sNULL (tag))
     return NULL;
 
   dlist_fornext (gi->bots, dptr)
@@ -787,9 +794,9 @@ bot_find_sub_by_tag (bot_t * the_bot, char *tag)
   dlist_t *dptr;
   bot_t *bot = NULL;
 
-debug(NULL, "bot_find_sub_by_tag: Entered: tag=%s\n", tag);
+  debug (NULL, "bot_find_sub_by_tag: Entered: tag=%s\n", tag);
 
-  if (!sNULL(tag) || !the_bot)
+  if (!sNULL (tag) || !the_bot)
     return NULL;
 
   dlist_fornext (the_bot->dl_subs, dptr)
@@ -818,7 +825,7 @@ bot_find_sub_by_id (bot_t * the_bot, int id)
   dlist_t *dptr;
   bot_t *bot = NULL;
 
-debug(NULL, "bot_find_sub_by_id: Entered: id=%i\n", id);
+  debug (NULL, "bot_find_sub_by_id: Entered: id=%i\n", id);
 
   if (id <= 0 || !the_bot)
     return NULL;
@@ -857,7 +864,7 @@ bot_find_all_dlist_by_bot_id (bot_t * bot, dlist_t ** node_ptr)
   bot_t *global, *bot_sub;
 
 
-debug(NULL, "bot_find_all_dlist_by_bot_id: Entered\n");
+  debug (NULL, "bot_find_all_dlist_by_bot_id: Entered\n");
 
   if (!bot || !node_ptr)
     return NULL;
@@ -904,7 +911,7 @@ bot_find_all_by_id (int id)
   dlist_t **dl_global, **dl_subs, *dptr_global, *dptr_subs;
   bot_t *global, *bot_sub;
 
-debug(NULL, "bot_find_all_by_id: id=%i\n", id);
+  debug (NULL, "bot_find_all_by_id: id=%i\n", id);
 
   if (id < 0)
     return NULL;
@@ -940,14 +947,16 @@ debug(NULL, "bot_find_all_by_id: id=%i\n", id);
 
 
 
-void bot_fork_clean_exit(bot_t *bot) {
+void
+bot_fork_clean_exit (bot_t * bot)
+{
 
-close(0);
-close(1);
-close(2);
+  close (0);
+  close (1);
+  close (2);
 
-exit(0);
-return;
+  exit (0);
+  return;
 }
 
 
@@ -968,11 +977,11 @@ bot_fork_clean (bot_t * bot)
   if (!pid)
     {
 
-gi->pid_child = getpid();
+      gi->pid_child = getpid ();
 
       event_reinit (gi->ev_base);
 
-close(0);
+      close (0);
 
       if (bot)
 	{
@@ -1000,42 +1009,42 @@ bot_copy_values (bot_t * bot, char *nick, char *ident, char *host,
 		 char *to, char *in, char *out)
 {
 
-debug(NULL, "bot_copy_values: Entered\n");
+  debug (NULL, "bot_copy_values: Entered\n");
 
   if (!bot)
     return;
 
   bot_line_clear (bot);
 
-  if (sNULL(nick))
+  if (sNULL (nick))
     {
       strlcpy_buf (bot->txt_nick, nick);
     }
 
-  if (sNULL(ident))
+  if (sNULL (ident))
     {
       strlcpy_buf (bot->txt_ident, ident);
     }
 
-  if (sNULL(host))
+  if (sNULL (host))
     {
       strlcpy_buf (bot->txt_host, host);
     }
 
-  if (sNULL(to))
+  if (sNULL (to))
     {
       strlcpy_buf (bot->txt_to, to);
     }
 
-  if (sNULL(in))
+  if (sNULL (in))
     {
       strlcpy_buf (bot->txt_data_in, in);
-bot->txt_data_in_sz = strlen(in);
+      bot->txt_data_in_sz = strlen (in);
     }
-  if (sNULL(out))
+  if (sNULL (out))
     {
       strlcpy_buf (bot->txt_data_out, out);
-bot->txt_data_out_sz = strlen(out);
+      bot->txt_data_out_sz = strlen (out);
     }
 
   return;
@@ -1058,7 +1067,7 @@ bot_daemon (int flags, char **mod_names, bot_t ** bots,
   int nochdir = 0, noclose = 0;
 
 
-debug(NULL, "bot_daemon: Entered\n");
+  debug (NULL, "bot_daemon: Entered\n");
 
 
   if (flags & BOT_DAEMON_NOCHDIR)
@@ -1076,12 +1085,15 @@ debug(NULL, "bot_daemon: Entered\n");
   if (!pid)
     {
 
-if(flags & BOT_DAEMON_CLEAN_FDS) {
-for(i=0;i<65535;i++) {
-if(i==1)continue;
-close(i);
-}
-}
+      if (flags & BOT_DAEMON_CLEAN_FDS)
+	{
+	  for (i = 0; i < 65535; i++)
+	    {
+	      if (i == 1)
+		continue;
+	      close (i);
+	    }
+	}
 
 
       if (flags & BOT_DAEMON_EVENT_RESTART)
@@ -1093,22 +1105,22 @@ close(i);
 	{
 	  if (mod_names)
 	    {
-	      for (i = 0; sNULL(mod_names[i]) != NULL; i++)
+	      for (i = 0; sNULL (mod_names[i]) != NULL; i++)
 		{
 		  zmodule_lock_arg (mod_names[i]);
 		}
 	      xmodule_unload_everything ();
-zmodule_prune();
-	      for (i = 0; sNULL(mod_names[i]) != NULL; i++)
+	      zmodule_prune ();
+	      for (i = 0; sNULL (mod_names[i]) != NULL; i++)
 		{
 		  zmodule_unlock_arg (mod_names[i]);
 		}
 	    }
 	}
-zmodule_list();
+      zmodule_list ();
 
       if (flags & BOT_DAEMON_REMOVE_BOTS)
-	{ 
+	{
 	  if (bots)
 	    {
 	      dlist_fornext_retarded (gi->bots, dptr, dptr_tmp)
@@ -1147,7 +1159,7 @@ zmodule_list();
 	    {
 
 	      gi->fd_unix = 0;
-	      strlcpy_buf(gi->fd_unix_path, fd_unix_path);
+	      strlcpy_buf (gi->fd_unix_path, fd_unix_path);
 	      bot_unix_init ();
 	    }
 	}

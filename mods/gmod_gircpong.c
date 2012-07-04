@@ -32,8 +32,8 @@ void
 __gircpong_init__ (void)
 {
 
-strlcpy_buf(gmod_gircpong_info.name, "gmod_gircpong");
-strlcpy_buf(gmod_gircpong_info.trigger, "^gircpong");
+  strlcpy_buf (gmod_gircpong_info.name, "gmod_gircpong");
+  strlcpy_buf (gmod_gircpong_info.trigger, "^gircpong");
 
   gmod_gircpong_info.init = gircpong_init;
   gmod_gircpong_info.fini = gircpong_fini;
@@ -139,11 +139,11 @@ gircpong_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "gircpong_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "gircpong_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -213,9 +213,7 @@ gircpong_process_options (gircpong_t * gircpong, char *string)
   memset (buf, 0, sizeof (buf));
 
 
-  dl =
-    tokenize (NULL, string,
-		  TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
+  dl = tokenize (NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
   if (!dl)
     return NULL;
 
@@ -301,7 +299,7 @@ gircpong_output (dlist_t * dlist_node, bot_t * bot)
   bot_gmod_elm_t *gmod = NULL;
   gircpong_t *gircpong = NULL;
 
-char * pong_reply=NULL;
+  char *pong_reply = NULL;
 
   debug (bot, "gircpong_output: Entered\n");
 
@@ -319,14 +317,13 @@ char * pong_reply=NULL;
       return NULL;
     }
   debug (NULL, "gircpong_output: in=[%s], out=[%s]\n", bot->txt_data_in,
-	     bot->txt_data_out);
+	 bot->txt_data_out);
   if (gircpong->gmod->opt_opposite)
     {
       dl =
 	tokenize (NULL, bot->txt_data_out,
-		      TOKENIZE_NORMAL | TOKENIZE_LEAVESEP |
-		      TOKENIZE_LEAVEQUOTES | TOKENIZE_MATCHANY,
-		      "\r\n");
+		  TOKENIZE_NORMAL | TOKENIZE_LEAVESEP |
+		  TOKENIZE_LEAVEQUOTES | TOKENIZE_MATCHANY, "\r\n");
       if (!dl)
 	goto cleanup;
       dlist_fornext_retarded (dl, dptr, dptr_tmp)
@@ -343,7 +340,7 @@ char * pong_reply=NULL;
 
 	ptr[1] = 'O';
 
-pong_reply = strdup(ptr);
+	pong_reply = strdup (ptr);
 
 	memcopy (bot->txt_data_in, pong_reply, sizeof (bot->txt_data_in) - 1,
 		 strlen (pong_reply));
@@ -355,14 +352,14 @@ pong_reply = strdup(ptr);
 	gmodule_up (dlist_node, bot);
 
 
-memcopy (bot->txt_data_out, pong_reply, sizeof (bot->txt_data_out) - 1,
-                 strlen (pong_reply));
-        bot->txt_data_out_sz = strlen (pong_reply);
-        bot->txt_data_in_sz = 0;
+	memcopy (bot->txt_data_out, pong_reply,
+		 sizeof (bot->txt_data_out) - 1, strlen (pong_reply));
+	bot->txt_data_out_sz = strlen (pong_reply);
+	bot->txt_data_in_sz = 0;
 
-gmodule_down(dlist_node, bot);
+	gmodule_down (dlist_node, bot);
 
-free(pong_reply);
+	free (pong_reply);
       }
 
       str = dlist_to_str (dl);
@@ -393,7 +390,7 @@ gircpong_input (dlist_t * dlist_node, bot_t * bot)
   gircpong_t *gircpong = NULL;
   char *str = NULL, *ptr = NULL;
 
-char * pong_reply=NULL;
+  char *pong_reply = NULL;
 
   debug (bot, "gircpong_input: Entered\n");
 
@@ -413,9 +410,8 @@ char * pong_reply=NULL;
     {
       dl =
 	tokenize (NULL, bot->txt_data_out,
-		      TOKENIZE_NORMAL | TOKENIZE_LEAVESEP |
-		      TOKENIZE_LEAVEQUOTES | TOKENIZE_MATCHANY,
-		      "\r\n");
+		  TOKENIZE_NORMAL | TOKENIZE_LEAVESEP |
+		  TOKENIZE_LEAVEQUOTES | TOKENIZE_MATCHANY, "\r\n");
       if (!dl)
 	goto cleanup;
       dlist_fornext_retarded (dl, dptr, dptr_tmp)
@@ -432,7 +428,7 @@ char * pong_reply=NULL;
 
 	ptr[1] = 'O';
 
-pong_reply = strdup(ptr);
+	pong_reply = strdup (ptr);
 
 	memcopy (bot->txt_data_out, ptr, sizeof (bot->txt_data_out) - 1,
 		 strlen (ptr));
@@ -444,14 +440,14 @@ pong_reply = strdup(ptr);
 	gmodule_down (dlist_node, bot);
 
 
-memcopy (bot->txt_data_in, pong_reply, sizeof (bot->txt_data_in) - 1,
-                 strlen (pong_reply));
-        bot->txt_data_in_sz = strlen (pong_reply);
-        bot->txt_data_out_sz = 0;
+	memcopy (bot->txt_data_in, pong_reply, sizeof (bot->txt_data_in) - 1,
+		 strlen (pong_reply));
+	bot->txt_data_in_sz = strlen (pong_reply);
+	bot->txt_data_out_sz = 0;
 
-gmodule_up(dlist_node, bot);
+	gmodule_up (dlist_node, bot);
 
-free(pong_reply);
+	free (pong_reply);
       }
 
       str = dlist_to_str (dl);

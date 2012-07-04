@@ -77,7 +77,7 @@ debug (bot_t * bot, const char *msg, ...)
   int n;
   char buf[MAX_BUF_SZ + 1];
 
-char * argv0=NULL;
+  char *argv0 = NULL;
 
 /* FUNK: eventually add console opts to this, BOT_CONSOLE_OPT_LINK etc */
 
@@ -126,29 +126,40 @@ char * argv0=NULL;
 	}
     }
 
-if(gi->argv) {
-if(gi->argv[0]) {
-argv0  = gi->argv[0];
-}
-}
+  if (gi->argv)
+    {
+      if (gi->argv[0])
+	{
+	  argv0 = gi->argv[0];
+	}
+    }
 
-if(!argv0)
-argv0 = "argvNULL";
+  if (!argv0)
+    argv0 = "argvNULL";
 
-  printf ("[%s](%i) debug: ", argv0, gi->pid_child > 0? gi->pid_child : gi->pid);
+  printf ("[%s](%i) debug: ", argv0,
+	  gi->pid_child > 0 ? gi->pid_child : gi->pid);
   printf ("%s", buf);
 
-if(gi->bot_current) {
-if(gi->bot_current->brake) {
-char buf[8];
-while(1) {
+  if (gi->bot_current)
+    {
+      if (gi->bot_current->brake)
+	{
+	  char buf[8];
+	  while (1)
+	    {
 //if(c == '\n') break;
-bz(buf);
-if(fgets(buf,sizeof(buf)-1,stdin)==NULL) break;
-if(!strncasecmp_len(buf, "off")) { gi->bot_current->brake = 0; break; }
-}
-}
-}
+	      bz (buf);
+	      if (fgets (buf, sizeof (buf) - 1, stdin) == NULL)
+		break;
+	      if (!strncasecmp_len (buf, "off"))
+		{
+		  gi->bot_current->brake = 0;
+		  break;
+		}
+	    }
+	}
+    }
 
   return n;
 }
@@ -189,11 +200,13 @@ debug_trace (void **array, size_t count)
 
 
 
-void debug_trace_init_mandatory(void) {
+void
+debug_trace_init_mandatory (void)
+{
 /* this can be run outside of chroot or inside */
   gd = &global_debug;
 
-return;
+  return;
 }
 
 void
@@ -537,8 +550,7 @@ bot_dl_print_destroy (bot_t * bot)
 
 
 void
-debug_hexdump_fp (FILE * fp, int width, unsigned char *mem,
-		      unsigned int len)
+debug_hexdump_fp (FILE * fp, int width, unsigned char *mem, unsigned int len)
 {
   int x;
   int y;

@@ -46,12 +46,13 @@ typedef struct parse2_text_list
   dlist_t *children;
 } text_list_t;
 
-dlist_t * dl_pmod_parse2_unique;
+dlist_t *dl_pmod_parse2_unique;
 
-typedef struct parse2_data {
-unsigned char initialized;
-dlist_t * allow;
-dlist_t * deny;
+typedef struct parse2_data
+{
+  unsigned char initialized;
+  dlist_t *allow;
+  dlist_t *deny;
 } parse2_data_t;
 
 /*
@@ -69,8 +70,10 @@ int parse2_build_text_list_replace_last (dlist_t * dl_text_list,
 					 text_list_t * tl);
 
 void parse2_process_options (dlist_t *, bot_t *, char *, parse2_data_t *);
-void parse2_process_options_parse_allow (void *, bot_t *, char *, parse2_data_t *);
-void parse2_process_options_parse_deny (void *, bot_t *, char *, parse2_data_t *);
+void parse2_process_options_parse_allow (void *, bot_t *, char *,
+					 parse2_data_t *);
+void parse2_process_options_parse_deny (void *, bot_t *, char *,
+					parse2_data_t *);
 void parse2_process_options_parse (void *, bot_t *, char *, parse2_data_t *);
 
 void parse2_allow_add (parse2_data_t *, char *);
@@ -79,7 +82,7 @@ int parse2_allow_find (parse2_data_t *, char *);
 
 void parse2_deny_add (parse2_data_t *, char *);
 void parse2_deny_clear (parse2_data_t *);
-int parse2_deny_find (parse2_data_t *,char *);
+int parse2_deny_find (parse2_data_t *, char *);
 
 module_t pmod_parse2_info;
 
@@ -88,8 +91,8 @@ bot_t *parse2_fini (dlist_t *, bot_t *);
 bot_t *parse2_help (dlist_t *, bot_t *);
 bot_t *parse2_run (dlist_t *, bot_t *);
 
-parse2_data_t * parse2_data_init(void);
-void parse2_data_fini(void *);
+parse2_data_t *parse2_data_init (void);
+void parse2_data_fini (void *);
 
 int parse2_handle_text (dlist_t *, bot_t *, void *);
 

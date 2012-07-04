@@ -24,24 +24,32 @@
 
 
 
-     size_t strlcpy_safe(char *dst, const char *src, size_t sz)
+size_t
+strlcpy_safe (char *dst, const char *src, size_t sz)
 {
-if(!dst || !src || sz <=0) return 0;
-return strlcpy(dst,src,sz);
+  if (!dst || !src || sz <= 0)
+    return 0;
+  return strlcpy (dst, src, sz);
 }
 
-     size_t strlcat_safe(char *dst, const char *src, size_t sz)
+size_t
+strlcat_safe (char *dst, const char *src, size_t sz)
 {
-if(!dst || !src || sz <=0) return 0;
-return strlcat(dst,src,sz);
+  if (!dst || !src || sz <= 0)
+    return 0;
+  return strlcat (dst, src, sz);
 }
 
 
 
-char * sNULL(char * s){ 
-if(!s) return NULL;
-if(s[0]=='\0') return NULL;
-return s;
+char *
+sNULL (char *s)
+{
+  if (!s)
+    return NULL;
+  if (s[0] == '\0')
+    return NULL;
+  return s;
 }
 
 
@@ -52,12 +60,12 @@ str_unite_static (const char *msg, ...)
 /* str_unite: unite multiple strings/ints/whatever, return a strdup'd string */
   va_list ap;
   int n;
- static char buf[MAX_BUF_SZ + 1];
+  static char buf[MAX_BUF_SZ + 1];
 
-  if (!sNULL((char *)msg))
+  if (!sNULL ((char *) msg))
     return NULL;
 
-bz(buf);
+  bz (buf);
 
   va_start (ap, msg);
   n = vsnprintf_buf (buf, msg, ap);
@@ -81,7 +89,7 @@ str_unite (const char *msg, ...)
   int n;
   char buf[MAX_BUF_SZ + 1];
 
-  if (!sNULL((char *)msg))
+  if (!sNULL ((char *) msg))
     return NULL;
 
   va_start (ap, msg);
@@ -106,11 +114,11 @@ str_unite_foralloc (const char *msg, ...)
   int n;
   char buf[MAX_BUF_SZ + 1];
 
-  if (!sNULL((char *)msg))
+  if (!sNULL ((char *) msg))
     return NULL;
 
   va_start (ap, msg);
-  n = vsnprintf_buf (buf,msg, ap);
+  n = vsnprintf_buf (buf, msg, ap);
   va_end (ap);
 
   if (n > 0)
@@ -131,7 +139,7 @@ dl_str_unite (dlist_t ** dl, const char *msg, ...)
   int n;
   char buf[MAX_BUF_SZ + 1];
 
-  if (!dl || !sNULL((char *)msg))
+  if (!dl || !sNULL ((char *) msg))
     return -1;
 
   va_start (ap, msg);
@@ -157,48 +165,56 @@ dl_str_dup (dlist_t ** dl, const char *string)
 {
   char *str = NULL;
 
-  if (!dl || !sNULL((char *)string))
+  if (!dl || !sNULL ((char *) string))
     return -1;
 
   str = strdup (string);
-  if (!sNULL(str))
+  if (!sNULL (str))
     return -1;
 
   return 1;
 }
 
-void dl_str_debug(dlist_t ** dl) {
-char * str=NULL;
+void
+dl_str_debug (dlist_t ** dl)
+{
+  char *str = NULL;
 
-if(!dl) return;
+  if (!dl)
+    return;
 
 /* SUPERFIX
 */
-str = dlist_to_str(*dl);
-if(!sNULL(str)) return;
+  str = dlist_to_str (*dl);
+  if (!sNULL (str))
+    return;
 
-debug(NULL, "dl_str_debug: [%s]\n", str);
+  debug (NULL, "dl_str_debug: [%s]\n", str);
 
-free(str);
-dl_str_destroy(dl);
+  free (str);
+  dl_str_destroy (dl);
 
-return;
+  return;
 }
 
 
-void dl_str_print(dlist_t ** dl) {
-char * str=NULL;
+void
+dl_str_print (dlist_t ** dl)
+{
+  char *str = NULL;
 
-if(!dl) return;
+  if (!dl)
+    return;
 
 // SUPERFIX 
-str = dlist_to_str(*dl);
-if(!sNULL(str)) return;
+  str = dlist_to_str (*dl);
+  if (!sNULL (str))
+    return;
 
-debug(NULL, "dl_str_print:\n[%s]\n", str);
+  debug (NULL, "dl_str_print:\n[%s]\n", str);
 
-free(str);
-return;
+  free (str);
+  return;
 }
 
 
@@ -223,7 +239,7 @@ strstrip_nl (char *str)
 {
 /* strip \n and \r from a string */
   int n;
-  if (!sNULL(str))
+  if (!sNULL (str))
     return 0;
 
   n = 0;
@@ -248,7 +264,7 @@ char *
 eat_whitespace (char *str)
 {
 /* disregard whitespace, return ptr to start of string */
-  if (!sNULL(str))
+  if (!sNULL (str))
     return NULL;
   while (*str && (*str == ' ' || *str == '\t'))
     str++;
@@ -263,7 +279,7 @@ strstrip_chars (char *str, char *chars)
 /* strip supplied chars from a string, fill them with nulls */
   int i;
 
-  if (!sNULL(str) || !sNULL(chars))
+  if (!sNULL (str) || !sNULL (chars))
     return 0;
 
   while (*str != '\0')
@@ -284,7 +300,7 @@ strtokpos (char *str, char c)
 {
 /* return a pointer to a string starting at char c, should just use strchr */
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return NULL;
 
   while (*str != '\0')
@@ -303,7 +319,7 @@ strncasecmp_len (const char *c1, const char *c2)
 {
 /* match string, case insensitive, based on c2 */
 
-  if (!sNULL((char *)c1) || !sNULL((char *)c2))
+  if (!sNULL ((char *) c1) || !sNULL ((char *) c2))
     return -1;
 
   return strncasecmp (c1, c2, fn_strlen (c2));
@@ -317,14 +333,14 @@ str_match (const char *s1, int flags, int len, ...)
   va_list ap;
   char *str;
 
-  if (!sNULL((char *)s1))
+  if (!sNULL ((char *) s1))
     return NULL;
 
   va_start (ap, len);
   for (;;)
     {
       str = va_arg (ap, char *);
-      if (!sNULL(str))
+      if (!sNULL (str))
 	break;
 
       if (flags & STR_MATCH_STRCASECMP)
@@ -414,7 +430,7 @@ strlcat_bot_safe (char *buf, char *str, int len)
   char *sep_ptr;
   int sep_len;
 
-  if (!buf || !sNULL(str) || len <= 0)
+  if (!buf || !sNULL (str) || len <= 0)
     return 0;
 
   sep_len = 0;
@@ -440,7 +456,7 @@ strlcat_bot_safe (char *buf, char *str, int len)
 
 printf("zzz: new_len=%i, n=%i, len=%i\n", new_len, n, len);
 */
-strlcat(buf,str,len);
+  strlcat (buf, str, len);
 
   return n;
 }
@@ -458,7 +474,7 @@ memcpy_bot_safe (char *buf, int len, char *str, int str_len)
   char *sep_ptr;
   int sep_len;
 
-  if (!buf || !sNULL(str) || len <= 0 || str_len <= 0)
+  if (!buf || !sNULL (str) || len <= 0 || str_len <= 0)
     return 0;
 
   sep_len = 0;
@@ -497,7 +513,8 @@ strlcatfmt_bot_safe (char *buf, int len, char *fmt, ...)
   int n;
   char tmp_buf[MAX_BUF_SZ];
 
-if(!sNULL(fmt)) return 0;
+  if (!sNULL (fmt))
+    return 0;
 
   va_start (ap, fmt);
   n = vsnprintf_buf (tmp_buf, fmt, ap);
@@ -513,7 +530,8 @@ if(!sNULL(fmt)) return 0;
 
 
 
-int strlcatfmt_safe(char * buf, int len, char * fmt, ... )
+int
+strlcatfmt_safe (char *buf, int len, char *fmt, ...)
 {
 /*
 int n;
@@ -529,7 +547,8 @@ int n;
   char tmp_buf[MAX_BUF_SZ];
 
 
-if(!sNULL(fmt)) return 0;
+  if (!sNULL (fmt))
+    return 0;
 
   va_start (ap, fmt);
   n = vsnprintf_buf (tmp_buf, fmt, ap);
@@ -551,7 +570,7 @@ charcat_safe (char *buf, char c, int len)
 /* same as strlcat_buf_safe, appends a one byte char */
   int n, len_buf, new_len;
 
-  if (!buf|| len <= 0)
+  if (!buf || len <= 0)
     return 0;
 
   len_buf = fn_strlen (buf);
@@ -579,7 +598,7 @@ charcat_bot_safe (char *buf, char c, int len)
   char *sep_ptr;
   int sep_len;
 
-  if (!buf|| len <= 0)
+  if (!buf || len <= 0)
     return 0;
 
   sep_len = 0;
@@ -617,7 +636,7 @@ strprepend_bot_safe (char *buf, char *str, int len)
   char *sep_ptr;
   int sep_len;
 
-  if (!buf || !sNULL(str) || len <= 0)
+  if (!buf || !sNULL (str) || len <= 0)
     return 0;
 
   sep_len = 0;
@@ -669,7 +688,7 @@ char *
 strdup_int (int x)
 {
   char buf[32];
-bz(buf);
+  bz (buf);
   snprintf_buf (buf, "%i", x);
   return strdup (buf);
 }
@@ -703,7 +722,7 @@ strtokdup_str (char *str, char *tok)
 
   s = NULL;
   base = str;
-  if (!sNULL(str) || !sNULL(tok))
+  if (!sNULL (str) || !sNULL (tok))
     {
       return NULL;
     }
@@ -735,7 +754,8 @@ xstrcasestr (char *haystack, char *needle)
 /* strcasestr */
   char *p, *startn = 0, *np = 0;
 
-if(!sNULL(haystack) || !sNULL(needle)) return NULL;
+  if (!sNULL (haystack) || !sNULL (needle))
+    return NULL;
 
   for (p = haystack; *p; p++)
     {
@@ -777,8 +797,8 @@ xstrcasestr_len (char *haystack, char *needle, int len)
 
   char *p_end;
 
-if(!sNULL(haystack) || !sNULL(needle))
-return NULL;
+  if (!sNULL (haystack) || !sNULL (needle))
+    return NULL;
 
   p = haystack;
   p_end = p + len;
@@ -824,7 +844,7 @@ xstrcasestr2 (char *haystack, char *needle)
 // trailing whitespace 
   char *z, *y;
   int c;
-  if (!sNULL(haystack) || !sNULL(needle))
+  if (!sNULL (haystack) || !sNULL (needle))
     return NULL;
   y = z = (needle + (fn_strlen (needle) - 1));
   while (*z == ' ')
@@ -881,10 +901,11 @@ xstrcasestr_unique (char *haystack, char *needle)
   int x;
 
 
-if(!sNULL(haystack) || !sNULL(needle)) return NULL;
+  if (!sNULL (haystack) || !sNULL (needle))
+    return NULL;
 
-  bz(buf);
-  bz(buf_haystack);
+  bz (buf);
+  bz (buf_haystack);
 
 
   b = needle;
@@ -979,7 +1000,7 @@ str_find_sep (char *str)
   int len;
   int i;
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return str;
 
   len = fn_strlen (str);
@@ -1006,7 +1027,7 @@ str_clean_sep (char *str)
   int len;
   int i;
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return 0;
 
   len = fn_strlen (str);
@@ -1029,7 +1050,7 @@ str_clean_sep_shrink (char *str, int len)
 
   debug (NULL, "str_clean_sep_shrink: Entered\n");
 
-  if (!sNULL(str) || len <= 0)
+  if (!sNULL (str) || len <= 0)
     return 0;
 
   i = j = 0;
@@ -1066,7 +1087,7 @@ str_transform_pipes (char *str)
 
   debug (NULL, "str_transform_pipes: Entered\n");
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return 0;
 
   j = 0;
@@ -1092,7 +1113,7 @@ int
 str_untransform_pipes (char *str)
 {
   int i, j;
-  if (!sNULL(str))
+  if (!sNULL (str))
     return 0;
 
   debug (NULL, "str_untransform_pipes: Entered\n");
@@ -1248,7 +1269,8 @@ str_clean_nl (char *buf, int len)
 /* clean \r\n's, could have just used strstrip_chars, i forget what i code sometimes */
   int i;
 
-if(!buf) return 0;
+  if (!buf)
+    return 0;
 
   for (i = 0; i < len; i++)
     {
@@ -1271,7 +1293,8 @@ snprintf_safe (char *buf, size_t len, const char *fmt, ...)
   char str_buf[MAX_BUF_SZ + 1];
   int n;
 
-if(!sNULL((char *)fmt)) return 0;
+  if (!sNULL ((char *) fmt))
+    return 0;
 
   va_start (ap, fmt);
   n = vsnprintf_buf (str_buf, fmt, ap);
@@ -1299,7 +1322,7 @@ capsup (char *str)
 {
   int n;
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return 0;
 
   n = 0;
@@ -1321,7 +1344,7 @@ capdown (char *str)
 {
   int n;
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return 0;
 
   n = 0;
@@ -1342,7 +1365,7 @@ str_isclean (char *str, int (*fn) (int))
 {
 /* use such as, str_isclean(buf, isalpha); .. returns 1 if clean isalpha chars, 0 if not.. replace isalpha with isXXX etc */
 
-  if (!sNULL(str) || !fn)
+  if (!sNULL (str) || !fn)
     return 0;
 
   while (*str)
@@ -1356,14 +1379,20 @@ str_isclean (char *str, int (*fn) (int))
 }
 
 
-int istrig(int c) {
-if(c == '_' || isalnum(c)) return 1;
-return 0;
+int
+istrig (int c)
+{
+  if (c == '_' || isalnum (c))
+    return 1;
+  return 0;
 }
 
-int isprog(int c) {
-if(c == '.' || c == '-' || c == '_' || isalnum(c)) return 1;
-return 0;
+int
+isprog (int c)
+{
+  if (c == '.' || c == '-' || c == '_' || isalnum (c))
+    return 1;
+  return 0;
 }
 
 
@@ -1371,7 +1400,7 @@ return 0;
 int
 str_apply (char *str, int (*fn) (int))
 {
-  if (!sNULL(str) || !fn)
+  if (!sNULL (str) || !fn)
     return 0;
 
   while (*str)
@@ -1384,17 +1413,25 @@ str_apply (char *str, int (*fn) (int))
 }
 
 
-int str_apply_is(char * str, int (*fn)(int)) {
-int i=0;
-if(!sNULL(str)||!fn) return 0;
+int
+str_apply_is (char *str, int (*fn) (int))
+{
+  int i = 0;
+  if (!sNULL (str) || !fn)
+    return 0;
 
-while(*str) {
-if(!fn(*str)) { *str='\0'; break; }
-i++;
-str++;
-}
+  while (*str)
+    {
+      if (!fn (*str))
+	{
+	  *str = '\0';
+	  break;
+	}
+      i++;
+      str++;
+    }
 
-return i;
+  return i;
 }
 
 
@@ -1436,8 +1473,8 @@ int
 itoc (int c)
 {
   char buf[10];
-  bz(buf);
-  snprintf_buf (buf,  "%i", c);
+  bz (buf);
+  snprintf_buf (buf, "%i", c);
   return buf[0];
 }
 
@@ -1472,7 +1509,7 @@ str_shrink_quotes (char *s)
   char *s2;
   int n;
 
-  if (!sNULL(s))
+  if (!sNULL (s))
     return 0;
 
   n = 0;
@@ -1512,7 +1549,8 @@ strdup_len (char *s, int l)
 /* man strndup .. */
   char *ns;
 
-if(!sNULL(s)) return NULL;
+  if (!sNULL (s))
+    return NULL;
 
   ns = (char *) calloc (1, l + 1);
   if (!ns)
@@ -1546,7 +1584,7 @@ strrchr_len (const char *s, int ch, int len)
 {
   /* start one past the last character INCLUDING NULL TERMINATOR */
 
-  if (!sNULL((char *)s) || !ch || len <= 0)
+  if (!sNULL ((char *) s) || !ch || len <= 0)
     return NULL;
 
   /* go from right to left; stop at 0 */
@@ -1595,7 +1633,7 @@ str_has_newline (char *s)
   int i;
 
 
-  if (!sNULL(s))
+  if (!sNULL (s))
     return 0;
 
   for (i = strlen (s); i >= 0; i--)
@@ -1617,7 +1655,7 @@ str_shrink_chars (char *s, char *chars)
   char *s2;
   int n;
 
-  if (!sNULL(s) || !sNULL(chars))
+  if (!sNULL (s) || !sNULL (chars))
     return 0;
 
   n = strlen (s);
@@ -1655,7 +1693,7 @@ str_shrink_chars_and_replace (char *s, char *chars, char replace)
   char *s2;
   int n, chars_len;
 
-  if (!sNULL(s) || !sNULL(chars))
+  if (!sNULL (s) || !sNULL (chars))
     return 0;
 
   chars_len = strlen (chars);
@@ -1696,7 +1734,7 @@ str_shrink_spaces_to_one (char *s1)
 {
   char *s2;
 
-  if (!sNULL(s1))
+  if (!sNULL (s1))
     return 0;
 
   s2 = s1;
@@ -1732,7 +1770,7 @@ int
 str_sum (char *s)
 {
   int tot = 0;
-  if (!sNULL(s))
+  if (!sNULL (s))
     return 0;
   while (*s)
     {
@@ -1752,7 +1790,7 @@ MAX_FMT (char *fmt, ...)
   va_list ap;
   int val, max_val, i, j;
 
-  if (!sNULL(fmt))
+  if (!sNULL (fmt))
     return 0;
 
   max_val = 0;
@@ -1789,10 +1827,10 @@ strstrip_chars_fmt (char *str, int opt, ...)
   char bytebuf[strlen (str) + 1];
   int str_orig_len;
 
-  if (!sNULL(str) || opt < 0)
+  if (!sNULL (str) || opt < 0)
     return -1;
 
-  bz(bytebuf);
+  bz (bytebuf);
 
   str_orig_len = strlen (str);
 
@@ -1922,7 +1960,7 @@ strchr_str (const char *s, const char *match, int *res_match_len)
   int i, j, match_len;
   char *s2 = NULL;
 
-  if (!sNULL((char *)s) || !sNULL((char *)match) || !res_match_len)
+  if (!sNULL ((char *) s) || !sNULL ((char *) match) || !res_match_len)
     return NULL;
 
   match_len = strlen (match);
@@ -1994,15 +2032,14 @@ str_replace (char *string, char *s1, char *s2)
   char *str = NULL, *ptr = NULL, *ptr_2 = NULL;
   char buf[MAX_BUF_SZ];
 
-  if (!sNULL(string) || !sNULL(s1) || !sNULL(s2))
+  if (!sNULL (string) || !sNULL (s1) || !sNULL (s2))
     return NULL;
 
-  bz(buf);
+  bz (buf);
 
   dl =
     tokenize (NULL, string,
-		  TOKENIZE_NORMAL | TOKENIZE_LEAVESEP |
-		  TOKENIZE_LEAVEQUOTES, s1);
+	      TOKENIZE_NORMAL | TOKENIZE_LEAVESEP | TOKENIZE_LEAVEQUOTES, s1);
   if (!dl)
     return NULL;
 
@@ -2043,9 +2080,10 @@ vsnprintf_safe (char *str, size_t size, const char *fmt, va_list ap)
 {
   int n = 0;
 
-if(!str || !sNULL((char *) fmt)) return 0;
+  if (!str || !sNULL ((char *) fmt))
+    return 0;
 
-  n = vsnprintf(str, size, fmt, ap);
+  n = vsnprintf (str, size, fmt, ap);
 
   if (n > size)
     n = size;
@@ -2059,65 +2097,78 @@ if(!str || !sNULL((char *) fmt)) return 0;
 
 
 
-char * ret_trig(char * s) {
-static char trig[32];
-int i=0;
+char *
+ret_trig (char *s)
+{
+  static char trig[32];
+  int i = 0;
 
-if(!sNULL(s)) return NULL;
+  if (!sNULL (s))
+    return NULL;
 
-bz(trig);
+  bz (trig);
 
-while(*s && i < sizeof(trig)) {
-if(!istrig(*s)) break;
-trig[i] = *s;
-i++;
-s++;
+  while (*s && i < sizeof (trig))
+    {
+      if (!istrig (*s))
+	break;
+      trig[i] = *s;
+      i++;
+      s++;
+    }
+
+
+  return trig;
 }
 
 
-return trig;
-}
 
 
 
 
 
 
+memdup_t *
+memdup (char *data, int len)
+{
+  memdup_t *mem = NULL;
 
+  if (!data || len <= 0)
+    return NULL;
 
-memdup_t * memdup(char * data, int len) {
-memdup_t * mem=NULL;
+  mem = (memdup_t *) calloc (1, sizeof (memdup_t));
+  if (!mem)
+    return NULL;
 
-if(!data || len <=0)
-return NULL;
+  mem->data = (char *) calloc (1, len + 1);
+  if (!mem->data)
+    goto cleanup;
+  mem->len = len;
 
-mem = (memdup_t *) calloc(1,sizeof(memdup_t));
-if(!mem) return NULL;
+  memcpy (mem->data, data, len);
 
-mem->data = (char *) calloc(1,len+1);
-if(!mem->data) goto cleanup;
-mem->len = len;
-
-memcpy(mem->data,data,len);
-
-return mem;
+  return mem;
 
 cleanup:
-if(mem) free(mem);
+  if (mem)
+    free (mem);
 
-return NULL;
+  return NULL;
 }
 
 
-void memdup_free(void * arg) {
-memdup_t * mem=NULL;
-if(!arg) return;
+void
+memdup_free (void *arg)
+{
+  memdup_t *mem = NULL;
+  if (!arg)
+    return;
 
-mem = (memdup_t *) arg;
+  mem = (memdup_t *) arg;
 
-if(mem->data)
-free(mem->data);
+  if (mem->data)
+    free (mem->data);
 
-free(mem);
-return;
+  free (mem);
+  return;
 }

@@ -29,8 +29,8 @@ void
 __relinkd_init__ (void)
 {
 
-strlcpy_buf(mod_relinkd_info.name, "mod_relinkd");
-strlcpy_buf(mod_relinkd_info.trigger, "^relinkd");
+  strlcpy_buf (mod_relinkd_info.name, "mod_relinkd");
+  strlcpy_buf (mod_relinkd_info.trigger, "^relinkd");
 
   mod_relinkd_info.init = relinkd_init;
   mod_relinkd_info.fini = relinkd_fini;
@@ -88,11 +88,11 @@ relinkd_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "relinkd_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "relinkd_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))

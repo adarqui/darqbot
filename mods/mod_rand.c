@@ -29,8 +29,8 @@ void
 __rand_init__ (void)
 {
 
-strlcpy_buf(mod_rand_info.name, "mod_rand");
-strlcpy_buf(mod_rand_info.trigger, "^rand");
+  strlcpy_buf (mod_rand_info.name, "mod_rand");
+  strlcpy_buf (mod_rand_info.trigger, "^rand");
 
   mod_rand_info.init = rand_init;
   mod_rand_info.fini = rand_fini;
@@ -86,11 +86,11 @@ rand_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "rand_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "rand_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -107,9 +107,10 @@ rand_run (dlist_t * dlist_node, bot_t * bot)
     {
       opt = RAND_NUM;
     }
-else if(!strncasecmp_len(dl_options_ptr, "data")) {
-opt = RAND_DATA;
-}
+  else if (!strncasecmp_len (dl_options_ptr, "data"))
+    {
+      opt = RAND_DATA;
+    }
 
   MOD_OPTIONS_BOTTOM_HALF;
 
@@ -132,89 +133,96 @@ rand_change_string (char *string, int opt)
   if (sep_ptr)
     string = sep_ptr;
 
-switch(opt)
+  switch (opt)
+    {
+    case RAND_DATA:
+      {
+	str = rand_op_data (string);
+	break;
+      }
+    case RAND_NUM:
+      {
+	str = rand_op_num (string);
+	break;
+      }
+    case RAND_WORD:
+      {
+	str = rand_op_word (string);
+	break;
+      }
+    default:
+      break;
+    }
+
+  return str;
+}
+
+
+char *
+rand_op_word (char *string)
 {
-case RAND_DATA: {
-str = rand_op_data(string);
-break;
-}
-case RAND_NUM: {
-str = rand_op_num(string);
-break;
-}
-case RAND_WORD: {
-str = rand_op_word(string);
-break;
-}
-default:
-break;
-}
-
-return str;
-}
-
-
-char * rand_op_word(char * string ) {
   int i, word_array[500], word_cnt, rand_val;
-char * str=NULL,*str_ptr=NULL;
+  char *str = NULL, *str_ptr = NULL;
 
-if(!sNULL(string)) 
-return NULL;
+  if (!sNULL (string))
+    return NULL;
 
   memset (word_array, 0, sizeof (word_array));
 
 /* return a random word */
-      word_cnt = 0;
-      for (i = 0; i < strlen (string); i++)
+  word_cnt = 0;
+  for (i = 0; i < strlen (string); i++)
+    {
+      if (string[i] == ' ')
 	{
-	  if (string[i] == ' ')
-	    {
-	      for (i = i; i < strlen (string) && string[i] == ' '; i++);
-	      word_array[word_cnt] = i;
-	      word_cnt++;
-	    }
-
+	  for (i = i; i < strlen (string) && string[i] == ' '; i++);
+	  word_array[word_cnt] = i;
+	  word_cnt++;
 	}
 
-      if (word_cnt == 0)
-	return NULL;
-      word_cnt++;
+    }
 
-    reloop:
-      rand_val = rand () % word_cnt;
+  if (word_cnt == 0)
+    return NULL;
+  word_cnt++;
 
-      str_ptr = string + word_array[rand_val];
-      while (*str_ptr == ' ')
-	str_ptr++;
-      str = strdup (str_ptr);
-      str_ptr = str;
-      while (*str_ptr)
+reloop:
+  rand_val = rand () % word_cnt;
+
+  str_ptr = string + word_array[rand_val];
+  while (*str_ptr == ' ')
+    str_ptr++;
+  str = strdup (str_ptr);
+  str_ptr = str;
+  while (*str_ptr)
+    {
+      if (*str_ptr == ' ')
 	{
-	  if (*str_ptr == ' ')
-	    {
-	      *str_ptr = '\0';
-	      break;
-	    }
-	  str_ptr++;
+	  *str_ptr = '\0';
+	  break;
 	}
+      str_ptr++;
+    }
 
-      if (strlen (str) == 0)
-	{
-	  free (str);
-	  goto reloop;
-	}
+  if (strlen (str) == 0)
+    {
+      free (str);
+      goto reloop;
+    }
 
 
-return str;
+  return str;
 }
 
 
-char * rand_op_num (char * string) {
-char * str=NULL;
-int rand_val=0;
+char *
+rand_op_num (char *string)
+{
+  char *str = NULL;
+  int rand_val = 0;
 
-      rand_val = rand ();
-      str = str_unite ("%i", rand_val);
+  rand_val = rand ();
+  str = str_unite ("%i", rand_val);
 
   return str;
 }
@@ -223,23 +231,29 @@ int rand_val=0;
 
 
 
-char * rand_op_data(char * string) {
-int sz=512,i=0;
-char * data=NULL;
+char *
+rand_op_data (char *string)
+{
+  int sz = 512, i = 0;
+  char *data = NULL;
 
-debug(NULL, "rand_op_data: Entered\n");
+  debug (NULL, "rand_op_data: Entered\n");
 
-data= random_data(sz+1);
-if(!data) { 
-return NULL;
+  data = random_data (sz + 1);
+  if (!data)
+    {
+      return NULL;
+    }
+
+  for (i = 0; i < sz; i++)
+    {
+      if (data[i] == '\0')
+	{
+	  while (data[i] == '\0')
+	    data[i] = (char) rand ();
+	}
+    }
+
+
+  return data;
 }
-
-for(i=0;i<sz;i++) {
-if(data[i]=='\0') { while(data[i] == '\0') data[i]=(char)rand();
-}
-}
-
-
-return data;
-}
-

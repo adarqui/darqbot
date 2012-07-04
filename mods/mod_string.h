@@ -38,42 +38,46 @@ bot_t *string_run (dlist_t *, bot_t *);
 
 void __string_init__ (void) __attribute__ ((constructor));
 
-enum mod_string_opt { 
-MOD_STRING_OPT_BEFORE=0,
-MOD_STRING_OPT_AFTER,
+enum mod_string_opt
+{
+  MOD_STRING_OPT_BEFORE = 0,
+  MOD_STRING_OPT_AFTER,
 };
 
-enum mod_string_subs {
-MOD_STRING,
-MOD_STRING_STRZERO,
-MOD_STRING_STRLEN,
-MOD_STRING_STRCHR,
-MOD_STRING_STRRCHR,
-MOD_STRING_STRSTR,
-MOD_STRING_STRCASESTR,
-MOD_STRING_INDEX,
-MOD_STRING_RINDEX,
-MOD_STRING_SUBCHAR,
-MOD_STRING_MEMSET,
-MOD_STRING_STRPREPEND,
-MOD_STRING_SPACE,
-MOD_STRING_REVERSE,
-MOD_STRING_UNQUOTE,
+enum mod_string_subs
+{
+  MOD_STRING,
+  MOD_STRING_STRZERO,
+  MOD_STRING_STRLEN,
+  MOD_STRING_STRCHR,
+  MOD_STRING_STRRCHR,
+  MOD_STRING_STRSTR,
+  MOD_STRING_STRCASESTR,
+  MOD_STRING_INDEX,
+  MOD_STRING_RINDEX,
+  MOD_STRING_SUBCHAR,
+  MOD_STRING_MEMSET,
+  MOD_STRING_STRPREPEND,
+  MOD_STRING_SPACE,
+  MOD_STRING_REVERSE,
+  MOD_STRING_UNQUOTE,
 };
 
-char * string_op_strzero(bot_t *, char *, char *, int);
-char * string_op_strlen(bot_t *, char *, char *, int);
+char *string_op_strzero (bot_t *, char *, char *, int);
+char *string_op_strlen (bot_t *, char *, char *, int);
 
-char * string_op_AstrAint(bot_t *, char * , char * , int , char *(*fn)(const char *, int)) ;
-char * string_op_AstrAstr(bot_t *, char * , char * , int , char *(*fn)(const char *, const char *)) ;
+char *string_op_AstrAint (bot_t *, char *, char *, int,
+			  char *(*fn) (const char *, int));
+char *string_op_AstrAstr (bot_t *, char *, char *, int,
+			  char *(*fn) (const char *, const char *));
 
-char * string_op_space(bot_t *, char *, char *, int);
-char * string_op_subchar(bot_t *, char *, char *, int);
-char * string_op_reverse(bot_t *, char *, char *, int);
-char * string_op_unquote(bot_t *, char *, char *, int);
+char *string_op_space (bot_t *, char *, char *, int);
+char *string_op_subchar (bot_t *, char *, char *, int);
+char *string_op_reverse (bot_t *, char *, char *, int);
+char *string_op_unquote (bot_t *, char *, char *, int);
 
-char * string_strprepend(const char *, const char *);
-char * string_memset(const char *, int);
-int subchar_get_char(char *, int *);
+char *string_strprepend (const char *, const char *);
+char *string_memset (const char *, int);
+int subchar_get_char (char *, int *);
 
 #endif

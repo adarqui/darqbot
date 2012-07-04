@@ -32,8 +32,8 @@ void
 __grelinkd_init__ (void)
 {
 
-strlcpy_buf(gmod_grelinkd_info.name, "gmod_grelinkd");
-strlcpy_buf(gmod_grelinkd_info.trigger, "^grelinkd");
+  strlcpy_buf (gmod_grelinkd_info.name, "gmod_grelinkd");
+  strlcpy_buf (gmod_grelinkd_info.trigger, "^grelinkd");
 
   gmod_grelinkd_info.init = grelinkd_init;
   gmod_grelinkd_info.fini = grelinkd_fini;
@@ -140,11 +140,11 @@ grelinkd_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "grelinkd_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "grelinkd_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -205,7 +205,7 @@ grelinkd_process_options (grelinkd_t * grelinkd, char *string)
   debug (NULL, "grelinkd_process_options: Entered\n");
 
 
-  if (!grelinkd || !sNULL(string))
+  if (!grelinkd || !sNULL (string))
     return NULL;
 
 
@@ -216,9 +216,7 @@ grelinkd_process_options (grelinkd_t * grelinkd, char *string)
   memset (buf, 0, sizeof (buf));
 
 
-  dl =
-    tokenize (NULL, string,
-		  TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
+  dl = tokenize (NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
   if (!dl)
     return NULL;
 
@@ -242,7 +240,7 @@ void
 grelinkd_process_options_parse (grelinkd_t * grelinkd, char *string)
 {
 
-  if (!grelinkd || !sNULL(string))
+  if (!grelinkd || !sNULL (string))
     return;
 
   debug (NULL, "grelinkd_process_options_parse: Entered\n");
@@ -265,7 +263,7 @@ void
 grelinkd_process_options_parse_null (grelinkd_t * grelinkd, char *string)
 {
 
-  if (!grelinkd || !sNULL(string))
+  if (!grelinkd || !sNULL (string))
     return;
 
   return;
@@ -317,7 +315,7 @@ grelinkd_output (dlist_t * dlist_node, bot_t * bot)
     }
 
   debug (NULL, "grelinkd_output: in=[%s], out=[%s]\n", bot->txt_data_in,
-	     bot->txt_data_out);
+	 bot->txt_data_out);
 
 
   grelinkd_op_data_notify (grelinkd);
@@ -436,7 +434,7 @@ buf_len = grelinkd_op_reload(bot, grdm);
   gmodule_up (dlist_node, bot);
 
   debug (NULL, "grelinkd_input: in=[%s], out=[%s]\n", bot->txt_data_in,
-	     bot->txt_data_out);
+	 bot->txt_data_out);
 
   return bot;
 }
@@ -462,7 +460,7 @@ grelinkd_input_uninitialized (grelinkd_t * grelinkd)
   gmodule_down (grelinkd->dptr_gmod, grelinkd->bot);
 
   debug (NULL, "grelinkd_input: in=[%s], out=[%s]\n",
-	     grelinkd->bot->txt_data_in, grelinkd->bot->txt_data_out);
+	 grelinkd->bot->txt_data_in, grelinkd->bot->txt_data_out);
 
 /* after hello packet, waiting for relinkc reply */
   grelinkd->initialized = 1;
@@ -570,8 +568,8 @@ grelinkd_op_relink_notify (grelinkd_t * grelinkd)
 	puts ("GRELINKD RESULT NEW");
 	grelinkd->bot->txt_data_out_sz =
 	  relink_res_pack_buf_new (grelinkd->bot->txt_data_out, grelinkd->id);
-	relink_packet_hton ((relink_control_pkt_t *) grelinkd->bot->
-			    txt_data_out);
+	relink_packet_hton ((relink_control_pkt_t *) grelinkd->
+			    bot->txt_data_out);
 	break;
       }
     case 1:
@@ -580,8 +578,8 @@ grelinkd_op_relink_notify (grelinkd_t * grelinkd)
 	puts ("GRELINKD RESULT OLD");
 	grelinkd->bot->txt_data_out_sz =
 	  relink_res_pack_buf_old (grelinkd->bot->txt_data_out, grelinkd->id);
-	relink_packet_hton ((relink_control_pkt_t *) grelinkd->bot->
-			    txt_data_out);
+	relink_packet_hton ((relink_control_pkt_t *) grelinkd->
+			    bot->txt_data_out);
 	break;
       }
     case -1:
@@ -591,8 +589,8 @@ grelinkd_op_relink_notify (grelinkd_t * grelinkd)
 	grelinkd->bot->txt_data_out_sz =
 	  relink_res_pack_buf_error (grelinkd->bot->txt_data_out,
 				     grelinkd->id);
-	relink_packet_hton ((relink_control_pkt_t *) grelinkd->bot->
-			    txt_data_out);
+	relink_packet_hton ((relink_control_pkt_t *) grelinkd->
+			    bot->txt_data_out);
 	break;
       }
     default:
@@ -873,7 +871,7 @@ grelinkd_free (void *arg)
 /* ... */
 
   debug (NULL, "grelinkd_free: grelinkd->id=%i, grelinkd->bot_id=%i\n",
-	     grelinkd->id, grelinkd->bot_id);
+	 grelinkd->id, grelinkd->bot_id);
   if (grelinkd->gmod)
     grelinkd->gmod->data = NULL;
 

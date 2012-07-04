@@ -38,11 +38,12 @@ bot_t *sep_run (dlist_t *, bot_t *);
 
 void __sep_init__ (void) __attribute__ ((constructor));
 
-enum mod_sep_sub {
-MOD_SEP,
-MOD_SEP_BREAK,
-MOD_SEP_CRUSH,
-MOD_SEP_COMMENT,
+enum mod_sep_sub
+{
+  MOD_SEP,
+  MOD_SEP_BREAK,
+  MOD_SEP_CRUSH,
+  MOD_SEP_COMMENT,
 };
 
 #endif

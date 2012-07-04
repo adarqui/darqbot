@@ -20,5 +20,3 @@
       email: andrew.darqui@g m a i l . c o m
 */
 #include "bot.h"
-
-

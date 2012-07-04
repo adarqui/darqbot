@@ -27,11 +27,11 @@ main (int argc, char *argv[])
 {
 
 /* fn pointers */
-gi = &global_info;
+  gi = &global_info;
 
   fns_load_defaults ();
 
-debug_trace_init_mandatory();
+  debug_trace_init_mandatory ();
 /* XXX
   debug_trace_init ();
 */
@@ -71,7 +71,7 @@ debug_trace_init_mandatory();
   event_dispatch ();
 */
   setjmp (gi->sigprotect_buf);
-sigsetjmp(gi->sigprotect_sigbuf,1);
+  sigsetjmp (gi->sigprotect_sigbuf, 1);
 
   while (1)
     {

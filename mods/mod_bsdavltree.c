@@ -29,8 +29,8 @@ void
 __bsdavltree_init__ (void)
 {
 
-strlcpy_buf(mod_bsdavltree_info.name, "mod_bsdavltree");
-strlcpy_buf(mod_bsdavltree_info.trigger, "^bsdavltree");
+  strlcpy_buf (mod_bsdavltree_info.name, "mod_bsdavltree");
+  strlcpy_buf (mod_bsdavltree_info.trigger, "^bsdavltree");
 
   module_add_subtrigs (&mod_bsdavltree_info, "^bavlt");
 
@@ -58,7 +58,7 @@ bsdavltree_init (dlist_t * dlist_node, bot_t * bot)
   bavlt_traverse = BSDAVLTREE_TRAVERSE_REVERSE;
 
   swap_inmem_get_assign_and_remove ("dl_mod_bsdavl", 0,
-					(void **) &dl_mod_bsdavl_unique);
+				    (void **) &dl_mod_bsdavl_unique);
 
   return NULL;
 }
@@ -100,11 +100,11 @@ bsdavltree_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "bsdavltree_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "bsdavltree_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -221,7 +221,7 @@ bsdavltree_change_string (bot_t * bot, char *string, int opt_op, int opt_type)
 
   bu =
     unique_create (bot, &dl_mod_bsdavl_unique,
-		       UNIQUE_ID_TAG | UNIQUE_ID_CHAN);
+		   UNIQUE_ID_TAG | UNIQUE_ID_CHAN);
   if (!bu)
     return NULL;
 
@@ -485,7 +485,7 @@ bsdavltree_op_info (bsdavl_trees_t * bt, char *string, int opt_type)
 			  bsdavl_node_fillbuf, buf);
     }
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;
@@ -555,7 +555,7 @@ bsdavltree_op_traverse (bsdavl_trees_t * bt, char *string, int opt_op,
       break;
     }
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;
@@ -600,7 +600,7 @@ bsdavltree_op_tree (bsdavl_trees_t * bt, char *string, int opt_type)
 				bsdavl_node_depth_fillbuf, buf);
     }
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;
@@ -630,7 +630,7 @@ bsdavltree_op_add (bsdavl_trees_t * bt, char *string, int opt_type)
 
   dl_toks =
     tokenize (NULL, string, TOKENIZE_NORMAL | TOKENIZE_MATCHANY,
-		  " ,./;'[]~<>\\`");
+	      " ,./;'[]~<>\\`");
   if (!dl_toks)
     return NULL;
 
@@ -679,8 +679,8 @@ bsdavltree_op_add (bsdavl_trees_t * bt, char *string, int opt_type)
 
 	TREE_INSERT ((Tree *) tree_ptr, bsdavl_node, tree,
 		     bsdavl_node_new (v.key_str !=
-				      NULL ? strdup (v.key_str) : v.
-				      key_str, v.key_int, v.value));
+				      NULL ? strdup (v.key_str) : v.key_str,
+				      v.key_int, v.value));
       }
   }
 
@@ -697,7 +697,7 @@ bsdavltree_op_add (bsdavl_trees_t * bt, char *string, int opt_type)
     }
 
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;
@@ -780,7 +780,7 @@ bsdavltree_op_del (bsdavl_trees_t * bt, char *string, int opt_type)
 	}
     }
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;
@@ -866,12 +866,12 @@ bsdavl_node_depth_fillbuf (bsdavl_node_t * self, int x, int y, void *buf)
   if (self->key_str)
     {
       strlcatfmt_safe (buf_ptr, MAX_BUF_SZ - 1, "%s{x=%i,y=%i},",
-		      self->key_str, x, y);
+		       self->key_str, x, y);
     }
   else
     {
       strlcatfmt_safe (buf_ptr, MAX_BUF_SZ - 1, "%d{x=%i,y=%i},",
-		      self->key_int, x, y);
+		       self->key_int, x, y);
     }
   return;
 }

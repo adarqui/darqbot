@@ -29,8 +29,8 @@ void
 __cmds_init__ (void)
 {
 
-strlcpy_buf(mod_cmds_info.name, "mod_cmds");
-strlcpy_buf(mod_cmds_info.trigger, "^cmds");
+  strlcpy_buf (mod_cmds_info.name, "mod_cmds");
+  strlcpy_buf (mod_cmds_info.trigger, "^cmds");
 
   mod_cmds_info.init = cmds_init;
   mod_cmds_info.fini = cmds_fini;
@@ -91,11 +91,11 @@ cmds_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "cmds_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "cmds_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))

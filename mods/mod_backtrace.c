@@ -29,8 +29,8 @@ void
 __backtrace_init__ (void)
 {
 
-strlcpy_buf(mod_backtrace_info.name, "mod_backtrace");
-strlcpy_buf(mod_backtrace_info.trigger, "^backtrace");
+  strlcpy_buf (mod_backtrace_info.name, "mod_backtrace");
+  strlcpy_buf (mod_backtrace_info.trigger, "^backtrace");
 
   mod_backtrace_info.init = backtrace_init;
   mod_backtrace_info.fini = backtrace_fini;
@@ -88,11 +88,11 @@ backtrace_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "backtrace_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "backtrace_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -151,7 +151,7 @@ backtrace_change_string (char *string, int opt)
 
 cleanup:
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   if (bt_strings)

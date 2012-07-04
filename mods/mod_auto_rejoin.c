@@ -30,8 +30,8 @@ void
 __auto_rejoin_init__ (void)
 {
 
-strlcpy_buf(mod_auto_rejoin_info.name, "mod_auto_rejoin");
-strlcpy_buf(mod_auto_rejoin_info.trigger, "^auto_rejoin");
+  strlcpy_buf (mod_auto_rejoin_info.name, "mod_auto_rejoin");
+  strlcpy_buf (mod_auto_rejoin_info.trigger, "^auto_rejoin");
 
   mod_auto_rejoin_info.init = mod_auto_rejoin_init;
   mod_auto_rejoin_info.fini = mod_auto_rejoin_fini;
@@ -86,14 +86,14 @@ mod_auto_rejoin_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot, "mod_auto_rejoin_run: Entered\n");
 
 
   debug (bot,
-	     "mod_auto_rejoin_run: Entered: initial hook buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "mod_auto_rejoin_run: Entered: initial hook buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -184,21 +184,20 @@ mod_auto_rejoin_input (dlist_t * dlist_node, bot_t * bot)
     }
 
   debug (bot, "mod_auto_rejoin_input: nick=[%s], kicked_nick=[%s]\n",
-	     nick->nick, kicked_nick);
+	 nick->nick, kicked_nick);
 
   if (!strcasecmp (nick->nick, kicked_nick))
     {
 /* we were kicked */
 
-      snprintf_buf (bot->txt_data_out, 
-		"JOIN %s\n", bot->txt_to);
+      snprintf_buf (bot->txt_data_out, "JOIN %s\n", bot->txt_to);
       bot->txt_data_out_sz = strlen (bot->txt_data_out);
 
       bot->shouldsend = 1;
       bot->isprivmsg = 0;
 
       debug (bot, "mod_auto_rejoin_input: rejoining %s, raw data=%s\n",
-		 bot->txt_to, bot->txt_data_out);
+	     bot->txt_to, bot->txt_data_out);
 
       gmodule_down (bot->dl_gmodules_cur, bot);
 

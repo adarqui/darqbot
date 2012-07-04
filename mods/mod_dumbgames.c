@@ -28,11 +28,11 @@
 void
 __dumbgames_init__ (void)
 {
-strlcpy_buf(mod_dumbgames_info.name, "mod_dumbgames");
-strlcpy_buf(mod_dumbgames_info.trigger, "^dumbgames");
+  strlcpy_buf (mod_dumbgames_info.name, "mod_dumbgames");
+  strlcpy_buf (mod_dumbgames_info.trigger, "^dumbgames");
 
-module_add_subtrigs(&mod_dumbgames_info, "^dice");
-module_add_subtrigs(&mod_dumbgames_info, "^roulette");
+  module_add_subtrigs (&mod_dumbgames_info, "^dice");
+  module_add_subtrigs (&mod_dumbgames_info, "^roulette");
 
   mod_dumbgames_info.init = dumbgames_init;
   mod_dumbgames_info.fini = dumbgames_fini;
@@ -75,16 +75,21 @@ dumbgames_help (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
   if (str_match (bot->trig_called, STR_MATCH_STRCASECMP, 0, "^dice", NULL))
-{
-bot->dl_module_help = "^dice ::: rolls two random dice";
-}
-else if(str_match (bot->trig_called, STR_MATCH_STRCASECMP, 0, "^roulette", NULL))
-{
-bot->dl_module_help = "^roulette(numtriggerpulls) ::: pulls the \"trigger\" numtriggerpulls times and hopefully doesn't return a BANG!";
-}
-else {
-  bot->dl_module_help = "^dumbgames ::: ^dice || ^roulette(numtriggerpulls)";
-}
+    {
+      bot->dl_module_help = "^dice ::: rolls two random dice";
+    }
+  else
+    if (str_match
+	(bot->trig_called, STR_MATCH_STRCASECMP, 0, "^roulette", NULL))
+    {
+      bot->dl_module_help =
+	"^roulette(numtriggerpulls) ::: pulls the \"trigger\" numtriggerpulls times and hopefully doesn't return a BANG!";
+    }
+  else
+    {
+      bot->dl_module_help =
+	"^dumbgames ::: ^dice || ^roulette(numtriggerpulls)";
+    }
 
   return NULL;
 }
@@ -93,7 +98,7 @@ bot_t *
 dumbgames_run (dlist_t * dlist_node, bot_t * bot)
 {
   char *dl_module_arg_after_options, *dl_options_ptr;
-  int opt,sub;
+  int opt, sub;
 
   debug (bot, "dumbgames_run: Entered\n");
 
@@ -101,22 +106,22 @@ dumbgames_run (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "dumbgames_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "dumbgames_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
     return NULL;
 
-sub = MOD_DUMBGAMES;
+  sub = MOD_DUMBGAMES;
 
-if(!strcasecmp(bot->trig_called, "^dice")) 
-sub = MOD_DUMBGAMES_DICE;
-else if(!strcasecmp(bot->trig_called, "^roulette"))
-sub = MOD_DUMBGAMES_ROULETTE;
+  if (!strcasecmp (bot->trig_called, "^dice"))
+    sub = MOD_DUMBGAMES_DICE;
+  else if (!strcasecmp (bot->trig_called, "^roulette"))
+    sub = MOD_DUMBGAMES_ROULETTE;
 
   opt = 0;
 
@@ -132,18 +137,21 @@ sub = MOD_DUMBGAMES_ROULETTE;
 
   MOD_PARSE_TOP_HALF_NODL;
 
-switch(sub) {
-case MOD_DUMBGAMES_DICE: {
-l_new_str = dice_change_string(opt);
-break;
-}
-case MOD_DUMBGAMES_ROULETTE: {
-l_new_str = roulette_change_string(opt);
-break;
-}
-default:
-break;
-}
+  switch (sub)
+    {
+    case MOD_DUMBGAMES_DICE:
+      {
+	l_new_str = dice_change_string (opt);
+	break;
+      }
+    case MOD_DUMBGAMES_ROULETTE:
+      {
+	l_new_str = roulette_change_string (opt);
+	break;
+      }
+    default:
+      break;
+    }
 
   MOD_PARSE_BOTTOM_HALF_NODL;
 
@@ -195,7 +203,7 @@ roulette_change_string (int opt)
 
   int chamber[6];
 
-debug(NULL, "roulette_change_string: opt=%i\n", opt);
+  debug (NULL, "roulette_change_string: opt=%i\n", opt);
 
   chamber[0] = 1;
   chamber[1] = 2;
@@ -205,24 +213,24 @@ debug(NULL, "roulette_change_string: opt=%i\n", opt);
   chamber[5] = 6;
 
   qsort (chamber, sizeof (chamber) / sizeof (int), sizeof (int),
-         chamber_compare);
+	 chamber_compare);
 
   while (1)
     {
       d2 = rand () % 7;
       if (d2 != 0)
-        break;
+	break;
     }
 
   for (i = 0; i < opt; i++)
     {
 
       if (chamber[i] == d2)
-        {
-          str = str_unite( "BANG!");
-          break;
-        }
-      str = str_unite( "CLICK.");
+	{
+	  str = str_unite ("BANG!");
+	  break;
+	}
+      str = str_unite ("CLICK.");
     }
 
   return str;

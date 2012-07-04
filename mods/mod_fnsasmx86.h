@@ -46,7 +46,7 @@ bot_t *fnsasmx86_run (dlist_t *, bot_t *);
 
 
 char *fnsasmx86_change_string (bot_t * bot, char *, int);
-char * fnsasmx86_test (bot_t *);
+char *fnsasmx86_test (bot_t *);
 void fnsasmx86_on (bot_t *);
 void fnsasmx86_off (bot_t *);
 

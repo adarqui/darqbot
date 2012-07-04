@@ -32,8 +32,8 @@ void
 __graw_init__ (void)
 {
 
-strlcpy_buf(gmod_graw_info.name, "gmod_graw");
-strlcpy_buf(gmod_graw_info.trigger, "^graw");
+  strlcpy_buf (gmod_graw_info.name, "gmod_graw");
+  strlcpy_buf (gmod_graw_info.trigger, "^graw");
   gmod_graw_info.init = graw_init;
   gmod_graw_info.fini = graw_fini;
   gmod_graw_info.help = graw_help;
@@ -169,17 +169,17 @@ graw_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "graw_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "graw_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
     return NULL;
 
-  debug (bot,"dl_module_arg=%s\n", bot->dl_module_arg);
+  debug (bot, "dl_module_arg=%s\n", bot->dl_module_arg);
 
 
 //gmod = (bot_gmod_elm_t *) gmodule_find_gmod(bot, gmod_graw_info.trigger);
@@ -187,7 +187,7 @@ graw_run (dlist_t * dlist_node, bot_t * bot)
     (dlist_t *) gmodule_find_gmod_dptr (bot, gmod_graw_info.trigger,
 					gmod_graw_info.trigger_ext);
 
-debug(bot,"dptr_gmod=%p\n", dptr_gmod);
+  debug (bot, "dptr_gmod=%p\n", dptr_gmod);
 
   if (!dptr_gmod)
     return NULL;
@@ -233,7 +233,7 @@ graw_process_options (graw_t * graw, char *string)
   debug (NULL, "graw_process_options: Entered\n");
 
 
-  if (!graw || !sNULL(string))
+  if (!graw || !sNULL (string))
     return NULL;
 
 
@@ -244,9 +244,7 @@ graw_process_options (graw_t * graw, char *string)
   memset (buf, 0, sizeof (buf));
 
 
-  dl =
-    tokenize (NULL, string,
-		  TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
+  dl = tokenize (NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
   if (!dl)
     return NULL;
 
@@ -270,7 +268,7 @@ void
 graw_process_options_parse (graw_t * graw, char *string)
 {
 
-  if (!graw || !sNULL(string))
+  if (!graw || !sNULL (string))
     return;
 
   debug (NULL, "graw_process_options_parse: Entered\n");
@@ -322,7 +320,7 @@ void
 graw_process_options_parse_proto (graw_t * graw, char *string)
 {
 
-  if (!graw || !sNULL(string))
+  if (!graw || !sNULL (string))
     return;
 
 /*
@@ -351,16 +349,16 @@ graw_process_options_parse_host (graw_t * graw, char *string)
   server_t *server;
   char *tok_1, *tok_2;
 
-  if (!graw || !sNULL(string))
+  if (!graw || !sNULL (string))
     return;
 
 
   tok_1 = strtok (string, ":");
-  if (!sNULL(tok_1))
+  if (!sNULL (tok_1))
     return;
 
   tok_2 = strtok (NULL, "");
-  if (!sNULL(tok_2))
+  if (!sNULL (tok_2))
     return;
 
   server = (server_t *) calloc (1, sizeof (server_t));
@@ -380,7 +378,7 @@ graw_process_options_parse_path (graw_t * graw, char *string)
 {
   server_t *server;
 
-  if (!graw || !sNULL(string))
+  if (!graw || !sNULL (string))
     return;
 
   server = (server_t *) calloc (1, sizeof (server_t));
@@ -404,7 +402,7 @@ graw_change_string (bot_t * bot, char *string, int opt)
   char *sep_ptr;
 
 
-  if (!bot || !sNULL(string))
+  if (!bot || !sNULL (string))
     return NULL;
 
 
@@ -485,8 +483,8 @@ graw_connect (graw_t * graw)
 
 	if (bfl->type == AF_INET)
 	  {
-	    debug (NULL, "graw_connect: af_inet: %s, %i\n", inet_ntoa (bfl->sin.sin_addr),
-		    ntohs (bfl->sin.sin_port));
+	    debug (NULL, "graw_connect: af_inet: %s, %i\n",
+		   inet_ntoa (bfl->sin.sin_addr), ntohs (bfl->sin.sin_port));
 	    link_fd =
 	      graw_network_raw_connect (inet_ntoa (bfl->sin.sin_addr),
 					ntohs (bfl->sin.sin_port));
@@ -510,8 +508,8 @@ graw_connect (graw_t * graw)
 	graw->dl_server_cur = dptr;
 
 	debug (NULL,
-		   "graw_connect: connected to %s on bot->fd_link=%i\n",
-		   server->host, graw->link.fd);
+	       "graw_connect: connected to %s on bot->fd_link=%i\n",
+	       server->host, graw->link.fd);
 
 	if (bot_unix_fd_send (graw->bot, graw->link.fd, graw->gmod) >= 0)
 	  return 0;
@@ -537,13 +535,13 @@ graw_send_link (graw_t * graw, char *buf, int len)
 
   debug (NULL, "graw_send_link: Entered: %p %s %i\n", graw, buf, len);
 
-  if (!graw || !sNULL(buf) || len <= 0)
+  if (!graw || !sNULL (buf) || len <= 0)
     return -1;
 
 /* need to clean separators */
 
   debug (NULL, "graw_send_link: fd=%i, len=%i, buf=[%s]\n", graw->link.fd,
-	     len, buf);
+	 len, buf);
 
   n = send (graw->link.fd, buf, len, 0);
   if (n <= 0)
@@ -577,8 +575,8 @@ graw_recv_link (graw_t * graw, char *buf, int len)
   if (n <= 0)
     {
       debug (NULL,
-		 "graw_recv_link: recv<=0, unsetting hooks, bot=%p, fd=%i, err=%s\n",
-		 graw, graw->link.fd, strerror (errno));
+	     "graw_recv_link: recv<=0, unsetting hooks, bot=%p, fd=%i, err=%s\n",
+	     graw, graw->link.fd, strerror (errno));
     }
 
   debug (NULL, "graw_recv_link: n=%i, buf=[%s]\n", n, buf);
@@ -623,8 +621,7 @@ graw_listen (graw_t * graw)
     }
 
   debug (NULL,
-	     "graw_listen: fd=%i, returned from graw_network_graw_listen\n",
-	     fd);
+	 "graw_listen: fd=%i, returned from graw_network_graw_listen\n", fd);
 
   if (fd < 0)
     return -1;
@@ -766,8 +763,7 @@ graw_accept_spawner (graw_t * graw)
 
   if (graw->link_connecting)
     {
-      debug (NULL,
-		 "graw_accept_spawner: already connecting, returning\n");
+      debug (NULL, "graw_accept_spawner: already connecting, returning\n");
       return -1;
     }
 
@@ -813,8 +809,9 @@ graw_accept_spawner (graw_t * graw)
 	continue;
       }
 
-   debug 
-      (NULL, "graw_accept_spawner: graw->link.fd=%i, fd=%i, bfl->fd=%i, bfl->link.sin.sin_port=%i GOGO\n",
+    debug
+      (NULL,
+       "graw_accept_spawner: graw->link.fd=%i, fd=%i, bfl->fd=%i, bfl->link.sin.sin_port=%i GOGO\n",
        graw->link.fd, fd, bfl->fd, bfl->sin.sin_port);
 
     graw_set_evhooks_accept (graw, bfl);
@@ -853,15 +850,14 @@ graw_connect_spawner (graw_t * graw)
 
   if (graw->link_connecting)
     {
-      debug (NULL,
-		 "graw_connect_spawner: already connecting, returning\n");
+      debug (NULL, "graw_connect_spawner: already connecting, returning\n");
       return -1;
     }
 
   if (graw->bot->on == 0)
     {
       debug (NULL,
-		 "graw_connect_spawner: bot is currently turned off, returning\n");
+	     "graw_connect_spawner: bot is currently turned off, returning\n");
       return -1;
     }
 
@@ -895,7 +891,7 @@ graw_network_raw_connect (char *host, int port)
   struct sockaddr_in sin;
   char *str_tmp;
   int fd, n;
-  if (!sNULL(host) || port <= 0)
+  if (!sNULL (host) || port <= 0)
     return -1;
 
   memset (&sin, 0, sizeof (sin));
@@ -903,7 +899,7 @@ graw_network_raw_connect (char *host, int port)
   sin.sin_port = htons (port);
 
   str_tmp = n_gethostbyname (host);
-  if (!sNULL(str_tmp))
+  if (!sNULL (str_tmp))
     return -1;
 
   sin.sin_addr.s_addr = inet_addr (str_tmp);
@@ -933,7 +929,7 @@ graw_network_unix_connect (char *path)
 
   debug (NULL, "graw_network_unix_connect: Entered: %s\n", path);
 
-  if (!sNULL(path))
+  if (!sNULL (path))
     return -1;
 
   memset (&sun, 0, sizeof (sun));
@@ -974,18 +970,18 @@ graw_network_raw_listen (char *host, int port)
 
   debug (NULL, "graw_network_raw_listen: Entered\n");
 
-  if (!sNULL(host) || port <= 0)
-{
-    return -1;
-}
+  if (!sNULL (host) || port <= 0)
+    {
+      return -1;
+    }
 
   memset (&sin, 0, sizeof (sin));
 
   str_tmp = n_gethostbyname (host);
-  if (!sNULL(str_tmp))
-{
-    return -1;
-}
+  if (!sNULL (str_tmp))
+    {
+      return -1;
+    }
 
   sin.sin_family = AF_INET;
   sin.sin_addr.s_addr = inet_addr (str_tmp);
@@ -1042,7 +1038,7 @@ graw_network_unix_listen (char *path)
 
   debug (NULL, "graw_network_unix_listen: Entered\n");
 
-  if (!sNULL(path))
+  if (!sNULL (path))
     return -1;
 
   unlink (path);
@@ -1106,7 +1102,7 @@ graw_set_evhooks (graw_t * graw)
 
 
   safe_event_set (&graw->link.ev, graw->link.fd, EV_READ | EV_PERSIST,
-	     graw_evhook_link, graw);
+		  graw_evhook_link, graw);
   safe_event_add (&graw->link.ev, NULL);
 
 
@@ -1128,7 +1124,7 @@ graw_set_evhooks_accept (graw_t * graw, fd_link_t * bfl)
 
 
   safe_event_set (&bfl->ev, bfl->fd, EV_READ | EV_PERSIST,
-	     graw_evhook_accept, graw);
+		  graw_evhook_accept, graw);
 
   safe_event_del (&bfl->ev);
   safe_event_add (&bfl->ev, NULL);
@@ -1232,8 +1228,7 @@ graw_evhook_link (int fd, short event, void *arg)
   memset (buf, 0, sizeof (buf));
   memcpy (buf, graw->bot->txt_data_in, n);
 
-  debug (NULL, "=> graw_evhook_link: fd=%i, n=%i, buf=[%s]\n", fd, n,
-	     buf);
+  debug (NULL, "=> graw_evhook_link: fd=%i, n=%i, buf=[%s]\n", fd, n, buf);
 
   gmodule_up (graw->dptr_gmod, graw->bot);
   if (graw->bot->txt_data_out_sz)
@@ -1329,7 +1324,8 @@ graw_evhook_accept (int fd, short event, void *arg)
   gmod_sub = (bot_gmod_elm_t *) dlist_data (dptr_gmod_sub);
   if (!gmod_sub->data)
     {
-      debug (NULL, "graw_evhook_accept: GIRCD ACCEPT GMOD->DATA = NULL, ALLOCATING");
+      debug (NULL,
+	     "graw_evhook_accept: GIRCD ACCEPT GMOD->DATA = NULL, ALLOCATING");
       graw_gmod_init (bot_sub, gmod_sub, dptr_gmod_sub);
       graw_sub = gmod_sub->data;
     }
@@ -1338,7 +1334,7 @@ graw_evhook_accept (int fd, short event, void *arg)
     return;
 
   graw_sub->initialized = 1;
-graw_sub->link_type = graw->link_type;
+  graw_sub->link_type = graw->link_type;
   graw_sub->link.fd = nfd;
   memcpy (&gmod_sub->link, &graw->link, sizeof (fd_link_t));
 
@@ -1653,7 +1649,8 @@ graw_control_up (dlist_t * dlist_node, bot_t * bot)
 /* need this to flush the gmod->dl_cache */
 	  graw_input_client (graw);
 
-	  debug (NULL,"graw_control_up: GRAW_CONTROL_UP!!! fd found=%i\n", fd);
+	  debug (NULL, "graw_control_up: GRAW_CONTROL_UP!!! fd found=%i\n",
+		 fd);
 	}
     }
   else

@@ -29,8 +29,8 @@ void
 __echo_init__ (void)
 {
 
-strlcpy_buf(mod_echo_info.name, "mod_echo"); 
-strlcpy_buf(mod_echo_info.trigger, "^echo");
+  strlcpy_buf (mod_echo_info.name, "mod_echo");
+  strlcpy_buf (mod_echo_info.trigger, "^echo");
 
   module_add_subtrigs (&mod_echo_info, "^e");
   module_add_subtrigs (&mod_echo_info, "^say");
@@ -92,10 +92,10 @@ echo_run (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
   debug (bot,
-	     "echo_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "echo_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
 
 

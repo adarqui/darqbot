@@ -53,7 +53,7 @@ mongodb_fini (bot_t * bot)
 */
 
   mongo_destroy (&gi->mongo_conn);
-memset(&gi->mongo_conn,0,sizeof(gi->mongo_conn));
+  memset (&gi->mongo_conn, 0, sizeof (gi->mongo_conn));
 
   debug (bot, "mongodb_fini: Destroying mongo connection\n");
 
@@ -65,7 +65,7 @@ memset(&gi->mongo_conn,0,sizeof(gi->mongo_conn));
 
 int
 mongodb_insert_key (bot_t * bot, char *db, char *key, char *value,
-		      char *fmt, ...)
+		    char *fmt, ...)
 {
   bson b;
   mongo_cursor cursor;
@@ -135,8 +135,8 @@ mongodb_retrieve_key (bot_t * bot, char *db, char *key, char *which)
     }
 
   debug (bot,
-	     "mongodb_retrieve_key: Entered :db=%s. key=%s, which=%s\n", db,
-	     key, which);
+	 "mongodb_retrieve_key: Entered :db=%s. key=%s, which=%s\n", db,
+	 key, which);
 
 
   bson_init (&b);
@@ -504,9 +504,7 @@ mongodb_fmt_build_fmt (bot_t * bot, char *fmt, ...)
   if (!fmt)
     return NULL;
 
-  dl_fmt =
-    tokenize (bot, fmt, TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE,
-		  "%");
+  dl_fmt = tokenize (bot, fmt, TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, "%");
   if (!dl_fmt)
     {
       return NULL;
@@ -601,8 +599,7 @@ mongodb_fmt_build_strings (bot_t * bot, char *string)
 
 
   dl_args =
-    tokenize (bot, string,
-		  TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, " ");
+    tokenize (bot, string, TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, " ");
   if (!dl_args)
     return NULL;
 
@@ -617,7 +614,7 @@ mongodb_fmt_build_strings (bot_t * bot, char *string)
 
   arg_array =
     (mongo_argument_t **) calloc (dlist_size (dl_fmt) + 1,
-				      sizeof (mongo_argument_t *));
+				  sizeof (mongo_argument_t *));
   if (!arg_array)
     goto cleanup;
 
@@ -645,8 +642,8 @@ mongodb_fmt_build_strings (bot_t * bot, char *string)
       str_arg_val = str_arg;
 
       debug (bot,
-		 "mongodb_fmt_build_strings: Adding key=%s, val=%s to bson object\n",
-		 str_arg_key, str_arg_val);
+	     "mongodb_fmt_build_strings: Adding key=%s, val=%s to bson object\n",
+	     str_arg_key, str_arg_val);
 
       arg_array[i] =
 	(mongo_argument_t *) calloc (1, sizeof (mongo_argument_t));
@@ -704,8 +701,7 @@ cleanup:
 
 
 int
-mongodb_fmt_insert_arg (bot_t * bot, char *db,
-			  mongo_argument_t ** arg_array)
+mongodb_fmt_insert_arg (bot_t * bot, char *db, mongo_argument_t ** arg_array)
 {
 /* example: ^e |^mongotestfmt "%s=name %i=age %f=grade" Darqbot 50 99.9 */
 
@@ -1027,9 +1023,7 @@ mongodb_bson_build (bot_t * bot, char *fmt, ...)
   if (!fmt)
     return NULL;
 
-  dl_fmt =
-    tokenize (bot, fmt, TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE,
-		  "%");
+  dl_fmt = tokenize (bot, fmt, TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, "%");
   if (!dl_fmt)
     {
       return NULL;
@@ -1229,7 +1223,7 @@ mongodb_bson_print_init (const bson * b)
 
   mongodb_bson_print (b);
 
-  if (sNULL(mpbuf)!=NULL)
+  if (sNULL (mpbuf) != NULL)
     str = strdup (mpbuf);
 
   return str;
@@ -1274,67 +1268,61 @@ mongodb_bson_print_raw (const char *data, int depth)
 	  strlcatfmt_buf (mpbuf, "%s", bson_iterator_string (&i));
 	  break;
 	case BSON_SYMBOL:
-	  strlcatfmt_buf (mpbuf, "SYMBOL :%s",
-			  bson_iterator_string (&i));
+	  strlcatfmt_buf (mpbuf, "SYMBOL :%s", bson_iterator_string (&i));
 	  break;
 	case BSON_OID:
 	  bson_oid_to_string (bson_iterator_oid (&i), oidhex);
 	  strlcatfmt_buf (mpbuf, "%s", oidhex);
 	  break;
 	case BSON_BOOL:
-	  strlcatfmt_buf (mpbuf,  "%s", bson_iterator_bool (&i) ? "true" : "false");
+	  strlcatfmt_buf (mpbuf, "%s",
+			  bson_iterator_bool (&i) ? "true" : "false");
 	  break;
 	case BSON_DATE:
-	  strlcatfmt_buf (mpbuf, "%ld",
-			  (long int) bson_iterator_date (&i));
+	  strlcatfmt_buf (mpbuf, "%ld", (long int) bson_iterator_date (&i));
 	  break;
 	case BSON_BINDATA:
 	  strlcatfmt_buf (mpbuf, "BSON_BINDATA");
 	  break;
 	case BSON_UNDEFINED:
-	  strlcatfmt_buf (mpbuf,  "BSON_UNDEFINED");
+	  strlcatfmt_buf (mpbuf, "BSON_UNDEFINED");
 	  break;
 	case BSON_NULL:
-	  strlcatfmt_buf (mpbuf,  "BSON_NULL");
+	  strlcatfmt_buf (mpbuf, "BSON_NULL");
 	  break;
 	case BSON_REGEX:
-	  strlcatfmt_buf (mpbuf, "BSON_REGEX: %s",
-			  bson_iterator_regex (&i));
+	  strlcatfmt_buf (mpbuf, "BSON_REGEX: %s", bson_iterator_regex (&i));
 	  break;
 	case BSON_CODE:
-	  strlcatfmt_buf (mpbuf, "BSON_CODE: %s",
-			  bson_iterator_code (&i));
+	  strlcatfmt_buf (mpbuf, "BSON_CODE: %s", bson_iterator_code (&i));
 	  break;
 	case BSON_CODEWSCOPE:
 	  strlcatfmt_buf (mpbuf, "BSON_CODE_W_SCOPE: %s",
 			  bson_iterator_code (&i));
 	  bson_init (&scope);
 	  bson_iterator_code_scope (&i, &scope);
-	  strlcatfmt_buf (mpbuf,  "\n -> SCOPE: ");
+	  strlcatfmt_buf (mpbuf, "\n -> SCOPE: ");
 	  bson_print (&scope);
 	  break;
 	case BSON_INT:
-	  strlcatfmt_buf (mpbuf,  "%d",
-			  bson_iterator_int (&i));
+	  strlcatfmt_buf (mpbuf, "%d", bson_iterator_int (&i));
 	  break;
 	case BSON_LONG:
-	  strlcatfmt_buf (mpbuf, "%lld",
-			  (uint64_t) bson_iterator_long (&i));
+	  strlcatfmt_buf (mpbuf, "%lld", (uint64_t) bson_iterator_long (&i));
 	  break;
 	case BSON_TIMESTAMP:
 	  ts = bson_iterator_timestamp (&i);
-	  strlcatfmt_buf (mpbuf, "i: %d, t: %d", ts.i,
-			  ts.t);
+	  strlcatfmt_buf (mpbuf, "i: %d, t: %d", ts.i, ts.t);
 	  break;
 	case BSON_OBJECT:
 	case BSON_ARRAY:
-	  strlcatfmt_buf (mpbuf,  "\n");
+	  strlcatfmt_buf (mpbuf, "\n");
 	  bson_print_raw (bson_iterator_value (&i), depth + 1);
 	  break;
 	default:
 	  break;
 	}
-      strlcatfmt_buf (mpbuf,  "\n");
+      strlcatfmt_buf (mpbuf, "\n");
     }
 
 }

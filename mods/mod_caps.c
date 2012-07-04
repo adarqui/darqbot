@@ -29,8 +29,8 @@ void
 __caps_init__ (void)
 {
 
-strlcpy_buf(mod_caps_info.name, "mod_caps");
-strlcpy_buf(mod_caps_info.trigger, "^caps");
+  strlcpy_buf (mod_caps_info.name, "mod_caps");
+  strlcpy_buf (mod_caps_info.trigger, "^caps");
 
   mod_caps_info.init = caps_init;
   mod_caps_info.fini = caps_fini;
@@ -86,11 +86,11 @@ caps_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "caps_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "caps_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))

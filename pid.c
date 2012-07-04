@@ -28,7 +28,7 @@ xpid_add (bot_t * bot, pid_t pid)
 {
   xpid_t *bp = NULL;
 
-debug(NULL, "xpid_add: Entered: pid=%i\n",pid);
+  debug (NULL, "xpid_add: Entered: pid=%i\n", pid);
 
   if (!bot || pid <= 1)
     return NULL;
@@ -54,7 +54,7 @@ xpid_destroy (bot_t * bot, int signum)
   xpid_t *bp = NULL;
 
 
-debug(NULL, "xpid_destroy: Entered\n");
+  debug (NULL, "xpid_destroy: Entered\n");
 
   if (!bot || signum < 0)
     return;
@@ -87,7 +87,7 @@ xpid_del (bot_t * bot, pid_t pid)
   xpid_t *bp = NULL;
   dlist_t *dptr_bp, *dptr_tmp;
 
-debug(NULL, "xpid_del: Entered: pid=%i\n", pid);
+  debug (NULL, "xpid_del: Entered: pid=%i\n", pid);
 
   if (pid <= 1)
     return;
@@ -119,7 +119,7 @@ xpid_free (void *arg)
 {
   xpid_t *bp = (xpid_t *) arg;
 
-debug(NULL, "xpid_free: Entered\n");
+  debug (NULL, "xpid_free: Entered\n");
 
   if (!bp)
     return;
@@ -141,7 +141,7 @@ xpid_console_print (bot_t * bot, char *tag)
   dlist_t *dptr = NULL;
   xpid_t *bp = NULL;
 
-debug(NULL, "xpid_console_print: Entered: tag=%s\n", tag);
+  debug (NULL, "xpid_console_print: Entered: tag=%s\n", tag);
 
 
   if (!bot)

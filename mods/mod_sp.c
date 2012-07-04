@@ -29,8 +29,8 @@ void
 __sp_init__ (void)
 {
 
-strlcpy_buf(mod_sp_info.name, "mod_sp");
-strlcpy_buf(mod_sp_info.trigger, "^sp");
+  strlcpy_buf (mod_sp_info.name, "mod_sp");
+  strlcpy_buf (mod_sp_info.trigger, "^sp");
 
   mod_sp_info.init = sp_init;
   mod_sp_info.fini = sp_fini;
@@ -45,7 +45,7 @@ strlcpy_buf(mod_sp_info.trigger, "^sp");
 
   debug (NULL, "__sp_init__: Loaded mod_sp\n");
 
-  bz2(sp_info);
+  bz2 (sp_info);
 
   return;
 }
@@ -104,12 +104,12 @@ sp_run (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
 
   debug (bot,
-	     "sp_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "sp_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
 
@@ -170,7 +170,7 @@ sp_run (dlist_t * dlist_node, bot_t * bot)
   if (!str_ptr)
     str_ptr = "";
 
-  if (sNULL(bot->txt_data_out)!=NULL)
+  if (sNULL (bot->txt_data_out) != NULL)
     {
       new_str = str_unite ("%s%s\n", bot->txt_data_out, str_ptr);
     }
@@ -241,7 +241,7 @@ sp_fill_info (bot_t * bot)
 
   str = str_unite_static ("%s/mods/mod_sp_files/conf", gi->confdir);
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     goto cleanup;
 
   sp_info.fp = fopen (str, "r");
@@ -342,7 +342,8 @@ sp_run_on (bot_t * bot)
 
   fcntl (sp_info.pipefd_b[0], F_SETFL, O_NONBLOCK);
 
-  debug(NULL, "sp_run_on: pipe0=%i, pipe1=%i\n", sp_info.pipefd[0], sp_info.pipefd[1]);
+  debug (NULL, "sp_run_on: pipe0=%i, pipe1=%i\n", sp_info.pipefd[0],
+	 sp_info.pipefd[1]);
 
 
   if (!(pid = bot_fork_clean (bot)))
@@ -394,10 +395,10 @@ sp_run_off (bot_t * bot)
     }
 
   if (sp_info.fp)
-{
-    fclose (sp_info.fp);
-sp_info.fp=NULL;
-}
+    {
+      fclose (sp_info.fp);
+      sp_info.fp = NULL;
+    }
 
   if (sp_info.argv)
     {
@@ -406,12 +407,12 @@ sp_info.fp=NULL;
 	  free (sp_info.argv[i]);
 	}
       free (sp_info.argv);
-sp_info.argv=NULL;
+      sp_info.argv = NULL;
     }
 
   if (sp_info.dir)
     free (sp_info.dir);
-sp_info.dir = NULL;
+  sp_info.dir = NULL;
 
   return 0;
 }
@@ -446,9 +447,9 @@ sp_run_info (bot_t * bot, char *str)
 	  if (!strcasecmp (penn_meanings[i].abrv, str))
 	    {
 	      snprintf_buf (bot->txt_data_out,
-			     "<<%s>,<%s>,<%s>>\n", penn_meanings[i].abrv,
-			     penn_meanings[i].meaning,
-			     penn_meanings[i].example);
+			    "<<%s>,<%s>,<%s>>\n", penn_meanings[i].abrv,
+			    penn_meanings[i].meaning,
+			    penn_meanings[i].example);
 	    }
 	}
       else

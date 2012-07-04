@@ -29,8 +29,8 @@ void
 __console_init__ (void)
 {
 
-strlcpy_buf(mod_console_info.name, "mod_console");
-strlcpy_buf(mod_console_info.trigger, "^console");
+  strlcpy_buf (mod_console_info.name, "mod_console");
+  strlcpy_buf (mod_console_info.trigger, "^console");
 
   mod_console_info.init = console_init;
   mod_console_info.fini = console_fini;
@@ -88,11 +88,11 @@ console_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "console_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "console_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -122,7 +122,7 @@ console_change_string (bot_t * bot, char *string, int opt)
     return NULL;
 
   debug (NULL, "console_change_string: Entere: string=%s, opt=%i\n",
-	     string, opt);
+	 string, opt);
 
   sep_ptr = str_find_sep (string);
   if (sep_ptr)

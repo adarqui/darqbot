@@ -27,11 +27,11 @@ main (int argc, char *argv[])
 {
 
 /* fn pointers */
-gi = &global_info;
+  gi = &global_info;
 
   fns_load_defaults ();
 
-debug_trace_init_mandatory();
+  debug_trace_init_mandatory ();
   debug_trace_init ();
 
   srand (getpid ());

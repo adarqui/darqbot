@@ -24,7 +24,7 @@
 
 void
 nick_add (bot_t * bot, char *nick, char *username, char *hostname,
-	      char *servername, char *realname)
+	  char *servername, char *realname)
 {
   nick_t *nick_ptr;
 

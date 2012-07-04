@@ -40,10 +40,10 @@ bot_unix_fd_send (bot_t * bot, int fd, bot_gmod_elm_t * gmod)
 
   debug (NULL, "bot_unix_fd_send: Entered: %s\n", gi->fd_unix_path);
 
-  if (!sNULL(global_info.fd_unix_path) || fd < 0)
+  if (!sNULL (global_info.fd_unix_path) || fd < 0)
     return -1;
 
-  bz2(un);
+  bz2 (un);
   strlcpy_buf (un.sun_path, global_info.fd_unix_path);
 
   un.sun_family = AF_UNIX;
@@ -67,12 +67,12 @@ bot_unix_fd_send (bot_t * bot, int fd, bot_gmod_elm_t * gmod)
   iov[0].iov_len = sizeof (int);
   iov[0].iov_base = &op;
 
-  bz(tag);
+  bz (tag);
   snprintf_buf (tag, "%s,%i", bot->tag, bot->ID);
 
   if (gmod)
     {
-      if (sNULL(gmod->trigger_ext))
+      if (sNULL (gmod->trigger_ext))
 	{
 	  strlcatfmt_buf (tag, ",%s", gmod->trigger_ext);
 	}
@@ -127,8 +127,9 @@ bot_unix_init (void)
   if (global_info.fd_unix > 0)
     return 0;
 
-if(!sNULL(global_info.fd_unix_path))
-    strlcat_buf(global_info.fd_unix_path, str_unite_static ("%s/%s", gi->confdir, BOT_UNIX_SOCKPATH));
+  if (!sNULL (global_info.fd_unix_path))
+    strlcat_buf (global_info.fd_unix_path,
+		 str_unite_static ("%s/%s", gi->confdir, BOT_UNIX_SOCKPATH));
 
   debug (NULL, "bot_unix_init: fd_unix_path=%s\n", gi->fd_unix_path);
 
@@ -165,8 +166,8 @@ if(!sNULL(global_info.fd_unix_path))
 
   global_info.fd_unix = s;
 
-  safe_event_set (&global_info.ev_unix, global_info.fd_unix, EV_READ | EV_PERSIST,
-	     bot_evhook_unix_accept, NULL);
+  safe_event_set (&global_info.ev_unix, global_info.fd_unix,
+		  EV_READ | EV_PERSIST, bot_evhook_unix_accept, NULL);
   safe_event_add (&global_info.ev_unix, NULL);
 
   return 0;
@@ -183,7 +184,7 @@ int
 bot_unix_fini (void)
 {
 
-    bz (global_info.fd_unix_path);
+  bz (global_info.fd_unix_path);
 
   safe_event_del (&global_info.ev_unix);
 
@@ -192,7 +193,7 @@ bot_unix_fini (void)
 
   global_info.fd_unix = 0;
 
-  bz2(global_info.ev_unix);
+  bz2 (global_info.ev_unix);
 
   return 0;
 }
@@ -227,7 +228,7 @@ bot_evhook_unix_accept (int fd, short event, void *arg)
   if (dptr)
     {
       safe_event_set (&bun->ev, bun->ev_fd, EV_READ | EV_PERSIST,
-		 bot_evhook_unix_read, dptr);
+		      bot_evhook_unix_read, dptr);
       safe_event_add (&bun->ev, NULL);
     }
   else
@@ -272,7 +273,7 @@ bot_evhook_unix_read (int fd, short event, void *arg)
 
   debug (NULL, "bot_evhook_unix_read: Entered\n");
 
-  bz2(msg);
+  bz2 (msg);
 
   iov[0].iov_base = &op;
   iov[0].iov_len = sizeof (op);
@@ -293,7 +294,7 @@ bot_evhook_unix_read (int fd, short event, void *arg)
       return;
     }
 
-  bz2(iov);
+  bz2 (iov);
 
   if (msg.msg_iovlen > 0)
     {

@@ -28,8 +28,8 @@
 void
 __md5_init__ (void)
 {
-strlcpy_buf(mod_md5_info.name, "mod_md5");
-strlcpy_buf(mod_md5_info.trigger, "^md5");
+  strlcpy_buf (mod_md5_info.name, "mod_md5");
+  strlcpy_buf (mod_md5_info.trigger, "^md5");
 
   mod_md5_info.init = md5_init;
   mod_md5_info.fini = md5_fini;
@@ -87,11 +87,11 @@ md5_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "md5_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "md5_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -123,7 +123,7 @@ md5_change_string (char *string, int opt)
   if (sep_ptr)
     string = sep_ptr;
 
-  if (!sNULL(string))
+  if (!sNULL (string))
     return NULL;
 
 

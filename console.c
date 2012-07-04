@@ -168,16 +168,19 @@ console_tag_parse (bot_t * bot, char *arg)
     {
       xpid_console_print (bot, bot->tag);
     }
-else if(!strncasecmp_len(arg, "brake")) {
-char * l = &arg[fn_strlen("brake")+1];
-if(!strcasecmp(l,"on")) {
-bot->brake = 1;
-}
-else if(!strcasecmp(l,"off")) {
-bot->brake = 0;
-}
+  else if (!strncasecmp_len (arg, "brake"))
+    {
+      char *l = &arg[fn_strlen ("brake") + 1];
+      if (!strcasecmp (l, "on"))
+	{
+	  bot->brake = 1;
+	}
+      else if (!strcasecmp (l, "off"))
+	{
+	  bot->brake = 0;
+	}
 
-}
+    }
 
 
   return;
@@ -202,8 +205,8 @@ bot_help_console (bot_t * bot)
 		"\tpmodload, pmodunload, pmodreload, pmodlist, pmodlock, pmodunlock ::: ...\n"
 		"\tgmodload, gmodunload, gmodreload, gmodlist, gmodlock, gmodunlock ::: ...\n"
 		"\tzmodload, zmodunload, zmodreload, zmodlist, zmodlock, zmodunlock ::: ...\n"
-                "\tmodiolist, gmodiolist, zmodiolist ::: ...\n"
-                "\tmodtimerlist, gmodtimerlist, zmodtimerlist ::: ...\n"
+		"\tmodiolist, gmodiolist, zmodiolist ::: ...\n"
+		"\tmodtimerlist, gmodtimerlist, zmodtimerlist ::: ...\n"
 		"\ttestmem ::: ...\n"
 		"\ttestfd ::: ...\n"
 		"\tclose ::: ...\n"
@@ -226,7 +229,7 @@ bot_help_console (bot_t * bot)
 		"\tkill ::: ...\n"
 		"\tmute ::: ...\n"
 		"\tunmute ::: ...\n" "\ttrace ::: ...\n" "\tdebug ::: ...\n"
-                "\tbreak ::: ...\n");
+		"\tbreak ::: ...\n");
 
 
   return (0);
@@ -268,7 +271,7 @@ bot_evhook_console (int fd, short event, void *arg)
 
 
 
-  bz(buf);
+  bz (buf);
 
   n = read (fd, buf, sizeof (buf) - 1);
   if (n <= 0)
@@ -402,27 +405,30 @@ console_parse (bot_t * bot, char *buf)
     {
       zmodule_list ();
     }
-else if(!strncasecmp_len(buf, "modiolist")) {
-module_iolist();
-}
-else if(!strncasecmp_len(buf, "gmodiolist")) {
-gmodule_iolist();
-}
-else if(!strncasecmp_len(buf, "zmodiolist")) {
-zmodule_iolist();
-}
-else if(!strncasecmp_len(buf, "modtimerlist")) 
-{
-module_timerlist();
-}
-else if(!strncasecmp_len(buf, "gmodtimerlist")) 
-{
-gmodule_timerlist();
-}
-else if(!strncasecmp_len(buf, "zmodtimerlist"))
-{
-zmodule_timerlist();
-}
+  else if (!strncasecmp_len (buf, "modiolist"))
+    {
+      module_iolist ();
+    }
+  else if (!strncasecmp_len (buf, "gmodiolist"))
+    {
+      gmodule_iolist ();
+    }
+  else if (!strncasecmp_len (buf, "zmodiolist"))
+    {
+      zmodule_iolist ();
+    }
+  else if (!strncasecmp_len (buf, "modtimerlist"))
+    {
+      module_timerlist ();
+    }
+  else if (!strncasecmp_len (buf, "gmodtimerlist"))
+    {
+      gmodule_timerlist ();
+    }
+  else if (!strncasecmp_len (buf, "zmodtimerlist"))
+    {
+      zmodule_timerlist ();
+    }
 
 
   else if (!strncasecmp_len (buf, "testmem"))
@@ -532,7 +538,7 @@ zmodule_timerlist();
 /* this is probably a tag */
       bot_t *bot_tmp;
 
-      char *tag = NULL, *rest=NULL;
+      char *tag = NULL, *rest = NULL;
       tok = strchr (buf, ' ');
       if (!tok)
 	goto cleanup;
@@ -544,16 +550,19 @@ zmodule_timerlist();
 	{
 	  console_tag_parse (bot_tmp, &buf[fn_strlen (tag) + 1]);
 	}
-else {
+      else
+	{
 /* not found, but if second argument is "on", we need to create & load it */
-rest = tok+1; 
-if(sNULL(rest)) {
-if(!strncasecmp_len(rest, "on")) {
-debug(NULL, "console_parse: Attempting to load %s\n", tag);
-bot_init_and_turn_on(tag);
-}
-}
-}
+	  rest = tok + 1;
+	  if (sNULL (rest))
+	    {
+	      if (!strncasecmp_len (rest, "on"))
+		{
+		  debug (NULL, "console_parse: Attempting to load %s\n", tag);
+		  bot_init_and_turn_on (tag);
+		}
+	    }
+	}
 
       free (tag);
 

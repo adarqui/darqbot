@@ -30,7 +30,7 @@ xdb_open (char *filename)
 
   debug (NULL, "xdb_open: Entered: %s\n", filename);
 
-  if (!sNULL(filename))
+  if (!sNULL (filename))
     return NULL;
 
   ret = db_create (&db, NULL, 0);
@@ -61,11 +61,11 @@ xdb_write (DB * db, char *key, char *value)
   DBT db_key, db_value;
   int ret = 0;
 
-  if (!db || !sNULL(key) || !sNULL(value))
+  if (!db || !sNULL (key) || !sNULL (value))
     return -1;
 
-  bz2(db_key);
-  bz2(db_value);
+  bz2 (db_key);
+  bz2 (db_value);
 
   db_key.data = key;
   db_key.size = strlen (key);
@@ -88,12 +88,12 @@ xdb_get (DB * db, char *key)
 
   int ret;
 
-if(!db || !sNULL(key))
-return NULL;
+  if (!db || !sNULL (key))
+    return NULL;
 
 
-  bz2(db_key);
-  bz2(db_value);
+  bz2 (db_key);
+  bz2 (db_value);
 
   db_key.data = key;
   db_key.size = strlen (key);
@@ -103,8 +103,7 @@ return NULL;
     return NULL;
 
   pair =
-    xdb_pair_create (db_key.data, db_key.size, db_value.data,
-			db_value.size);
+    xdb_pair_create (db_key.data, db_key.size, db_value.data, db_value.size);
 
   return pair;
 }
@@ -141,8 +140,8 @@ xdb_get_recnum (DB * db, int recnum)
   if (ret != 0)
     return NULL;
 
-  bz2(db_key);
-  bz2(db_value);
+  bz2 (db_key);
+  bz2 (db_value);
 
   db_key.data = &recnum;
   db_key.size = sizeof (recnum);
@@ -152,8 +151,7 @@ xdb_get_recnum (DB * db, int recnum)
     goto cleanup;
 
   pair =
-    xdb_pair_create (db_key.data, db_key.size, db_value.data,
-			db_value.size);
+    xdb_pair_create (db_key.data, db_key.size, db_value.data, db_value.size);
 
 cleanup:
   if (dbc)
@@ -195,7 +193,7 @@ xdb_pair_create (char *s1, int s1_len, char *s2, int s2_len)
 
   xdb_pair_t *pair = NULL;
 
-  if (!sNULL(s1) || s1_len <= 0 || !sNULL(s2) || s2_len <= 0)
+  if (!sNULL (s1) || s1_len <= 0 || !sNULL (s2) || s2_len <= 0)
     return NULL;
 
   pair = (xdb_pair_t *) calloc (1, sizeof (xdb_pair_t));
@@ -254,7 +252,7 @@ xdb_pair_find_by_key (dlist_t * dl, char *key)
 
   xdb_pair_t *pair = NULL;
 
-  if (!dl || !sNULL(key))
+  if (!dl || !sNULL (key))
     return NULL;
 
   dlist_fornext (dl, dptr)

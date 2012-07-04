@@ -29,14 +29,14 @@ void
 __color_init__ (void)
 {
 
-strlcpy_buf(mod_color_info.name, "mod_color");
-strlcpy_buf(mod_color_info.trigger, "^color");
+  strlcpy_buf (mod_color_info.name, "mod_color");
+  strlcpy_buf (mod_color_info.trigger, "^color");
 
-module_add_subtrigs(&mod_color_info, "^fgcolor");
-module_add_subtrigs(&mod_color_info, "^bgcolor");
+  module_add_subtrigs (&mod_color_info, "^fgcolor");
+  module_add_subtrigs (&mod_color_info, "^bgcolor");
 
-module_add_subtrigs(&mod_color_info, "^fgc");
-module_add_subtrigs(&mod_color_info, "^bgc");
+  module_add_subtrigs (&mod_color_info, "^fgc");
+  module_add_subtrigs (&mod_color_info, "^bgc");
 
 
   mod_color_info.init = color_init;
@@ -89,20 +89,20 @@ color_run (dlist_t * dlist_node, bot_t * bot)
 {
 
   char *dl_module_arg_after_options, *dl_options_ptr;
-  int opt,sub;
-  char *color_str, *COLOR_STR=NULL;
+  int opt, sub;
+  char *color_str, *COLOR_STR = NULL;
 
   debug (bot, "color_run: Entered\n");
 
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
 
   debug (bot,
-	     "color_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "color_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
 
@@ -118,15 +118,18 @@ color_run (dlist_t * dlist_node, bot_t * bot)
   opt = sub = 0;
   color_str = NULL;
 
-  if (str_match (bot->trig_called, STR_MATCH_STRCASECMP, 0, "^fgcolor", "^fgc", NULL))
+  if (str_match
+      (bot->trig_called, STR_MATCH_STRCASECMP, 0, "^fgcolor", "^fgc", NULL))
     {
       sub = MOD_COLOR_FGCOLOR;
-COLOR_STR = IRC_COLOR_COLOR_STR;
+      COLOR_STR = IRC_COLOR_COLOR_STR;
     }
-  else if (str_match (bot->trig_called, STR_MATCH_STRCASECMP, 0, "^bgcolor", "^bgc", NULL))
+  else
+    if (str_match
+	(bot->trig_called, STR_MATCH_STRCASECMP, 0, "^bgcolor", "^bgc", NULL))
     {
-sub = MOD_COLOR_BGCOLOR;
-COLOR_STR = IRC_COLOR_REVERSE2_STR;
+      sub = MOD_COLOR_BGCOLOR;
+      COLOR_STR = IRC_COLOR_REVERSE2_STR;
     }
 
   MOD_OPTIONS_TOP_HALF;
@@ -134,78 +137,120 @@ COLOR_STR = IRC_COLOR_REVERSE2_STR;
   if (!strncasecmp_len (dl_options_ptr, "white"))
     {
       color_str =
-	str_unite ("%s%s%s", COLOR_STR, sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "", IRC_COLOR_WHITE_STR);
+	str_unite ("%s%s%s", COLOR_STR,
+		   sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		   IRC_COLOR_WHITE_STR);
     }
   else if (!strncasecmp_len (dl_options_ptr, "black"))
     {
       color_str =
-	str_unite ("%s%s%s", COLOR_STR, sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "", IRC_COLOR_BLACK_STR);
+	str_unite ("%s%s%s", COLOR_STR,
+		   sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		   IRC_COLOR_BLACK_STR);
     }
   else if (!strncasecmp_len (dl_options_ptr, "blue"))
     {
-      color_str = str_unite ("%s%s%s", COLOR_STR, sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "" , IRC_COLOR_BLUE_STR);
+      color_str =
+	str_unite ("%s%s%s", COLOR_STR,
+		   sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		   IRC_COLOR_BLUE_STR);
     }
   else if (!strncasecmp_len (dl_options_ptr, "green"))
     {
       color_str =
-	str_unite ("%s%s%s", COLOR_STR, sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "", IRC_COLOR_GREEN_STR);
+	str_unite ("%s%s%s", COLOR_STR,
+		   sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		   IRC_COLOR_GREEN_STR);
     }
   else if (!strncasecmp_len (dl_options_ptr, "red"))
     {
-      color_str = str_unite ("%s%s%s", COLOR_STR, sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "", IRC_COLOR_RED_STR);
+      color_str =
+	str_unite ("%s%s%s", COLOR_STR,
+		   sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		   IRC_COLOR_RED_STR);
     }
   else if (!strncasecmp_len (dl_options_ptr, "brown"))
     {
       color_str =
-	str_unite ("%s%s%s", COLOR_STR, sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "", IRC_COLOR_BROWN_STR);
+	str_unite ("%s%s%s", COLOR_STR,
+		   sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		   IRC_COLOR_BROWN_STR);
     }
   else if (!strncasecmp_len (dl_options_ptr, "purple"))
     {
       color_str =
-	str_unite ("%s%s%s", COLOR_STR, sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "", IRC_COLOR_PURPLE_STR);
+	str_unite ("%s%s%s", COLOR_STR,
+		   sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		   IRC_COLOR_PURPLE_STR);
     }
   else if (!strncasecmp_len (dl_options_ptr, "orange"))
     {
       color_str =
-	str_unite ("%s%s%s", COLOR_STR, sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "", IRC_COLOR_ORANGE_STR);
+	str_unite ("%s%s%s", COLOR_STR,
+		   sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		   IRC_COLOR_ORANGE_STR);
     }
   else if (!strncasecmp_len (dl_options_ptr, "yellow"))
     {
       color_str =
-	str_unite ("%s%s%s", COLOR_STR, sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "", IRC_COLOR_YELLOW_STR);
+	str_unite ("%s%s%s", COLOR_STR,
+		   sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		   IRC_COLOR_YELLOW_STR);
     }
   else if (!strncasecmp_len (dl_options_ptr, "lime"))
     {
-      color_str = str_unite ("%s%s%s", COLOR_STR, sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "", IRC_COLOR_LIME_STR);
+      color_str =
+	str_unite ("%s%s%s", COLOR_STR,
+		   sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		   IRC_COLOR_LIME_STR);
     }
   else if (!strncasecmp_len (dl_options_ptr, "teal"))
     {
-      color_str = str_unite ("%s%s%s", COLOR_STR, sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "", IRC_COLOR_TEAL_STR);
+      color_str =
+	str_unite ("%s%s%s", COLOR_STR,
+		   sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		   IRC_COLOR_TEAL_STR);
     }
   else if (!strncasecmp_len (dl_options_ptr, "cyan"))
     {
-      color_str = str_unite ("%s%s%s", COLOR_STR, sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "", IRC_COLOR_CYAN_STR);
+      color_str =
+	str_unite ("%s%s%s", COLOR_STR,
+		   sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		   IRC_COLOR_CYAN_STR);
     }
   else if (!strncasecmp_len (dl_options_ptr, "royal"))
     {
       color_str =
-	str_unite ("%s%s%s", COLOR_STR, sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "", IRC_COLOR_ROYAL_STR);
+	str_unite ("%s%s%s", COLOR_STR,
+		   sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		   IRC_COLOR_ROYAL_STR);
     }
   else if (!strncasecmp_len (dl_options_ptr, "pink"))
     {
-      color_str = str_unite ("%s%s%s", COLOR_STR, sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "", IRC_COLOR_PINK_STR);
+      color_str =
+	str_unite ("%s%s%s", COLOR_STR,
+		   sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		   IRC_COLOR_PINK_STR);
     }
   else if (!strncasecmp_len (dl_options_ptr, "grey"))
     {
-      color_str = str_unite ("%s%s%s", COLOR_STR , sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "", IRC_COLOR_GREY_STR);
+      color_str =
+	str_unite ("%s%s%s", COLOR_STR,
+		   sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		   IRC_COLOR_GREY_STR);
     }
   else if (!strncasecmp_len (dl_options_ptr, "silver"))
     {
       color_str =
-	str_unite ("%s%s%s", COLOR_STR, sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "", IRC_COLOR_SILVER_STR);
+	str_unite ("%s%s%s", COLOR_STR,
+		   sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		   IRC_COLOR_SILVER_STR);
     }
   else
-    color_str = str_unite( "%s%s%s", COLOR_STR, sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "", IRC_COLOR_PINK_STR);
+    color_str =
+      str_unite ("%s%s%s", COLOR_STR,
+		 sub == MOD_COLOR_BGCOLOR ? IRC_COLOR_COLOR_STR : "",
+		 IRC_COLOR_PINK_STR);
 
   MOD_OPTIONS_BOTTOM_HALF;
 
@@ -214,7 +259,7 @@ COLOR_STR = IRC_COLOR_REVERSE2_STR;
 
 
   MOD_PARSE_TOP_HALF;
-  l_new_str = color_change_string (l_str_ptr, color_str,sub);
+  l_new_str = color_change_string (l_str_ptr, color_str, sub);
   MOD_PARSE_BOTTOM_HALF;
 
   return bot;
@@ -236,8 +281,7 @@ color_change_string (char *string, char *color_str, int sub)
   if (sep_ptr)
     string = sep_ptr;
 
-  str = str_unite( "%s%s%s", color_str, string,
-		  IRC_COLOR_RESET_STR);
+  str = str_unite ("%s%s%s", color_str, string, IRC_COLOR_RESET_STR);
 
   return str;
 }

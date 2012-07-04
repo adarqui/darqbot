@@ -29,8 +29,8 @@ void
 __festival_init__ (void)
 {
 
-strlcpy_buf(mod_festival_info.name, "mod_festival");
-strlcpy_buf(mod_festival_info.trigger, "^festival");
+  strlcpy_buf (mod_festival_info.name, "mod_festival");
+  strlcpy_buf (mod_festival_info.trigger, "^festival");
 
   mod_festival_info.init = festival_init;
   mod_festival_info.fini = festival_fini;
@@ -88,11 +88,11 @@ festival_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "festival_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "festival_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -126,7 +126,7 @@ festival_change_string (char *string, int opt)
 
   memset (buf, 0, sizeof (buf));
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;
@@ -145,8 +145,8 @@ festival_send (bot_t * bot, char *msg, int len)
   str_shrink_quotes (bot->txt_data_out);
 
   strprepend_bot_safe (bot->txt_data_out,
-		   "(voice_cmu_us_clb_arctic_clunits)(SayText \"",
-		   sizeof (bot->txt_data_out));
+		       "(voice_cmu_us_clb_arctic_clunits)(SayText \"",
+		       sizeof (bot->txt_data_out));
   strlcat_bot (bot->txt_data_out, "\")(quit)\n");
 
   fd = bot_network_raw_connect ("localhost", 1314, 0, 0);
@@ -157,7 +157,7 @@ festival_send (bot_t * bot, char *msg, int len)
 
 
   debug (bot, "festival_send: Just sent (res=%i)[%s]\n", n,
-	     bot->txt_data_out);
+	 bot->txt_data_out);
 
 /* no need, it will exit with (quit) 
 bot_network_raw_disconnect(fd);

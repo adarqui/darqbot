@@ -29,8 +29,8 @@ void
 __rainbow_init__ (void)
 {
 
-strlcpy_buf(mod_rainbow_info.name, "mod_rainbow");
-strlcpy_buf(mod_rainbow_info.trigger, "^rainbow");
+  strlcpy_buf (mod_rainbow_info.name, "mod_rainbow");
+  strlcpy_buf (mod_rainbow_info.trigger, "^rainbow");
 
   mod_rainbow_info.init = rainbow_init;
   mod_rainbow_info.fini = rainbow_fini;
@@ -87,13 +87,13 @@ rainbow_run (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot, "rainbow_run: Entered\n");
 
   debug (bot,
-	     "rainbow_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "rainbow_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -131,8 +131,7 @@ rainbow_run (dlist_t * dlist_node, bot_t * bot)
     }
 
   dl =
-    tokenize (bot, dl_options_ptr,
-		  TOKENIZE_NORMAL | TOKENIZE_NOQUOTES, ",");
+    tokenize (bot, dl_options_ptr, TOKENIZE_NORMAL | TOKENIZE_NOQUOTES, ",");
   if (!dl)
     {
       rainbow_defaults (rc, &rc_index, IRC_COLOR_COLOR_STR);

@@ -29,8 +29,8 @@ void
 __internals_init__ (void)
 {
 
-strlcpy_buf(mod_internals_info.name, "mod_internals");
-strlcpy_buf(mod_internals_info.trigger, "^internals");
+  strlcpy_buf (mod_internals_info.name, "mod_internals");
+  strlcpy_buf (mod_internals_info.trigger, "^internals");
 
   mod_internals_info.init = internals_init;
   mod_internals_info.fini = internals_fini;
@@ -72,7 +72,8 @@ internals_help (dlist_t * dlist_node, bot_t * bot)
   if (!bot)
     return NULL;
 
-  bot->dl_module_help = "^internals || ^internals(all:in_sz:out_sz:in_strlen:out_strlen:in_data:trig_prefix)";
+  bot->dl_module_help =
+    "^internals || ^internals(all:in_sz:out_sz:in_strlen:out_strlen:in_data:trig_prefix)";
 
   return NULL;
 }
@@ -88,11 +89,11 @@ internals_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "internals_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "internals_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -101,39 +102,48 @@ internals_run (dlist_t * dlist_node, bot_t * bot)
   opt = 0;
 
   MOD_OPTIONS_TOP_HALF;
-if(strcasestr(dl_options_ptr, "all")) {
-opt = ~opt;
-}
-else {
-if(strcasestr(dl_options_ptr, "in_sz")) {
-opt |= MOD_INTERNALS_OPT_IN_SZ;
-}
+  if (strcasestr (dl_options_ptr, "all"))
+    {
+      opt = ~opt;
+    }
+  else
+    {
+      if (strcasestr (dl_options_ptr, "in_sz"))
+	{
+	  opt |= MOD_INTERNALS_OPT_IN_SZ;
+	}
 
-if(strcasestr(dl_options_ptr, "out_sz")) {
-opt |= MOD_INTERNALS_OPT_OUT_SZ;
-}
+      if (strcasestr (dl_options_ptr, "out_sz"))
+	{
+	  opt |= MOD_INTERNALS_OPT_OUT_SZ;
+	}
 
-if(strcasestr(dl_options_ptr, "in_strlen")) {
-opt |= MOD_INTERNALS_OPT_IN_STRLEN;
-}
+      if (strcasestr (dl_options_ptr, "in_strlen"))
+	{
+	  opt |= MOD_INTERNALS_OPT_IN_STRLEN;
+	}
 
-if(strcasestr(dl_options_ptr, "out_strlen")) {
-opt |= MOD_INTERNALS_OPT_OUT_STRLEN;
-}
+      if (strcasestr (dl_options_ptr, "out_strlen"))
+	{
+	  opt |= MOD_INTERNALS_OPT_OUT_STRLEN;
+	}
 
-if(strcasestr(dl_options_ptr, "in_data")) {
-opt |= MOD_INTERNALS_OPT_IN_DATA;
-}
+      if (strcasestr (dl_options_ptr, "in_data"))
+	{
+	  opt |= MOD_INTERNALS_OPT_IN_DATA;
+	}
 
-if(strcasestr(dl_options_ptr, "trig_prefix")) {
-opt |= MOD_INTERNALS_OPT_TRIG_PREFIX;
-}
+      if (strcasestr (dl_options_ptr, "trig_prefix"))
+	{
+	  opt |= MOD_INTERNALS_OPT_TRIG_PREFIX;
+	}
 
-if(strcasestr(dl_options_ptr, "getpid")) {
-opt |= MOD_INTERNALS_OPT_GETPID;
-}
+      if (strcasestr (dl_options_ptr, "getpid"))
+	{
+	  opt |= MOD_INTERNALS_OPT_GETPID;
+	}
 
-}
+    }
 
   MOD_OPTIONS_BOTTOM_HALF;
 
@@ -149,7 +159,7 @@ opt |= MOD_INTERNALS_OPT_GETPID;
 char *
 internals_change_string (bot_t * bot, char *string, int opt)
 {
-dlist_t * dl_text = NULL;
+  dlist_t *dl_text = NULL;
   char *str = NULL;
 
   char *sep_ptr;
@@ -162,40 +172,48 @@ dlist_t * dl_text = NULL;
   if (sep_ptr)
     string = sep_ptr;
 
-if(!strlen(string)) string = NULL;
+  if (!strlen (string))
+    string = NULL;
 
 
-if(opt & MOD_INTERNALS_OPT_IN_SZ) {
-internals_op_in_sz(&dl_text, bot);
-}
+  if (opt & MOD_INTERNALS_OPT_IN_SZ)
+    {
+      internals_op_in_sz (&dl_text, bot);
+    }
 
-if(opt & MOD_INTERNALS_OPT_OUT_SZ) {
-internals_op_out_sz(&dl_text, bot);
-}
+  if (opt & MOD_INTERNALS_OPT_OUT_SZ)
+    {
+      internals_op_out_sz (&dl_text, bot);
+    }
 
-if(opt & MOD_INTERNALS_OPT_IN_STRLEN) {
-internals_op_in_strlen(&dl_text, bot);
-}
+  if (opt & MOD_INTERNALS_OPT_IN_STRLEN)
+    {
+      internals_op_in_strlen (&dl_text, bot);
+    }
 
-if(opt & MOD_INTERNALS_OPT_OUT_STRLEN) {
-internals_op_out_strlen(&dl_text, bot);
-}
+  if (opt & MOD_INTERNALS_OPT_OUT_STRLEN)
+    {
+      internals_op_out_strlen (&dl_text, bot);
+    }
 
-if(opt & MOD_INTERNALS_OPT_IN_DATA) {
-internals_op_in_data(&dl_text, bot);
-}
+  if (opt & MOD_INTERNALS_OPT_IN_DATA)
+    {
+      internals_op_in_data (&dl_text, bot);
+    }
 
-if(opt & MOD_INTERNALS_OPT_TRIG_PREFIX) {
-internals_op_trig_prefix(&dl_text, bot, string);
-}
+  if (opt & MOD_INTERNALS_OPT_TRIG_PREFIX)
+    {
+      internals_op_trig_prefix (&dl_text, bot, string);
+    }
 
-if(opt & MOD_INTERNALS_OPT_GETPID) {
-internals_op_getpid(&dl_text,&bot);
-}
+  if (opt & MOD_INTERNALS_OPT_GETPID)
+    {
+      internals_op_getpid (&dl_text, &bot);
+    }
 
-str = dlist_to_str(dl_text);
+  str = dlist_to_str (dl_text);
 
-dlist_fini(&dl_text, free);
+  dlist_fini (&dl_text, free);
 
   return str;
 }
@@ -203,159 +221,190 @@ dlist_fini(&dl_text, free);
 
 
 
-int internals_op_in_sz(dlist_t **dl_text, bot_t * bot) {
-char * str=NULL;
-char *c;
+int
+internals_op_in_sz (dlist_t ** dl_text, bot_t * bot)
+{
+  char *str = NULL;
+  char *c;
 
-if(!dl_text || !bot) return -1;
+  if (!dl_text || !bot)
+    return -1;
 
-if(dlist_size(*dl_text) > 0)
-c = " ";
-else
-c = "";
+  if (dlist_size (*dl_text) > 0)
+    c = " ";
+  else
+    c = "";
 
-str = str_unite("%sin_sz=%i", c,bot->txt_data_in_sz);
-if(!str) return -1;
+  str = str_unite ("%sin_sz=%i", c, bot->txt_data_in_sz);
+  if (!str)
+    return -1;
 
-dlist_Dinsert_after(dl_text, str);
+  dlist_Dinsert_after (dl_text, str);
 
-return 0;
+  return 0;
 }
 
 
 
 
-int internals_op_out_sz(dlist_t **dl_text, bot_t * bot) {
-char * str=NULL;
-char * c;
+int
+internals_op_out_sz (dlist_t ** dl_text, bot_t * bot)
+{
+  char *str = NULL;
+  char *c;
 
-if(!dl_text || !bot) return -1;
+  if (!dl_text || !bot)
+    return -1;
 
-if(dlist_size(*dl_text) > 0)
-c = " ";
-else
-c = "";
+  if (dlist_size (*dl_text) > 0)
+    c = " ";
+  else
+    c = "";
 
-str = str_unite("%sout_sz=%i", c,bot->txt_data_out_sz);
-if(!str) return -1;
+  str = str_unite ("%sout_sz=%i", c, bot->txt_data_out_sz);
+  if (!str)
+    return -1;
 
-dlist_Dinsert_after(dl_text, str);
+  dlist_Dinsert_after (dl_text, str);
 
-return 0;
+  return 0;
 }
 
 
 
 
-int internals_op_in_data(dlist_t **dl_text, bot_t * bot) {
-char * str=NULL;
-char * c;
+int
+internals_op_in_data (dlist_t ** dl_text, bot_t * bot)
+{
+  char *str = NULL;
+  char *c;
 
-if(!dl_text || !bot) return -1;
+  if (!dl_text || !bot)
+    return -1;
 
-if(dlist_size(*dl_text) > 0)
-c = " " ;
-else
-c = "";
+  if (dlist_size (*dl_text) > 0)
+    c = " ";
+  else
+    c = "";
 
-str = str_unite("%sin_data=%s", c,bot->txt_data_in);
-if(!str) return -1;
+  str = str_unite ("%sin_data=%s", c, bot->txt_data_in);
+  if (!str)
+    return -1;
 
-dlist_Dinsert_after(dl_text, str);
+  dlist_Dinsert_after (dl_text, str);
 
-return 0;
+  return 0;
 }
 
 
 
 
-int internals_op_in_strlen(dlist_t **dl_text, bot_t * bot) {
-char * str=NULL;
-char * c;
+int
+internals_op_in_strlen (dlist_t ** dl_text, bot_t * bot)
+{
+  char *str = NULL;
+  char *c;
 
-if(!dl_text || !bot) return -1;
+  if (!dl_text || !bot)
+    return -1;
 
-if(dlist_size(*dl_text) > 0)
-c = " ";
-else
-c = "";
+  if (dlist_size (*dl_text) > 0)
+    c = " ";
+  else
+    c = "";
 
-str = str_unite("%sin_strlen=%i", c,strlen(bot->txt_data_in));
-if(!str) return -1;
+  str = str_unite ("%sin_strlen=%i", c, strlen (bot->txt_data_in));
+  if (!str)
+    return -1;
 
-dlist_Dinsert_after(dl_text, str);
+  dlist_Dinsert_after (dl_text, str);
 
-return 0;
+  return 0;
 }
 
 
 
 
 
-int internals_op_out_strlen(dlist_t **dl_text, bot_t * bot) {
-char * str=NULL;
-char *c;
+int
+internals_op_out_strlen (dlist_t ** dl_text, bot_t * bot)
+{
+  char *str = NULL;
+  char *c;
 
-if(!dl_text || !bot) return -1;
+  if (!dl_text || !bot)
+    return -1;
 
-if(dlist_size(*dl_text) > 0)
-c =  " ";
-else
-c = "";
+  if (dlist_size (*dl_text) > 0)
+    c = " ";
+  else
+    c = "";
 
-str = str_unite("%sout_strlen=%i", c,strlen(bot->txt_data_out));
-if(!str) return -1;
+  str = str_unite ("%sout_strlen=%i", c, strlen (bot->txt_data_out));
+  if (!str)
+    return -1;
 
-dlist_Dinsert_after(dl_text, str);
+  dlist_Dinsert_after (dl_text, str);
 
-return 0;
+  return 0;
 }
 
 
 
-int internals_op_getpid(dlist_t **dl_text, bot_t * bot) {
-char * str=NULL;
-char *c;
+int
+internals_op_getpid (dlist_t ** dl_text, bot_t * bot)
+{
+  char *str = NULL;
+  char *c;
 
-if(!dl_text || !bot) return -1;
+  if (!dl_text || !bot)
+    return -1;
 
-if(dlist_size(*dl_text) > 0)
-c =  " ";
-else
-c = "";
+  if (dlist_size (*dl_text) > 0)
+    c = " ";
+  else
+    c = "";
 
-str = str_unite("%sgetpid=%i", c,getpid());
-if(!str) return -1;
+  str = str_unite ("%sgetpid=%i", c, getpid ());
+  if (!str)
+    return -1;
 
-dlist_Dinsert_after(dl_text, str);
+  dlist_Dinsert_after (dl_text, str);
 
-return 0;
+  return 0;
 }
 
 
 
-int internals_op_trig_prefix(dlist_t **dl_text, bot_t * bot, char * trig_prefix) {
-char * str=NULL;
-char *c;
+int
+internals_op_trig_prefix (dlist_t ** dl_text, bot_t * bot, char *trig_prefix)
+{
+  char *str = NULL;
+  char *c;
 
-if(!dl_text || !bot) return -1;
+  if (!dl_text || !bot)
+    return -1;
 
-if(dlist_size(*dl_text) > 0)
-c =  " ";
-else
-c = "";
+  if (dlist_size (*dl_text) > 0)
+    c = " ";
+  else
+    c = "";
 
-if(!sNULL(trig_prefix)) {
-str = str_unite("%strig_prefix=%s", c,bot->trig_prefix);
-if(!str) return -1;
+  if (!sNULL (trig_prefix))
+    {
+      str = str_unite ("%strig_prefix=%s", c, bot->trig_prefix);
+      if (!str)
+	return -1;
 
-dlist_Dinsert_after(dl_text, str);
-}
-else {
-if(sNULL(bot->trig_prefix)) bz(bot->trig_prefix);
-strlcpy_buf(bot->trig_prefix,trig_prefix);
-}
+      dlist_Dinsert_after (dl_text, str);
+    }
+  else
+    {
+      if (sNULL (bot->trig_prefix))
+	bz (bot->trig_prefix);
+      strlcpy_buf (bot->trig_prefix, trig_prefix);
+    }
 
 
-return 0;
+  return 0;
 }

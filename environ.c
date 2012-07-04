@@ -151,8 +151,7 @@ environ_destroy_args (bot_t * bot)
 
     if (isdigit (ptr[0]) && ptr[1] == '=')
       {
-	debug (bot, "environ_destroy_args: about to remove %s\n",
-		   ptr);
+	debug (bot, "environ_destroy_args: about to remove %s\n", ptr);
 	dlist_remove (&bot->dl_environ, dptr);
 	free (ptr);
       }
@@ -267,14 +266,14 @@ environ_sub_envs (bot_t * bot, char *str)
     argv[num] = ptr + 2;
   }
 
-  bz(buf);
+  bz (buf);
   tok = str;
   while (1)
     {
       tok_2 = strstr (tok, "$$");
       if (!tok_2)
 	{
-	  strlcat_buf(buf, tok);
+	  strlcat_buf (buf, tok);
 	  break;
 	}
 
@@ -302,14 +301,14 @@ environ_sub_envs (bot_t * bot, char *str)
 	    continue;
 
 	  *tok_2 = '\0';
-	  strlcat_buf(buf, tok);
-	  strlcat_buf(buf, argv[num]);
+	  strlcat_buf (buf, tok);
+	  strlcat_buf (buf, argv[num]);
 	}
 
       tok = tok_2 + 3;
     }
 
-  if (sNULL(buf) != NULL)
+  if (sNULL (buf) != NULL)
     new_str = strdup (buf);
   return new_str;
 }

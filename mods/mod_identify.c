@@ -29,8 +29,8 @@ void
 __identify_init__ (void)
 {
 
-strlcpy_buf(mod_identify_info.name, "mod_identify");
-strlcpy_buf(mod_identify_info.trigger, "^identify");
+  strlcpy_buf (mod_identify_info.name, "mod_identify");
+  strlcpy_buf (mod_identify_info.trigger, "^identify");
 
   mod_identify_info.init = identify_init;
   mod_identify_info.fini = identify_fini;
@@ -97,11 +97,11 @@ identify_run (dlist_t * dlist_node, bot_t * bot)
       return NULL;
     }
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "identify_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "identify_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
 
@@ -167,16 +167,14 @@ identify_change_string (bot_t * bot, char *string, int opt)
   if (sep_ptr)
     string = sep_ptr;
 
-bz(buf);
+  bz (buf);
 
   if (opt == IDENTIFY_OPT_RUN)
     {
       return identify_op_run (bot);
     }
 
-  dl =
-    tokenize (bot, string,
-		  TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, " ");
+  dl = tokenize (bot, string, TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, " ");
   if (!dl)
     return NULL;
 
@@ -186,8 +184,7 @@ bz(buf);
 
   if (!str_isclean (arg_array[0], iskeychars))
     {
-      debug (bot,
-		 "identify_run: Key contains illegal chars, returning\n");
+      debug (bot, "identify_run: Key contains illegal chars, returning\n");
       goto cleanup;
     }
 
@@ -289,7 +286,7 @@ identify_op_get (bot_t * bot, char *key)
 
   b =
     mongodb_bson_get (bot, "test.darqbotidentify", "key",
-			MONGODB_ARG_STRING, (char *) key);
+		      MONGODB_ARG_STRING, (char *) key);
 
   if (!b)
     return NULL;
@@ -347,8 +344,8 @@ identify_op_run (bot_t * bot)
     pcre_change_string_fn = identify_change_string_fn_null;
 
   memset (&tmp_bot, 0, sizeof (tmp_bot));
-  snprintf_buf (tmp_bot.txt_data_out,  "%s!%s@%s",
-	    bot->txt_nick, bot->txt_ident, bot->txt_host);
+  snprintf_buf (tmp_bot.txt_data_out, "%s!%s@%s",
+		bot->txt_nick, bot->txt_ident, bot->txt_host);
 
   dlist_fornext (dl, dptr)
   {
@@ -360,7 +357,7 @@ identify_op_run (bot_t * bot)
 
     dl_tok =
       tokenize (bot, kv->value,
-		    TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, ",");
+		TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, ",");
     if (!dl_tok)
       continue;
 
@@ -409,11 +406,10 @@ identify_op_add (bot_t * bot, char *key, char *value)
   debug (bot, "identify_op_add: Entered\n");
 
   str =
-    str_unite_static ("%s!%s@%s!%s", bot->txt_nick, bot->txt_ident, bot->txt_host,
-	       bot->txt_to);
+    str_unite_static ("%s!%s@%s!%s", bot->txt_nick, bot->txt_ident,
+		      bot->txt_host, bot->txt_to);
 
-  b =
-    mongodb_bson_build (bot, "%s=key %s=value %s=comment", key, value, str);
+  b = mongodb_bson_build (bot, "%s=key %s=value %s=comment", key, value, str);
 
   if (!b)
     return NULL;

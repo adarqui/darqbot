@@ -29,8 +29,8 @@ void
 __tinypaw_init__ (void)
 {
 
-strlcpy_buf(mod_tinypaw_info.name, "mod_tinypaw");
-strlcpy_buf(mod_tinypaw_info.trigger, "^tinypaw");
+  strlcpy_buf (mod_tinypaw_info.name, "mod_tinypaw");
+  strlcpy_buf (mod_tinypaw_info.trigger, "^tinypaw");
 
   mod_tinypaw_info.init = tinypaw_init;
   mod_tinypaw_info.fini = tinypaw_fini;
@@ -87,11 +87,11 @@ tinypaw_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "tinypaw_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "tinypaw_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -161,7 +161,7 @@ tinypaw_change_string (bot_t * bot, char *string, int opt)
   str_keywords = strtok (NULL, "");
   if (!str_keywords)
     {
-      if (!sNULL(bot->txt_data_out))
+      if (!sNULL (bot->txt_data_out))
 	return NULL;
       strlcat_bot (buf, bot->txt_data_out);
     }

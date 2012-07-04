@@ -32,8 +32,8 @@ void
 __gexec_init__ (void)
 {
 
-strlcpy_buf(gmod_gexec_info.name, "gmod_gexec");
-strlcpy_buf(gmod_gexec_info.trigger, "^gexec");
+  strlcpy_buf (gmod_gexec_info.name, "gmod_gexec");
+  strlcpy_buf (gmod_gexec_info.trigger, "^gexec");
 
   gmod_gexec_info.init = gexec_init;
   gmod_gexec_info.fini = gexec_fini;
@@ -131,7 +131,7 @@ gexec_run (dlist_t * dlist_node, bot_t * bot)
   dlist_t *dptr_gmod = NULL;
   bot_gmod_elm_t *gmod = NULL;
   gexec_t *gexec = NULL;
-int n;
+  int n;
 
   char *dl_module_arg_after_options, *dl_options_ptr;
 
@@ -140,11 +140,11 @@ int n;
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "gexec_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "gexec_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -176,12 +176,12 @@ int n;
 
   MOD_OPTIONS_BOTTOM_HALF;
 
-n = gexec_exec(gexec);
-if(n < 0)
-{
-gmodule_destroy_down(dlist_node, bot);
-return NULL;
-}
+  n = gexec_exec (gexec);
+  if (n < 0)
+    {
+      gmodule_destroy_down (dlist_node, bot);
+      return NULL;
+    }
 
   gmodule_set_can_pass_up (gmod);
   gmodule_set_can_pass_down (gmod);
@@ -221,9 +221,7 @@ gexec_process_options (gexec_t * gexec, char *string)
   memset (buf, 0, sizeof (buf));
 
 
-  dl =
-    tokenize (NULL, string,
-		  TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
+  dl = tokenize (NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
   if (!dl)
     return NULL;
 
@@ -272,10 +270,10 @@ gexec_process_options_parse_bin (gexec_t * gexec, char *string)
   if (!gexec || !string)
     return;
 
-if(gexec->bin) 
-free(gexec->bin);
+  if (gexec->bin)
+    free (gexec->bin);
 
-gexec->bin = strdup(string);
+  gexec->bin = strdup (string);
 
   return;
 }
@@ -332,7 +330,7 @@ gexec_output (dlist_t * dlist_node, bot_t * bot)
     }
 
   debug (NULL, "gexec_output: in=[%s], out=[%s]\n", bot->txt_data_in,
-	     bot->txt_data_out);
+	 bot->txt_data_out);
 
   gmodule_down (dlist_node, bot);
 
@@ -345,7 +343,7 @@ gexec_input (dlist_t * dlist_node, bot_t * bot)
 {
   bot_gmod_elm_t *gmod = NULL;
   gexec_t *gexec = NULL;
-int n ;
+  int n;
 
   debug (bot, "gexec_input: Entered\n");
 
@@ -363,17 +361,18 @@ int n ;
 /*
   gmodule_up (dlist_node, bot);
 */
-if(!gexec->initialized)
-gmodule_up(dlist_node, bot);
-else {
-n = write(gexec->pipe[1], bot->txt_data_in, bot->txt_data_in_sz);
-n = write(gexec->pipe[0], bot->txt_data_in, bot->txt_data_in_sz);
-n = write(gexec->pipe_b[1], bot->txt_data_in, bot->txt_data_in_sz);
-debug(NULL,"gexec_input: n=%i\n", n);
-}
+  if (!gexec->initialized)
+    gmodule_up (dlist_node, bot);
+  else
+    {
+      n = write (gexec->pipe[1], bot->txt_data_in, bot->txt_data_in_sz);
+      n = write (gexec->pipe[0], bot->txt_data_in, bot->txt_data_in_sz);
+      n = write (gexec->pipe_b[1], bot->txt_data_in, bot->txt_data_in_sz);
+      debug (NULL, "gexec_input: n=%i\n", n);
+    }
 
   debug (NULL, "gexec_input: in=[%s], out=[%s]\n", bot->txt_data_in,
-	     bot->txt_data_out);
+	 bot->txt_data_out);
 
   return bot;
 }
@@ -453,7 +452,7 @@ gexec_destroy_down (dlist_t * dlist_node, bot_t * bot)
       if (gmod)
 	{
 	  gexec = gmod->data;
-gexec_unset_evhooks(gexec);
+	  gexec_unset_evhooks (gexec);
 	  gexec_free (gexec);
 	}
     }
@@ -557,12 +556,12 @@ gexec_free (void *arg)
 
   gexec->gmod->data = NULL;
 
-if(gexec->bin)
-free(gexec->bin);
+  if (gexec->bin)
+    free (gexec->bin);
 
-gexec_unset_evhooks(gexec);
+  gexec_unset_evhooks (gexec);
 
-safe_close(gexec->pipe[1]);
+  safe_close (gexec->pipe[1]);
 
   free (gexec);
 
@@ -574,59 +573,69 @@ safe_close(gexec->pipe[1]);
 
 
 
-int gexec_exec(gexec_t *gexec) {
-char **argv=NULL;
-int argc=0;
-pid_t pid;
+int
+gexec_exec (gexec_t * gexec)
+{
+  char **argv = NULL;
+  int argc = 0;
+  pid_t pid;
 
-if(!gexec) return -1;
+  if (!gexec)
+    return -1;
 
-debug(NULL, "gexec_exec: Entered: gexec->bin=%s\n", gexec->bin);
+  debug (NULL, "gexec_exec: Entered: gexec->bin=%s\n", gexec->bin);
 
-if(!gexec->bin) return -1;
+  if (!gexec->bin)
+    return -1;
 
-argv = tokenize_str2argv(gexec->bin, &argc, 0);
-if(!argv)return -1;
+  argv = tokenize_str2argv (gexec->bin, &argc, 0);
+  if (!argv)
+    return -1;
 
-if(pipe(gexec->pipe)<0) goto cleanup;
-if(pipe(gexec->pipe_b)<0) goto cleanup;
+  if (pipe (gexec->pipe) < 0)
+    goto cleanup;
+  if (pipe (gexec->pipe_b) < 0)
+    goto cleanup;
 
-pid = fork();
-if(pid< 0) goto cleanup;
+  pid = fork ();
+  if (pid < 0)
+    goto cleanup;
 
-if(!pid) {
-gexec->pid = getpid();
+  if (!pid)
+    {
+      gexec->pid = getpid ();
 
-close(0);
-close(1);
-close(2);
+      close (0);
+      close (1);
+      close (2);
 
-close(gexec->pipe_b[0]);
-dup2(gexec->pipe_b[1], 1);
-dup2(gexec->pipe_b[1], 2);
-close(gexec->pipe[1]);
-close(0);
-dup2(gexec->pipe[0],0);
+      close (gexec->pipe_b[0]);
+      dup2 (gexec->pipe_b[1], 1);
+      dup2 (gexec->pipe_b[1], 2);
+      close (gexec->pipe[1]);
+      close (0);
+      dup2 (gexec->pipe[0], 0);
 
-execve(argv[0],argv,environ);
-puts("ERROR");
-exit(0);
-return 0;
-}
-else {
-close(gexec->pipe[0]);
-close(gexec->pipe_b[1]);
-gexec_set_evhooks(gexec);
-}
+      execve (argv[0], argv, environ);
+      puts ("ERROR");
+      exit (0);
+      return 0;
+    }
+  else
+    {
+      close (gexec->pipe[0]);
+      close (gexec->pipe_b[1]);
+      gexec_set_evhooks (gexec);
+    }
 
-gexec->pid = pid;
-gexec->initialized = 1;
+  gexec->pid = pid;
+  gexec->initialized = 1;
 
 cleanup:
-if(argv)
-tokenize_destroy_array(NULL, argv);
+  if (argv)
+    tokenize_destroy_array (NULL, argv);
 
-return 0;
+  return 0;
 }
 
 
@@ -640,10 +649,10 @@ gexec_set_evhooks (gexec_t * gexec)
   if (!gexec)
     return -1;
 
-gexec->link.fd = gexec->pipe_b[0];
+  gexec->link.fd = gexec->pipe_b[0];
 
   safe_event_set (&gexec->link.ev, gexec->link.fd, EV_READ | EV_PERSIST,
-             gexec_evhook_link, gexec);
+		  gexec_evhook_link, gexec);
   safe_event_add (&gexec->link.ev, NULL);
 
 
@@ -652,7 +661,9 @@ gexec->link.fd = gexec->pipe_b[0];
 
 
 
-int gexec_unset_evhooks(gexec_t *gexec) {
+int
+gexec_unset_evhooks (gexec_t * gexec)
+{
   if (gexec->link.fd > 0)
     {
       debug (NULL, "gexec_unset_evhooks: closing: %i\n", gexec->link.fd);
@@ -660,9 +671,9 @@ int gexec_unset_evhooks(gexec_t *gexec) {
       safe_close (gexec->link.fd);
     }
 
-fd_link_cleanup(&gexec->link);
+  fd_link_cleanup (&gexec->link);
 
-return 0;
+  return 0;
 }
 
 
@@ -689,21 +700,18 @@ gexec_evhook_link (int fd, short event, void *arg)
 
   bot_line_clear (gexec->bot);
 
-n = read(gexec->pipe_b[0], buf, sizeof(buf)-1);
+  n = read (gexec->pipe_b[0], buf, sizeof (buf) - 1);
 
-if(n<=0) {
-        gexec_destroy_down_gexec (gexec);
-return;
+  if (n <= 0)
+    {
+      gexec_destroy_down_gexec (gexec);
+      return;
+    }
+
+  memcpy (gexec->bot->txt_data_out, buf, n);
+  gexec->bot->txt_data_out_sz = n;
+
+  gmodule_down (gexec->dptr_gmod, gexec->bot);
+
+  return;
 }
-
-memcpy(gexec->bot->txt_data_out,buf,n);
-gexec->bot->txt_data_out_sz = n;
-
-gmodule_down(gexec->dptr_gmod, gexec->bot);
-
-return;
-}
-
-
-
-

@@ -29,8 +29,8 @@ void
 __print_init__ (void)
 {
 
-strlcpy_buf(mod_print_info.name, "mod_print");
-strlcpy_buf(mod_print_info.trigger, "^print");
+  strlcpy_buf (mod_print_info.name, "mod_print");
+  strlcpy_buf (mod_print_info.trigger, "^print");
 
   module_add_subtrigs (&mod_print_info, "^p");
 
@@ -90,11 +90,11 @@ print_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "print_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "print_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -270,11 +270,11 @@ print_op_binary_forward_char (char *string)
       for (j = 0; j < 8; j++)
 	{
 	  res = bit_extract_bit_char (string[i], j);
-	  strlcatfmt_buf (buf,  "%i", res);
+	  strlcatfmt_buf (buf, "%i", res);
 	}
     }
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;
@@ -360,7 +360,7 @@ print_op_binary_reverse_char (char *string)
     }
 
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;

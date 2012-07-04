@@ -29,8 +29,8 @@ void
 __save_init__ (void)
 {
 
-strlcpy_buf(mod_save_info.name, "mod_save");
-strlcpy_buf(mod_save_info.trigger, "^save");
+  strlcpy_buf (mod_save_info.name, "mod_save");
+  strlcpy_buf (mod_save_info.trigger, "^save");
 
   mod_save_info.init = save_init;
   mod_save_info.fini = save_fini;
@@ -89,11 +89,11 @@ save_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "save_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "save_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -147,10 +147,10 @@ save_change_string (bot_t * bot, char *opt_str)
 
   memset (buf, 0, sizeof (buf));
 
-  strlcatfmt_bot(buf, "%s saved.", bot->tag); 
+  strlcatfmt_bot (buf, "%s saved.", bot->tag);
   save_bot (bot);
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;
@@ -179,7 +179,8 @@ save_bot (bot_t * bot)
   if (!fp)
     {
       str =
-	str_unite_static ("%s/tmp/%s.conf.%i", bot->confdir, bot->tag, getpid ());
+	str_unite_static ("%s/tmp/%s.conf.%i", bot->confdir, bot->tag,
+			  getpid ());
       fp = fopen (str, "w");
       if (!fp)
 	fp = stdout;

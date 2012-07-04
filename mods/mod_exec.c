@@ -29,8 +29,8 @@ void
 __exec_init__ (void)
 {
 
-strlcpy_buf(mod_exec_info.name, "mod_exec");
-strlcpy_buf(mod_exec_info.trigger, "^exec");
+  strlcpy_buf (mod_exec_info.name, "mod_exec");
+  strlcpy_buf (mod_exec_info.trigger, "^exec");
 
   mod_exec_info.init = exec_init;
   mod_exec_info.fini = exec_fini;
@@ -88,11 +88,11 @@ exec_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "exec_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "exec_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -168,7 +168,7 @@ exec_op_normal (dlist_t * dlist_node, bot_t * bot, char *string)
   pmodule_cur_run2 (bot);
 
 /* added 04/12/2012 */
-  if (sNULL(bot->txt_data_out)!=NULL)
+  if (sNULL (bot->txt_data_out) != NULL)
     str = strdup (bot->txt_data_out);
 
   return str;
@@ -196,7 +196,7 @@ exec_op_fork (dlist_t * dlist_node, bot_t * bot, char *string)
       pmodule_cur_run2 (bot);
 
 /* added 04/12/2012 */
-      if (sNULL(bot->txt_data_out)!=NULL)
+      if (sNULL (bot->txt_data_out) != NULL)
 	str = strdup (bot->txt_data_out);
     }
 

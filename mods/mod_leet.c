@@ -29,8 +29,8 @@ void
 __leet_init__ (void)
 {
 
-strlcpy_buf(mod_leet_info.name, "mod_leet");
-strlcpy_buf(mod_leet_info.trigger, "^leet");
+  strlcpy_buf (mod_leet_info.name, "mod_leet");
+  strlcpy_buf (mod_leet_info.trigger, "^leet");
 
   mod_leet_info.init = leet_init;
   mod_leet_info.fini = leet_fini;
@@ -88,12 +88,12 @@ leet_run (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
 
   debug (bot,
-	     "leet_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "leet_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
 
@@ -244,7 +244,9 @@ leet_change_string (char *string, int opt_1, int opt_2)
 		      if (needcaps)
 			z_str = x_caps (leet_chars[j].n[0]);
 
-		      strlcat_bot (buf, z_str == NULL ? leet_chars[j].n[0] : z_str);
+		      strlcat_bot (buf,
+				   z_str ==
+				   NULL ? leet_chars[j].n[0] : z_str);
 		      if (z_str)
 			free (z_str);
 		    }
@@ -262,7 +264,9 @@ leet_change_string (char *string, int opt_1, int opt_2)
 		      if (needcaps)
 			z_str = x_caps (leet_chars[j].n[0]);
 
-		      strlcat_bot (buf, z_str == NULL ? leet_chars[j].n[0] : z_str);
+		      strlcat_bot (buf,
+				   z_str ==
+				   NULL ? leet_chars[j].n[0] : z_str);
 
 		      if (z_str)
 			free (z_str);
@@ -280,7 +284,7 @@ leet_change_string (char *string, int opt_1, int opt_2)
 
 		  randval = rand () % t;
 
-		  strlcat_bot (buf, leet_chars[j].n[randval]); 
+		  strlcat_bot (buf, leet_chars[j].n[randval]);
 
 		  match = 1;
 
@@ -329,7 +333,7 @@ leet_change_string (char *string, int opt_1, int opt_2)
     }
 
 
-  if (sNULL(buf))
+  if (sNULL (buf))
     str = strdup (buf);
 
 

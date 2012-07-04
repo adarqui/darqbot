@@ -81,10 +81,10 @@ dlist_init (void *data, int type)
   else
     d->type = DLIST_TYPE_NORMAL;
 */
-if(type != DLIST_TYPE_NORMAL) 
-d->type = type;
-else
-d->type = DLIST_TYPE_NORMAL;
+  if (type != DLIST_TYPE_NORMAL)
+    d->type = type;
+  else
+    d->type = DLIST_TYPE_NORMAL;
 
 
   return d;
@@ -94,133 +94,171 @@ d->type = DLIST_TYPE_NORMAL;
 
 
 
-dlist_t * dlist_tree_init(void * data, int (*dl_avl_compare)(const void *, const void *, void *), void (*dl_avl_free)(void *,void *)) {
-dlist_t * dptr=NULL;
+dlist_t *
+dlist_tree_init (void *data,
+		 int (*dl_avl_compare) (const void *, const void *, void *),
+		 void (*dl_avl_free) (void *, void *))
+{
+  dlist_t *dptr = NULL;
 
-debug(NULL, "dlist_tree_init: Entered\n");
+  debug (NULL, "dlist_tree_init: Entered\n");
 
-if(!dl_avl_compare || !dl_avl_free) return NULL;
+  if (!dl_avl_compare || !dl_avl_free)
+    return NULL;
 
-dptr = dlist_init(data, DLIST_TYPE_AVL);
-if(!dptr) return NULL;
+  dptr = dlist_init (data, DLIST_TYPE_AVL);
+  if (!dptr)
+    return NULL;
 
-dptr->avl_compare = dl_avl_compare;
-dptr->avl_free = dl_avl_free;
+  dptr->avl_compare = dl_avl_compare;
+  dptr->avl_free = dl_avl_free;
 
-dptr->avl_tree = avl_create(dptr->avl_compare, NULL, NULL);
+  dptr->avl_tree = avl_create (dptr->avl_compare, NULL, NULL);
 
-return dptr;
+  return dptr;
 }
 
 
-void * dlist_tree_insert(dlist_t ** dl, void *data) {
+void *
+dlist_tree_insert (dlist_t ** dl, void *data)
+{
 /* DO NOT CALL THIS DIRECTLY UNLESS 'DATA' IS A DLIST_T STRUCTURE */
-void * v=NULL;
+  void *v = NULL;
 
 //debug(NULL, "dlist_tree_insert: Entered\n");
 
-if(!dl || !data) return NULL;
+  if (!dl || !data)
+    return NULL;
 
-if(!(*dl)) return NULL;
+  if (!(*dl))
+    return NULL;
 
-if((*dl)->type  != DLIST_TYPE_AVL) return NULL;
+  if ((*dl)->type != DLIST_TYPE_AVL)
+    return NULL;
 
-if(!(*dl)->avl_compare)
-return NULL;
+  if (!(*dl)->avl_compare)
+    return NULL;
 
-v = avl_insert((*dl)->avl_tree, data);
+  v = avl_insert ((*dl)->avl_tree, data);
 
 //return v;
-return data;
+  return data;
 }
 
 
-void * dlist_tree_delete(dlist_t ** dl, void *data) {
+void *
+dlist_tree_delete (dlist_t ** dl, void *data)
+{
 /* DO NOT CALL THIS DIRECTLY UNLESS 'DATA' IS A DLIST_T STRUCTURE */
-void * v=NULL;
+  void *v = NULL;
 
 //debug(NULL, "dlist_tree_delete: Entered\n");
 
-if(!dl || !data) return NULL;
+  if (!dl || !data)
+    return NULL;
 
-if(!(*dl)) return NULL;
+  if (!(*dl))
+    return NULL;
 
-if((*dl)->type  != DLIST_TYPE_AVL) return NULL;
+  if ((*dl)->type != DLIST_TYPE_AVL)
+    return NULL;
 
-if(!(*dl)->avl_compare) return NULL;
+  if (!(*dl)->avl_compare)
+    return NULL;
 
-v = avl_delete((*dl)->avl_tree, data);
+  v = avl_delete ((*dl)->avl_tree, data);
 
-return v;
+  return v;
 }
 
 
-void * dlist_tree_delete_and_free(dlist_t ** dl, void * data) {
+void *
+dlist_tree_delete_and_free (dlist_t ** dl, void *data)
+{
 /* DO NOT CALL THIS DIRECTLY UNLESS 'DATA' IS A DLIST_T STRUCTURE */
-void * v = NULL;
+  void *v = NULL;
 
 //debug(NULL, "dlist_tree_delete_and_free: Entered\n");
 
-if(!dl || !data) return NULL;
+  if (!dl || !data)
+    return NULL;
 
-if(!(*dl)) return NULL;
+  if (!(*dl))
+    return NULL;
 
-if((*dl)->type  != DLIST_TYPE_AVL) return NULL;
+  if ((*dl)->type != DLIST_TYPE_AVL)
+    return NULL;
 
-v = dlist_tree_delete(dl, data);
+  v = dlist_tree_delete (dl, data);
 
-if(v) {
-if(!(*dl)->destroy) {
-(*dl)->avl_free(v, (*dl)->avl_param);
+  if (v)
+    {
+      if (!(*dl)->destroy)
+	{
+	  (*dl)->avl_free (v, (*dl)->avl_param);
+	}
+    }
+
+  return NULL;
 }
-}
-
-return NULL;
-}
 
 
 
 
-void * dlist_tree_insert2(dlist_t ** dl, int (*avl_compare)(const void *, const void *, void *), void *data) {
+void *
+dlist_tree_insert2 (dlist_t ** dl,
+		    int (*avl_compare) (const void *, const void *, void *),
+		    void *data)
+{
 /* DO NOT CALL THIS DIRECTLY UNLESS 'DATA' IS A DLIST_T STRUCTURE */
-dlist_t * dl_ptr=NULL;
-void * v=NULL;
+  dlist_t *dl_ptr = NULL;
+  void *v = NULL;
 
 //debug(NULL, "dlist_tree_insert2: Entered\n");
 
-if(!dl || !data) return NULL;
+  if (!dl || !data)
+    return NULL;
 
-dl_ptr = *dl;
-if(!(*dl)) {
-dl_ptr = dlist_tree_init(NULL, avl_compare, NULL);
-if(!dl_ptr) return NULL;
-(*dl) = dl_ptr;
+  dl_ptr = *dl;
+  if (!(*dl))
+    {
+      dl_ptr = dlist_tree_init (NULL, avl_compare, NULL);
+      if (!dl_ptr)
+	return NULL;
+      (*dl) = dl_ptr;
+    }
+  else
+    {
+      if (dl_ptr->type != DLIST_TYPE_AVL)
+	return NULL;
+    }
+
+  v = avl_insert (dl_ptr->avl_tree, data);
+
+  return v;
 }
-else {
-if(dl_ptr->type  != DLIST_TYPE_AVL) return NULL;
-}
-
-v = avl_insert(dl_ptr->avl_tree, data);
-
-return v;
-}
 
 
 
-void dlist_tree_fini(dlist_t **dl, void (*fn)(void *,void*)) {
+void
+dlist_tree_fini (dlist_t ** dl, void (*fn) (void *, void *))
+{
 
-debug(NULL, "dlist_tree_fini: Entered\n");
+  debug (NULL, "dlist_tree_fini: Entered\n");
 
-if(!dl) return;
-
-
-if(!(*dl)->avl_tree) return;
+  if (!dl)
+    return;
 
 
-if((*dl)->type  != DLIST_TYPE_AVL) return;
- 
+  if (!(*dl)->avl_tree)
+    return;
 
-avl_destroy((*dl)->avl_tree, fn != NULL ? fn : (*dl)->avl_free);
+
+  if ((*dl)->type != DLIST_TYPE_AVL)
+    return;
+
+
+  avl_destroy ((*dl)->avl_tree, fn != NULL ? fn : (*dl)->avl_free);
 
 /*
 if(dlist_size(*dl) <=0) {
@@ -229,293 +267,361 @@ free(*dl);
 }
 */
 
-free(*dl);
-*dl=NULL;
+  free (*dl);
+  *dl = NULL;
 
 
-return;
+  return;
 }
 
 
 
-void dlist_tree_print (dlist_t ** dl_tree, dlist_t ** dl_text, void *(*fn_printer)(void *)) {
+void
+dlist_tree_print (dlist_t ** dl_tree, dlist_t ** dl_text,
+		  void *(*fn_printer) (void *))
+{
 
-if(!dl_tree || !dl_text) return;
+  if (!dl_tree || !dl_text)
+    return;
 
-if(!(*dl_tree) ) return;
-if(!(*dl_tree)->avl_tree) return;
+  if (!(*dl_tree))
+    return;
+  if (!(*dl_tree)->avl_tree)
+    return;
 
-  dlist_tree_print_structure (dl_tree, dl_text, fn_printer, (*dl_tree)->avl_tree->avl_root, 0);
+  dlist_tree_print_structure (dl_tree, dl_text, fn_printer,
+			      (*dl_tree)->avl_tree->avl_root, 0);
 
-return;
+  return;
 }
 
 
 void
-dlist_tree_print_structure (dlist_t ** dl_tree, dlist_t ** dl_text, void *(*fn_printer)(void *), const struct avl_node *node, int level)
+dlist_tree_print_structure (dlist_t ** dl_tree, dlist_t ** dl_text,
+			    void *(*fn_printer) (void *),
+			    const struct avl_node *node, int level)
 {
-dlist_t  * dptr;
+  dlist_t *dptr;
 
   if (!dl_tree || node == NULL || !dl_text)
     return;
 
-dptr = (dlist_t *) node->avl_data;
+  dptr = (dlist_t *) node->avl_data;
 
-dl_str_unite(dl_text, "%p-%s", dptr, fn_printer(dptr));
+  dl_str_unite (dl_text, "%p-%s", dptr, fn_printer (dptr));
 
   if (node->avl_link[0] != NULL || node->avl_link[1] != NULL)
     {
-dl_str_unite(dl_text, "(");
+      dl_str_unite (dl_text, "(");
 
-      dlist_tree_print_structure (dl_tree, dl_text, fn_printer, node->avl_link[0], level + 1);
+      dlist_tree_print_structure (dl_tree, dl_text, fn_printer,
+				  node->avl_link[0], level + 1);
       if (node->avl_link[1] != NULL)
-        {
-dl_str_unite(dl_text, ",");
-          dlist_tree_print_structure (dl_tree, dl_text, fn_printer, node->avl_link[1], level + 1);
-        }
-dl_str_unite(dl_text, ")");
+	{
+	  dl_str_unite (dl_text, ",");
+	  dlist_tree_print_structure (dl_tree, dl_text, fn_printer,
+				      node->avl_link[1], level + 1);
+	}
+      dl_str_unite (dl_text, ")");
     }
 
-return;
+  return;
 }
 
 
 
 
-dlist_t * dlist_tree_mirror(dlist_t * dl) {
-dlist_t * dl_mir = NULL;
-if(!dl) return NULL;
-if(!dl->avl_tree) return NULL;
-dlist_tree_mirror_node(&dl_mir, dl->avl_tree->avl_root,0);
+dlist_t *
+dlist_tree_mirror (dlist_t * dl)
+{
+  dlist_t *dl_mir = NULL;
+  if (!dl)
+    return NULL;
+  if (!dl->avl_tree)
+    return NULL;
+  dlist_tree_mirror_node (&dl_mir, dl->avl_tree->avl_root, 0);
 
-if(dl_mir) {
-dl_mir->subtype = DLIST_SUBTYPE_MIRROR;
+  if (dl_mir)
+    {
+      dl_mir->subtype = DLIST_SUBTYPE_MIRROR;
+    }
+
+  return dl_mir;
 }
 
-return dl_mir;
-}
 
 
+void
+dlist_tree_mirror_node (dlist_t ** dl, const struct avl_node *node, int level)
+{
+  dlist_t *dptr = NULL;
+  if (!dl || !node)
+    return;
 
-void dlist_tree_mirror_node(dlist_t ** dl, const struct avl_node * node, int level) {
-dlist_t * dptr=NULL;
-if(!dl || !node) return;
-
-dptr = (dlist_t *) node->avl_data;
-if(!dptr) return;
+  dptr = (dlist_t *) node->avl_data;
+  if (!dptr)
+    return;
 
 /*
 dptr = (dlist_t *) dlist_data(dptr);
 if(!dptr) return;
 */
 
-dlist_Dinsert_after(dl, dptr->data);
+  dlist_Dinsert_after (dl, dptr->data);
 
   if (node->avl_link[0] != NULL || node->avl_link[1] != NULL)
     {
       dlist_tree_mirror_node (dl, node->avl_link[0], level + 1);
       if (node->avl_link[1] != NULL)
-        {
-          dlist_tree_mirror_node(dl, node->avl_link[1], level + 1);
-        }
+	{
+	  dlist_tree_mirror_node (dl, node->avl_link[1], level + 1);
+	}
     }
 
-return;
+  return;
 }
 
 
 
-void * dlist_traverse(dlist_t ** dl, void *(*fn)(void *, void *), void * data) {
-void * v = NULL;
-
-
-if(!dl || !fn) return NULL;
-if(!(*dl)) return NULL;
-
-switch((*dl)->type) {
-case DLIST_TYPE_NORMAL:
-case DLIST_TYPE_CIRCULAR:
+void *
+dlist_traverse (dlist_t ** dl, void *(*fn) (void *, void *), void *data)
 {
-v = dlist_traverse_list(dl, fn, data);
-break;
+  void *v = NULL;
+
+
+  if (!dl || !fn)
+    return NULL;
+  if (!(*dl))
+    return NULL;
+
+  switch ((*dl)->type)
+    {
+    case DLIST_TYPE_NORMAL:
+    case DLIST_TYPE_CIRCULAR:
+      {
+	v = dlist_traverse_list (dl, fn, data);
+	break;
+      }
+    case DLIST_TYPE_TREE:
+      {
+	v = dlist_traverse_tree (dl, fn, data);
+	break;
+      }
+    case DLIST_TYPE_HASH:
+      {
+	break;
+      }
+    case DLIST_TYPE_ARRAY:
+      {
+	break;
+      }
+    default:
+      break;
+    }
+
+  return v;
 }
-case DLIST_TYPE_TREE:
+
+
+void *
+dlist_traverse_list (dlist_t ** dl, void *(*fn) (void *, void *), void *data)
 {
-v = dlist_traverse_tree(dl, fn, data);
-break;
+  dlist_t *dptr_a, *dptr_b;
+  void *v = NULL;
+
+
+  if (!dl || !fn)
+    return NULL;
+
+  if (!(*dl))
+    return NULL;
+
+  dlist_fornext_retarded ((*dl), dptr_a, dptr_b)
+  {
+    if (!dptr_a)
+      break;
+    v = fn (data, dptr_a);
+    if (v)
+      {
+	return v;
+      }
+  }
+
+  return v;
 }
-case DLIST_TYPE_HASH:
+
+
+void *
+dlist_traverse_tree (dlist_t ** dl, void *(*fn) (void *, void *), void *data)
 {
-break;
+  void *v = NULL;
+
+
+  if (!dl || !fn)
+    return NULL;
+  if (!(*dl))
+    return NULL;
+
+  if (!(*dl)->avl_tree)
+    return NULL;
+
+
+  v = dlist_traverse_tree_node (dl, (*dl)->avl_tree->avl_root, fn, data);
+
+
+  return v;
 }
-case DLIST_TYPE_ARRAY:
+
+
+
+void *
+dlist_traverse_tree_node (dlist_t ** dl, const struct avl_node *node,
+			  void *(*fn) (void *, void *), void *data)
 {
-break;
-}
-default:
-break;
-}
-
-return v;
-}
+  dlist_t *dptr = NULL;
+  void *v = NULL;
 
 
-void * dlist_traverse_list(dlist_t **dl, void *(*fn)(void *, void *), void *data) {
-dlist_t * dptr_a, *dptr_b;
-void * v = NULL;
+  if (!dl || !node || !fn)
+    return NULL;
+
+  if (!(*dl))
+    return NULL;
+
+  dptr = (dlist_t *) node->avl_data;
+  if (!dptr)
+    return NULL;
 
 
-if(!dl||!fn) return NULL;
-
-if(!(*dl)) return NULL;
-
-dlist_fornext_retarded((*dl), dptr_a, dptr_b) {
-if(!dptr_a) break;
-v = fn(data,dptr_a);
-if(v) { 
-return v;
-}
-}
-
-return v;
-}
-
-
-void * dlist_traverse_tree(dlist_t ** dl, void *(*fn)(void *, void *), void * data) {
-void * v = NULL;
-
-
-if(!dl || !fn) return NULL;
-if(!(*dl)) return NULL;
-
-if(!(*dl)->avl_tree) return NULL;
-
-
-v = dlist_traverse_tree_node(dl, (*dl)->avl_tree->avl_root, fn, data);
-
-
-return v;
-}
-
-
-
-void * dlist_traverse_tree_node(dlist_t ** dl, const struct avl_node * node, void *(*fn)(void *, void *), void * data) {
-dlist_t * dptr=NULL;
-void * v=NULL;
-
-
-if(!dl || !node || !fn ) return NULL;
-
-if(!(*dl)) return NULL;
-
-dptr = (dlist_t *) node->avl_data;
-if(!dptr) return NULL;
-
-
-v = fn(data, dptr);
-if(v) return v;
+  v = fn (data, dptr);
+  if (v)
+    return v;
 
 
   if (node->avl_link[0] != NULL || node->avl_link[1] != NULL)
     {
       v = dlist_traverse_tree_node (dl, node->avl_link[0], fn, data);
-if(v) return v;
+      if (v)
+	return v;
 
       if (node->avl_link[1] != NULL)
-        {
-v =           dlist_traverse_tree_node(dl, node->avl_link[1], fn, data);
-if(v) return v;
-        }
+	{
+	  v = dlist_traverse_tree_node (dl, node->avl_link[1], fn, data);
+	  if (v)
+	    return v;
+	}
     }
 
-return v;
+  return v;
 }
 
 
 
 
-dlist_t * dlist_tree_find_dptr(dlist_t **dl, void *node) {
+dlist_t *
+dlist_tree_find_dptr (dlist_t ** dl, void *node)
+{
 
-dlist_t  * dptr=NULL;
+  dlist_t *dptr = NULL;
 
-if(!dl || !node) return NULL;
-if(!(*dl)) return NULL;
-if(!(*dl)->avl_tree) return NULL;
+  if (!dl || !node)
+    return NULL;
+  if (!(*dl))
+    return NULL;
+  if (!(*dl)->avl_tree)
+    return NULL;
 
-dptr = avl_find((*dl)->avl_tree, node);
+  dptr = avl_find ((*dl)->avl_tree, node);
 
-return dptr;
+  return dptr;
 }
 
 
 
-int dlist_tree_size(dlist_t **dl) {
+int
+dlist_tree_size (dlist_t ** dl)
+{
 
-if(!dl) return 0;
+  if (!dl)
+    return 0;
 
-if(!(*dl)) return 0;
+  if (!(*dl))
+    return 0;
 
-if(!(*dl)->avl_tree) return 0;
+  if (!(*dl)->avl_tree)
+    return 0;
 
-return avl_count((*dl)->avl_tree);
+  return avl_count ((*dl)->avl_tree);
 }
 
 
 
-void * dlist_tree_find(dlist_t ** dl, void * node) {
-dlist_t * dptr=NULL;
-void * v=NULL;
+void *
+dlist_tree_find (dlist_t ** dl, void *node)
+{
+  dlist_t *dptr = NULL;
+  void *v = NULL;
 
 
-dptr = dlist_tree_find_dptr(dl, node);
+  dptr = dlist_tree_find_dptr (dl, node);
 
 
-if(dptr){
-v = (void *)dlist_data(dptr);
+  if (dptr)
+    {
+      v = (void *) dlist_data (dptr);
+    }
+
+  return v;
 }
 
-return v;
-}
 
 
+void
+dlist_tree_reorder (dlist_t ** dl, dlist_t ** dl_mirror)
+{
+  dlist_t *dptr = NULL;
 
-void dlist_tree_reorder(dlist_t ** dl, dlist_t **dl_mirror) {
-dlist_t * dptr=NULL;
+  if (!dl || !dl_mirror)
+    return;
+  if (!(*dl))
+    return;
 
-if(!dl || !dl_mirror) return;
-if(!(*dl)) return;
+  if (!(*dl)->type == DLIST_TYPE_AVL)
+    return;
 
-if(!(*dl)->type == DLIST_TYPE_AVL)
-return;
-
-if(!(*dl)->avl_tree) return;
+  if (!(*dl)->avl_tree)
+    return;
 
 
 //avl_destroy((*dl)->avl_tree, NULL);
-dlist_traverse(dl, dlist_tree_reorder_copy2mirror, dl_mirror);
+  dlist_traverse (dl, dlist_tree_reorder_copy2mirror, dl_mirror);
 
-(*dl)->avl_tree = avl_create((*dl)->avl_compare, NULL, NULL);
+  (*dl)->avl_tree = avl_create ((*dl)->avl_compare, NULL, NULL);
 
-dlist_fornext(*dl_mirror, dptr) {
-dlist_Dinsert_after(dl, dlist_data(dptr));
-}
+  dlist_fornext (*dl_mirror, dptr)
+  {
+    dlist_Dinsert_after (dl, dlist_data (dptr));
+  }
 
 //dlist_tree_traverse(dl, dlist_tree_reorder_copy2mirror, &dl_mirror);
 
-return;
+  return;
 }
 
 
 
 
-void * dlist_tree_reorder_copy2mirror(void * pa, void * pb) {
-dlist_t ** dl=(dlist_t  ** ) pa ;
-void * v=NULL;
-module_t * m=NULL;
+void *
+dlist_tree_reorder_copy2mirror (void *pa, void *pb)
+{
+  dlist_t **dl = (dlist_t **) pa;
+  void *v = NULL;
+  module_t *m = NULL;
 
-dlist_t * dptr_v=NULL;
+  dlist_t *dptr_v = NULL;
 
-if(!pa||!pb) return NULL;
+  if (!pa || !pb)
+    return NULL;
 
 /*
 v = (vid * ) pb;
@@ -523,16 +629,17 @@ if(!v) return NULL;
 
 dptr_v = (
 */
-dptr_v = (dlist_t *) pb;
-if(!dptr_v) return NULL;
+  dptr_v = (dlist_t *) pb;
+  if (!dptr_v)
+    return NULL;
 
-v = (void *) dlist_data(dptr_v);
+  v = (void *) dlist_data (dptr_v);
 
-m = (module_t *) v;
+  m = (module_t *) v;
 
-dlist_Dinsert_after(dl, m);
+  dlist_Dinsert_after (dl, m);
 
-return NULL;
+  return NULL;
 }
 
 
@@ -566,7 +673,7 @@ dlist_free (dlist_t ** removed_elm, void (*destroy) (void *))
   if (destroy && dptr->data)
     destroy (dptr->data);
 
-dptr->data=NULL;
+  dptr->data = NULL;
 
   *removed_elm = NULL;
 
@@ -586,19 +693,21 @@ dlist_remove_and_free (dlist_t ** head, dlist_t ** elm,
   if (!head || !elm || !destroy)
     return;
 
-if(!(*head))
-return;
+  if (!(*head))
+    return;
 
-if((*head)->type == DLIST_TYPE_AVL) {
-dlist_tree_delete(head, elm);
-return;
-}
+  if ((*head)->type == DLIST_TYPE_AVL)
+    {
+      dlist_tree_delete (head, elm);
+      return;
+    }
 
-if((*head)->type != DLIST_TYPE_NORMAL && (*head)->type != DLIST_TYPE_CIRCULAR)
-return;
+  if ((*head)->type != DLIST_TYPE_NORMAL
+      && (*head)->type != DLIST_TYPE_CIRCULAR)
+    return;
 
-if(!(*elm))
-return;
+  if (!(*elm))
+    return;
 
   dptr = *(elm);
   if (!dptr)
@@ -608,8 +717,8 @@ return;
   dlist_remove (head, dptr);
   dlist_free (elm, destroy);
 */
-dptr = dlist_remove(head, dptr);
-dlist_free(&dptr,destroy);
+  dptr = dlist_remove (head, dptr);
+  dlist_free (&dptr, destroy);
 //*elm=NULL;
 
   return;
@@ -622,7 +731,8 @@ dlist_insert_after (dlist_t ** head, dlist_t * elm, dlist_t * elm_new)
   dlist_t *e;
 
 
-if(!head) return NULL;
+  if (!head)
+    return NULL;
 
 
   if (!elm_new)
@@ -636,21 +746,24 @@ if(!head) return NULL;
 
       (*head)->sz++;
 
-(*head)->type = DLIST_TYPE_NORMAL;
+      (*head)->type = DLIST_TYPE_NORMAL;
 
 
       return elm_new;
     }
 
-if((*head)->type == DLIST_TYPE_AVL) {
-return dlist_tree_insert(head, elm_new);
-}
+  if ((*head)->type == DLIST_TYPE_AVL)
+    {
+      return dlist_tree_insert (head, elm_new);
+    }
 
-if((*head)->type != DLIST_TYPE_NORMAL && (*head)->type != DLIST_TYPE_CIRCULAR) return NULL;
+  if ((*head)->type != DLIST_TYPE_NORMAL
+      && (*head)->type != DLIST_TYPE_CIRCULAR)
+    return NULL;
 
 
-if(!elm_new->type)
-elm_new->type = (*head)->type;
+  if (!elm_new->type)
+    elm_new->type = (*head)->type;
 
   if (!elm)
     {
@@ -745,7 +858,8 @@ dlist_insert_before (dlist_t ** head, dlist_t * elm, dlist_t * elm_new)
 {
   dlist_t *e;
 
-if(!head) return NULL;
+  if (!head)
+    return NULL;
 
   if (!elm_new)
     return NULL;
@@ -757,19 +871,22 @@ if(!head) return NULL;
       dlist_nullht (elm_new);
       (*head)->sz++;
 
-(*head)->type = DLIST_TYPE_NORMAL;
+      (*head)->type = DLIST_TYPE_NORMAL;
 
       return elm_new;
     }
 
-if((*head)->type == DLIST_TYPE_AVL) {
-return dlist_tree_insert(head, elm_new);
-}
+  if ((*head)->type == DLIST_TYPE_AVL)
+    {
+      return dlist_tree_insert (head, elm_new);
+    }
 
-if((*head)->type != DLIST_TYPE_NORMAL && (*head)->type != DLIST_TYPE_CIRCULAR) return NULL;
+  if ((*head)->type != DLIST_TYPE_NORMAL
+      && (*head)->type != DLIST_TYPE_CIRCULAR)
+    return NULL;
 
-if(!elm_new->type)
-elm_new->type = (*head)->type;
+  if (!elm_new->type)
+    elm_new->type = (*head)->type;
 
   if (!elm)
     {
@@ -863,18 +980,18 @@ dlist_Dinsert_after (dlist_t ** head, void *data)
   if (!dptr)
     return NULL;
 
-if(!(*head))
-{
-dptr->type = DLIST_TYPE_NORMAL;
-}
-else 
-{
-dptr->type = (*head)->type;
-}
+  if (!(*head))
+    {
+      dptr->type = DLIST_TYPE_NORMAL;
+    }
+  else
+    {
+      dptr->type = (*head)->type;
+    }
 
-  dptr =  dlist_insert_after (head, NULL, dptr);
+  dptr = dlist_insert_after (head, NULL, dptr);
 
-return dptr;
+  return dptr;
 }
 
 dlist_t *
@@ -886,34 +1003,37 @@ dlist_Dinsert_before (dlist_t ** head, void *data)
   if (!dptr)
     return NULL;
 
-if(!(*head))
-{
-dptr->type = DLIST_TYPE_NORMAL;
-}
-else
-{
-dptr->type = (*head)->type;
-}
+  if (!(*head))
+    {
+      dptr->type = DLIST_TYPE_NORMAL;
+    }
+  else
+    {
+      dptr->type = (*head)->type;
+    }
 
   return dlist_insert_before (head, NULL, dptr);
 }
 
 
 void
-dlist_remove_and_free_wrapper (dlist_t ** head, dlist_t ** elm, void (*destroy) (void *))
+dlist_remove_and_free_wrapper (dlist_t ** head, dlist_t ** elm,
+			       void (*destroy) (void *))
 {
 
-dlist_remove_and_free(head, elm, destroy);
+  dlist_remove_and_free (head, elm, destroy);
 
-return;
+  return;
 }
 
-dlist_t * dlist_remove_wrapper(dlist_t ** head, dlist_t * elm) {
-dlist_t * dptr=NULL;
+dlist_t *
+dlist_remove_wrapper (dlist_t ** head, dlist_t * elm)
+{
+  dlist_t *dptr = NULL;
 
-dptr = dlist_remove(head, elm);
+  dptr = dlist_remove (head, elm);
 
-return dptr;
+  return dptr;
 }
 
 
@@ -928,11 +1048,14 @@ dlist_remove (dlist_t ** head, dlist_t * elm)
   if (!(*head))
     return NULL;
 
-if((*head)->type == DLIST_TYPE_AVL) {
-return dlist_tree_delete(head, elm);
-}
+  if ((*head)->type == DLIST_TYPE_AVL)
+    {
+      return dlist_tree_delete (head, elm);
+    }
 
-if((*head)->type != DLIST_TYPE_NORMAL && (*head)->type != DLIST_TYPE_CIRCULAR) return NULL;
+  if ((*head)->type != DLIST_TYPE_NORMAL
+      && (*head)->type != DLIST_TYPE_CIRCULAR)
+    return NULL;
 
   if (elm == *head)
     {
@@ -1082,14 +1205,14 @@ dlist_Denqueue (dlist_t ** head, void *data)
   if (!dptr)
     return NULL;
 
-if(!(*head))
-{
-dptr->type = DLIST_TYPE_NORMAL;
-}
-else
-{
-dptr->type = (*head)->type;
-}
+  if (!(*head))
+    {
+      dptr->type = DLIST_TYPE_NORMAL;
+    }
+  else
+    {
+      dptr->type = (*head)->type;
+    }
 
   return dlist_insert_before (head, NULL, dptr);
 }
@@ -1167,14 +1290,14 @@ dlist_Dpush (dlist_t ** head, void *data)
   if (!dptr)
     return NULL;
 
-if(!(*head))
-{
-dptr->type = DLIST_TYPE_NORMAL;
-}
-else
-{
-dptr->type = (*head)->type;
-}
+  if (!(*head))
+    {
+      dptr->type = DLIST_TYPE_NORMAL;
+    }
+  else
+    {
+      dptr->type = (*head)->type;
+    }
 
   return dlist_insert_before (head, NULL, dptr);
 }
@@ -1206,20 +1329,23 @@ dlist_fini (dlist_t ** head, void (*destroy) (void *))
   while (dptr != NULL);
 */
 
-if((*head)->type == DLIST_TYPE_AVL) {
-dlist_tree_fini(head, (*head)->avl_free);
-return 0;
-}
+  if ((*head)->type == DLIST_TYPE_AVL)
+    {
+      dlist_tree_fini (head, (*head)->avl_free);
+      return 0;
+    }
 
 
-if((*head)->type != DLIST_TYPE_NORMAL && (*head)->type != DLIST_TYPE_CIRCULAR) return -1;
+  if ((*head)->type != DLIST_TYPE_NORMAL
+      && (*head)->type != DLIST_TYPE_CIRCULAR)
+    return -1;
 
   dptr = dptr_2 = NULL;
   dlist_fornext_retarded (*head, dptr, dptr_2)
   {
     if (dptr == NULL)
       break;
-dlist_remove(head, dptr);
+    dlist_remove (head, dptr);
     dlist_free (&dptr, destroy);
   }
 
@@ -1241,19 +1367,19 @@ dlist_make_circular (dlist_t ** head_or_tail)
   if (!(*head_or_tail))
     return -1;
 
-if((*head_or_tail)->type != DLIST_TYPE_NORMAL && (*head_or_tail)->type != DLIST_TYPE_CIRCULAR) return -1;
+  if ((*head_or_tail)->type != DLIST_TYPE_NORMAL
+      && (*head_or_tail)->type != DLIST_TYPE_CIRCULAR)
+    return -1;
 
   if (dlist_iscirc (*head_or_tail))
     return -1;
 
   head =
-    (*head_or_tail)->
-    tail ? (*head_or_tail) : (*head_or_tail)->head ? (*head_or_tail)->
-    head : NULL;
+    (*head_or_tail)->tail ? (*head_or_tail) : (*head_or_tail)->
+    head ? (*head_or_tail)->head : NULL;
   tail =
-    (*head_or_tail)->
-    head ? (*head_or_tail) : (*head_or_tail)->tail ? (*head_or_tail)->
-    tail : NULL;
+    (*head_or_tail)->head ? (*head_or_tail) : (*head_or_tail)->
+    tail ? (*head_or_tail)->tail : NULL;
 
   if (head == NULL)
     return -1;
@@ -1288,7 +1414,9 @@ dlist_make_uncircular (dlist_t ** head_or_tail)
   if (!(*head_or_tail))
     return -1;
 
-if((*head_or_tail)->type != DLIST_TYPE_NORMAL && (*head_or_tail)->type != DLIST_TYPE_CIRCULAR) return -1;
+  if ((*head_or_tail)->type != DLIST_TYPE_NORMAL
+      && (*head_or_tail)->type != DLIST_TYPE_CIRCULAR)
+    return -1;
 
   if (!dlist_iscirc (*head_or_tail))
     return -1;
@@ -1376,7 +1504,7 @@ dlist_convert_dlist_to_array_new (dlist_t * dl)
   dlist_t *dptr;
   void **array;
   int i;
-char * str=NULL;
+  char *str = NULL;
 
   if (!dl)
     return NULL;
@@ -1392,8 +1520,8 @@ char * str=NULL;
   i = 0;
   dlist_fornext (dl, dptr)
   {
-str = (char *) dlist_data(dptr);
-    array[i] = strdup(str);
+    str = (char *) dlist_data (dptr);
+    array[i] = strdup (str);
     i++;
   }
 
@@ -1508,51 +1636,59 @@ dlist_node_rand (dlist_t * dl)
 
 
 
-char * array_to_str(void ** array, int count, char * (*fn)(void *)) {
-dlist_t * dl=NULL;
-char  * str=NULL;
-int i=0;
+char *
+array_to_str (void **array, int count, char *(*fn) (void *))
+{
+  dlist_t *dl = NULL;
+  char *str = NULL;
+  int i = 0;
 
-for(i=0;i<count;i++ ) {
-if(array[i]==NULL) break;
+  for (i = 0; i < count; i++)
+    {
+      if (array[i] == NULL)
+	break;
 
-dlist_Dinsert_after(&dl, fn(array[i]));
+      dlist_Dinsert_after (&dl, fn (array[i]));
+    }
+
+  str = dlist_to_str (dl);
+  dlist_fini (&dl, free);
+
+  return str;
 }
 
-str = dlist_to_str(dl);
-dlist_fini(&dl, free);
 
-return str;
-}
-
-
-char * arraystr_to_str(char **array, int count, char * append) {
+char *
+arraystr_to_str (char **array, int count, char *append)
+{
   char *str = NULL, *tmp_str = NULL, *tmp_str_2 = NULL;
-int i=0;
+  int i = 0;
 
   debug (NULL, "arraystr_to_str: Entered\n");
 
   if (!array)
     return NULL;
 
-for(i=0;i< count && array[i] != NULL; i++) {
-    tmp_str = (char *) array[i];
-if(!tmp_str) continue;
+  for (i = 0; i < count && array[i] != NULL; i++)
+    {
+      tmp_str = (char *) array[i];
+      if (!tmp_str)
+	continue;
 
-    if (str)
-      {
-        tmp_str_2 = str;
-        str = str_unite ("%s%s%s", str, append, tmp_str);
-        free (tmp_str_2);
-      }
-    else
-      {
-        str = strdup (tmp_str);
-      }
+      if (str)
+	{
+	  tmp_str_2 = str;
+	  str = str_unite ("%s%s%s", str, append, tmp_str);
+	  free (tmp_str_2);
+	}
+      else
+	{
+	  str = strdup (tmp_str);
+	}
 
-  }
+    }
 
-return str;
+  return str;
 }
 
 
@@ -1572,7 +1708,8 @@ dlist_to_str (dlist_t * dl)
   dlist_fornext (dl, dptr)
   {
     tmp_str = (char *) dlist_data (dptr);
-if(!tmp_str) continue;
+    if (!tmp_str)
+      continue;
 
     if (str)
       {

@@ -57,16 +57,17 @@ bot_t *avl_run (dlist_t *, bot_t *);
 char *avl_change_string (bot_t *, char *, int);
 void __avl_init__ (void) __attribute__ ((constructor));
 
-char * avl_op_insert(struct avl_table **, char *);
-char * avl_op_delete(struct avl_table **, char *);
-char * avl_op_clear(struct avl_table **, char *);
-char * avl_op_size(struct avl_table **, char *);
-char * avl_op_list(struct avl_table **, char *);
-char * avl_op_tree(struct avl_table **, char *);
+char *avl_op_insert (struct avl_table **, char *);
+char *avl_op_delete (struct avl_table **, char *);
+char *avl_op_clear (struct avl_table **, char *);
+char *avl_op_size (struct avl_table **, char *);
+char *avl_op_list (struct avl_table **, char *);
+char *avl_op_tree (struct avl_table **, char *);
 
-void avl_list_whole_tree (dlist_t **, const struct avl_table *) ;
-static void avl_list_tree_structure (dlist_t **, const struct avl_node *, int);
-int avl_compare(const void *, const void *, void *);
-void avl_freex(void *, void *);
+void avl_list_whole_tree (dlist_t **, const struct avl_table *);
+static void avl_list_tree_structure (dlist_t **, const struct avl_node *,
+				     int);
+int avl_compare (const void *, const void *, void *);
+void avl_freex (void *, void *);
 
 #endif

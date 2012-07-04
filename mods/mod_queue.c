@@ -29,8 +29,8 @@ void
 __queue_init__ (void)
 {
 
-strlcpy_buf(mod_queue_info.name, "mod_queue");
-strlcpy_buf(mod_queue_info.trigger, "^queue");
+  strlcpy_buf (mod_queue_info.name, "mod_queue");
+  strlcpy_buf (mod_queue_info.trigger, "^queue");
 
   module_add_subtrigs (&mod_queue_info, "^enqueue");
   module_add_subtrigs (&mod_queue_info, "^dequeue");
@@ -58,7 +58,7 @@ queue_init (dlist_t * dlist_node, bot_t * bot)
   debug (bot, "queue_init: Entered\n");
 
   swap_inmem_get_assign_and_remove ("dl_mod_queue", 0,
-					(void **) &dl_mod_queue_unique);
+				    (void **) &dl_mod_queue_unique);
 
   return NULL;
 }
@@ -82,7 +82,8 @@ queue_help (dlist_t * dlist_node, bot_t * bot)
   if (!bot)
     return NULL;
 
-  bot->dl_module_help = "^queue || ^queue(enqueue:dequeue:clear:size:list) ...";
+  bot->dl_module_help =
+    "^queue || ^queue(enqueue:dequeue:clear:size:list) ...";
 
   return NULL;
 }
@@ -98,11 +99,11 @@ queue_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "queue_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "queue_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -173,11 +174,10 @@ queue_change_string (bot_t * bot, char *string, int opt)
   if (sep_ptr)
     string = sep_ptr;
 
-bz(buf);
+  bz (buf);
 
   bu =
-    unique_create (bot, &dl_mod_queue_unique,
-		       UNIQUE_ID_TAG | UNIQUE_ID_CHAN);
+    unique_create (bot, &dl_mod_queue_unique, UNIQUE_ID_TAG | UNIQUE_ID_CHAN);
   if (!bu)
     return NULL;
 
@@ -212,7 +212,7 @@ bz(buf);
       if (dlist_size (*dl_mod_queue) == 0)
 	return NULL;
 
-      strlcat_bot (buf,"[back]\n");
+      strlcat_bot (buf, "[back]\n");
       dlist_fornext (*dl_mod_queue, dptr)
       {
 	data_ptr = (char *) dlist_data (dptr);
@@ -223,7 +223,7 @@ bz(buf);
       strlcat_bot (buf, "[front]\n");
     }
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;

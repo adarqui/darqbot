@@ -29,8 +29,8 @@ void
 __quiz_init__ (void)
 {
 
-strlcpy_buf(mod_quiz_info.name, "mod_quiz");
-strlcpy_buf(mod_quiz_info.trigger, "^quiz");
+  strlcpy_buf (mod_quiz_info.name, "mod_quiz");
+  strlcpy_buf (mod_quiz_info.trigger, "^quiz");
 
   module_add_subtrigs (&mod_quiz_info, "^answer");
   module_add_subtrigs (&mod_quiz_info, "^ans");
@@ -40,7 +40,7 @@ strlcpy_buf(mod_quiz_info.trigger, "^quiz");
   mod_quiz_info.help = quiz_help;
   mod_quiz_info.run = quiz_run;
 
-mod_quiz_info.off = quiz_off;
+  mod_quiz_info.off = quiz_off;
 
 
   mod_quiz_info.output = NULL;
@@ -53,27 +53,33 @@ mod_quiz_info.off = quiz_off;
 }
 
 
-bot_t * quiz_off(dlist_t *dlist_node, bot_t *bot) {
-unique_t * bu=NULL;
-quiz_active_t ** qa=NULL;
-dlist_t * dptr, *dptr_tmp;
+bot_t *
+quiz_off (dlist_t * dlist_node, bot_t * bot)
+{
+  unique_t *bu = NULL;
+  quiz_active_t **qa = NULL;
+  dlist_t *dptr, *dptr_tmp;
 
-debug(NULL, "quiz_off: Entered\n");
+  debug (NULL, "quiz_off: Entered\n");
 
-dlist_fornext_retarded(dl_quiz_active_unique,dptr,dptr_tmp) {
-if(!dptr) break;
+  dlist_fornext_retarded (dl_quiz_active_unique, dptr, dptr_tmp)
+  {
+    if (!dptr)
+      break;
 
-bu = (unique_t *) dlist_data(dptr);
-if(!bu) continue;
+    bu = (unique_t *) dlist_data (dptr);
+    if (!bu)
+      continue;
 
-qa = (quiz_active_t **) &bu->data;
-if(!qa) continue;
-}
+    qa = (quiz_active_t **) & bu->data;
+    if (!qa)
+      continue;
+  }
 
 
-dlist_fini (&dl_quiz_pairs, xdb_pair_destroy);
+  dlist_fini (&dl_quiz_pairs, xdb_pair_destroy);
 
-return NULL;
+  return NULL;
 }
 
 
@@ -86,7 +92,7 @@ quiz_init (dlist_t * dlist_node, bot_t * bot)
   quiz_add_files_to_db ();
 
   swap_inmem_get_assign_and_remove ("dl_quiz_active", 0,
-					(void **) &dl_quiz_active_unique);
+				    (void **) &dl_quiz_active_unique);
 
   return NULL;
 }
@@ -152,11 +158,11 @@ quiz_run (dlist_t * dlist_node, bot_t * bot)
       return NULL;
     }
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "quiz_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "quiz_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
   if (bot_shouldreturn (bot))
     return NULL;
@@ -295,7 +301,7 @@ quiz_change_string (bot_t * bot, char *string, int opt)
 
   bu =
     unique_create (bot, &dl_quiz_active_unique,
-		       UNIQUE_ID_TAG | UNIQUE_ID_CHAN);
+		   UNIQUE_ID_TAG | UNIQUE_ID_CHAN);
   if (!bu)
     return NULL;
 
@@ -309,8 +315,7 @@ quiz_change_string (bot_t * bot, char *string, int opt)
   if (strlen (string))
     {
       dl =
-	tokenize (bot, string,
-		      TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, " ");
+	tokenize (bot, string, TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, " ");
       if (!dl)
 	return NULL;
 
@@ -551,9 +556,7 @@ quiz_add_files_to_db (void)
   dir = str_unite ("%s/mods/mod_quiz_files/", gi->confdir);
 
   dl =
-    files_get_listing (NULL, dir,
-			   FILES_NORMAL | FILES_RECURSE |
-			   FILES_NODOT);
+    files_get_listing (NULL, dir, FILES_NORMAL | FILES_RECURSE | FILES_NODOT);
   if (!dl)
     goto cleanup;
 
@@ -597,7 +600,7 @@ quiz_add_files_to_db (void)
   dlist_fornext (dl, dptr)
   {
     debug (NULL, "quiz_add_files_to_db: file=%s\n",
-	       (char *) dlist_data (dptr));
+	   (char *) dlist_data (dptr));
     quiz_add_files_to_db_file ((char *) dlist_data (dptr));
   }
 
@@ -727,7 +730,7 @@ quiz_add_files_to_db_file (char *name)
       else
 	{
 /* append to buf_inside */
-	  strlcatfmt_buf (buf_inside,  "%s\n", buf);
+	  strlcatfmt_buf (buf_inside, "%s\n", buf);
 	}
 
 
@@ -780,7 +783,7 @@ quiz_op_list (bot_t * bot)
     strlcatfmt_buf (buf, "%s ", pair->key);
   }
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;
@@ -828,7 +831,7 @@ quiz_op_info (bot_t * bot, quiz_active_t * qa)
   strlcatfmt_buf (buf,
 		  "quiz id: %i\n channel: %s , timeout: %i , size: %i\n",
 		  qa->ID, bot->txt_to, qa->timeout, qa->size);
-  strlcatfmt_buf (buf, 
+  strlcatfmt_buf (buf,
 		  " multi: %i , newlines: %i , hidekey: %i , fixkey=%i\n",
 		  qa->multi, qa->newlines, qa->hidekey, qa->fixkey);
   strlcat_bot (buf, " topics: ");
@@ -839,7 +842,7 @@ quiz_op_info (bot_t * bot, quiz_active_t * qa)
     if (!topic_str)
       continue;
 
-    strlcatfmt_buf (buf,  "%s ", topic_str);
+    strlcatfmt_buf (buf, "%s ", topic_str);
   }
   strlcatfmt_buf (buf,
 		  "\n correct answers: %i , incorrect answers: %i , questions asked: %i\n",
@@ -860,7 +863,7 @@ quiz_op_info (bot_t * bot, quiz_active_t * qa)
   }
 
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;
@@ -875,7 +878,7 @@ quiz_op_setup (bot_t * bot, quiz_active_t ** qa_arg, char *string)
   quiz_active_t *qa = NULL;
   char *str = NULL, *str_previous_answer = NULL, *tstr = NULL;
 
-debug(NULL, "quiz_op_setup: Entered\n");
+  debug (NULL, "quiz_op_setup: Entered\n");
 
   if (!bot || !qa_arg)
     return NULL;
@@ -1116,7 +1119,7 @@ quiz_op_winners (bot_t * bot, quiz_active_t * qa)
   found = 0;
   memset (buf, 0, sizeof (buf));
 
-  strlcatfmt_buf (buf, 
+  strlcatfmt_buf (buf,
 		  "correct answers: %i , incorrect answers: %i , questions asked: %i\n",
 		  qa->correct, qa->incorrect, qa->count);
 
@@ -1134,7 +1137,7 @@ quiz_op_winners (bot_t * bot, quiz_active_t * qa)
     charcat_buf (buf, '\n');
   }
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;
@@ -1157,9 +1160,7 @@ quiz_active_init (bot_t * bot, char *string)
   debug (bot, "quiz_active_init: Entered\n");
 
   found = 0;
-  dl =
-    tokenize (bot, string,
-		  TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, " ");
+  dl = tokenize (bot, string, TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, " ");
   if (!dl)
     return NULL;
 
@@ -1326,8 +1327,7 @@ quiz_active_ask (bot_t * bot, quiz_active_t * qa)
       int fixkey_sz = 0;
       dl =
 	tokenize (bot, pair_2->key,
-		      TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE,
-		      "^^^");
+		  TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, "^^^");
 
       if (dl)
 	{
@@ -1383,8 +1383,7 @@ quiz_active_ask (bot_t * bot, quiz_active_t * qa)
     {
       dl =
 	tokenize (bot, pair_2->key,
-		      TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE,
-		      "^^^");
+		  TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, "^^^");
       if (dl)
 	{
 
@@ -1527,7 +1526,7 @@ quiz_active_answer (bot_t * bot, quiz_active_t * qa, char *answer)
 
   dl =
     tokenize (NULL, qa->question->key,
-		  TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, "^^^");
+	      TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, "^^^");
   if (!dl)
     return NULL;
 

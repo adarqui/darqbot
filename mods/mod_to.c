@@ -252,8 +252,8 @@ to_print (bot_t * bot)
   char *val;
 
   debug (bot,
-	     "to_print_info: conf=%s, pms=%s, allowpms=%i\n", to_info.conf,
-	     to_info.log_pms, to_info.allowpms);
+	 "to_print_info: conf=%s, pms=%s, allowpms=%i\n", to_info.conf,
+	 to_info.log_pms, to_info.allowpms);
 
 /* controlchans */
   debug (bot, "to_print_info: controlchans:\n");
@@ -284,8 +284,8 @@ __to_init__ (void)
   mod_to_info.name = "mod_to";
   mod_to_info.trigger = strdup ("^to");
 */
-strlcpy_buf(mod_to_info.name, "mod_to");
-strlcpy_buf(mod_to_info.trigger, "^to");
+  strlcpy_buf (mod_to_info.name, "mod_to");
+  strlcpy_buf (mod_to_info.trigger, "^to");
 
   mod_to_info.init = to_init;
   mod_to_info.fini = to_fini;
@@ -387,11 +387,11 @@ to_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "to_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "to_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))

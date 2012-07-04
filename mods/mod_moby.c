@@ -29,8 +29,8 @@ void
 __moby_init__ (void)
 {
 
-strlcpy_buf(mod_moby_info.name, "mod_moby");
-strlcpy_buf(mod_moby_info.trigger, "^moby");
+  strlcpy_buf (mod_moby_info.name, "mod_moby");
+  strlcpy_buf (mod_moby_info.trigger, "^moby");
 
   mod_moby_info.init = moby_init;
   mod_moby_info.fini = moby_fini;
@@ -71,12 +71,14 @@ moby_create_db (bot_t * bot)
 */
 
 
-  strlcpy_buf(moby_info.db_name,  str_unite_static ("%s/mods/mod_moby_files/syns.moby_db", gi->confdir));
-str_db = moby_info.db_name;
+  strlcpy_buf (moby_info.db_name,
+	       str_unite_static ("%s/mods/mod_moby_files/syns.moby_db",
+				 gi->confdir));
+  str_db = moby_info.db_name;
   if (!stat (str_db, &st))
     {
 /* db already exists */
-moby_info.initialized = 1;
+      moby_info.initialized = 1;
 
       return;
     }
@@ -186,11 +188,11 @@ moby_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "moby_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "moby_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -237,7 +239,7 @@ moby_get_syn (DB * db, char *tok, int opt)
     {
       dl =
 	tokenize (NULL, pair->value,
-		      TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, ",");
+		  TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, ",");
       if (!dl)
 	goto cleanup;
 
@@ -245,7 +247,7 @@ moby_get_syn (DB * db, char *tok, int opt)
       if (!dptr)
 	goto cleanup;
 
-str = str_unite_static("%s",(char *) dlist_data(dptr));
+      str = str_unite_static ("%s", (char *) dlist_data (dptr));
     }
   else if (opt == MOBY_LIST)
     {
@@ -255,8 +257,8 @@ str = str_unite_static("%s",(char *) dlist_data(dptr));
 
 cleanup:
 
-if(dl)
-tokenize_destroy(NULL, &dl);
+  if (dl)
+    tokenize_destroy (NULL, &dl);
 
   xdb_pair_destroy (pair);
 
@@ -267,7 +269,7 @@ tokenize_destroy(NULL, &dl);
 char *
 moby_change_string (char *string, int opt)
 {
-DB * db=NULL;
+  DB *db = NULL;
 
   int i, j, tok_nonalpha_len, retchar;
   char *str, *syn, *tok_ptr, *tok_nonalpha;
@@ -290,10 +292,11 @@ DB * db=NULL;
   memset (buf, 0, sizeof (buf));
   tok_ptr = string;
 
-db = xdb_open (moby_info.db_name);
-if(!db) { 
-return NULL;
-}
+  db = xdb_open (moby_info.db_name);
+  if (!db)
+    {
+      return NULL;
+    }
 
   j = 0;
   while (1)
@@ -348,7 +351,7 @@ return NULL;
       j++;
     }
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;

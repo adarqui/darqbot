@@ -36,7 +36,7 @@ bot_find_confdir (bot_t * bot)
 
   str = str_unite_static ("%s/%s", gi->confdir, BOT_DEF_CONFDIR);
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return NULL;
 
   debug (bot, "bot_find_confdir: trying str=%s\n", str);
@@ -66,15 +66,15 @@ conf_parse (bot_t * bot)
       return -1;
     }
 
-  if (!sNULL(bot->confdir))
+  if (!sNULL (bot->confdir))
     {
       debug (bot, "conf_parse: BOT->confdir=NULL\n");
       return -1;
     }
 
 
-if(!sNULL(bot->conffile))
-snprintf_buf(bot->conffile, "%s/%s", bot->confdir, BOT_DEF_CONFFILE);
+  if (!sNULL (bot->conffile))
+    snprintf_buf (bot->conffile, "%s/%s", bot->confdir, BOT_DEF_CONFFILE);
 
   fp = fopen (bot->conffile, "r");
   if (!fp)
@@ -87,7 +87,7 @@ snprintf_buf(bot->conffile, "%s/%s", bot->confdir, BOT_DEF_CONFFILE);
 
   while (1)
     {
-      bz(buf);
+      bz (buf);
       if (fgets (buf, sizeof (buf) - 1, fp) == NULL)
 	break;
 
@@ -169,9 +169,10 @@ snprintf_buf(bot->conffile, "%s/%s", bot->confdir, BOT_DEF_CONFFILE);
 	  bot_parse_gmodules (bot, &buf[fn_strlen ("gmodules") + 1], 1,
 			      ":::");
 	}
-else if(!strncasecmp_len(buf_ptr, "trig_prefix")) {
-strlcpy_buf(bot->trig_prefix,&buf[fn_strlen("trig_prefix")+2]);
-}
+      else if (!strncasecmp_len (buf_ptr, "trig_prefix"))
+	{
+	  strlcpy_buf (bot->trig_prefix, &buf[fn_strlen ("trig_prefix") + 2]);
+	}
 
     }
 
@@ -195,7 +196,7 @@ bot_parse_logfile (bot_t * bot, char *str, int add)
 
   debug (bot, "bot_parse_logfile: Entered\n");
 
-  if (!bot || !sNULL(str))
+  if (!bot || !sNULL (str))
     return -1;
 
   if (add == 0)
@@ -205,10 +206,10 @@ bot_parse_logfile (bot_t * bot, char *str, int add)
 
   ptr_1 = eat_whitespace (str);
 
-bz(bot->logfile);
+  bz (bot->logfile);
 
-  if (sNULL(ptr_1))
-    strlcpy_buf(bot->logfile, ptr_1);
+  if (sNULL (ptr_1))
+    strlcpy_buf (bot->logfile, ptr_1);
 
   strstrip_chars (bot->logfile, " :,");
 
@@ -224,7 +225,7 @@ bot_parse_tag (bot_t * bot, char *str, int add)
 
   debug (bot, "bot_parse_tag: Entered\n");
 
-  if (!bot || !sNULL(str))
+  if (!bot || !sNULL (str))
     return -1;
 
   if (add == 0)
@@ -234,12 +235,12 @@ bot_parse_tag (bot_t * bot, char *str, int add)
 
   ptr_1 = eat_whitespace (str);
 
-  if (sNULL(ptr_1))
+  if (sNULL (ptr_1))
     {
       strstrip_chars (ptr_1, " :,!@#$%^&*()=+;':\",./<>?~`\\|");
     }
 
-  strlcpy_buf(bot->tag,ptr_1);
+  strlcpy_buf (bot->tag, ptr_1);
 
   return 0;
 }
@@ -252,7 +253,7 @@ bot_parse_trace (bot_t * bot, char *str, int add)
 {
   char *ptr_1;
 
-  if (!bot || !sNULL(str))
+  if (!bot || !sNULL (str))
     return -1;
 
   if (add == 0)
@@ -283,7 +284,7 @@ bot_parse_debug (bot_t * bot, char *str, int add)
 {
   char *ptr_1;
 
-  if (!bot || !sNULL(str))
+  if (!bot || !sNULL (str))
     return -1;
 
   if (add == 0)
@@ -314,16 +315,16 @@ bot_parse_debug (bot_t * bot, char *str, int add)
 int
 bot_parse_gmodules (bot_t * bot, char *str, int add, char *delim)
 {
-  dlist_t *dl=NULL, *dptr;
+  dlist_t *dl = NULL, *dptr;
   bot_gmod_elm_t *gmod = NULL;
   char *ptr_1, *ptr_2, *ptr_3;
 
-char * str_tmp=NULL;
+  char *str_tmp = NULL;
 
-  if (!bot || !sNULL(str))
+  if (!bot || !sNULL (str))
     return -1;
 
-  if (!sNULL(delim))
+  if (!sNULL (delim))
     delim = ":::";
 
   ptr_1 = eat_whitespace (str);
@@ -337,15 +338,13 @@ char * str_tmp=NULL;
 	}
     }
 
-  dl =
-    tokenize (bot, ptr_1, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES,
-		  delim);
+  dl = tokenize (bot, ptr_1, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, delim);
 
   dlist_fornext (dl, dptr)
   {
     gmod = (bot_gmod_elm_t *) calloc (1, sizeof (bot_gmod_elm_t));
-str_tmp = (char *) dlist_data(dptr);
-    gmod->syntax = (char *) strdup(str_tmp);
+    str_tmp = (char *) dlist_data (dptr);
+    gmod->syntax = (char *) strdup (str_tmp);
     dlist_Dinsert_after (&bot->dl_gmodules, gmod);
 
     ptr_2 = strchr (gmod->syntax, '(');
@@ -360,22 +359,25 @@ str_tmp = (char *) dlist_data(dptr);
 /*
 	gmod->trigger_ext = strdup_len (ptr_3, (ptr_2 - ptr_3));
 */
-strlcpy_buf(gmod->trigger_ext, str_unite_static("%.*s", (ptr_2-ptr_3), ptr_3));
+	strlcpy_buf (gmod->trigger_ext,
+		     str_unite_static ("%.*s", (ptr_2 - ptr_3), ptr_3));
 	ptr_2 = ptr_3;
       }
 
 /*
     gmod->trigger = strdup_len (gmod->syntax, (ptr_2 - gmod->syntax));
 */
-strlcpy_buf(gmod->trigger, str_unite_static("%.*s", (ptr_2-gmod->syntax), gmod->syntax));
+    strlcpy_buf (gmod->trigger,
+		 str_unite_static ("%.*s", (ptr_2 - gmod->syntax),
+				   gmod->syntax));
 
-    if (sNULL(gmod->trigger_ext))
+    if (sNULL (gmod->trigger_ext))
       {
 	char *save, *tok;
 
 	save = gmod->syntax;
 	tok = strchr (gmod->syntax, '(');
-	if (sNULL(tok))
+	if (sNULL (tok))
 	  {
 	    gmod->syntax = str_unite ("%s%s", gmod->trigger, tok);
 	  }
@@ -385,7 +387,7 @@ strlcpy_buf(gmod->trigger, str_unite_static("%.*s", (ptr_2-gmod->syntax), gmod->
 
   }
 
-tokenize_destroy(NULL, &dl);
+  tokenize_destroy (NULL, &dl);
 
   return 0;
 }

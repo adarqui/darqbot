@@ -29,8 +29,8 @@ void
 __rss_init__ (void)
 {
 
-strlcpy_buf(mod_rss_info.name, "mod_rss");
-strlcpy_buf(mod_rss_info.trigger, "^rss");
+  strlcpy_buf (mod_rss_info.name, "mod_rss");
+  strlcpy_buf (mod_rss_info.trigger, "^rss");
 
   mod_rss_info.init = rss_init;
   mod_rss_info.fini = rss_fini;
@@ -72,7 +72,8 @@ rss_help (dlist_t * dlist_node, bot_t * bot)
   if (!bot)
     return NULL;
 
-  bot->dl_module_help = "^rss <url> || ^rss(tiny,adarq,update,add,del,info,nofork) <...>";
+  bot->dl_module_help =
+    "^rss <url> || ^rss(tiny,adarq,update,add,del,info,nofork) <...>";
 
   return NULL;
 }
@@ -90,12 +91,12 @@ rss_run (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
 
   debug (bot,
-	     "rss_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "rss_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -302,14 +303,14 @@ rss_op_info (bot_t * bot, char *string)
 
   db = xdb_open (db_name);
   if (!db)
-{
-    return NULL;
-}
+    {
+      return NULL;
+    }
 
-bz(buf);
+  bz (buf);
 
   string_ptr = eat_whitespace (string);
-  if (!sNULL(string_ptr))
+  if (!sNULL (string_ptr))
     {
 /* return all keys */
       count = xdb_count (db);
@@ -333,8 +334,7 @@ bz(buf);
       pair = xdb_get (db, string);
       if (pair)
 	{
-	  strlcatfmt_buf (buf, "%s %s", pair->key,
-			  pair->value);
+	  strlcatfmt_buf (buf, "%s %s", pair->key, pair->value);
 	  xdb_pair_destroy (pair);
 	}
     }
@@ -343,7 +343,7 @@ cleanup:
   if (db)
     xdb_fini (db);
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;
@@ -376,7 +376,7 @@ rss_op_run (bot_t * bot, char *string, int opt, int opt_2)
   if (!opt)
     return NULL;
 
-bz(buf);
+  bz (buf);
 
   strstrip_chars (string, " \r\n\t");
 
@@ -420,7 +420,8 @@ bz(buf);
     {
 
       str = str_unite_static ("/tmp/mod_rss-%i%i.xml", getpid (), rand ());
-if(!sNULL(str)) goto cleanup;
+      if (!sNULL (str))
+	goto cleanup;
 
       rss_fp = fopen (str, "w");
       if (!rss_fp)
@@ -449,7 +450,7 @@ if(!sNULL(str)) goto cleanup;
 
       unlink (str);
 
-str[0]='\0' ;
+      str[0] = '\0';
 
       if (rss_dl_urls)
 	{
@@ -494,7 +495,7 @@ str[0]='\0' ;
 
 	      }
 
-	      bz(buf);
+	      bz (buf);
 
 	      i = 0;
 	      dlist_fornext (rss_dl_urls, dptr)
@@ -511,8 +512,7 @@ str[0]='\0' ;
 
 		    if (str_key_dup)
 		      {
-			strlcatfmt_buf (buf, "[%s] ",
-					str_key_dup);
+			strlcatfmt_buf (buf, "[%s] ", str_key_dup);
 		      }
 		    strlcatfmt_buf (buf, "%s (%s)\n",
 				    rssurl_ptr->title, rssurl_ptr->tinyurl);
@@ -557,7 +557,7 @@ str[0]='\0' ;
 
 	      }
 
-	      bz(buf);
+	      bz (buf);
 	      i = 0;
 	      dlist_forprev (dlist_tail (rss_dl_urls), dptr)
 	      {
@@ -572,8 +572,7 @@ str[0]='\0' ;
 		  {
 		    if (str_key_dup)
 		      {
-			strlcatfmt_buf (buf,"[%s] ",
-					str_key_dup);
+			strlcatfmt_buf (buf, "[%s] ", str_key_dup);
 		      }
 		    strlcatfmt_buf (buf, "%s (%s)\n",
 				    rssurl_ptr->title, rssurl_ptr->tinyurl);
@@ -586,7 +585,7 @@ str[0]='\0' ;
 	    }
 
 
-	  if (sNULL(buf)!=NULL)
+	  if (sNULL (buf) != NULL)
 	    str = strdup (buf);
 
 	}
@@ -853,7 +852,7 @@ rss_opt_geturl_adarq (CURL * curl, rss_url_t * rssurl_ptr)
   if (!curl || !rssurl_ptr)
     return 0;
 
-  bz(buf);
+  bz (buf);
 
   snprintf_buf (buf, "longurl=%s", rssurl_ptr->url);
 

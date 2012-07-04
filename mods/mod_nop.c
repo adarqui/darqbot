@@ -29,8 +29,8 @@ void
 __nop_init__ (void)
 {
 
-strlcpy_buf(mod_nop_info.name, "mod_nop");
-strlcpy_buf(mod_nop_info.trigger, "^nop");
+  strlcpy_buf (mod_nop_info.name, "mod_nop");
+  strlcpy_buf (mod_nop_info.trigger, "^nop");
 
   mod_nop_info.init = mod_nop_init;
   mod_nop_info.fini = mod_nop_fini;
@@ -107,14 +107,14 @@ mod_nop_run (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot, "mod_nop_run: Entered\n");
 
 
   debug (bot,
-	     "mod_nop_run: Entered: initial hook buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "mod_nop_run: Entered: initial hook buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -234,7 +234,7 @@ opt = 3;
 	      free (mod_nop_out_str_prepend);
 	    mod_nop_out_str_prepend = strdup (l_str_ptr);
 	    debug (bot, "mod_nop_run: out_prepend = %s\n",
-		       mod_nop_out_str_prepend);
+		   mod_nop_out_str_prepend);
 	    break;
 	  }
 
@@ -244,7 +244,7 @@ opt = 3;
 	      free (mod_nop_out_str_append);
 	    mod_nop_out_str_append = strdup (l_str_ptr);
 	    debug (bot, "mod_nop_run: out_append = %s\n",
-		       mod_nop_out_str_append);
+		   mod_nop_out_str_append);
 	    break;
 	  }
 
@@ -254,7 +254,7 @@ opt = 3;
 	      free (mod_nop_in_str_prepend);
 	    mod_nop_in_str_prepend = strdup (l_str_ptr);
 	    debug (bot, "mod_nop_run: in_prepend = %s\n",
-		       mod_nop_in_str_prepend);
+		   mod_nop_in_str_prepend);
 	    break;
 	  }
 
@@ -264,7 +264,7 @@ opt = 3;
 	      free (mod_nop_in_str_append);
 	    mod_nop_in_str_append = strdup (l_str_ptr);
 	    debug (bot, "mod_nop_run: in_append = %s\n",
-		       mod_nop_in_str_append);
+		   mod_nop_in_str_append);
 	    break;
 	  }
 	case 5:

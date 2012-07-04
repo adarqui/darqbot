@@ -86,7 +86,7 @@ module_path (char *name)
 
 
 module_t *
-module_load (char * name)
+module_load (char *name)
 {
   return xmodule_load (XMODULE_TYPE_MODULE, name);
 }
@@ -95,7 +95,7 @@ module_load (char * name)
 module_t *
 module_unload (module_t * mod)
 {
-  return xmodule_unload (XMODULE_TYPE_MODULE, mod,NULL);
+  return xmodule_unload (XMODULE_TYPE_MODULE, mod, NULL);
 }
 
 
@@ -172,24 +172,29 @@ console_modreload (char *arg)
 
 
 
-void modules_off(void) {
-dlist_t * dptr=NULL;
-module_t * mod=NULL;
-
-debug(NULL, "modules_off: Entered\n");
-
-dlist_fornext(gi->dl_module,dptr) {
-
-if(!dptr) continue;
-
-mod = (module_t *) dlist_data(dptr);
-
-if(!mod) continue;
-if(mod->off)
+void
+modules_off (void)
 {
-mod->off(NULL, NULL);
-}
-}
+  dlist_t *dptr = NULL;
+  module_t *mod = NULL;
 
-return;
+  debug (NULL, "modules_off: Entered\n");
+
+  dlist_fornext (gi->dl_module, dptr)
+  {
+
+    if (!dptr)
+      continue;
+
+    mod = (module_t *) dlist_data (dptr);
+
+    if (!mod)
+      continue;
+    if (mod->off)
+      {
+	mod->off (NULL, NULL);
+      }
+  }
+
+  return;
 }

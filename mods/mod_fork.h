@@ -39,9 +39,10 @@ void __fork_init__ (void) __attribute__ ((constructor));
 
 char *fork_change_string (bot_t *, char *, int);
 
-enum mod_fork_options {
-MOD_FORK_OPT_VERBOSE=0x01,
-MOD_FORK_OPT_DAEMON=0x02,
+enum mod_fork_options
+{
+  MOD_FORK_OPT_VERBOSE = 0x01,
+  MOD_FORK_OPT_DAEMON = 0x02,
 };
 
 #endif

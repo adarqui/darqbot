@@ -29,8 +29,8 @@ void
 __stack_init__ (void)
 {
 
-strlcpy_buf(mod_stack_info.name, "mod_stack");
-strlcpy_buf(mod_stack_info.trigger,"^stack");
+  strlcpy_buf (mod_stack_info.name, "mod_stack");
+  strlcpy_buf (mod_stack_info.trigger, "^stack");
 
   module_add_subtrigs (&mod_stack_info, "^push");
   module_add_subtrigs (&mod_stack_info, "^pop");
@@ -59,7 +59,7 @@ stack_init (dlist_t * dlist_node, bot_t * bot)
   debug (bot, "stack_init: Entered\n");
 
   swap_inmem_get_assign_and_remove ("dl_mod_stack", 0,
-					(void **) &dl_mod_stack_unique);
+				    (void **) &dl_mod_stack_unique);
 
   return NULL;
 }
@@ -99,11 +99,11 @@ stack_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "stack_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "stack_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -175,11 +175,10 @@ stack_change_string (bot_t * bot, char *string, int opt)
   if (sep_ptr)
     string = sep_ptr;
 
-bz(buf);
+  bz (buf);
 
   bu =
-    unique_create (bot, &dl_mod_stack_unique,
-		       UNIQUE_ID_TAG | UNIQUE_ID_CHAN);
+    unique_create (bot, &dl_mod_stack_unique, UNIQUE_ID_TAG | UNIQUE_ID_CHAN);
   if (!bu)
     return NULL;
 
@@ -192,7 +191,7 @@ bz(buf);
     }
   else if (opt == MOD_STACK_SIZE)
     {
-      strlcatfmt_buf (buf,  "%i", dlist_size (*dl_mod_stack));
+      strlcatfmt_buf (buf, "%i", dlist_size (*dl_mod_stack));
     }
   else if (opt == MOD_STACK_PUSH)
     {
@@ -222,11 +221,11 @@ bz(buf);
 	  continue;
 	strlcatfmt_buf (buf, "%s\n", data_ptr);
       }
-      strlcat_buf (buf,  "[bottom]\n");
+      strlcat_buf (buf, "[bottom]\n");
     }
 
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;

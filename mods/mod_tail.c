@@ -29,8 +29,8 @@ void
 __tail_init__ (void)
 {
 
-strlcpy_buf(mod_tail_info.name, "mod_tail");
-strlcpy_buf(mod_tail_info.trigger, "^tail");
+  strlcpy_buf (mod_tail_info.name, "mod_tail");
+  strlcpy_buf (mod_tail_info.trigger, "^tail");
 
 
   mod_tail_info.init = tail_init;
@@ -57,7 +57,7 @@ tail_init (dlist_t * dlist_node, bot_t * bot)
   debug (bot, "tail_init: Entered\n");
 
   swap_inmem_get_assign_and_remove ("dl_mod_tail", 0,
-					(void **) &dl_mod_tail_unique);
+				    (void **) &dl_mod_tail_unique);
 
   return NULL;
 }
@@ -81,7 +81,8 @@ tail_help (dlist_t * dlist_node, bot_t * bot)
   if (!bot)
     return NULL;
 
-  bot->dl_module_help = "^tail(clear:run:add:del:list) || ^tail </path/to/file>";
+  bot->dl_module_help =
+    "^tail(clear:run:add:del:list) || ^tail </path/to/file>";
 
   return NULL;
 }
@@ -97,11 +98,11 @@ tail_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "tail_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "tail_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))

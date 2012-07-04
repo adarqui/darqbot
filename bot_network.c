@@ -27,7 +27,8 @@ n_gethostbyname (char *host)
   struct hostent *h;
   char *x;
 
-if(!sNULL(host)) return NULL;
+  if (!sNULL (host))
+    return NULL;
 
   h = gethostbyname (host);
   if (h)
@@ -100,7 +101,7 @@ bot_network_raw_connect (char *host, int port, int type, int alarm_val)
   struct sockaddr_in sin;
   char *str_tmp;
   int fd, n;
-  if (!sNULL(host) || !port)
+  if (!sNULL (host) || !port)
     return -1;
 
   bz2 (sin);
@@ -108,7 +109,7 @@ bot_network_raw_connect (char *host, int port, int type, int alarm_val)
   sin.sin_port = htons (port);
 
   str_tmp = n_gethostbyname (host);
-  if (!sNULL(str_tmp))
+  if (!sNULL (str_tmp))
     return -1;
 
   sin.sin_addr.s_addr = inet_addr (str_tmp);
@@ -148,12 +149,12 @@ bot_network_raw_listen (char *host, int port)
 
   debug (NULL, "bot_network_raw_listen: Entered\n");
 
-  if (!sNULL(host) || port <= 0)
+  if (!sNULL (host) || port <= 0)
     return -1;
 
   bz2 (sin);
   str_tmp = n_gethostbyname (host);
-  if (!sNULL(str_tmp))
+  if (!sNULL (str_tmp))
     return -1;
 
   sin.sin_family = AF_INET;

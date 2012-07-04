@@ -32,8 +32,8 @@ void
 __gpty_init__ (void)
 {
 
-strlcpy_buf(gmod_gpty_info.name, "gmod_gpty");
-strlcpy_buf(gmod_gpty_info.trigger, "^gpty");
+  strlcpy_buf (gmod_gpty_info.name, "gmod_gpty");
+  strlcpy_buf (gmod_gpty_info.trigger, "^gpty");
 
   gmod_gpty_info.init = gpty_init;
   gmod_gpty_info.fini = gpty_fini;
@@ -139,11 +139,11 @@ gpty_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "gpty_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "gpty_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -158,7 +158,7 @@ gpty_run (dlist_t * dlist_node, bot_t * bot)
   gmod = (bot_gmod_elm_t *) dlist_data (dptr_gmod);
   if (!gmod)
     {
-      debug (NULL,"gpty_run: GPTY GMOD=NULL\n");
+      debug (NULL, "gpty_run: GPTY GMOD=NULL\n");
       return NULL;
     }
 
@@ -213,9 +213,7 @@ gpty_process_options (gpty_t * gpty, char *string)
   memset (buf, 0, sizeof (buf));
 
 
-  dl =
-    tokenize (NULL, string,
-		  TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
+  dl = tokenize (NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
   if (!dl)
     return NULL;
 
@@ -313,7 +311,7 @@ gpty_output (dlist_t * dlist_node, bot_t * bot)
     }
 
   debug (NULL, "gpty_output: in=[%s], out=[%s]\n", bot->txt_data_in,
-	     bot->txt_data_out);
+	 bot->txt_data_out);
 
   gmodule_down (dlist_node, bot);
 
@@ -344,7 +342,7 @@ gpty_input (dlist_t * dlist_node, bot_t * bot)
   gmodule_up (dlist_node, bot);
 
   debug (NULL, "gpty_input: in=[%s], out=[%s]\n", bot->txt_data_in,
-	     bot->txt_data_out);
+	 bot->txt_data_out);
 
   return bot;
 }

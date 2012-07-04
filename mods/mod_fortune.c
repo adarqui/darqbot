@@ -29,8 +29,8 @@ void
 __fortune_init__ (void)
 {
 
-strlcpy_buf(mod_fortune_info.name, "mod_fortune");
-strlcpy_buf(mod_fortune_info.trigger, "^fortune");
+  strlcpy_buf (mod_fortune_info.name, "mod_fortune");
+  strlcpy_buf (mod_fortune_info.trigger, "^fortune");
 
   module_add_subtrigs (&mod_fortune_info, "^forkfortune");
 
@@ -100,10 +100,10 @@ fortune_run (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
   debug (bot,
-	     "fortune_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "fortune_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
 
 
@@ -121,7 +121,7 @@ fortune_run (dlist_t * dlist_node, bot_t * bot)
 
   memset (local_arg_buf, 0, sizeof (local_arg_buf));
 
-strlcpy_buf(local_arg_buf,"fortune");
+  strlcpy_buf (local_arg_buf, "fortune");
 
 
   if (strlen (dl_options_ptr) == 0)
@@ -137,8 +137,7 @@ strlcpy_buf(local_arg_buf,"fortune");
     ("TRIG_CALLED=%s, MODULE_ARG=%s, LOCAL_ARG_BUF=%s, DL_OPTIONS_PTR=%s\n",
      bot->trig_called, &bot->dl_module_arg[0], local_arg_buf, dl_options_ptr);
 
-  argv =
-    tokenize_array (bot, local_arg_buf, TOKENIZE_NORMAL, " ", &argc);
+  argv = tokenize_array (bot, local_arg_buf, TOKENIZE_NORMAL, " ", &argc);
   if (!argv)
     return NULL;
 

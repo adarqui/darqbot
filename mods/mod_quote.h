@@ -43,14 +43,15 @@ void __quote_init__ (void) __attribute__ ((constructor));
 
 dlist_t *dl_quote_pairs;
 
-typedef struct quote {
-char title[32];
-char filename[132];
-int count;
-} quote_t ; 
+typedef struct quote
+{
+  char title[32];
+  char filename[132];
+  int count;
+} quote_t;
 
 void quote_add_files_to_db_file (char *);
 void quote_add_files_to_db (void);
-char * quote_get(xdb_pair_t * , char *) ;
+char *quote_get (xdb_pair_t *, char *);
 
 #endif

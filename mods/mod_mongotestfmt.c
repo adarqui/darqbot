@@ -33,8 +33,8 @@ __mongotestfmt_init__ (void)
   mod_mongotestfmt_info.name = "mod_mongotestfmt";
   mod_mongotestfmt_info.trigger = strdup ("^mongotestfmt");
 */
-strlcpy_buf(mod_mongotestfmt_info.name, "mod_mongotestfmt");
-strlcpy_buf(mod_mongotestfmt_info.trigger, "^mongotestfmt");
+  strlcpy_buf (mod_mongotestfmt_info.name, "mod_mongotestfmt");
+  strlcpy_buf (mod_mongotestfmt_info.trigger, "^mongotestfmt");
 
   mod_mongotestfmt_info.init = mongotestfmt_init;
   mod_mongotestfmt_info.fini = mongotestfmt_fini;
@@ -92,11 +92,11 @@ mongotestfmt_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "mongotestfmt_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "mongotestfmt_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -200,7 +200,7 @@ mongotestfmt_change_string (bot_t * bot, char *string, int opt)
       puts ("TESTING MONGODB_FMT_BUILD_FMT:");
       arg_array =
 	mongodb_fmt_build_fmt (bot, "%s=name %i=age %f=IQ %l=addr", "darq",
-				 29, 107.9, 1924020102);
+			       29, 107.9, 1924020102);
       if (!arg_array)
 	{
 	  puts ("arg_array = NULL");
@@ -220,8 +220,7 @@ mongotestfmt_change_string (bot_t * bot, char *string, int opt)
     {
       puts ("MONGOTESTFMT_ADDBSON");
       dl_fmt =
-	tokenize (bot, string,
-		      TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, " ");
+	tokenize (bot, string, TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, " ");
       if (!dl_fmt)
 	return NULL;
 
@@ -255,21 +254,20 @@ mongotestfmt_change_string (bot_t * bot, char *string, int opt)
 //b = mongodb_bson_build_strings(bot, string);
 //b =  mongodb_bson_build(bot, "%s=name %i=age %f=grade", "joe", 30, 55.5);
       b = mongodb_bson_build (bot, str_fmt,
-				char_array[0],
-				dlist_size (dl_fmt) <
-				2 ? NULL : char_array[1],
-				dlist_size (dl_fmt) <
-				3 ? NULL : char_array[2],
-				dlist_size (dl_fmt) <
-				4 ? NULL : char_array[3],
-				dlist_size (dl_fmt) <
-				5 ? NULL : char_array[4],
-				dlist_size (dl_fmt) <
-				6 ? NULL : char_array[5],
-				dlist_size (dl_fmt) <
-				7 ? NULL : char_array[6],
-				dlist_size (dl_fmt) <
-				8 ? NULL : char_array[7]);
+			      char_array[0],
+			      dlist_size (dl_fmt) <
+			      2 ? NULL : char_array[1],
+			      dlist_size (dl_fmt) <
+			      3 ? NULL : char_array[2],
+			      dlist_size (dl_fmt) <
+			      4 ? NULL : char_array[3],
+			      dlist_size (dl_fmt) <
+			      5 ? NULL : char_array[4],
+			      dlist_size (dl_fmt) <
+			      6 ? NULL : char_array[5],
+			      dlist_size (dl_fmt) <
+			      7 ? NULL : char_array[6],
+			      dlist_size (dl_fmt) < 8 ? NULL : char_array[7]);
 
       if (!b)
 	{
@@ -307,7 +305,7 @@ mongotestfmt_change_string (bot_t * bot, char *string, int opt)
 
       b =
 	mongodb_bson_get (bot, "test.darqbottestmongo", arg.name,
-			    MONGODB_ARG_STRING, arg.arg_str);
+			  MONGODB_ARG_STRING, arg.arg_str);
 
       if (!b)
 	goto cleanup;
@@ -419,7 +417,7 @@ cleanup:
   free (arg.arg_str);
 
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
 

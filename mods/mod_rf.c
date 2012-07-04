@@ -29,8 +29,8 @@ void
 __rf_init__ (void)
 {
 
-strlcpy_buf(mod_rf_info.name, "mod_rf");
-strlcpy_buf(mod_rf_info.trigger, "^rf");
+  strlcpy_buf (mod_rf_info.name, "mod_rf");
+  strlcpy_buf (mod_rf_info.trigger, "^rf");
 
   mod_rf_info.init = rf_init;
   mod_rf_info.fini = rf_fini;
@@ -107,11 +107,11 @@ rf_run (dlist_t * dlist_node, bot_t * bot)
       return NULL;
     }
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "rf_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "rf_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
 
@@ -123,8 +123,8 @@ rf_run (dlist_t * dlist_node, bot_t * bot)
 
   array =
     tokenize_array (bot, dl_options_ptr,
-			TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES,
-			":::", &array_size);
+		    TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES,
+		    ":::", &array_size);
   if (!array)
     return NULL;
 
@@ -135,25 +135,30 @@ rf_run (dlist_t * dlist_node, bot_t * bot)
 
   rand_val = rand () % (array_size);
 
-strlcpy_safe(&trig_tmp[1], ret_trig(&array[rand_val][1]), sizeof(trig_tmp)-2);
-if(!sNULL(&trig_tmp[1])) return NULL;
+  strlcpy_safe (&trig_tmp[1], ret_trig (&array[rand_val][1]),
+		sizeof (trig_tmp) - 2);
+  if (!sNULL (&trig_tmp[1]))
+    return NULL;
 
-trig_tmp[0]='^';
+  trig_tmp[0] = '^';
 
-dptr = xmodule_find_by_trig_dptr(XMODULE_TYPE_MODULE, trig_tmp);
-if(dptr) {
-module = (module_t *)dlist_data(dptr);
-if(module) {
-if(module->run) {
-  strlcpy_buf (bot->txt_data_in, array[rand_val]);
-bot->dl_module_arg = bot->txt_data_in + strlen(module->trigger);
-module->run(dptr,bot);
-}
-}
-}
+  dptr = xmodule_find_by_trig_dptr (XMODULE_TYPE_MODULE, trig_tmp);
+  if (dptr)
+    {
+      module = (module_t *) dlist_data (dptr);
+      if (module)
+	{
+	  if (module->run)
+	    {
+	      strlcpy_buf (bot->txt_data_in, array[rand_val]);
+	      bot->dl_module_arg =
+		bot->txt_data_in + strlen (module->trigger);
+	      module->run (dptr, bot);
+	    }
+	}
+    }
 
   tokenize_destroy_array (bot, array);
 
   return bot;
 }
-

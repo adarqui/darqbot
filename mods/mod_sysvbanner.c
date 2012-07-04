@@ -29,8 +29,8 @@ void
 __sysvbanner_init__ (void)
 {
 
-strlcpy_buf(mod_sysvbanner_info.name, "mod_sysvbanner");
-strlcpy_buf(mod_sysvbanner_info.trigger, "^sysvbanner");
+  strlcpy_buf (mod_sysvbanner_info.name, "mod_sysvbanner");
+  strlcpy_buf (mod_sysvbanner_info.trigger, "^sysvbanner");
 
   mod_sysvbanner_info.init = sysvbanner_init;
   mod_sysvbanner_info.fini = sysvbanner_fini;
@@ -88,11 +88,11 @@ sysvbanner_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "sysvbanner_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "sysvbanner_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -219,7 +219,7 @@ sysvbanner_change_string (char *string, int opt)
   charcat_safe (buf, '\n', sizeof (buf) - 1);
 
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;

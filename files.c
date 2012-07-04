@@ -64,7 +64,7 @@ files_get_listing_run (bot_t * bot, char *dir, int opts, dlist_t ** dl)
 
       if (dirp_e->d_type == DT_DIR)
 	{
-	  bz(buf);
+	  bz (buf);
 	  snprintf_buf (buf, "%s%s", dir, dirp_e->d_name);
 	  files_get_listing_run (bot, buf, opts, dl);
 	}
@@ -79,7 +79,7 @@ files_get_listing_run (bot_t * bot, char *dir, int opts, dlist_t ** dl)
 
     }
 
-closedir(dirp);
+  closedir (dirp);
 
   return;
 }

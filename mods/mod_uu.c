@@ -29,8 +29,8 @@ void
 __uu_init__ (void)
 {
 
-strlcpy_buf(mod_uu_info.name, "mod_uu");
-strlcpy_buf(mod_uu_info.trigger, "^uu");
+  strlcpy_buf (mod_uu_info.name, "mod_uu");
+  strlcpy_buf (mod_uu_info.trigger, "^uu");
 
   mod_uu_info.init = uu_init;
   mod_uu_info.fini = uu_fini;
@@ -92,11 +92,11 @@ uu_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "uu_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "uu_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -124,7 +124,7 @@ uu_run (dlist_t * dlist_node, bot_t * bot)
       l_str_ptr = bot->txt_data_out;
       l_should_strzero = 1;
     }
-  if (!sNULL(l_str_ptr))
+  if (!sNULL (l_str_ptr))
     return bot;
   l_new_str = uu_change_string (l_str_ptr, opt, &new_len);
   if (l_new_str != NULL)

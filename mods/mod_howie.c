@@ -29,8 +29,8 @@ void
 __howie_init__ (void)
 {
 
-strlcpy_buf(mod_howie_info.name, "mod_howie");
-strlcpy_buf(mod_howie_info.trigger, "^howie");
+  strlcpy_buf (mod_howie_info.name, "mod_howie");
+  strlcpy_buf (mod_howie_info.trigger, "^howie");
 
   mod_howie_info.init = howie_init;
   mod_howie_info.fini = howie_fini;
@@ -104,11 +104,11 @@ howie_run (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "howie_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "howie_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -142,7 +142,7 @@ howie_run (dlist_t * dlist_node, bot_t * bot)
   if (!str_ptr)
     str_ptr = "";
 
-  if (sNULL(bot->txt_data_out)!=NULL)
+  if (sNULL (bot->txt_data_out) != NULL)
     {
       new_str =
 	str_unite ("%s: %s%s\n", bot->txt_nick, bot->txt_data_out, str_ptr);
@@ -211,7 +211,7 @@ howie_fill_info (bot_t * bot)
 
   str = str_unite_static ("%s/mods/mod_howie_files/conf", gi->confdir);
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     goto cleanup;
 
   howie_info.fp = fopen (str, "r");
@@ -320,7 +320,8 @@ howie_run_on (bot_t * bot)
 
   fcntl (howie_info.pipefd_b[0], F_SETFL, O_NONBLOCK);
 
-  debug (NULL, "howie_run_on: pipe0=%i, pipe1=%i\n", howie_info.pipefd[0], howie_info.pipefd[1]);
+  debug (NULL, "howie_run_on: pipe0=%i, pipe1=%i\n", howie_info.pipefd[0],
+	 howie_info.pipefd[1]);
 
 
   if (!(pid = fork ()))
@@ -339,7 +340,7 @@ howie_run_on (bot_t * bot)
 
 
       debug (bot, "-> howie_run_on: about to execve %s\n",
-		 howie_info.argv[0]);
+	     howie_info.argv[0]);
 
       execve (howie_info.argv[0], howie_info.argv, environ);
       perror ("execve: ");
@@ -377,7 +378,7 @@ howie_run_off (bot_t * bot)
   if (howie_info.fp)
     fclose (howie_info.fp);
 
-howie_info.fp = NULL;
+  howie_info.fp = NULL;
 
   if (howie_info.argv)
     {
@@ -389,12 +390,12 @@ howie_info.fp = NULL;
       free (howie_info.argv);
     }
 
-howie_info.argv = NULL;
+  howie_info.argv = NULL;
 
   if (howie_info.dir)
     free (howie_info.dir);
 
-howie_info.dir = NULL;
+  howie_info.dir = NULL;
 
   return 0;
 }

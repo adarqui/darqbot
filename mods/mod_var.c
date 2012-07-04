@@ -29,8 +29,8 @@ void
 __var_init__ (void)
 {
 
-strlcpy_buf(mod_var_info.name, "mod_var");
-strlcpy_buf(mod_var_info.trigger, "^var");
+  strlcpy_buf (mod_var_info.name, "mod_var");
+  strlcpy_buf (mod_var_info.trigger, "^var");
 
   mod_var_info.init = var_init;
   mod_var_info.fini = var_fini;
@@ -72,7 +72,8 @@ var_help (dlist_t * dlist_node, bot_t * bot)
   if (!bot)
     return NULL;
 
-  bot->dl_module_help = "^var(usleep:bufsz:multi:maxflood:nesting_cur:allowpm:sigprotect:timer_sleep:timer_sort)";
+  bot->dl_module_help =
+    "^var(usleep:bufsz:multi:maxflood:nesting_cur:allowpm:sigprotect:timer_sleep:timer_sort)";
 
   return NULL;
 }
@@ -89,11 +90,11 @@ var_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "var_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "var_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -152,7 +153,7 @@ var_run (dlist_t * dlist_node, bot_t * bot)
   MOD_OPTIONS_BOTTOM_HALF;
 
   l_str_ptr = eat_whitespace (dl_module_arg_after_options);
-  if (!sNULL(l_str_ptr))
+  if (!sNULL (l_str_ptr))
     l_str_ptr = NULL;
 
   if (optfn)

@@ -29,8 +29,8 @@ void
 __sig_init__ (void)
 {
 
-strlcpy_buf(mod_sig_info.name, "mod_sig");
-strlcpy_buf(mod_sig_info.trigger, "^sig");
+  strlcpy_buf (mod_sig_info.name, "mod_sig");
+  strlcpy_buf (mod_sig_info.trigger, "^sig");
 
   mod_sig_info.init = sig_init;
   mod_sig_info.fini = sig_fini;
@@ -88,11 +88,11 @@ sig_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "sig_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "sig_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))

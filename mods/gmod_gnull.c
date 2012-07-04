@@ -32,8 +32,8 @@ void
 __gnull_init__ (void)
 {
 
-strlcpy_buf(gmod_gnull_info.name, "gmod_gnull");
-strlcpy_buf(gmod_gnull_info.trigger, "^gnull");
+  strlcpy_buf (gmod_gnull_info.name, "gmod_gnull");
+  strlcpy_buf (gmod_gnull_info.trigger, "^gnull");
 
   gmod_gnull_info.init = gnull_init;
   gmod_gnull_info.fini = gnull_fini;
@@ -139,11 +139,11 @@ gnull_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "gnull_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "gnull_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -211,9 +211,7 @@ gnull_process_options (gnull_t * gnull, char *string)
   memset (buf, 0, sizeof (buf));
 
 
-  dl =
-    tokenize (NULL, string,
-		  TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
+  dl = tokenize (NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
   if (!dl)
     return NULL;
 
@@ -308,12 +306,12 @@ gnull_output (dlist_t * dlist_node, bot_t * bot)
   gnull = (gnull_t *) gmod->data;
   if (!gnull)
     {
-      debug (NULL,"gnull_output: GNULL_OUTPUT: gnull=NULL\n");
+      debug (NULL, "gnull_output: GNULL_OUTPUT: gnull=NULL\n");
       return NULL;
     }
 
   debug (NULL, "gnull_output: in=[%s], out=[%s]\n", bot->txt_data_in,
-	     bot->txt_data_out);
+	 bot->txt_data_out);
 
   gmodule_down (dlist_node, bot);
 
@@ -344,7 +342,7 @@ gnull_input (dlist_t * dlist_node, bot_t * bot)
   gmodule_up (dlist_node, bot);
 
   debug (NULL, "gnull_input: in=[%s], out=[%s]\n", bot->txt_data_in,
-	     bot->txt_data_out);
+	 bot->txt_data_out);
 
   return bot;
 }

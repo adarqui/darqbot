@@ -29,7 +29,7 @@ fd_link_add (dlist_t ** dl_fd_link, int fd, struct event ev,
 {
   fd_link_t *bfl = NULL;
 
-  debug (NULL, "fd_link_add: Entered: fd=%i\n",fd);
+  debug (NULL, "fd_link_add: Entered: fd=%i\n", fd);
 
   if (!dl_fd_link || fd < 0)
     return NULL;
@@ -72,7 +72,7 @@ fd_link_find (dlist_t ** dl_fd_link, int fd)
   dlist_t *dptr_bfl;
   fd_link_t *bfl;
 
-  debug (NULL, "fd_link_find: Entered: fd=%i\n",fd);
+  debug (NULL, "fd_link_find: Entered: fd=%i\n", fd);
 
   if (!dl_fd_link || fd < 0)
     return NULL;
@@ -99,7 +99,7 @@ fd_link_del (dlist_t ** dl_fd_link, int fd, void (*cleanup) (fd_link_t *))
   dlist_t *dptr_bfl = NULL;
   fd_link_t *bfl = NULL;
 
-  debug (NULL, "fd_link_del: Entered: fd=%i\n",fd);
+  debug (NULL, "fd_link_del: Entered: fd=%i\n", fd);
 
   if (!dl_fd_link || fd < 0 || !cleanup)
     return -1;
@@ -185,7 +185,7 @@ fd_link_set_cur (dlist_t ** dl_fd_link, fd_link_t * bfl_arg, int fd)
   fd_link_t *bfl = NULL;
 
 
-debug(NULL, "fd_link_set_cur: fd=%i\n", fd);
+  debug (NULL, "fd_link_set_cur: fd=%i\n", fd);
 
   if (!dl_fd_link || !bfl_arg || fd < 0)
     return;
@@ -213,9 +213,9 @@ fd_link_print (fd_link_t * bfl)
     return;
 
   debug (NULL,
-	     "bfl->fd=%i, bfl->sin.sin_addr=%s, bfl->sin.sin_port=%i, bfl->sun.un_path=%s\n",
-	     bfl->fd, inet_ntoa (bfl->sin.sin_addr),
-	     ntohs (bfl->sin.sin_port), bfl->sun.sun_path);
+	 "bfl->fd=%i, bfl->sin.sin_addr=%s, bfl->sin.sin_port=%i, bfl->sun.un_path=%s\n",
+	 bfl->fd, inet_ntoa (bfl->sin.sin_addr),
+	 ntohs (bfl->sin.sin_port), bfl->sun.sun_path);
 
   return;
 }
@@ -260,7 +260,7 @@ fd_link_get_latest_host (bot_t * bot, char *trigger, char *trigger_ext)
 	}
       case AF_UNIX:
 	{
-	  if (sNULL(bfl->sun.sun_path) != NULL)
+	  if (sNULL (bfl->sun.sun_path) != NULL)
 	    str = strdup (bfl->sun.sun_path);
 	  return str;
 	}

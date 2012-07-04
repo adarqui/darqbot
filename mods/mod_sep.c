@@ -29,12 +29,12 @@ void
 __sep_init__ (void)
 {
 
-strlcpy_buf(mod_sep_info.name, "mod_sep");
-strlcpy_buf(mod_sep_info.trigger, "^sep");
+  strlcpy_buf (mod_sep_info.name, "mod_sep");
+  strlcpy_buf (mod_sep_info.trigger, "^sep");
 
-module_add_subtrigs(&mod_sep_info, "^:");
-module_add_subtrigs(&mod_sep_info, "^!");
-module_add_subtrigs(&mod_sep_info,"^#");
+  module_add_subtrigs (&mod_sep_info, "^:");
+  module_add_subtrigs (&mod_sep_info, "^!");
+  module_add_subtrigs (&mod_sep_info, "^#");
 
   mod_sep_info.init = sep_init;
   mod_sep_info.fini = sep_fini;
@@ -77,19 +77,24 @@ sep_help (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
   if (str_match (bot->trig_called, STR_MATCH_STRCASECMP, 0, "^:", NULL))
-{
-bot->dl_module_help = "^: ::: breaks up output text so that subsequent triggers may not modify text prior to a ^:";
-}
-else  if (str_match (bot->trig_called, STR_MATCH_STRCASECMP, 0, "^!", NULL))
-{
-bot->dl_module_help = "^! ::: crushes all breaks, allows full text to be modified once again";
-}
-else if(str_match(bot->trig_called, STR_MATCH_STRCASECMP, 0, "^#", NULL)) {
-bot->dl_module_help = "^# ::: initializes or ends a comment, text in between comment triggers is not processed";
-}
-else {
-  bot->dl_module_help = "^sep ::: ^: || ^!";
-}
+    {
+      bot->dl_module_help =
+	"^: ::: breaks up output text so that subsequent triggers may not modify text prior to a ^:";
+    }
+  else if (str_match (bot->trig_called, STR_MATCH_STRCASECMP, 0, "^!", NULL))
+    {
+      bot->dl_module_help =
+	"^! ::: crushes all breaks, allows full text to be modified once again";
+    }
+  else if (str_match (bot->trig_called, STR_MATCH_STRCASECMP, 0, "^#", NULL))
+    {
+      bot->dl_module_help =
+	"^# ::: initializes or ends a comment, text in between comment triggers is not processed";
+    }
+  else
+    {
+      bot->dl_module_help = "^sep ::: ^: || ^!";
+    }
 
   return NULL;
 }
@@ -97,18 +102,18 @@ else {
 bot_t *
 sep_run (dlist_t * dlist_node, bot_t * bot)
 {
-int sub=0;
+  int sub = 0;
 
   debug (bot, "sep_run: Entered\n");
 
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "sep_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "sep_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
 /*
@@ -117,34 +122,42 @@ int sub=0;
     return NULL;
 */
 
-if(!strcasecmp(bot->trig_called, "^:")) {
-sub = MOD_SEP_BREAK;
-}
-else if(!strcasecmp(bot->trig_called , "^!")) 
-{ sub = MOD_SEP_CRUSH;
-}
-else if(!strcasecmp(bot->trig_called, "^#")) {
-sub = MOD_SEP_COMMENT;
-}
+  if (!strcasecmp (bot->trig_called, "^:"))
+    {
+      sub = MOD_SEP_BREAK;
+    }
+  else if (!strcasecmp (bot->trig_called, "^!"))
+    {
+      sub = MOD_SEP_CRUSH;
+    }
+  else if (!strcasecmp (bot->trig_called, "^#"))
+    {
+      sub = MOD_SEP_COMMENT;
+    }
 
-else return NULL;
-
-if(sub == MOD_SEP_BREAK){ 
-  charcat_bot (bot->txt_data_out, 0x01);
-  strlcat_bot (bot->txt_data_out, bot->txt_data_in);
- strlcat_bot (bot->txt_data_out, eat_whitespace (bot->dl_module_arg));
-}
-else if(sub == MOD_SEP_CRUSH) {
-  str_clean_sep_shrink (bot->txt_data_out, strlen (bot->txt_data_out) + 1);
-  strlcat_bot (bot->txt_data_out, bot->txt_data_in);
-  strlcat_bot (bot->txt_data_out, eat_whitespace (bot->dl_module_arg));
-}
-else if(sub == MOD_SEP_COMMENT) {
-  if (bot->iscomment)
-    bot->iscomment = 0;
   else
-    bot->iscomment = 1;
-}
+    return NULL;
+
+  if (sub == MOD_SEP_BREAK)
+    {
+      charcat_bot (bot->txt_data_out, 0x01);
+      strlcat_bot (bot->txt_data_out, bot->txt_data_in);
+      strlcat_bot (bot->txt_data_out, eat_whitespace (bot->dl_module_arg));
+    }
+  else if (sub == MOD_SEP_CRUSH)
+    {
+      str_clean_sep_shrink (bot->txt_data_out,
+			    strlen (bot->txt_data_out) + 1);
+      strlcat_bot (bot->txt_data_out, bot->txt_data_in);
+      strlcat_bot (bot->txt_data_out, eat_whitespace (bot->dl_module_arg));
+    }
+  else if (sub == MOD_SEP_COMMENT)
+    {
+      if (bot->iscomment)
+	bot->iscomment = 0;
+      else
+	bot->iscomment = 1;
+    }
 
   return bot;
 }

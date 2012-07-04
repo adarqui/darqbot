@@ -29,8 +29,8 @@ void
 __quote_init__ (void)
 {
 
-strlcpy_buf(mod_quote_info.name, "mod_quote");
-strlcpy_buf(mod_quote_info.trigger, "^quote");
+  strlcpy_buf (mod_quote_info.name, "mod_quote");
+  strlcpy_buf (mod_quote_info.trigger, "^quote");
 
   mod_quote_info.init = quote_init;
   mod_quote_info.fini = quote_fini;
@@ -54,7 +54,7 @@ quote_init (dlist_t * dlist_node, bot_t * bot)
 
   debug (bot, "quote_init: Entered\n");
 
-      quote_add_files_to_db ();
+  quote_add_files_to_db ();
 
   return NULL;
 }
@@ -86,18 +86,18 @@ quote_run (dlist_t * dlist_node, bot_t * bot)
 {
   char *dl_module_arg_after_options, *dl_options_ptr;
   int opt_1;
-char * opt_title=NULL;
+  char *opt_title = NULL;
 
   debug (bot, "quote_run: Entered\n");
 
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "quote_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "quote_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -106,7 +106,7 @@ char * opt_title=NULL;
 
   opt_1 = 0;
 
-opt_title= NULL;
+  opt_title = NULL;
 
 
   MOD_OPTIONS_TOP_HALF;
@@ -123,10 +123,10 @@ opt_title= NULL;
 
 
 char *
-quote_change_string (char *string, char * opt_title)
+quote_change_string (char *string, char *opt_title)
 {
-dlist_t * dptr_pair = NULL;
-xdb_pair_t *pair = NULL;
+  dlist_t *dptr_pair = NULL;
+  xdb_pair_t *pair = NULL;
   char *str;
   char buf[MAX_BUF_SZ];
 
@@ -140,31 +140,38 @@ xdb_pair_t *pair = NULL;
 
   memset (buf, 0, sizeof (buf));
 
-if(!opt_title) {
-dptr_pair = (dlist_t *)dlist_node_rand(dl_quote_pairs);
-if(!dptr_pair) return NULL;
-pair = (xdb_pair_t *) dlist_data(dptr_pair);
-}
-else {
-pair = xdb_pair_find_by_key(dl_quote_pairs,opt_title);
-}
+  if (!opt_title)
+    {
+      dptr_pair = (dlist_t *) dlist_node_rand (dl_quote_pairs);
+      if (!dptr_pair)
+	return NULL;
+      pair = (xdb_pair_t *) dlist_data (dptr_pair);
+    }
+  else
+    {
+      pair = xdb_pair_find_by_key (dl_quote_pairs, opt_title);
+    }
 
-if(!pair) return NULL;
+  if (!pair)
+    return NULL;
 
-str = quote_get(pair, string);
+  str = quote_get (pair, string);
 
   return str;
 }
 
 
 
-char * quote_get(xdb_pair_t * pair, char * string) {
-DB * db=NULL;
-int count = 0, recnum=0;
-char * str=NULL;
-xdb_pair_t * pair_2=NULL;
+char *
+quote_get (xdb_pair_t * pair, char *string)
+{
+  DB *db = NULL;
+  int count = 0, recnum = 0;
+  char *str = NULL;
+  xdb_pair_t *pair_2 = NULL;
 
-if(!pair) return NULL;
+  if (!pair)
+    return NULL;
 
   db = xdb_open (pair->value);
   if (!db)
@@ -176,11 +183,11 @@ if(!pair) return NULL;
 
   printf ("count=%i\n", count);
 
-recnum = rand() % count;
+  recnum = rand () % count;
 
   pair_2 = xdb_get_recnum (db, recnum);
 
-str = strdup(pair_2->value);
+  str = strdup (pair_2->value);
 
   if (db)
     xdb_fini (db);
@@ -189,7 +196,7 @@ str = strdup(pair_2->value);
     xdb_pair_destroy (pair_2);
 
 
-return str;
+  return str;
 }
 
 
@@ -212,9 +219,7 @@ quote_add_files_to_db (void)
 
 
   dl =
-    files_get_listing (NULL, dir,
-                           FILES_NORMAL | FILES_RECURSE |
-                           FILES_NODOT);
+    files_get_listing (NULL, dir, FILES_NORMAL | FILES_RECURSE | FILES_NODOT);
   if (!dl)
     goto cleanup;
 
@@ -231,11 +236,11 @@ quote_add_files_to_db (void)
 
     if (suffix)
       {
-        if (!strcasecmp (suffix, ".quot"))
-          {
-            dlist_remove_and_free (&dl, &dptr, free);
-            continue;
-          }
+	if (!strcasecmp (suffix, ".quot"))
+	  {
+	    dlist_remove_and_free (&dl, &dptr, free);
+	    continue;
+	  }
       }
 
     suffix = strrchr (str, '/');
@@ -259,7 +264,7 @@ quote_add_files_to_db (void)
   dlist_fornext (dl, dptr)
   {
     debug (NULL, "quote_add_files_to_db: file=%s\n",
-               (char *) dlist_data (dptr));
+	   (char *) dlist_data (dptr));
     quote_add_files_to_db_file ((char *) dlist_data (dptr));
   }
 
@@ -303,29 +308,29 @@ quote_add_files_to_db_file (char *name)
     goto cleanup;
 
   while (1)
-    
+
     {
       memset (buf, 0, sizeof (buf));
 
       if (fgets (buf, sizeof (buf) - 1, fp) == NULL)
-        break;
+	break;
       strstrip_nl (buf);
 
-tok_2 = eat_whitespace(buf);
-str_shrink_quotes(tok_2);
+      tok_2 = eat_whitespace (buf);
+      str_shrink_quotes (tok_2);
 
       if (buf[0] == '#')
-        continue;
+	continue;
 
       if (strlen (buf) == 0)
-        continue;
+	continue;
 
-tok_1 = itocstr(count);
+      tok_1 = itocstr (count);
 
-          xdb_write (db, tok_1, tok_2);
+      xdb_write (db, tok_1, tok_2);
 
-          count++;
-        }
+      count++;
+    }
 
 cleanup:
   if (fp)
@@ -336,5 +341,3 @@ cleanup:
 
   return;
 }
-
-

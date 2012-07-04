@@ -29,8 +29,8 @@ void
 __shake1_init__ (void)
 {
 
-strlcpy_buf(mod_shake1_info.name, "mod_shake1");
-strlcpy_buf(mod_shake1_info.trigger, "^shake1");
+  strlcpy_buf (mod_shake1_info.name, "mod_shake1");
+  strlcpy_buf (mod_shake1_info.trigger, "^shake1");
 
   mod_shake1_info.init = shake1_init;
   mod_shake1_info.fini = shake1_fini;
@@ -115,12 +115,12 @@ shake1_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
 
   debug (bot,
-	     "shake1_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "shake1_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
 
@@ -151,7 +151,7 @@ shake1_get_sym (FILE * fp, off_t * offsets, int num)
   if (!fp || !offsets || num < 0)
     return NULL;
 
-bz(buf);
+  bz (buf);
 
   off = offsets[num];
 
@@ -197,7 +197,7 @@ shake1_change_string (char *string, int opt)
   str = shake1_get_sym (shake1_info.fp_3, shake1_info.fp_3_offsets, k);
   strlcat_bot (buf, str);
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;
@@ -210,8 +210,8 @@ shake1_print_info (bot_t * bot)
 {
 
   debug (bot, "shake1_print_info: 1_lines=%i, 2_lines=%i, 3_lines=%i\n",
-	     shake1_info.fp_1_lines, shake1_info.fp_2_lines,
-	     shake1_info.fp_3_lines);
+	 shake1_info.fp_1_lines, shake1_info.fp_2_lines,
+	 shake1_info.fp_3_lines);
 
   return;
 }

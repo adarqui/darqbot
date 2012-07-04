@@ -29,8 +29,8 @@ void
 __packmulti_init__ (void)
 {
 
-strlcpy_buf(mod_packmulti_info.name, "mod_packmulti");
-strlcpy_buf(mod_packmulti_info.trigger, "^packmulti");
+  strlcpy_buf (mod_packmulti_info.name, "mod_packmulti");
+  strlcpy_buf (mod_packmulti_info.trigger, "^packmulti");
 
   mod_packmulti_info.init = packmulti_init;
   mod_packmulti_info.fini = packmulti_fini;
@@ -85,13 +85,13 @@ packmulti_run (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot, "packmulti_run: Entered\n");
 
   debug (bot,
-	     "packmulti_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "packmulti_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -136,7 +136,7 @@ packmulti_change_string (bot_t * bot, char *string, int opt)
   if (sep_ptr)
     string = sep_ptr;
 
-bz(buf);
+  bz (buf);
 
   i = 0;
   while (*string)
@@ -153,7 +153,7 @@ bz(buf);
       i++;
     }
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;

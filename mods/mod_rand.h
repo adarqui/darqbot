@@ -46,8 +46,8 @@ bot_t *rand_run (dlist_t *, bot_t *);
 void __rand_init__ (void) __attribute__ ((constructor));
 
 char *rand_change_string (char *, int);
-char *rand_op_data(char *);
-char * rand_op_num(char *);
-char *rand_op_word(char *);
+char *rand_op_data (char *);
+char *rand_op_num (char *);
+char *rand_op_word (char *);
 
 #endif

@@ -30,10 +30,10 @@ __rot13_init__ (void)
 {
 
 
-strlcpy_buf(mod_rot13_info.name, "mod_rot13");
-strlcpy_buf(mod_rot13_info.trigger, "^rot13");
+  strlcpy_buf (mod_rot13_info.name, "mod_rot13");
+  strlcpy_buf (mod_rot13_info.trigger, "^rot13");
 
-module_add_subtrigs(&mod_rot13_info, "^caesar");
+  module_add_subtrigs (&mod_rot13_info, "^caesar");
 
   mod_rot13_info.init = rot13_init;
   mod_rot13_info.fini = rot13_fini;
@@ -90,11 +90,11 @@ rot13_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "rot13_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "rot13_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))

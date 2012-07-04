@@ -32,8 +32,8 @@ void
 __gdaemon_init__ (void)
 {
 
-strlcpy_buf(gmod_gdaemon_info.name, "gmod_gdaemon");
-strlcpy_buf(gmod_gdaemon_info.trigger, "^gdaemon");
+  strlcpy_buf (gmod_gdaemon_info.name, "gmod_gdaemon");
+  strlcpy_buf (gmod_gdaemon_info.trigger, "^gdaemon");
 
   gmod_gdaemon_info.init = gdaemon_init;
   gmod_gdaemon_info.fini = gdaemon_fini;
@@ -140,11 +140,11 @@ gdaemon_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "gdaemon_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "gdaemon_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -159,7 +159,7 @@ gdaemon_run (dlist_t * dlist_node, bot_t * bot)
   gmod = (bot_gmod_elm_t *) dlist_data (dptr_gmod);
   if (!gmod)
     {
-      debug(NULL, "gdaemon_run: GDAEMON GMOD=NULL");
+      debug (NULL, "gdaemon_run: GDAEMON GMOD=NULL");
       return NULL;
     }
 
@@ -193,7 +193,7 @@ gdaemon_run (dlist_t * dlist_node, bot_t * bot)
       bot_daemon (gdaemon->flags, mod_names, bots, gdaemon->new_name,
 		  gdaemon->fd_unix_path);
 
-gi->pid_child = getpid();
+      gi->pid_child = getpid ();
     }
   else
     return bot;
@@ -231,9 +231,7 @@ gdaemon_process_options (gdaemon_t * gdaemon, char *string)
   memset (buf, 0, sizeof (buf));
 
 
-  dl =
-    tokenize (NULL, string,
-		  TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
+  dl = tokenize (NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
   if (!dl)
     return NULL;
 
@@ -300,9 +298,10 @@ gdaemon_process_options_parse (gdaemon_t * gdaemon, char *string)
       gdaemon->flags |= BOT_DAEMON_UNIX_RESTART;
       gdaemon->fd_unix_path = strdup (&string[strlen ("fd_unix_path=")]);
     }
-else if(!strncasecmp_len(string, "clean_fds")) {
-gdaemon->flags |= BOT_DAEMON_CLEAN_FDS;
-}
+  else if (!strncasecmp_len (string, "clean_fds"))
+    {
+      gdaemon->flags |= BOT_DAEMON_CLEAN_FDS;
+    }
 
 
   gmodule_parse_common_options (gdaemon->bot, gdaemon->gmod, string);
@@ -323,7 +322,7 @@ gdaemon_process_options_parse_mod_names (gdaemon_t * gdaemon, char *string)
 
   dl =
     tokenize (gdaemon->bot, string,
-		  TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, ",");
+	      TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, ",");
   if (!dl)
     return;
 
@@ -385,7 +384,7 @@ gdaemon_output (dlist_t * dlist_node, bot_t * bot)
     }
 
   debug (NULL, "gdaemon_output: in=[%s], out=[%s]\n", bot->txt_data_in,
-	     bot->txt_data_out);
+	 bot->txt_data_out);
 
   gmodule_down (dlist_node, bot);
 
@@ -415,7 +414,7 @@ gdaemon_input (dlist_t * dlist_node, bot_t * bot)
   gmodule_up (dlist_node, bot);
 
   debug (NULL, "gdaemon_input: in=[%s], out=[%s]\n", bot->txt_data_in,
-	     bot->txt_data_out);
+	 bot->txt_data_out);
 
   debug (NULL, "gdaemon_input: end");
 

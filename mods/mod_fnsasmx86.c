@@ -29,8 +29,8 @@ void
 __fnsasmx86_init__ (void)
 {
 
-strlcpy_buf(mod_fnsasmx86_info.name, "mod_fnsasmx86");
-strlcpy_buf(mod_fnsasmx86_info.trigger, "^fnsasmx86");
+  strlcpy_buf (mod_fnsasmx86_info.name, "mod_fnsasmx86");
+  strlcpy_buf (mod_fnsasmx86_info.trigger, "^fnsasmx86");
 
   mod_fnsasmx86_info.init = fnsasmx86_init;
   mod_fnsasmx86_info.fini = fnsasmx86_fini;
@@ -91,11 +91,11 @@ fnsasmx86_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "fnsasmx86_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "fnsasmx86_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -145,7 +145,7 @@ fnsasmx86_change_string (bot_t * bot, char *string, int opt)
 
   if (opt == MOD_FNSASMX86_TEST)
     {
-     str=  fnsasmx86_test (bot);
+      str = fnsasmx86_test (bot);
     }
   else if (opt == MOD_FNSASMX86_ON)
     {
@@ -196,47 +196,56 @@ fnsasmx86_off (bot_t * bot)
 char *
 fnsasmx86_test (bot_t * bot)
 {
-dlist_t * dl_text=NULL;
-  char buf[132], *str=NULL;
+  dlist_t *dl_text = NULL;
+  char buf[132], *str = NULL;
 
   strlcpy_buf (buf, "hey");
 
-  dl_str_unite (&dl_text, "=> fnsasmx86_test: asmx86_true() = %i\n", asmx86_true ());
+  dl_str_unite (&dl_text, "=> fnsasmx86_test: asmx86_true() = %i\n",
+		asmx86_true ());
   dl_str_unite (&dl_text, "=> fnsasmx86_test: asmx86_false() = %i\n",
-	     asmx86_false ());
+		asmx86_false ());
   dl_str_unite (&dl_text, "=> fnsasmx86_test: asmx86_val_int(99) = %i\n",
-	     asmx86_val_int (99));
-  dl_str_unite (&dl_text, "=> fnsasmx86_test: asmx86_val_string(\"hello\") = %s\n",
-	     asmx86_val_string ("hello"));
-  dl_str_unite (&dl_text, "=> fnsasmx86_test: asmx86_strlen(\"hello\") = %i\n",
-	     asmx86_strlen ("hello"));
+		asmx86_val_int (99));
+  dl_str_unite (&dl_text,
+		"=> fnsasmx86_test: asmx86_val_string(\"hello\") = %s\n",
+		asmx86_val_string ("hello"));
+  dl_str_unite (&dl_text,
+		"=> fnsasmx86_test: asmx86_strlen(\"hello\") = %i\n",
+		asmx86_strlen ("hello"));
   dl_str_unite (&dl_text, "=> fnsasmx86_test: asmx86_strlen(\"yo\") = %i\n",
-	     asmx86_strlen ("yo"));
+		asmx86_strlen ("yo"));
   dl_str_unite (&dl_text, "=> fnsasmx86_test: asmx86_strlen(\"\") = %i\n",
-	     asmx86_strlen (""));
+		asmx86_strlen (""));
   dl_str_unite (&dl_text, "=> fnsasmx86_test: buf=%s\n", buf);
   dl_str_unite (&dl_text, "=> fnsasmx86_test: asmx86_memset(buf,0,..) = %s\n",
-	     asmx86_memset (buf, 0, sizeof (buf)));
-  dl_str_unite (&dl_text, "=> fnsasmx86_test: asmx86_memset(buf,0x41,..) = %s\n",
-	     asmx86_memset (buf, 0x41, sizeof (buf) - 1));
+		asmx86_memset (buf, 0, sizeof (buf)));
+  dl_str_unite (&dl_text,
+		"=> fnsasmx86_test: asmx86_memset(buf,0x41,..) = %s\n",
+		asmx86_memset (buf, 0x41, sizeof (buf) - 1));
   asmx86_bzero (buf, sizeof (buf));
   dl_str_unite (&dl_text, "=> fnsasmx86_test: asmx86_bzero(buf) = %s\n", buf);
-  dl_str_unite (&dl_text, "=> fnsasmx86_test: asmx86_strcmp(\"hi\", \"yo\") = %i\n",
-	     asmx86_strcmp ("hi", "yo"));
-  dl_str_unite (&dl_text, "=> fnsasmx86_test: asmx86_strcmp(\"yo\", \"yo\") = %i\n",
-	     asmx86_strcmp ("yo", "yo"));
-  dl_str_unite (&dl_text, "=> fnsasmx86_test: asmx86_strncmp(\"hi\", \"yo\") = %i\n",
-	     asmx86_strncmp ("hi", "yo", 2));
-  dl_str_unite (&dl_text, "=> fnsasmx86_test: asmx86_strncmp(\"yo\", \"yo\") = %i\n",
-	     asmx86_strncmp ("yo", "yo", 2));
-  dl_str_unite (&dl_text, "=> fnsasmx86_test: asmx86_strncmp(\"hey\", \"yo\") = %i\n",
-	     asmx86_strncmp ("hey", "yo", 3));
   dl_str_unite (&dl_text,
-	     "=> fnsasmx86_test: asmx86_strncmp(\"yoyo\", \"yoyo\") = %i\n",
-	     asmx86_strncmp ("yoyo", "yoyo", 3));
+		"=> fnsasmx86_test: asmx86_strcmp(\"hi\", \"yo\") = %i\n",
+		asmx86_strcmp ("hi", "yo"));
+  dl_str_unite (&dl_text,
+		"=> fnsasmx86_test: asmx86_strcmp(\"yo\", \"yo\") = %i\n",
+		asmx86_strcmp ("yo", "yo"));
+  dl_str_unite (&dl_text,
+		"=> fnsasmx86_test: asmx86_strncmp(\"hi\", \"yo\") = %i\n",
+		asmx86_strncmp ("hi", "yo", 2));
+  dl_str_unite (&dl_text,
+		"=> fnsasmx86_test: asmx86_strncmp(\"yo\", \"yo\") = %i\n",
+		asmx86_strncmp ("yo", "yo", 2));
+  dl_str_unite (&dl_text,
+		"=> fnsasmx86_test: asmx86_strncmp(\"hey\", \"yo\") = %i\n",
+		asmx86_strncmp ("hey", "yo", 3));
+  dl_str_unite (&dl_text,
+		"=> fnsasmx86_test: asmx86_strncmp(\"yoyo\", \"yoyo\") = %i\n",
+		asmx86_strncmp ("yoyo", "yoyo", 3));
 
-str = dlist_to_str(dl_text);
-dl_str_destroy(&dl_text);
+  str = dlist_to_str (dl_text);
+  dl_str_destroy (&dl_text);
 
   return str;
 }

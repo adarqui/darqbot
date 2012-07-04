@@ -132,7 +132,7 @@ relink_find_buf_data (char *buf, int buf_sz, char **msg, int *len)
   else
     *len = rlpkt->type;
 
-debug(NULL, "relink_find_buf_data: *len=%i, *msg=[%s]\n", *len, *msg);
+  debug (NULL, "relink_find_buf_data: *len=%i, *msg=[%s]\n", *len, *msg);
 
   return 0;
 }
@@ -325,19 +325,19 @@ relink_packet_print (char *msg, relink_control_pkt_t * rlpkt)
 
   debug (NULL, "%s", msg);
   debug (NULL,
-	     "relink control packet:\n\trlpkt->magic=%lx\n\trlpkt->id=%i\n\trlpkt->op=%i\n\trlpkt->type=%i\n\trlpkt->subtype=%i\n",
-	     rlpkt->magic, rlpkt->id, rlpkt->op, rlpkt->type, rlpkt->subtype);
+	 "relink control packet:\n\trlpkt->magic=%lx\n\trlpkt->id=%i\n\trlpkt->op=%i\n\trlpkt->type=%i\n\trlpkt->subtype=%i\n",
+	 rlpkt->magic, rlpkt->id, rlpkt->op, rlpkt->type, rlpkt->subtype);
 
   if (rlpkt->op == RELINK_CONTROL_OP_RELINK)
     {
       rlpkt_relink =
 	(relink_control_pkt_relink_t *) (ptr + sizeof (relink_control_pkt_t));
       debug (NULL,
-		 "\tRELINK_CONTROL_OP_RELINK PACKET:\n\t\trelink->host=%s\n\t\trelink->port=%i\n",
-		 rlpkt_relink->host, rlpkt_relink->port);
+	     "\tRELINK_CONTROL_OP_RELINK PACKET:\n\t\trelink->host=%s\n\t\trelink->port=%i\n",
+	     rlpkt_relink->host, rlpkt_relink->port);
       debug_hexdump_fp (stdout, 12, (unsigned char *) rlpkt,
-			    sizeof (relink_control_pkt_t) +
-			    sizeof (relink_control_pkt_relink_t));
+			sizeof (relink_control_pkt_t) +
+			sizeof (relink_control_pkt_relink_t));
     }
   else if (rlpkt->op == RELINK_CONTROL_OP_DATA)
     {
@@ -346,7 +346,7 @@ relink_packet_print (char *msg, relink_control_pkt_t * rlpkt)
       else
 	new_len = rlpkt->type;
       debug_hexdump_fp (stdout, 12, (unsigned char *) rlpkt,
-			    sizeof (relink_control_pkt_t) + new_len);
+			sizeof (relink_control_pkt_t) + new_len);
     }
   else if (rlpkt->op == RELINK_CONTROL_OP_RESULT)
     {
@@ -362,15 +362,15 @@ relink_packet_print (char *msg, relink_control_pkt_t * rlpkt)
 	      new_len = rlpkt->subtype;
 	    }
 	  debug (NULL,
-		     "\n\tRELINK_CONTROL_RESULT_STRING:\n\tstring=[%.*s]\n",
-		     new_len, ptr + sizeof (relink_control_pkt_t));
+		 "\n\tRELINK_CONTROL_RESULT_STRING:\n\tstring=[%.*s]\n",
+		 new_len, ptr + sizeof (relink_control_pkt_t));
 	}
 
     }
   else
     {
       debug_hexdump_fp (stdout, 12, (unsigned char *) rlpkt,
-			    sizeof (relink_control_pkt_t));
+			sizeof (relink_control_pkt_t));
     }
 
 

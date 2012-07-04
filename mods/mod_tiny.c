@@ -29,8 +29,8 @@ void
 __tiny_init__ (void)
 {
 
-strlcpy_buf(mod_tiny_info.name, "mod_tiny");
-strlcpy_buf(mod_tiny_info.trigger, "^tiny");
+  strlcpy_buf (mod_tiny_info.name, "mod_tiny");
+  strlcpy_buf (mod_tiny_info.trigger, "^tiny");
 
 
   mod_tiny_info.init = tiny_init;
@@ -88,11 +88,11 @@ tiny_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "tiny_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "tiny_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -148,7 +148,7 @@ tiny_change_string (bot_t * bot, char *string, int opt)
   if (!str_url)
     return NULL;
 
-  snprintf_buf (buf,  "longurl=%s", str_url);
+  snprintf_buf (buf, "longurl=%s", str_url);
 
   curl = curl_easy_init ();
   if (curl)

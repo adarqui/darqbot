@@ -29,8 +29,8 @@ void
 __rant_init__ (void)
 {
 
-strlcpy_buf(mod_rant_info.name, "mod_rant");
-strlcpy_buf(mod_rant_info.trigger, "^rant");
+  strlcpy_buf (mod_rant_info.name, "mod_rant");
+  strlcpy_buf (mod_rant_info.trigger, "^rant");
 
   mod_rant_info.init = rant_init;
   mod_rant_info.fini = rant_fini;
@@ -55,7 +55,7 @@ rant_init (dlist_t * dlist_node, bot_t * bot)
   debug (bot, "rant_init: Entered\n");
 
   swap_inmem_get_assign_and_remove ("dl_mod_rant", 0,
-					(void **) &dl_mod_rant_unique);
+				    (void **) &dl_mod_rant_unique);
 
   return NULL;
 }
@@ -95,11 +95,11 @@ rant_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "rant_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "rant_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -200,7 +200,7 @@ rant_change_string (bot_t * bot, char *string, int opt)
 
 
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;
@@ -257,7 +257,7 @@ rant_op_push (bot_t * bot, dlist_t ** dl, char *string)
     {
       bu =
 	unique_create (bot, &dl_mod_rant_unique,
-			   UNIQUE_ID_TAG | UNIQUE_ID_NICK);
+		       UNIQUE_ID_TAG | UNIQUE_ID_NICK);
       if (!bu)
 	return NULL;
       dl = (dlist_t **) & bu->data;

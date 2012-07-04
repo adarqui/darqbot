@@ -29,8 +29,8 @@ void
 __smf_init__ (void)
 {
 
-strlcpy_buf(mod_smf_info.name, "mod_smf");
-strlcpy_buf(mod_smf_info.trigger, "^smf");
+  strlcpy_buf (mod_smf_info.name, "mod_smf");
+  strlcpy_buf (mod_smf_info.trigger, "^smf");
 
   mod_smf_info.init = smf_init;
   mod_smf_info.fini = smf_fini;
@@ -98,12 +98,12 @@ smf_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
 
   debug (bot,
-	     "smf_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "smf_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -150,7 +150,7 @@ smf_run (dlist_t * dlist_node, bot_t * bot)
       array_size = 5;
       array =
 	tokenize_array (bot, eat_whitespace (dl_module_arg_after_options),
-			    TOKENIZE_NORMAL, " ", &array_size);
+			TOKENIZE_NORMAL, " ", &array_size);
       for (i = 0; array[i] != NULL; i++)
 	{
 	  printf ("OMG %s\n", array[i]);
@@ -275,8 +275,8 @@ cleanup:
   if (si->curl)
     curl_easy_cleanup (si->curl);
 
-if(postfields)
-free(postfields);
+  if (postfields)
+    free (postfields);
 
   return si;
 }
@@ -416,7 +416,9 @@ smf_post (bot_t * bot, smf_info_t * si, char *subforum, char *topic,
   si->curl = curl_easy_init ();
 
   postfields = NULL;
-  url = str_unite_static ("%s/%s/?action=post2;start=0", si->smf_url, new_subforum);
+  url =
+    str_unite_static ("%s/%s/?action=post2;start=0", si->smf_url,
+		      new_subforum);
 
   curl_easy_setopt (si->curl, CURLOPT_URL, url);
   curl_easy_setopt (si->curl, CURLOPT_NOPROGRESS, 1);
@@ -456,8 +458,8 @@ smf_post (bot_t * bot, smf_info_t * si, char *subforum, char *topic,
   si->smf_posted_url =
     str_unite ("%s/%s/%s", si->smf_url, new_subforum, new_topic);
 
-if(postfields)
-free(postfields);
+  if (postfields)
+    free (postfields);
 
   return si;
 }
@@ -523,7 +525,7 @@ smf_parse_cookies (bot_t * bot, smf_info_t * si)
 	    }
 	}
 
-goto cleanup;
+      goto cleanup;
     }
 
   si->curl_res =
@@ -532,15 +534,15 @@ goto cleanup;
     {
       fprintf (stderr, "Curl curl_easy_getinfo failed: %s\n",
 	       curl_easy_strerror (si->curl_res));
-si = NULL;
-goto cleanup;
+      si = NULL;
+      goto cleanup;
     }
   nc = si->cookies, i = 1;
 
   if (!nc)
     {
-si = NULL;
-goto cleanup;
+      si = NULL;
+      goto cleanup;
     }
   while (nc)
     {
@@ -583,8 +585,8 @@ goto cleanup;
 //                    curl_slist_free_all(cookies);
 
 cleanup:
-if(fp)
-fclose(fp);
+  if (fp)
+    fclose (fp);
 
   return si;
 }
@@ -616,7 +618,7 @@ smf_change_string (bot_t * bot, char *subforum, char *topic, char *string,
   if (sep_ptr)
     string = sep_ptr;
 
-bz(buf);
+  bz (buf);
 
   user = pass = body = postfields = url = NULL;
   body = string;
@@ -635,12 +637,12 @@ bz(buf);
 
   if (!smf_login (bot, si))
     {
-      bot_fork_clean_exit(bot);
+      bot_fork_clean_exit (bot);
     }
 
   if (!smf_post (bot, si, subforum, topic, body))
     {
-bot_fork_clean_exit(bot);
+      bot_fork_clean_exit (bot);
     }
 
   if (si->smf_posted_url)

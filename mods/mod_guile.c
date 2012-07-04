@@ -29,8 +29,8 @@ void
 __guile_init__ (void)
 {
 
-strlcpy_buf(mod_guile_info.name, "mod_guile");
-strlcpy_buf(mod_guile_info.trigger, "^guile");
+  strlcpy_buf (mod_guile_info.name, "mod_guile");
+  strlcpy_buf (mod_guile_info.trigger, "^guile");
 
   mod_guile_info.init = guile_init;
   mod_guile_info.fini = guile_fini;
@@ -94,14 +94,14 @@ guile_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   guile_info.text_list = dlist_node;
   guile_info.bot = bot;
 
   debug (bot,
-	     "guile_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "guile_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -228,12 +228,13 @@ guile_inner_main (void *closure, int argc, char **argv)
       goto cleanup;
     }
 
- debug(NULL, "guile_inner_main: pipefds[0]=%i, pipefds[1]=%i\n", guile_info.pipefds[0], guile_info.pipefds[1]);
+  debug (NULL, "guile_inner_main: pipefds[0]=%i, pipefds[1]=%i\n",
+	 guile_info.pipefds[0], guile_info.pipefds[1]);
 
-if(guile_info.pipefds[0] != 0)
-{
-  close (0);
-}
+  if (guile_info.pipefds[0] != 0)
+    {
+      close (0);
+    }
   old_stdout = dup (1);
   close (1);
   close (2);
@@ -254,18 +255,18 @@ if(guile_info.pipefds[0] != 0)
   dup2 (old_stdout, 2);
 
   if (val <= 0)
-{
-bot_fork_clean_exit(guile_info.bot);
-}
+    {
+      bot_fork_clean_exit (guile_info.bot);
+    }
 
-bz (guile_info.bot->txt_data_in);
-strzero_bot(guile_info.bot->txt_data_out);
+  bz (guile_info.bot->txt_data_in);
+  strzero_bot (guile_info.bot->txt_data_out);
 
   if (guile_info.data_opt == DATA_OPT_OUT)
-{
-strlcat_bot(guile_info.bot->txt_data_in, guile_info.bot->txt_data_out);
-    strzero_bot (guile_info.bot->txt_data_out);
-}
+    {
+      strlcat_bot (guile_info.bot->txt_data_in, guile_info.bot->txt_data_out);
+      strzero_bot (guile_info.bot->txt_data_out);
+    }
   strlcat_bot (guile_info.bot->txt_data_in, buf);
 
 cleanup:
@@ -290,8 +291,8 @@ cleanup:
   pmodule_cur_run2 (bot);
 
 /* added 04/12/2012 */
-  if (sNULL(guile_info.bot->txt_data_out) != NULL && guile_info.bot->shouldsend
-      && sNULL(guile_info.bot->txt_to)!=NULL)
+  if (sNULL (guile_info.bot->txt_data_out) != NULL
+      && guile_info.bot->shouldsend && sNULL (guile_info.bot->txt_to) != NULL)
     {
 /* XXX
       gmodule_down (gi->pmod_cur_dlist_node, gi->pmod_cur_bot);
@@ -299,7 +300,7 @@ cleanup:
       gmodule_down (bot->dl_gmodules_cur, bot);
     }
 
-bot_fork_clean_exit(guile_info.bot);
+  bot_fork_clean_exit (guile_info.bot);
 
   return;
 }
@@ -309,7 +310,6 @@ bot_fork_clean_exit(guile_info.bot);
 void
 guile_alarm_handler (int signum)
 {
-bot_fork_clean_exit(NULL);
-return;
+  bot_fork_clean_exit (NULL);
+  return;
 }
-

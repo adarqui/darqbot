@@ -352,32 +352,37 @@ xsetproctitle (char *new_name)
   if (!gi->argv[0])
     return;
 
-memset(gi->argv[0],0,strlen(gi->argv[0]));
-  strlcpy (gi->argv[0], new_name,  strlen(gi->argv[0])-1);
+  memset (gi->argv[0], 0, strlen (gi->argv[0]));
+  strlcpy (gi->argv[0], new_name, strlen (gi->argv[0]) - 1);
   return;
 }
 
 
 
 
-char * random_data(int len) {
-int r,i;
-char * data=NULL;
+char *
+random_data (int len)
+{
+  int r, i;
+  char *data = NULL;
 
-if(len <=0) return NULL;
+  if (len <= 0)
+    return NULL;
 
-data = (char * ) calloc(1,len);
-if(!data) goto cleanup;
+  data = (char *) calloc (1, len);
+  if (!data)
+    goto cleanup;
 
-for(i=0;i<len;i++) {
-r = rand();
-data[i] = (char) r;
-}
+  for (i = 0; i < len; i++)
+    {
+      r = rand ();
+      data[i] = (char) r;
+    }
 
 
 cleanup:
 
-return data;
+  return data;
 }
 
 
@@ -398,4 +403,3 @@ clean_environ (void)
 
   return;
 }
- 

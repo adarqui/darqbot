@@ -29,8 +29,8 @@ void
 __vuln_init__ (void)
 {
 
-strlcpy_buf(mod_vuln_info.name, "mod_vuln");
-strlcpy_buf(mod_vuln_info.trigger, "^vuln");
+  strlcpy_buf (mod_vuln_info.name, "mod_vuln");
+  strlcpy_buf (mod_vuln_info.trigger, "^vuln");
 
   mod_vuln_info.init = vuln_init;
   mod_vuln_info.fini = vuln_fini;
@@ -88,11 +88,11 @@ vuln_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "vuln_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "vuln_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -130,7 +130,7 @@ vuln_change_string (char *string, int opt)
 
   memset (buf, 0, sizeof (buf));
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;
@@ -146,7 +146,7 @@ mod_vuln_offby1_1 (char *s)
 {
   char buf[15];
   memset (buf, 0, sizeof (buf));
-  strcat (buf, s);	// Final parameter should be: sizeof(buf)-1
+  strcat (buf, s);		// Final parameter should be: sizeof(buf)-1
   return;
 }
 
@@ -170,7 +170,7 @@ mod_vuln_overflow_1 (char *s)
 {
   char buf[132];
 
-  strcpy(buf, s);
+  strcpy (buf, s);
   return;
 }
 

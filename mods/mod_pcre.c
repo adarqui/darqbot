@@ -28,8 +28,8 @@
 void
 __pcre_init__ (void)
 {
-strlcpy_buf(mod_pcre_info.name, "mod_pcre");
-strlcpy_buf(mod_pcre_info.trigger, "^pcre");
+  strlcpy_buf (mod_pcre_info.name, "mod_pcre");
+  strlcpy_buf (mod_pcre_info.trigger, "^pcre");
 
   mod_pcre_info.init = pcre_init;
   mod_pcre_info.fini = pcre_fini;
@@ -88,11 +88,11 @@ pcre_run (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "pcre_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "pcre_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -244,7 +244,7 @@ pcre_change_string (bot_t * bot, char *string, int opt)
   offset_pcre = 0;
   flags_pcre = 0;
 
-  bz2(matches_pcre);
+  bz2 (matches_pcre);
 
   j = 0;
   while (1)
@@ -268,22 +268,24 @@ pcre_change_string (bot_t * bot, char *string, int opt)
 
       if (opt & OPT_EXTRACT)
 	{
-	  snprintf_buf (buf, "%.*s", matches_pcre[1] - matches_pcre[0], txt_ptr + matches_pcre[0]);
+	  snprintf_buf (buf, "%.*s", matches_pcre[1] - matches_pcre[0],
+			txt_ptr + matches_pcre[0]);
 	  printf ("EXTRACTING [%s], %i\n", buf,
 		  matches_pcre[1] - matches_pcre[0]);
 	}
       else if (opt & OPT_REMOVE)
 	{
-	  snprintf_buf (buf, "%.*s", matches_pcre[0] - offset_pcre, txt_ptr + offset_pcre);
+	  snprintf_buf (buf, "%.*s", matches_pcre[0] - offset_pcre,
+			txt_ptr + offset_pcre);
 	  printf ("REMOVING [%s], %i\n", buf, matches_pcre[0] - offset_pcre);
 	}
       else
 	{
 	  snprintf_buf (buf, "%.*s%s%.*s%s", matches_pcre[0] - offset_pcre,
-		    txt_ptr + offset_pcre,
-		    IRC_COLOR_BOLD_STR,
-		    matches_pcre[1] - matches_pcre[0],
-		    txt_ptr + matches_pcre[0], IRC_COLOR_RESET_STR);
+			txt_ptr + offset_pcre,
+			IRC_COLOR_BOLD_STR,
+			matches_pcre[1] - matches_pcre[0],
+			txt_ptr + matches_pcre[0], IRC_COLOR_RESET_STR);
 	}
 
       strlcat_bot (lbuf, buf);
@@ -295,18 +297,18 @@ pcre_change_string (bot_t * bot, char *string, int opt)
     }
 
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     {
       if (!(opt & OPT_EXTRACT))
 	strlcat_bot (lbuf, bot->txt_data_out + offset_pcre);
     }
 
-  if ((opt & OPT_REMOVE) && sNULL(buf) == NULL)
+  if ((opt & OPT_REMOVE) && sNULL (buf) == NULL)
     {
       strlcat_bot (lbuf, bot->txt_data_out + offset_pcre);
     }
 
-  if (sNULL(lbuf)!=NULL)
+  if (sNULL (lbuf) != NULL)
     str = strdup (lbuf);
 
   return str;

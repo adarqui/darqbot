@@ -29,8 +29,8 @@ void
 __me_init__ (void)
 {
 
-strlcpy_buf(mod_me_info.name, "mod_me");
-strlcpy_buf(mod_me_info.trigger, "^me");
+  strlcpy_buf (mod_me_info.name, "mod_me");
+  strlcpy_buf (mod_me_info.trigger, "^me");
 
   mod_me_info.init = me_init;
   mod_me_info.fini = me_fini;
@@ -67,7 +67,7 @@ bot_t *
 me_help (dlist_t * dlist_node, bot_t * bot)
 {
   debug (bot, "me_help: Entered\n");
-char * str=NULL;
+  char *str = NULL;
 
   if (!bot)
     return NULL;
@@ -75,25 +75,26 @@ char * str=NULL;
   bot->dl_module_help = "^me";
 
 
-str = str_unite(
-"Supported constants are (names that should be used are given in parenthesis): e (e), log2(e) (log2e), log10(e) (log10e),\n"
-"ln(2) (ln2), ln(10) (ln10), pi (pi), pi / 2 (pi_2), pi / 4 (pi_4), 1 / pi (1_pi), 2 / pi (2_pi), 2 / sqrt(pi) (2_sqrtpi),\n"
-"sqrt(2) (sqrt) and sqrt(1 / 2) (sqrt1_2).\n\n"
-"Variable name is any combination of alphanumericals and _ characters beginning with a non-digit that is not elementary function name.\n\n"
-"Supported elementary functions are (names that should be used are given in parenthesis): exponential (exp), logarithmic\n"
-"(log), square root (sqrt), sine (sin), cosine (cos), tangent (tan), cotangent (cot), secant (sec), cosecant (csc), inverse\n"
-"sine (asin), inverse cosine (acos), inverse tangent (atan), inverse cotangent (acot), inverse secant (asec), inverse\n"
-"cosecant (acsc), hyperbolic sine (sinh), cosine (cosh), hyperbolic tangent (tanh), hyperbolic cotangent (coth), hyperbolic\n"
-"secant (sech), hyperbolic cosecant (csch), hyperbolic inverse sine (asinh), hyperbolic inverse cosine (acosh), hyperbolic\n"
-"inverse tangent (atanh), hyperbolic inverse cotangent (acoth), hyperbolic inverse secant (asech), hyperbolic inverse\n"
-"cosecant (acsch), absolute value (abs), Heaviside step function (step) with value 1 defined for x = 0, Dirac delta\n"
-"function with infinity (delta) and not-a-number (nandelta) values defined for x = 0, and error function (erf).\n\n"
-"Supported unary operation is unary minus ('-').\n\n"
-"Supported binary operations are addition ('+'), subtraction ('+'), multiplication ('*'), division multiplication ('/') and exponentiation ('^').\n");
+  str =
+    str_unite
+    ("Supported constants are (names that should be used are given in parenthesis): e (e), log2(e) (log2e), log10(e) (log10e),\n"
+     "ln(2) (ln2), ln(10) (ln10), pi (pi), pi / 2 (pi_2), pi / 4 (pi_4), 1 / pi (1_pi), 2 / pi (2_pi), 2 / sqrt(pi) (2_sqrtpi),\n"
+     "sqrt(2) (sqrt) and sqrt(1 / 2) (sqrt1_2).\n\n"
+     "Variable name is any combination of alphanumericals and _ characters beginning with a non-digit that is not elementary function name.\n\n"
+     "Supported elementary functions are (names that should be used are given in parenthesis): exponential (exp), logarithmic\n"
+     "(log), square root (sqrt), sine (sin), cosine (cos), tangent (tan), cotangent (cot), secant (sec), cosecant (csc), inverse\n"
+     "sine (asin), inverse cosine (acos), inverse tangent (atan), inverse cotangent (acot), inverse secant (asec), inverse\n"
+     "cosecant (acsc), hyperbolic sine (sinh), cosine (cosh), hyperbolic tangent (tanh), hyperbolic cotangent (coth), hyperbolic\n"
+     "secant (sech), hyperbolic cosecant (csch), hyperbolic inverse sine (asinh), hyperbolic inverse cosine (acosh), hyperbolic\n"
+     "inverse tangent (atanh), hyperbolic inverse cotangent (acoth), hyperbolic inverse secant (asech), hyperbolic inverse\n"
+     "cosecant (acsch), absolute value (abs), Heaviside step function (step) with value 1 defined for x = 0, Dirac delta\n"
+     "function with infinity (delta) and not-a-number (nandelta) values defined for x = 0, and error function (erf).\n\n"
+     "Supported unary operation is unary minus ('-').\n\n"
+     "Supported binary operations are addition ('+'), subtraction ('+'), multiplication ('*'), division multiplication ('/') and exponentiation ('^').\n");
 
-strlcat_bot(bot->txt_data_out, str);
+  strlcat_bot (bot->txt_data_out, str);
 
-free(str);
+  free (str);
 
   return NULL;
 }
@@ -102,8 +103,8 @@ bot_t *
 me_run (dlist_t * dlist_node, bot_t * bot)
 {
   char *dl_module_arg_after_options, *dl_options_ptr;
-int opt=0;
-me_t me;
+  int opt = 0;
+  me_t me;
 
   debug (bot, "me_run: Entered\n");
 
@@ -112,20 +113,20 @@ me_t me;
     return NULL;
 
   debug (bot,
-	     "me_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "me_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
 
 
   if (bot_shouldreturn (bot))
     return NULL;
 
-memset(&me,0,sizeof(me));
+  memset (&me, 0, sizeof (me));
 
   MOD_OPTIONS_TOP_HALF;
-me_parse_options(dl_options_ptr, &me);
+  me_parse_options (dl_options_ptr, &me);
   MOD_OPTIONS_BOTTOM_HALF;
 
   bot->shouldsend = 1;
@@ -142,20 +143,20 @@ me_parse_options(dl_options_ptr, &me);
 char *
 me_change_string (char *string, int opt, me_t * me)
 {
-void * f = NULL,* f_prim=NULL;
+  void *f = NULL, *f_prim = NULL;
   char *sep_ptr;
   char *str = NULL;
 
-char ** names=NULL;
-int count=0;
+  char **names = NULL;
+  int count = 0;
 
-char * f_prim_str=NULL;
+  char *f_prim_str = NULL;
 
-char * vars_str=NULL;
+  char *vars_str = NULL;
 
-double res=0, res_prim=0;
+  double res = 0, res_prim = 0;
 
-debug(NULL, "me_change_string: Entered: %s\n",string);
+  debug (NULL, "me_change_string: Entered: %s\n", string);
 
   if (!me || !string)
     return NULL;
@@ -164,39 +165,47 @@ debug(NULL, "me_change_string: Entered: %s\n",string);
   if (sep_ptr)
     string = sep_ptr;
 
-if(!strlen(string)) return NULL;
+  if (!strlen (string))
+    return NULL;
 
-f = evaluator_create(string);
-if(!f) return NULL;
+  f = evaluator_create (string);
+  if (!f)
+    return NULL;
 
-evaluator_get_variables(f, &names, &count);
+  evaluator_get_variables (f, &names, &count);
 
-if(!names) goto cleanup;
+  if (!names)
+    goto cleanup;
 
-vars_str = array_to_str((void **)names, count, (char *(*)(void *))strdup);
-if(!vars_str) goto cleanup;
+  vars_str =
+    array_to_str ((void **) names, count, (char *(*)(void *)) strdup);
+  if (!vars_str)
+    goto cleanup;
 
 
-f_prim = evaluator_derivative_x(f);
+  f_prim = evaluator_derivative_x (f);
 
-if(!f_prim) goto cleanup;
+  if (!f_prim)
+    goto cleanup;
 
-f_prim_str = evaluator_get_string(f_prim);
+  f_prim_str = evaluator_get_string (f_prim);
 
-res = evaluator_evaluate_x_y_z(f, me->x, me->y, me->z);
-res_prim = evaluator_evaluate_x_y_z(f_prim,me->x,me->y,me->z);
+  res = evaluator_evaluate_x_y_z (f, me->x, me->y, me->z);
+  res_prim = evaluator_evaluate_x_y_z (f_prim, me->x, me->y, me->z);
 
-str = str_unite("f(x,y,z)=%f ... vars={%s} ::: f'(x)=%s=%f", res, vars_str, f_prim_str, res_prim);
+  str =
+    str_unite ("f(x,y,z)=%f ... vars={%s} ::: f'(x)=%s=%f", res, vars_str,
+	       f_prim_str, res_prim);
 
 cleanup:
-if(f_prim)
-evaluator_destroy(f_prim);
+  if (f_prim)
+    evaluator_destroy (f_prim);
 
-if(f)
-evaluator_destroy(f);
+  if (f)
+    evaluator_destroy (f);
 
-if(vars_str)
-free(vars_str);
+  if (vars_str)
+    free (vars_str);
 
   return str;
 }
@@ -204,36 +213,43 @@ free(vars_str);
 
 
 
-void me_parse_options(char * str, me_t * me ) { 
-dlist_t * dl=NULL,*dptr;
+void
+me_parse_options (char *str, me_t * me)
+{
+  dlist_t *dl = NULL, *dptr;
 
-debug(NULL, "me_parse_options: Entered\n");
-if(!str || !me)
-return;
+  debug (NULL, "me_parse_options: Entered\n");
+  if (!str || !me)
+    return;
 
-dl= tokenize(NULL, str, TOKENIZE_NORMAL|TOKENIZE_MATCHANY, " ,");
-if(!dl) return;
+  dl = tokenize (NULL, str, TOKENIZE_NORMAL | TOKENIZE_MATCHANY, " ,");
+  if (!dl)
+    return;
 
-dlist_fornext(dl, dptr) {
-str = (char *)dlist_data(dptr);
-if(!str) continue;
+  dlist_fornext (dl, dptr)
+  {
+    str = (char *) dlist_data (dptr);
+    if (!str)
+      continue;
 
-if(!strncasecmp_len(str, "x=")) {
-me->x = atof(&str[2]);
-me->x_set = 1;
+    if (!strncasecmp_len (str, "x="))
+      {
+	me->x = atof (&str[2]);
+	me->x_set = 1;
+      }
+    else if (!strncasecmp_len (str, "y="))
+      {
+	me->y = atof (&str[2]);
+	me->y_set = 1;
+      }
+    else if (!strncasecmp_len (str, "z="))
+      {
+	me->z = atof (&str[2]);
+	me->z_set = 1;
+      }
+  }
+
+  tokenize_destroy (NULL, &dl);
+
+  return;
 }
-else if(!strncasecmp_len(str, "y=")) {
-me->y = atof(&str[2]);
-me->y_set = 1;
-}
-else if(!strncasecmp_len(str,"z=")) {
-me->z = atof(&str[2]);
-me->z_set =1;
-}
-}
-
-tokenize_destroy(NULL, &dl);
-
-return;
-}
-

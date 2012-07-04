@@ -68,7 +68,7 @@ bot_t *quiz_fini (dlist_t *, bot_t *);
 bot_t *quiz_help (dlist_t *, bot_t *);
 bot_t *quiz_run (dlist_t *, bot_t *);
 bot_t *quiz_timer (dlist_t *, bot_t *);
-bot_t *quiz_off(dlist_t *, bot_t *);
+bot_t *quiz_off (dlist_t *, bot_t *);
 
 void __quiz_init__ (void) __attribute__ ((constructor));
 

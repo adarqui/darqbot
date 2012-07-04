@@ -33,8 +33,8 @@ __grelay_init__ (void)
   gmod_grelay_info.name = "gmod_grelay";
   gmod_grelay_info.trigger = strdup ("^relay");
 */
-strlcpy_buf(gmod_grelay_info.name, "gmod_grelay");
-strlcpy_buf(gmod_grelay_info.trigger, "^grelay");
+  strlcpy_buf (gmod_grelay_info.name, "gmod_grelay");
+  strlcpy_buf (gmod_grelay_info.trigger, "^grelay");
 
   gmod_grelay_info.init = grelay_init;
   gmod_grelay_info.fini = grelay_fini;
@@ -288,11 +288,11 @@ grelay_input (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "grelay_input: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "grelay_input: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -378,13 +378,13 @@ grelay_input (dlist_t * dlist_node, bot_t * bot)
       else
 	return NULL;
 
-puts("WTF1");
+      puts ("WTF1");
 
       module = xmodule_find_by_trig (type, tok_3);
       if (!module)
 	goto cleanup;
 
-puts("WTF2");
+      puts ("WTF2");
 
       if (!module->run)
 	goto cleanup;
@@ -392,7 +392,7 @@ puts("WTF2");
 /*
       memset (&bot->trig_called, 0, sizeof (bot->trig_called));
 */
-bz(bot->trig_called);
+      bz (bot->trig_called);
       strlcpy_buf (bot->trig_called, tok_2);
       bot->dl_module_arg = bot->trig_called + fn_strlen (tok_3);
       printf ("trig_called=%s, tok_2=%s, tok_3=%s\n", bot->trig_called, tok_2,
@@ -424,7 +424,7 @@ bot_line_clear(bot);
 
 
 cleanup:
-puts("WHYYYYYYYYYYYYYYYYYYYYYYYYY");
+  puts ("WHYYYYYYYYYYYYYYYYYYYYYYYYY");
 
   if (tok_3)
     free (tok_3);

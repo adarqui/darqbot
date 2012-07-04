@@ -46,10 +46,10 @@ global_defaults (void)
   timer_set ();
 
   safe_event_set (&global_info.ev_console, global_info.fd_console,
-	     EV_READ | EV_PERSIST, bot_evhook_console, NULL);
+		  EV_READ | EV_PERSIST, bot_evhook_console, NULL);
   safe_event_add (&global_info.ev_console, NULL);
 
-global_info.var_xmod_style = XMODULE_STYLE_LIST;
+  global_info.var_xmod_style = XMODULE_STYLE_LIST;
 
   return;
 }
@@ -63,34 +63,34 @@ global_conf_parse (void)
   int add;
 
 
-debug(NULL, "global_conf_parse: Entered\n");
+  debug (NULL, "global_conf_parse: Entered\n");
 
-  if (!sNULL(global_info.conf_dir))
+  if (!sNULL (global_info.conf_dir))
     {
-      strlcpy_buf(global_info.conf_dir,global_conf_dir ());
+      strlcpy_buf (global_info.conf_dir, global_conf_dir ());
     }
 
-  if (!sNULL(global_info.conf_dir))
+  if (!sNULL (global_info.conf_dir))
     {
       debug_err (NULL, "global_conf_parse: conf_dir=NULL\n");
     }
 
-  if (!sNULL(global_info.conf_file))
+  if (!sNULL (global_info.conf_file))
     {
-      strlcat_buf(global_info.conf_file,
-	str_unite_static ("%s/%s", global_info.conf_dir, BOT_DEF_CONFFILE));
+      strlcat_buf (global_info.conf_file,
+		   str_unite_static ("%s/%s", global_info.conf_dir,
+				     BOT_DEF_CONFFILE));
     }
 
   fp = fopen (global_info.conf_file, "r");
   if (!fp)
     {
       debug_err (NULL, "global_conf_parse: unable to open %s\n",
-	       global_info.conf_file);
+		 global_info.conf_file);
 
     }
 
-  debug (NULL, "global_conf_parse: opened %s\n",
-	     global_info.conf_file);
+  debug (NULL, "global_conf_parse: opened %s\n", global_info.conf_file);
 
   while (1)
     {
@@ -98,7 +98,7 @@ debug(NULL, "global_conf_parse: Entered\n");
       if (fgets (buf, sizeof (buf) - 1, fp) == NULL)
 	break;
 
-debug(NULL, "%s", buf);
+      debug (NULL, "%s", buf);
 
       strstrip_nl (buf);
       if (buf[0] == '+')
@@ -115,20 +115,22 @@ debug(NULL, "%s", buf);
 	  global_info.chroot_uid =
 	    atoi (&buf_ptr[fn_strlen ("chroot_uid") + 1]);
 	  debug (NULL, "global_conf_parse: chroot_uid=%i\n",
-		     global_info.chroot_uid);
+		 global_info.chroot_uid);
 	}
       else if (!strncasecmp_len (buf_ptr, "chroot_gid"))
 	{
 	  global_info.chroot_gid =
 	    atoi (&buf_ptr[fn_strlen ("chroot_gid") + 1]);
 	  debug (NULL, "global_conf_parse: chroot_gid=%i\n",
-		     global_info.chroot_gid);
+		 global_info.chroot_gid);
 	}
       else if (!strncasecmp_len (buf_ptr, "chroot_dir"))
 	{
 
-	  strlcat_buf(global_info.chroot_dir, &buf_ptr[fn_strlen ("chroot_dir") + 1]);
-	  debug (NULL, "global_conf_parse: chroot_dir=%s\n", global_info.chroot_dir);
+	  strlcat_buf (global_info.chroot_dir,
+		       &buf_ptr[fn_strlen ("chroot_dir") + 1]);
+	  debug (NULL, "global_conf_parse: chroot_dir=%s\n",
+		 global_info.chroot_dir);
 	}
       else if (!strncasecmp_len (buf_ptr, "chroot"))
 	{
@@ -137,8 +139,10 @@ debug(NULL, "%s", buf);
       else if (!strncasecmp_len (buf_ptr, "confdir"))
 	{
 
-	  strlcat_buf(global_info.confdir, &buf_ptr[fn_strlen ("confdir") + 1]);
-	  debug (NULL, "global_conf_parse: confdir=%s\n", global_info.confdir);
+	  strlcat_buf (global_info.confdir,
+		       &buf_ptr[fn_strlen ("confdir") + 1]);
+	  debug (NULL, "global_conf_parse: confdir=%s\n",
+		 global_info.confdir);
 	}
       else if (!strncasecmp_len (buf_ptr, "modules"))
 	{
@@ -162,27 +166,26 @@ debug(NULL, "%s", buf);
 	}
       else if (!strncasecmp_len (buf_ptr, "sigprotect"))
 	{
-	  global_parse_sigprotect (&buf_ptr[fn_strlen ("sigprotect") + 1],
-				       1);
+	  global_parse_sigprotect (&buf_ptr[fn_strlen ("sigprotect") + 1], 1);
 	}
       else if (!strncasecmp_len (buf_ptr, "timer_sleep"))
 	{
 	  global_parse_timer_sleep (&buf_ptr
-					[fn_strlen ("timer_sleep") + 1], 1);
+				    [fn_strlen ("timer_sleep") + 1], 1);
 	}
       else if (!strncasecmp_len (buf_ptr, "timer_sort"))
 	{
-	  global_parse_timer_sort (&buf_ptr[fn_strlen ("timer_sort") + 1],
-				       1);
+	  global_parse_timer_sort (&buf_ptr[fn_strlen ("timer_sort") + 1], 1);
 	}
       else if (!strncasecmp_len (buf_ptr, "fd_unix_path"))
 	{
 	  global_parse_fd_unix_path (&buf_ptr
-					 [fn_strlen ("fd_unix_path") + 1], 1);
+				     [fn_strlen ("fd_unix_path") + 1], 1);
 	}
-else if(!strncasecmp_len(buf_ptr, "xmod_style")) {
-xmodule_parse_style(&buf_ptr[fn_strlen("xmod_style")+1]);
-}
+      else if (!strncasecmp_len (buf_ptr, "xmod_style"))
+	{
+	  xmodule_parse_style (&buf_ptr[fn_strlen ("xmod_style") + 1]);
+	}
 
     }
 
@@ -207,8 +210,8 @@ char *
 global_conf_dir (void)
 {
   struct stat st;
-  int n=0;
-  char *str=NULL, *home=NULL;
+  int n = 0;
+  char *str = NULL, *home = NULL;
 
   home = getenv ("HOME");
   if (home)
@@ -436,52 +439,52 @@ global_off (void)
 
   global_info.bots = NULL;
 
-  bz(gi->conf_dir);
+  bz (gi->conf_dir);
 
-  bz(gi->conf_file);
+  bz (gi->conf_file);
 
-  bz(gi->confdir );
+  bz (gi->confdir);
 
-  bz(gi->chroot_dir );
+  bz (gi->chroot_dir);
 
-  bz(gi->fd_unix_path);
+  bz (gi->fd_unix_path);
 
-dlist_fini(&gi->dl_module, xmodule_free_destroy);
-dlist_fini(&gi->dl_pmodule,xmodule_free_destroy);
-dlist_fini(&gi->dl_gmodule,xmodule_free_destroy);
-dlist_fini(&gi->dl_mod_timers, xmodule_free_destroy);
-dlist_fini(&gi->dl_gmod_gtimers, xmodule_free_destroy);
-dlist_fini(&gi->dl_mod_iohooks,xmodule_free_destroy);
-dlist_fini(&gi->dl_gmod_giohooks,xmodule_free_destroy);
+  dlist_fini (&gi->dl_module, xmodule_free_destroy);
+  dlist_fini (&gi->dl_pmodule, xmodule_free_destroy);
+  dlist_fini (&gi->dl_gmodule, xmodule_free_destroy);
+  dlist_fini (&gi->dl_mod_timers, xmodule_free_destroy);
+  dlist_fini (&gi->dl_gmod_gtimers, xmodule_free_destroy);
+  dlist_fini (&gi->dl_mod_iohooks, xmodule_free_destroy);
+  dlist_fini (&gi->dl_gmod_giohooks, xmodule_free_destroy);
 
   mongodb_fini (NULL);
 
   gi->on = 0;
 
 
-if(gi->dl_module_str)
-free(gi->dl_module_str);
+  if (gi->dl_module_str)
+    free (gi->dl_module_str);
 
-gi->dl_module_str=NULL;
+  gi->dl_module_str = NULL;
 
-if(gi->dl_pmodule_str)
-free(gi->dl_pmodule_str);
+  if (gi->dl_pmodule_str)
+    free (gi->dl_pmodule_str);
 
-gi->dl_pmodule_str=NULL;
+  gi->dl_pmodule_str = NULL;
 
-if(gi->dl_gmodule_str)
-free(gi->dl_gmodule_str);
+  if (gi->dl_gmodule_str)
+    free (gi->dl_gmodule_str);
 
-gi->dl_gmodule_str=NULL;
+  gi->dl_gmodule_str = NULL;
 
 
-if(gd->trace_fp)
-fclose(gd->trace_fp);
-gd->trace_file=NULL;
+  if (gd->trace_fp)
+    fclose (gd->trace_fp);
+  gd->trace_file = NULL;
 
-if(gd->trace_file)
-free(gd->trace_file);
-gd->trace_file = NULL;
+  if (gd->trace_file)
+    free (gd->trace_file);
+  gd->trace_file = NULL;
 
   return;
 }
@@ -495,7 +498,7 @@ global_on (void)
   struct dirent *de_ptr;
   bot_t *bot;
 
-  if (!sNULL(gi->conf_dir))
+  if (!sNULL (gi->conf_dir))
     global_conf_parse ();
 
   mongodb_init (NULL);
@@ -516,7 +519,7 @@ global_on (void)
   if (bot_unix_init () < 0)
     {
       debug (NULL, "global_on: bot_unix_init: Failed\n");
-closedir(dir);
+      closedir (dir);
       return;
     }
 
@@ -532,11 +535,11 @@ closedir(dir);
       if (!xstrcasestr (de_ptr->d_name, ".conf"))
 	continue;
 
-bot = bot_init_and_turn_on(de_ptr->d_name);
+      bot = bot_init_and_turn_on (de_ptr->d_name);
     }
 
 
-closedir(dir);
+  closedir (dir);
 
   return;
 }
@@ -579,7 +582,7 @@ global_parse_chroot (char *str, int add)
 {
   char *ptr_1;
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return -1;
 
   if (add == 0)
@@ -607,9 +610,9 @@ int
 global_parse_modules (char *str, int add)
 {
 
-debug(NULL, "global_parse_modules: Entered\n");
+  debug (NULL, "global_parse_modules: Entered\n");
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return -1;
 
   if (add == 0)
@@ -617,10 +620,10 @@ debug(NULL, "global_parse_modules: Entered\n");
       return 0;
     }
 
-if(gi->dl_module_str)
-free(gi->dl_module_str);
+  if (gi->dl_module_str)
+    free (gi->dl_module_str);
 
-gi->dl_module_str = strdup(str);
+  gi->dl_module_str = strdup (str);
 
   return 0;
 }
@@ -636,9 +639,9 @@ int
 global_parse_pmodules (char *str, int add)
 {
 
-debug(NULL, "global_parse_pmodules: Entered\n");
+  debug (NULL, "global_parse_pmodules: Entered\n");
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return -1;
 
   if (add == 0)
@@ -646,10 +649,10 @@ debug(NULL, "global_parse_pmodules: Entered\n");
       return 0;
     }
 
-if(gi->dl_pmodule_str)
-free(gi->dl_pmodule_str);
+  if (gi->dl_pmodule_str)
+    free (gi->dl_pmodule_str);
 
-gi->dl_pmodule_str = strdup(str);
+  gi->dl_pmodule_str = strdup (str);
 
 
   return 0;
@@ -664,9 +667,9 @@ int
 global_parse_gmodules (char *str, int add)
 {
 
-debug(NULL, "global_parse_gmodules: Entered\n");
+  debug (NULL, "global_parse_gmodules: Entered\n");
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return -1;
 
   if (add == 0)
@@ -674,10 +677,10 @@ debug(NULL, "global_parse_gmodules: Entered\n");
       return 0;
     }
 
-if(gi->dl_gmodule_str)
-free(gi->dl_gmodule_str);
+  if (gi->dl_gmodule_str)
+    free (gi->dl_gmodule_str);
 
-gi->dl_gmodule_str = strdup(str);
+  gi->dl_gmodule_str = strdup (str);
 
   return 0;
 }
@@ -688,7 +691,7 @@ global_parse_trace (char *str, int add)
 {
   char *ptr_1;
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return -1;
 
   if (add == 0)
@@ -720,7 +723,7 @@ global_parse_debug (char *str, int add)
 {
   char *ptr_1;
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return -1;
 
   if (add == 0)
@@ -755,7 +758,7 @@ global_parse_sigprotect (char *str, int add)
 {
   char *ptr_1;
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return -1;
 
   if (add == 0)
@@ -788,7 +791,7 @@ global_parse_timer_sleep (char *str, int add)
 {
   char *ptr_1;
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return -1;
 
   if (add == 0)
@@ -814,7 +817,7 @@ global_parse_timer_sort (char *str, int add)
 {
   char *ptr_1;
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return -1;
 
   if (add == 0)
@@ -841,7 +844,7 @@ global_parse_fd_unix_path (char *str, int add)
 {
   char *ptr_1;
 
-  if (!sNULL(str))
+  if (!sNULL (str))
     return -1;
 
   if (add == 0)
@@ -851,7 +854,7 @@ global_parse_fd_unix_path (char *str, int add)
 
   ptr_1 = str;
 
-  strlcat_buf(gi->fd_unix_path ,ptr_1);
+  strlcat_buf (gi->fd_unix_path, ptr_1);
 
   return 0;
 }
@@ -920,19 +923,19 @@ global_getopt (int argc, char **argv)
 	case 'd':
 	  {
 /* global conf dir */
-	    strlcat_buf(gi->conf_dir,optarg);
+	    strlcat_buf (gi->conf_dir, optarg);
 	    break;
 	  }
 	case 'f':
 	  {
 /* global conf file */
-	    strlcat_buf(gi->conf_file ,optarg);
+	    strlcat_buf (gi->conf_file, optarg);
 	    break;
 	  }
 	case 'u':
 	  {
 /* global unix fdpassing socket path */
-	    strlcat_buf(gi->fd_unix_path,optarg);
+	    strlcat_buf (gi->fd_unix_path, optarg);
 	    break;
 	  }
 	default:

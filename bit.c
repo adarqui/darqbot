@@ -270,7 +270,7 @@ bit_vec_to_str (bit_vector_t * bv)
   if (!bv)
     return NULL;
 
-bz(buf);
+  bz (buf);
 
   for (i = 0; i < bv->sz; i++)
     {
@@ -282,7 +282,7 @@ bz(buf);
 	}
     }
 
-  if (sNULL(buf) != NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;

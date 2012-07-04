@@ -29,8 +29,8 @@ void
 __hun_init__ (void)
 {
 
-strlcpy_buf(mod_hun_info.name, "mod_hun");
-strlcpy_buf(mod_hun_info.trigger, "^hun");
+  strlcpy_buf (mod_hun_info.name, "mod_hun");
+  strlcpy_buf (mod_hun_info.trigger, "^hun");
 
   mod_hun_info.init = hun_init;
   mod_hun_info.fini = hun_fini;
@@ -92,11 +92,11 @@ hun_run (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "hun_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "hun_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -151,15 +151,17 @@ hun_change_string (char *string, int opt, char *opt_2)
 
   hun_clean_path (opt_2);
 
-bz(hunh_path_1);
-bz(hunh_path_2);
+  bz (hunh_path_1);
+  bz (hunh_path_2);
 
-  strlcpy_buf(hunh_path_1, str_unite_static ("%s/%s.aff", MOD_HUNH_DIR, opt_2));
-  if (!sNULL(hunh_path_1))
+  strlcpy_buf (hunh_path_1,
+	       str_unite_static ("%s/%s.aff", MOD_HUNH_DIR, opt_2));
+  if (!sNULL (hunh_path_1))
     return NULL;
 
-  strlcpy_buf(hunh_path_2,str_unite_static ("%s/%s.dic", MOD_HUNH_DIR, opt_2));
-  if (!sNULL(hunh_path_2))
+  strlcpy_buf (hunh_path_2,
+	       str_unite_static ("%s/%s.dic", MOD_HUNH_DIR, opt_2));
+  if (!sNULL (hunh_path_2))
     return NULL;
 
   hunh = Hunspell_create (hunh_path_1, hunh_path_2);
@@ -208,7 +210,7 @@ bz(hunh_path_2);
 
   Hunspell_destroy (hunh);
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;

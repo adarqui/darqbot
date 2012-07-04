@@ -29,8 +29,8 @@ void
 __chan_init__ (void)
 {
 
-strlcpy_buf(mod_chan_info.name , "mod_chan");
-strlcpy_buf(mod_chan_info.trigger, "^chan");
+  strlcpy_buf (mod_chan_info.name, "mod_chan");
+  strlcpy_buf (mod_chan_info.trigger, "^chan");
 
   module_add_subtrigs (&mod_chan_info, "^list");
   module_add_subtrigs (&mod_chan_info, "^users");
@@ -102,12 +102,12 @@ mod_chan_run (dlist_t * dlist_node, bot_t * bot)
 
   debug (bot, "mod_chan_run: Entered\n");
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
 
   debug (bot,
-	     "mod_chan_run: Entered: initial hook buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "mod_chan_run: Entered: initial hook buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
 
@@ -352,7 +352,7 @@ mod_chan_input (dlist_t * dlist_node, bot_t * bot)
   return NULL;
 
   debug (bot, "mod_chan_input: Entered : %i, %s\n", bot->isline,
-	     bot->irc_command);
+	 bot->irc_command);
 
 
   tok_1 = data_dup = NULL;
@@ -428,8 +428,7 @@ mod_chan_input (dlist_t * dlist_node, bot_t * bot)
 			break;
 		    }
 
-		  dlist_Dinsert_after (&channel->dl_users,
-				       strdup (tok_1));
+		  dlist_Dinsert_after (&channel->dl_users, strdup (tok_1));
 		}
 
 	    }
@@ -598,7 +597,7 @@ mod_chan_input (dlist_t * dlist_node, bot_t * bot)
 
       channel->topic =
 	strdup (bot->txt_data_in[0] ==
-		    ':' ? bot->txt_data_in + 1 : bot->txt_data_in);
+		':' ? bot->txt_data_in + 1 : bot->txt_data_in);
 
     }
 
@@ -748,7 +747,7 @@ chan_mode (bot_t * bot, char *channel, char *string)
   debug (bot, "chan_op: Entered\n");
 
   memset (bot->txt_data_out, 0, sizeof (bot->txt_data_out));
-  strlcatfmt_bot (bot->txt_data_out,  "MODE %s %s\n", channel, string);
+  strlcatfmt_bot (bot->txt_data_out, "MODE %s %s\n", channel, string);
 
   return str;
 }
@@ -794,7 +793,7 @@ chan_quit (bot_t * bot, char *msg)
   debug (bot, "chan_quit: Entered, msg=%s\n", msg);
 
   memset (bot->txt_data_out, 0, sizeof (bot->txt_data_out));
-  strlcatfmt_bot (bot->txt_data_out,  "QUIT :%s\n", msg);
+  strlcatfmt_bot (bot->txt_data_out, "QUIT :%s\n", msg);
   return str;
 }
 
@@ -831,8 +830,7 @@ chan_part (bot_t * bot, char *channels)
   debug (bot, "chan_part: Entered\n");
 
   memset (bot->txt_data_out, 0, sizeof (bot->txt_data_out));
-  strlcatfmt_bot (bot->txt_data_out, 
-		  "PART %s\n", channels);
+  strlcatfmt_bot (bot->txt_data_out, "PART %s\n", channels);
 
   return str;
 }
@@ -901,7 +899,8 @@ chan_topic (bot_t * bot, char *channel_name, char *new_topic)
       if (strlen (new_topic))
 	{
 	  memset (bot->txt_data_out, 0, sizeof (bot->txt_data_out));
-	  strlcatfmt_bot (bot->txt_data_out, "TOPIC %s :%s\n", channel_name, new_topic);
+	  strlcatfmt_bot (bot->txt_data_out, "TOPIC %s :%s\n", channel_name,
+			  new_topic);
 	  return NULL;
 	}
     }

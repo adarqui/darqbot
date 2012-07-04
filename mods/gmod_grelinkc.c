@@ -32,8 +32,8 @@ void
 __grelinkc_init__ (void)
 {
 
-strlcpy_buf(gmod_grelinkc_info.name, "gmod_grelinkc");
-strlcpy_buf(gmod_grelinkc_info.trigger, "^grelinkc");
+  strlcpy_buf (gmod_grelinkc_info.name, "gmod_grelinkc");
+  strlcpy_buf (gmod_grelinkc_info.trigger, "^grelinkc");
 
   gmod_grelinkc_info.init = grelinkc_init;
   gmod_grelinkc_info.fini = grelinkc_fini;
@@ -139,11 +139,11 @@ grelinkc_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "grelinkc_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "grelinkc_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -204,7 +204,7 @@ grelinkc_process_options (grelinkc_t * grelinkc, char *string)
   debug (NULL, "grelinkc_process_options: Entered\n");
 
 
-  if (!grelinkc || !sNULL(string))
+  if (!grelinkc || !sNULL (string))
     return NULL;
 
 
@@ -239,7 +239,7 @@ void
 grelinkc_process_options_parse (grelinkc_t * grelinkc, char *string)
 {
 
-  if (!grelinkc || !sNULL(string))
+  if (!grelinkc || !sNULL (string))
     return;
 
   debug (NULL, "grelinkc_process_options_parse: Entered\n");
@@ -264,7 +264,7 @@ void
 grelinkc_process_options_parse_id (grelinkc_t * grelinkc, char *string)
 {
 
-  if (!grelinkc || !sNULL(string))
+  if (!grelinkc || !sNULL (string))
     return;
 
   grelinkc->id = atoi (string);
@@ -278,7 +278,7 @@ void
 grelinkc_process_options_parse_line (grelinkc_t * grelinkc, char *string)
 {
 
-  if (!grelinkc || !sNULL(string))
+  if (!grelinkc || !sNULL (string))
     return;
 
   if (grelinkc->line)
@@ -302,7 +302,7 @@ grelinkc_change_string (bot_t * bot, char *string, int opt)
   char *sep_ptr;
 
 
-  if (!bot || !sNULL(string))
+  if (!bot || !sNULL (string))
     return NULL;
 
 
@@ -343,7 +343,7 @@ grelinkc_output (dlist_t * dlist_node, bot_t * bot)
     }
 
   debug (NULL, "grelinkc_output: in=[%s], out=[%s]\n", bot->txt_data_in,
-	     bot->txt_data_out);
+	 bot->txt_data_out);
 
   grelinkc_op_data_notify (grelinkc);
 
@@ -436,7 +436,7 @@ grelinkc_input (dlist_t * dlist_node, bot_t * bot)
   tokenize_destroy (bot, &dl_rlpkt);
 
   debug (NULL, "grelinkc_input: in=[%s], out=[%s]\n", bot->txt_data_in,
-	     bot->txt_data_out);
+	 bot->txt_data_out);
 
   return bot;
 }

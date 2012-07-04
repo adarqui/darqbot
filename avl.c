@@ -29,8 +29,8 @@
    and memory allocator |allocator|.
    Returns |NULL| if memory allocation failed. */
 struct avl_table *
-avl_create (avl_comparison_func *compare, void *param,
-            struct libavl_allocator *allocator)
+avl_create (avl_comparison_func * compare, void *param,
+	    struct libavl_allocator *allocator)
 {
   struct avl_table *tree;
 
@@ -61,18 +61,18 @@ avl_find (const struct avl_table *tree, const void *item)
   const struct avl_node *p;
 
   assert (tree != NULL && item != NULL);
-  for (p = tree->avl_root; p != NULL; )
+  for (p = tree->avl_root; p != NULL;)
     {
       int cmp = tree->avl_compare (item, p->avl_data, tree->avl_param);
 // FUNK
 //int cmp = tree->avl_compare(item, p->avl_data, p);
 
       if (cmp < 0)
-        p = p->avl_link[0];
+	p = p->avl_link[0];
       else if (cmp > 0)
-        p = p->avl_link[1];
-      else /* |cmp == 0| */
-        return p->avl_data;
+	p = p->avl_link[1];
+      else			/* |cmp == 0| */
+	return p->avl_data;
     }
 
   return NULL;
@@ -85,14 +85,14 @@ avl_find (const struct avl_table *tree, const void *item)
 void **
 avl_probe (struct avl_table *tree, void *item)
 {
-  struct avl_node *y, *z; /* Top node to update balance factor, and parent. */
-  struct avl_node *p, *q; /* Iterator, and parent. */
-  struct avl_node *n;     /* Newly inserted node. */
-  struct avl_node *w;     /* New root of rebalanced subtree. */
-  int dir;                /* Direction to descend. */
+  struct avl_node *y, *z;	/* Top node to update balance factor, and parent. */
+  struct avl_node *p, *q;	/* Iterator, and parent. */
+  struct avl_node *n;		/* Newly inserted node. */
+  struct avl_node *w;		/* New root of rebalanced subtree. */
+  int dir;			/* Direction to descend. */
 
-  unsigned char da[AVL_MAX_HEIGHT]; /* Cached comparison results. */
-  int k = 0;              /* Number of cached results. */
+  unsigned char da[AVL_MAX_HEIGHT];	/* Cached comparison results. */
+  int k = 0;			/* Number of cached results. */
 
   assert (tree != NULL && item != NULL);
 
@@ -103,10 +103,10 @@ avl_probe (struct avl_table *tree, void *item)
     {
       int cmp = tree->avl_compare (item, p->avl_data, tree->avl_param);
       if (cmp == 0)
-        return &p->avl_data;
+	return &p->avl_data;
 
       if (p->avl_balance != 0)
-        z = q, y = p, k = 0;
+	z = q, y = p, k = 0;
       da[k++] = dir = cmp > 0;
     }
 
@@ -132,55 +132,55 @@ avl_probe (struct avl_table *tree, void *item)
     {
       struct avl_node *x = y->avl_link[0];
       if (x->avl_balance == -1)
-        {
-          w = x;
-          y->avl_link[0] = x->avl_link[1];
-          x->avl_link[1] = y;
-          x->avl_balance = y->avl_balance = 0;
-        }
+	{
+	  w = x;
+	  y->avl_link[0] = x->avl_link[1];
+	  x->avl_link[1] = y;
+	  x->avl_balance = y->avl_balance = 0;
+	}
       else
-        {
-          assert (x->avl_balance == +1);
-          w = x->avl_link[1];
-          x->avl_link[1] = w->avl_link[0];
-          w->avl_link[0] = x;
-          y->avl_link[0] = w->avl_link[1];
-          w->avl_link[1] = y;
-          if (w->avl_balance == -1)
-            x->avl_balance = 0, y->avl_balance = +1;
-          else if (w->avl_balance == 0)
-            x->avl_balance = y->avl_balance = 0;
-          else /* |w->avl_balance == +1| */
-            x->avl_balance = -1, y->avl_balance = 0;
-          w->avl_balance = 0;
-        }
+	{
+	  assert (x->avl_balance == +1);
+	  w = x->avl_link[1];
+	  x->avl_link[1] = w->avl_link[0];
+	  w->avl_link[0] = x;
+	  y->avl_link[0] = w->avl_link[1];
+	  w->avl_link[1] = y;
+	  if (w->avl_balance == -1)
+	    x->avl_balance = 0, y->avl_balance = +1;
+	  else if (w->avl_balance == 0)
+	    x->avl_balance = y->avl_balance = 0;
+	  else			/* |w->avl_balance == +1| */
+	    x->avl_balance = -1, y->avl_balance = 0;
+	  w->avl_balance = 0;
+	}
     }
   else if (y->avl_balance == +2)
     {
       struct avl_node *x = y->avl_link[1];
       if (x->avl_balance == +1)
-        {
-          w = x;
-          y->avl_link[1] = x->avl_link[0];
-          x->avl_link[0] = y;
-          x->avl_balance = y->avl_balance = 0;
-        }
+	{
+	  w = x;
+	  y->avl_link[1] = x->avl_link[0];
+	  x->avl_link[0] = y;
+	  x->avl_balance = y->avl_balance = 0;
+	}
       else
-        {
-          assert (x->avl_balance == -1);
-          w = x->avl_link[0];
-          x->avl_link[0] = w->avl_link[1];
-          w->avl_link[1] = x;
-          y->avl_link[1] = w->avl_link[0];
-          w->avl_link[0] = y;
-          if (w->avl_balance == +1)
-            x->avl_balance = 0, y->avl_balance = -1;
-          else if (w->avl_balance == 0)
-            x->avl_balance = y->avl_balance = 0;
-          else /* |w->avl_balance == -1| */
-            x->avl_balance = +1, y->avl_balance = 0;
-          w->avl_balance = 0;
-        }
+	{
+	  assert (x->avl_balance == -1);
+	  w = x->avl_link[0];
+	  x->avl_link[0] = w->avl_link[1];
+	  w->avl_link[1] = x;
+	  y->avl_link[1] = w->avl_link[0];
+	  w->avl_link[0] = y;
+	  if (w->avl_balance == +1)
+	    x->avl_balance = 0, y->avl_balance = -1;
+	  else if (w->avl_balance == 0)
+	    x->avl_balance = y->avl_balance = 0;
+	  else			/* |w->avl_balance == -1| */
+	    x->avl_balance = +1, y->avl_balance = 0;
+	  w->avl_balance = 0;
+	}
     }
   else
     return &n->avl_data;
@@ -225,12 +225,12 @@ void *
 avl_delete (struct avl_table *tree, const void *item)
 {
   /* Stack of nodes. */
-  struct avl_node *pa[AVL_MAX_HEIGHT]; /* Nodes. */
-  unsigned char da[AVL_MAX_HEIGHT];    /* |avl_link[]| indexes. */
-  int k;                               /* Stack pointer. */
+  struct avl_node *pa[AVL_MAX_HEIGHT];	/* Nodes. */
+  unsigned char da[AVL_MAX_HEIGHT];	/* |avl_link[]| indexes. */
+  int k;			/* Stack pointer. */
 
-  struct avl_node *p;   /* Traverses tree to find node to delete. */
-  int cmp;              /* Result of comparison between |item| and |p|. */
+  struct avl_node *p;		/* Traverses tree to find node to delete. */
+  int cmp;			/* Result of comparison between |item| and |p|. */
 
   assert (tree != NULL && item != NULL);
 
@@ -246,7 +246,7 @@ avl_delete (struct avl_table *tree, const void *item)
 
       p = p->avl_link[dir];
       if (p == NULL)
-        return NULL;
+	return NULL;
     }
   item = p->avl_data;
 
@@ -256,38 +256,38 @@ avl_delete (struct avl_table *tree, const void *item)
     {
       struct avl_node *r = p->avl_link[1];
       if (r->avl_link[0] == NULL)
-        {
-          r->avl_link[0] = p->avl_link[0];
-          r->avl_balance = p->avl_balance;
-          pa[k - 1]->avl_link[da[k - 1]] = r;
-          da[k] = 1;
-          pa[k++] = r;
-        }
+	{
+	  r->avl_link[0] = p->avl_link[0];
+	  r->avl_balance = p->avl_balance;
+	  pa[k - 1]->avl_link[da[k - 1]] = r;
+	  da[k] = 1;
+	  pa[k++] = r;
+	}
       else
-        {
-          struct avl_node *s;
-          int j = k++;
+	{
+	  struct avl_node *s;
+	  int j = k++;
 
-          for (;;)
-            {
-              da[k] = 0;
-              pa[k++] = r;
-              s = r->avl_link[0];
-              if (s->avl_link[0] == NULL)
-                break;
+	  for (;;)
+	    {
+	      da[k] = 0;
+	      pa[k++] = r;
+	      s = r->avl_link[0];
+	      if (s->avl_link[0] == NULL)
+		break;
 
-              r = s;
-            }
+	      r = s;
+	    }
 
-          s->avl_link[0] = p->avl_link[0];
-          r->avl_link[0] = s->avl_link[1];
-          s->avl_link[1] = p->avl_link[1];
-          s->avl_balance = p->avl_balance;
+	  s->avl_link[0] = p->avl_link[0];
+	  r->avl_link[0] = s->avl_link[1];
+	  s->avl_link[1] = p->avl_link[1];
+	  s->avl_balance = p->avl_balance;
 
-          pa[j - 1]->avl_link[da[j - 1]] = s;
-          da[j] = 1;
-          pa[j] = s;
-        }
+	  pa[j - 1]->avl_link[da[j - 1]] = s;
+	  da[j] = 1;
+	  pa[j] = s;
+	}
     }
 
   tree->avl_alloc->libavl_free (tree->avl_alloc, p);
@@ -298,89 +298,89 @@ avl_delete (struct avl_table *tree, const void *item)
       struct avl_node *y = pa[k];
 
       if (da[k] == 0)
-        {
-          y->avl_balance++;
-          if (y->avl_balance == +1)
-            break;
-          else if (y->avl_balance == +2)
-            {
-              struct avl_node *x = y->avl_link[1];
-              if (x->avl_balance == -1)
-                {
-                  struct avl_node *w;
-                  assert (x->avl_balance == -1);
-                  w = x->avl_link[0];
-                  x->avl_link[0] = w->avl_link[1];
-                  w->avl_link[1] = x;
-                  y->avl_link[1] = w->avl_link[0];
-                  w->avl_link[0] = y;
-                  if (w->avl_balance == +1)
-                    x->avl_balance = 0, y->avl_balance = -1;
-                  else if (w->avl_balance == 0)
-                    x->avl_balance = y->avl_balance = 0;
-                  else /* |w->avl_balance == -1| */
-                    x->avl_balance = +1, y->avl_balance = 0;
-                  w->avl_balance = 0;
-                  pa[k - 1]->avl_link[da[k - 1]] = w;
-                }
-              else
-                {
-                  y->avl_link[1] = x->avl_link[0];
-                  x->avl_link[0] = y;
-                  pa[k - 1]->avl_link[da[k - 1]] = x;
-                  if (x->avl_balance == 0)
-                    {
-                      x->avl_balance = -1;
-                      y->avl_balance = +1;
-                      break;
-                    }
-                  else
-                    x->avl_balance = y->avl_balance = 0;
-                }
-            }
-        }
+	{
+	  y->avl_balance++;
+	  if (y->avl_balance == +1)
+	    break;
+	  else if (y->avl_balance == +2)
+	    {
+	      struct avl_node *x = y->avl_link[1];
+	      if (x->avl_balance == -1)
+		{
+		  struct avl_node *w;
+		  assert (x->avl_balance == -1);
+		  w = x->avl_link[0];
+		  x->avl_link[0] = w->avl_link[1];
+		  w->avl_link[1] = x;
+		  y->avl_link[1] = w->avl_link[0];
+		  w->avl_link[0] = y;
+		  if (w->avl_balance == +1)
+		    x->avl_balance = 0, y->avl_balance = -1;
+		  else if (w->avl_balance == 0)
+		    x->avl_balance = y->avl_balance = 0;
+		  else		/* |w->avl_balance == -1| */
+		    x->avl_balance = +1, y->avl_balance = 0;
+		  w->avl_balance = 0;
+		  pa[k - 1]->avl_link[da[k - 1]] = w;
+		}
+	      else
+		{
+		  y->avl_link[1] = x->avl_link[0];
+		  x->avl_link[0] = y;
+		  pa[k - 1]->avl_link[da[k - 1]] = x;
+		  if (x->avl_balance == 0)
+		    {
+		      x->avl_balance = -1;
+		      y->avl_balance = +1;
+		      break;
+		    }
+		  else
+		    x->avl_balance = y->avl_balance = 0;
+		}
+	    }
+	}
       else
-        {
-          y->avl_balance--;
-          if (y->avl_balance == -1)
-            break;
-          else if (y->avl_balance == -2)
-            {
-              struct avl_node *x = y->avl_link[0];
-              if (x->avl_balance == +1)
-                {
-                  struct avl_node *w;
-                  assert (x->avl_balance == +1);
-                  w = x->avl_link[1];
-                  x->avl_link[1] = w->avl_link[0];
-                  w->avl_link[0] = x;
-                  y->avl_link[0] = w->avl_link[1];
-                  w->avl_link[1] = y;
-                  if (w->avl_balance == -1)
-                    x->avl_balance = 0, y->avl_balance = +1;
-                  else if (w->avl_balance == 0)
-                    x->avl_balance = y->avl_balance = 0;
-                  else /* |w->avl_balance == +1| */
-                    x->avl_balance = -1, y->avl_balance = 0;
-                  w->avl_balance = 0;
-                  pa[k - 1]->avl_link[da[k - 1]] = w;
-                }
-              else
-                {
-                  y->avl_link[0] = x->avl_link[1];
-                  x->avl_link[1] = y;
-                  pa[k - 1]->avl_link[da[k - 1]] = x;
-                  if (x->avl_balance == 0)
-                    {
-                      x->avl_balance = +1;
-                      y->avl_balance = -1;
-                      break;
-                    }
-                  else
-                    x->avl_balance = y->avl_balance = 0;
-                }
-            }
-        }
+	{
+	  y->avl_balance--;
+	  if (y->avl_balance == -1)
+	    break;
+	  else if (y->avl_balance == -2)
+	    {
+	      struct avl_node *x = y->avl_link[0];
+	      if (x->avl_balance == +1)
+		{
+		  struct avl_node *w;
+		  assert (x->avl_balance == +1);
+		  w = x->avl_link[1];
+		  x->avl_link[1] = w->avl_link[0];
+		  w->avl_link[0] = x;
+		  y->avl_link[0] = w->avl_link[1];
+		  w->avl_link[1] = y;
+		  if (w->avl_balance == -1)
+		    x->avl_balance = 0, y->avl_balance = +1;
+		  else if (w->avl_balance == 0)
+		    x->avl_balance = y->avl_balance = 0;
+		  else		/* |w->avl_balance == +1| */
+		    x->avl_balance = -1, y->avl_balance = 0;
+		  w->avl_balance = 0;
+		  pa[k - 1]->avl_link[da[k - 1]] = w;
+		}
+	      else
+		{
+		  y->avl_link[0] = x->avl_link[1];
+		  x->avl_link[1] = y;
+		  pa[k - 1]->avl_link[da[k - 1]] = x;
+		  if (x->avl_balance == 0)
+		    {
+		      x->avl_balance = +1;
+		      y->avl_balance = -1;
+		      break;
+		    }
+		  else
+		    x->avl_balance = y->avl_balance = 0;
+		}
+	    }
+	}
     }
 
   tree->avl_count--;
@@ -405,14 +405,14 @@ trav_refresh (struct avl_traverser *trav)
       struct avl_node *i;
 
       trav->avl_height = 0;
-      for (i = trav->avl_table->avl_root; i != node; )
-        {
-          assert (trav->avl_height < AVL_MAX_HEIGHT);
-          assert (i != NULL);
+      for (i = trav->avl_table->avl_root; i != node;)
+	{
+	  assert (trav->avl_height < AVL_MAX_HEIGHT);
+	  assert (i != NULL);
 
-          trav->avl_stack[trav->avl_height++] = i;
-          i = i->avl_link[cmp (node->avl_data, i->avl_data, param) > 0];
-        }
+	  trav->avl_stack[trav->avl_height++] = i;
+	  i = i->avl_link[cmp (node->avl_data, i->avl_data, param) > 0];
+	}
     }
 }
 
@@ -445,9 +445,9 @@ avl_t_first (struct avl_traverser *trav, struct avl_table *tree)
   if (x != NULL)
     while (x->avl_link[0] != NULL)
       {
-        assert (trav->avl_height < AVL_MAX_HEIGHT);
-        trav->avl_stack[trav->avl_height++] = x;
-        x = x->avl_link[0];
+	assert (trav->avl_height < AVL_MAX_HEIGHT);
+	trav->avl_stack[trav->avl_height++] = x;
+	x = x->avl_link[0];
       }
   trav->avl_node = x;
 
@@ -472,9 +472,9 @@ avl_t_last (struct avl_traverser *trav, struct avl_table *tree)
   if (x != NULL)
     while (x->avl_link[1] != NULL)
       {
-        assert (trav->avl_height < AVL_MAX_HEIGHT);
-        trav->avl_stack[trav->avl_height++] = x;
-        x = x->avl_link[1];
+	assert (trav->avl_height < AVL_MAX_HEIGHT);
+	trav->avl_stack[trav->avl_height++] = x;
+	x = x->avl_link[1];
       }
   trav->avl_node = x;
 
@@ -500,14 +500,14 @@ avl_t_find (struct avl_traverser *trav, struct avl_table *tree, void *item)
       int cmp = tree->avl_compare (item, p->avl_data, tree->avl_param);
 
       if (cmp < 0)
-        q = p->avl_link[0];
+	q = p->avl_link[0];
       else if (cmp > 0)
-        q = p->avl_link[1];
-      else /* |cmp == 0| */
-        {
-          trav->avl_node = p;
-          return p->avl_data;
-        }
+	q = p->avl_link[1];
+      else			/* |cmp == 0| */
+	{
+	  trav->avl_node = p;
+	  return p->avl_data;
+	}
 
       assert (trav->avl_height < AVL_MAX_HEIGHT);
       trav->avl_stack[trav->avl_height++] = p;
@@ -537,8 +537,8 @@ avl_t_insert (struct avl_traverser *trav, struct avl_table *tree, void *item)
     {
       trav->avl_table = tree;
       trav->avl_node =
-        ((struct avl_node *)
-         ((char *) p - offsetof (struct avl_node, avl_data)));
+	((struct avl_node *)
+	 ((char *) p - offsetof (struct avl_node, avl_data)));
       trav->avl_generation = tree->avl_generation - 1;
       return *p;
     }
@@ -561,11 +561,11 @@ avl_t_copy (struct avl_traverser *trav, const struct avl_traverser *src)
       trav->avl_node = src->avl_node;
       trav->avl_generation = src->avl_generation;
       if (trav->avl_generation == trav->avl_table->avl_generation)
-        {
-          trav->avl_height = src->avl_height;
-          memcpy (trav->avl_stack, (const void *) src->avl_stack,
-                  sizeof *trav->avl_stack * trav->avl_height);
-        }
+	{
+	  trav->avl_height = src->avl_height;
+	  memcpy (trav->avl_stack, (const void *) src->avl_stack,
+		  sizeof *trav->avl_stack * trav->avl_height);
+	}
     }
 
   return trav->avl_node != NULL ? trav->avl_node->avl_data : NULL;
@@ -596,27 +596,27 @@ avl_t_next (struct avl_traverser *trav)
       x = x->avl_link[1];
 
       while (x->avl_link[0] != NULL)
-        {
-          assert (trav->avl_height < AVL_MAX_HEIGHT);
-          trav->avl_stack[trav->avl_height++] = x;
-          x = x->avl_link[0];
-        }
+	{
+	  assert (trav->avl_height < AVL_MAX_HEIGHT);
+	  trav->avl_stack[trav->avl_height++] = x;
+	  x = x->avl_link[0];
+	}
     }
   else
     {
       struct avl_node *y;
 
       do
-        {
-          if (trav->avl_height == 0)
-            {
-              trav->avl_node = NULL;
-              return NULL;
-            }
+	{
+	  if (trav->avl_height == 0)
+	    {
+	      trav->avl_node = NULL;
+	      return NULL;
+	    }
 
-          y = x;
-          x = trav->avl_stack[--trav->avl_height];
-        }
+	  y = x;
+	  x = trav->avl_stack[--trav->avl_height];
+	}
       while (y == x->avl_link[1]);
     }
   trav->avl_node = x;
@@ -649,27 +649,27 @@ avl_t_prev (struct avl_traverser *trav)
       x = x->avl_link[0];
 
       while (x->avl_link[1] != NULL)
-        {
-          assert (trav->avl_height < AVL_MAX_HEIGHT);
-          trav->avl_stack[trav->avl_height++] = x;
-          x = x->avl_link[1];
-        }
+	{
+	  assert (trav->avl_height < AVL_MAX_HEIGHT);
+	  trav->avl_stack[trav->avl_height++] = x;
+	  x = x->avl_link[1];
+	}
     }
   else
     {
       struct avl_node *y;
 
       do
-        {
-          if (trav->avl_height == 0)
-            {
-              trav->avl_node = NULL;
-              return NULL;
-            }
+	{
+	  if (trav->avl_height == 0)
+	    {
+	      trav->avl_node = NULL;
+	      return NULL;
+	    }
 
-          y = x;
-          x = trav->avl_stack[--trav->avl_height];
-        }
+	  y = x;
+	  x = trav->avl_stack[--trav->avl_height];
+	}
       while (y == x->avl_link[0]);
     }
   trav->avl_node = x;
@@ -705,7 +705,7 @@ avl_t_replace (struct avl_traverser *trav, void *new)
    to null pointers to avoid touching uninitialized data. */
 static void
 copy_error_recovery (struct avl_node **stack, int height,
-                     struct avl_table *new, avl_item_func *destroy)
+		     struct avl_table *new, avl_item_func * destroy)
 {
   assert (stack != NULL && height >= 0 && new != NULL);
 
@@ -724,8 +724,8 @@ copy_error_recovery (struct avl_node **stack, int height,
    If |allocator != NULL|, it is used for allocation in the new tree.
    Otherwise, the same allocator used for |org| is used. */
 struct avl_table *
-avl_copy (const struct avl_table *org, avl_copy_func *copy,
-          avl_item_func *destroy, struct libavl_allocator *allocator)
+avl_copy (const struct avl_table *org, avl_copy_func * copy,
+	  avl_item_func * destroy, struct libavl_allocator *allocator)
 {
   struct avl_node *stack[2 * (AVL_MAX_HEIGHT + 1)];
   int height = 0;
@@ -736,7 +736,7 @@ avl_copy (const struct avl_table *org, avl_copy_func *copy,
 
   assert (org != NULL);
   new = avl_create (org->avl_compare, org->avl_param,
-                    allocator != NULL ? allocator : org->avl_alloc);
+		    allocator != NULL ? allocator : org->avl_alloc);
   if (new == NULL)
     return NULL;
   new->avl_count = org->avl_count;
@@ -748,78 +748,78 @@ avl_copy (const struct avl_table *org, avl_copy_func *copy,
   for (;;)
     {
       while (x->avl_link[0] != NULL)
-        {
-          assert (height < 2 * (AVL_MAX_HEIGHT + 1));
+	{
+	  assert (height < 2 * (AVL_MAX_HEIGHT + 1));
 
-          y->avl_link[0] =
-            new->avl_alloc->libavl_malloc (new->avl_alloc,
-                                           sizeof *y->avl_link[0]);
-          if (y->avl_link[0] == NULL)
-            {
-              if (y != (struct avl_node *) &new->avl_root)
-                {
-                  y->avl_data = NULL;
-                  y->avl_link[1] = NULL;
-                }
+	  y->avl_link[0] =
+	    new->avl_alloc->libavl_malloc (new->avl_alloc,
+					   sizeof *y->avl_link[0]);
+	  if (y->avl_link[0] == NULL)
+	    {
+	      if (y != (struct avl_node *) &new->avl_root)
+		{
+		  y->avl_data = NULL;
+		  y->avl_link[1] = NULL;
+		}
 
-              copy_error_recovery (stack, height, new, destroy);
-              return NULL;
-            }
+	      copy_error_recovery (stack, height, new, destroy);
+	      return NULL;
+	    }
 
-          stack[height++] = (struct avl_node *) x;
-          stack[height++] = y;
-          x = x->avl_link[0];
-          y = y->avl_link[0];
-        }
+	  stack[height++] = (struct avl_node *) x;
+	  stack[height++] = y;
+	  x = x->avl_link[0];
+	  y = y->avl_link[0];
+	}
       y->avl_link[0] = NULL;
 
       for (;;)
-        {
-          y->avl_balance = x->avl_balance;
-          if (copy == NULL)
-            y->avl_data = x->avl_data;
-          else
-            {
-              y->avl_data = copy (x->avl_data, org->avl_param);
-              if (y->avl_data == NULL)
-                {
-                  y->avl_link[1] = NULL;
-                  copy_error_recovery (stack, height, new, destroy);
-                  return NULL;
-                }
-            }
+	{
+	  y->avl_balance = x->avl_balance;
+	  if (copy == NULL)
+	    y->avl_data = x->avl_data;
+	  else
+	    {
+	      y->avl_data = copy (x->avl_data, org->avl_param);
+	      if (y->avl_data == NULL)
+		{
+		  y->avl_link[1] = NULL;
+		  copy_error_recovery (stack, height, new, destroy);
+		  return NULL;
+		}
+	    }
 
-          if (x->avl_link[1] != NULL)
-            {
-              y->avl_link[1] =
-                new->avl_alloc->libavl_malloc (new->avl_alloc,
-                                               sizeof *y->avl_link[1]);
-              if (y->avl_link[1] == NULL)
-                {
-                  copy_error_recovery (stack, height, new, destroy);
-                  return NULL;
-                }
+	  if (x->avl_link[1] != NULL)
+	    {
+	      y->avl_link[1] =
+		new->avl_alloc->libavl_malloc (new->avl_alloc,
+					       sizeof *y->avl_link[1]);
+	      if (y->avl_link[1] == NULL)
+		{
+		  copy_error_recovery (stack, height, new, destroy);
+		  return NULL;
+		}
 
-              x = x->avl_link[1];
-              y = y->avl_link[1];
-              break;
-            }
-          else
-            y->avl_link[1] = NULL;
+	      x = x->avl_link[1];
+	      y = y->avl_link[1];
+	      break;
+	    }
+	  else
+	    y->avl_link[1] = NULL;
 
-          if (height <= 2)
-            return new;
+	  if (height <= 2)
+	    return new;
 
-          y = stack[--height];
-          x = stack[--height];
-        }
+	  y = stack[--height];
+	  x = stack[--height];
+	}
     }
 }
 
 /* Frees storage allocated for |tree|.
    If |destroy != NULL|, applies it to each data item in inorder. */
 void
-avl_destroy (struct avl_table *tree, avl_item_func *destroy)
+avl_destroy (struct avl_table *tree, avl_item_func * destroy)
 {
   struct avl_node *p, *q;
 
@@ -828,16 +828,16 @@ avl_destroy (struct avl_table *tree, avl_item_func *destroy)
   for (p = tree->avl_root; p != NULL; p = q)
     if (p->avl_link[0] == NULL)
       {
-        q = p->avl_link[1];
-        if (destroy != NULL && p->avl_data != NULL)
-          destroy (p->avl_data, tree->avl_param);
-        tree->avl_alloc->libavl_free (tree->avl_alloc, p);
+	q = p->avl_link[1];
+	if (destroy != NULL && p->avl_data != NULL)
+	  destroy (p->avl_data, tree->avl_param);
+	tree->avl_alloc->libavl_free (tree->avl_alloc, p);
       }
     else
       {
-        q = p->avl_link[0];
-        p->avl_link[0] = q->avl_link[1];
-        q->avl_link[1] = p;
+	q = p->avl_link[0];
+	p->avl_link[0] = q->avl_link[1];
+	q->avl_link[1] = p;
       }
 
   tree->avl_alloc->libavl_free (tree->avl_alloc, tree);
@@ -861,18 +861,16 @@ avl_free (struct libavl_allocator *allocator, void *block)
 }
 
 /* Default memory allocator that uses |malloc()| and |free()|. */
-struct libavl_allocator avl_allocator_default =
-  {
-    avl_malloc,
-    avl_free
-  };
+struct libavl_allocator avl_allocator_default = {
+  avl_malloc,
+  avl_free
+};
 
 #undef NDEBUG
 #include <assert.h>
 
 /* Asserts that |avl_insert()| succeeds at inserting |item| into |table|. */
-void
-(avl_assert_insert) (struct avl_table *table, void *item)
+void (avl_assert_insert) (struct avl_table * table, void *item)
 {
   void **p = avl_probe (table, item);
   assert (p != NULL && *p == item);
@@ -880,11 +878,9 @@ void
 
 /* Asserts that |avl_delete()| really removes |item| from |table|,
    and returns the removed item. */
-void *
-(avl_assert_delete) (struct avl_table *table, void *item)
+void *(avl_assert_delete) (struct avl_table * table, void *item)
 {
   void *p = avl_delete (table, item);
   assert (p != NULL);
   return p;
 }
-

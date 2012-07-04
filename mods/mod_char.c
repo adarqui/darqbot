@@ -29,8 +29,8 @@ void
 __char_init__ (void)
 {
 
-strlcpy_buf(mod_char_info.name, "mod_char");
-strlcpy_buf(mod_char_info.trigger, "^char");
+  strlcpy_buf (mod_char_info.name, "mod_char");
+  strlcpy_buf (mod_char_info.trigger, "^char");
 
   mod_char_info.init = char_init;
   mod_char_info.fini = char_fini;
@@ -89,11 +89,11 @@ char_run (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "char_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "char_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))

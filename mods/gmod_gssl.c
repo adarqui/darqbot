@@ -36,8 +36,8 @@ __gssl_init__ (void)
   gmod_gssl_info.name = "gmod_gssl";
   gmod_gssl_info.trigger = strdup ("^ssl");
 */
-strlcpy_buf(gmod_gssl_info.name, "gmod_gssl");
-strlcpy_buf(gmod_gssl_info.trigger, "^gssl");
+  strlcpy_buf (gmod_gssl_info.name, "gmod_gssl");
+  strlcpy_buf (gmod_gssl_info.trigger, "^gssl");
 
   gmod_gssl_info.init = gssl_init;
   gmod_gssl_info.fini = gssl_fini;
@@ -143,11 +143,11 @@ gssl_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "gssl_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "gssl_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -220,9 +220,7 @@ gssl_process_options (gssl_t * gssl, char *string)
   memset (buf, 0, sizeof (buf));
 
 
-  dl =
-    tokenize (NULL, string,
-		  TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
+  dl = tokenize (NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES, "...");
   if (!dl)
     return NULL;
 
@@ -330,7 +328,7 @@ gssl_output (dlist_t * dlist_node, bot_t * bot)
   memset (buf, 0, sizeof (buf));
 
   debug (NULL, "gssl_output: in=[%s], out=[%s]\n", bot->txt_data_in,
-	     bot->txt_data_out);
+	 bot->txt_data_out);
 
   if (bot->txt_data_out_sz > 0)
     {
@@ -432,7 +430,7 @@ gssl_input (dlist_t * dlist_node, bot_t * bot)
     }
 
   debug (NULL, "gssl_input: in=[%s], out=[%s]\n", bot->txt_data_in,
-	     bot->txt_data_out);
+	 bot->txt_data_out);
 
   return bot;
 }

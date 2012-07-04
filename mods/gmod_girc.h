@@ -77,6 +77,6 @@ int girc_send_dptr (dlist_t *);
 void girc_defaults_post (girc_t *);
 void girc_destroy_gmod (bot_gmod_elm_t *);
 
-void * girc_input_iohooks(void * , void * ) ;
+void *girc_input_iohooks (void *, void *);
 
 #endif

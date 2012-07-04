@@ -29,8 +29,8 @@ void
 __fork_init__ (void)
 {
 
-strlcpy_buf(mod_fork_info.name , "mod_fork");
-strlcpy_buf(mod_fork_info.trigger, "^fork");
+  strlcpy_buf (mod_fork_info.name, "mod_fork");
+  strlcpy_buf (mod_fork_info.trigger, "^fork");
 
   mod_fork_info.init = fork_init;
   mod_fork_info.fini = fork_fini;
@@ -81,9 +81,9 @@ bot_t *
 fork_run (dlist_t * dlist_node, bot_t * bot)
 {
   char *dl_module_arg_after_options, *dl_options_ptr;
-char **argv=NULL;
-int argc=0;
-int c,opt;
+  char **argv = NULL;
+  int argc = 0;
+  int c, opt;
 
   debug (bot, "fork_run: Entered\n");
 
@@ -92,49 +92,54 @@ int c,opt;
     return NULL;
 
   debug (bot,
-	     "fork_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "fork_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
 
 
   if (bot_shouldreturn (bot))
     return NULL;
 
-opt = 0;
+  opt = 0;
 
   MOD_OPTIONS_TOP_HALF;
-argv = tokenize_str2argv(dl_options_ptr, &argc, TOKENIZE_STR2ARGV_ARGV0);
-if(argv) {
+  argv = tokenize_str2argv (dl_options_ptr, &argc, TOKENIZE_STR2ARGV_ARGV0);
+  if (argv)
+    {
 
-optind = 0;
+      optind = 0;
 
-while((c = getopt(argc, argv, "vd"))!=-1) {
-switch(c) {
-case 'v': {
-opt |= MOD_FORK_OPT_VERBOSE;
-break;
-}
-case 'd': {
-opt |= MOD_FORK_OPT_DAEMON;
-break;
-}
-default:
-break;
-}
+      while ((c = getopt (argc, argv, "vd")) != -1)
+	{
+	  switch (c)
+	    {
+	    case 'v':
+	      {
+		opt |= MOD_FORK_OPT_VERBOSE;
+		break;
+	      }
+	    case 'd':
+	      {
+		opt |= MOD_FORK_OPT_DAEMON;
+		break;
+	      }
+	    default:
+	      break;
+	    }
 
-}
+	}
 
-tokenize_destroy_array(NULL, argv);
-}
+      tokenize_destroy_array (NULL, argv);
+    }
 
   MOD_OPTIONS_BOTTOM_HALF;
 
   bot->shouldsend = 1;
 
   MOD_PARSE_TOP_HALF_NODL;
-  l_new_str = fork_change_string (bot,l_str_ptr,opt);
+  l_new_str = fork_change_string (bot, l_str_ptr, opt);
   MOD_PARSE_BOTTOM_HALF_NODL;
 
   return bot;
@@ -145,29 +150,29 @@ tokenize_destroy_array(NULL, argv);
 char *
 fork_change_string (bot_t * bot, char *string, int opt)
 {
-pid_t pid_new, pid_orig;
+  pid_t pid_new, pid_orig;
   char *sep_ptr;
   char *str = NULL;
 
 
-  if (!bot||!string)
+  if (!bot || !string)
     return NULL;
 
   sep_ptr = str_find_sep (string);
   if (sep_ptr)
     string = sep_ptr;
 
-pid_orig = getpid();
+  pid_orig = getpid ();
 
-pid_new = bot_fork_clean(bot)
-;
+  pid_new = bot_fork_clean (bot);
 
-debug(NULL, "fork_change_string: pid=%i\n", pid_new);
+  debug (NULL, "fork_change_string: pid=%i\n", pid_new);
 
-if(!pid_new && (opt & MOD_FORK_OPT_VERBOSE)) {
-pid_new=getpid();
-str = str_unite("{pid_orig=%i, pid_new=%i}", pid_orig, pid_new);
-}
+  if (!pid_new && (opt & MOD_FORK_OPT_VERBOSE))
+    {
+      pid_new = getpid ();
+      str = str_unite ("{pid_orig=%i, pid_new=%i}", pid_orig, pid_new);
+    }
 
   return str;
 }

@@ -71,12 +71,13 @@ timer_handler_new (int arg)
 
     if (!module)
       continue;
-if(module->active) {
-    if (module->timer)
+    if (module->active)
       {
-	module->timer (NULL, NULL);
+	if (module->timer)
+	  {
+	    module->timer (NULL, NULL);
+	  }
       }
-}
   }
 
   if ((gi->timer.last_timer - gi->timer.last_sort) > gi->var_timer_sort)
@@ -84,8 +85,8 @@ if(module->active) {
 /* do sorting */
       time (&gi->timer.last_sort);
       debug (NULL, "DOING SORT, %i %i\n",
-		 (gi->timer.last_timer - gi->timer.last_sort) >
-		 gi->var_timer_sort, gi->var_timer_sort);
+	     (gi->timer.last_timer - gi->timer.last_sort) >
+	     gi->var_timer_sort, gi->var_timer_sort);
       timer_sort_modules ();
     }
 

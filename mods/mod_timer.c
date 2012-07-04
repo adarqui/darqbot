@@ -29,8 +29,8 @@ void
 __timer_init__ (void)
 {
 
-strlcpy_buf(mod_timer_info.name,"mod_timer");
-strlcpy_buf(mod_timer_info.trigger, "^timer");
+  strlcpy_buf (mod_timer_info.name, "mod_timer");
+  strlcpy_buf (mod_timer_info.trigger, "^timer");
 
   mod_timer_info.init = timer_init;
   mod_timer_info.fini = timer_fini;
@@ -56,7 +56,7 @@ timer_init (dlist_t * dlist_node, bot_t * bot)
   debug (bot, "timer_init: Entered\n");
 
   swap_inmem_get_assign_and_remove ("dl_mod_timer", 0,
-					(void **) &dl_mod_timer);
+				    (void **) &dl_mod_timer);
   swap_inmem_get_assign_and_remove ("timer_bv", 0, (void **) &timer_bv);
 
   if (!timer_bv)
@@ -104,11 +104,11 @@ timer_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "timer_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "timer_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
@@ -257,7 +257,7 @@ timer_timer (dlist_t * dlist_node, bot_t * bot)
 /* will this do it?? - y e s */
 	if (bot_copy->isforked)
 	  {
-bot_fork_clean_exit(bot_copy);
+	    bot_fork_clean_exit (bot_copy);
 	  }
       }
   }
@@ -292,8 +292,8 @@ timer_op_add (bot_t * bot, char *string)
 
   dl =
     tokenize (bot, string,
-		  TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE |
-		  TOKENIZE_IGNORECASE, ":ttt:");
+	      TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE |
+	      TOKENIZE_IGNORECASE, ":ttt:");
   if (!dl)
     return NULL;
 
@@ -417,11 +417,12 @@ timer_op_list (char *string)
     if (!t)
       continue;
 
-    strlcatfmt_buf (buf, "id=%i {interval=%i, count=%i, chan=%s, cmd=%s}\n", t->id, t->interval, t->count, t->chan, t->cmd);
+    strlcatfmt_buf (buf, "id=%i {interval=%i, count=%i, chan=%s, cmd=%s}\n",
+		    t->id, t->interval, t->count, t->chan, t->cmd);
   }
 
 
-  if (sNULL(buf)!=NULL)
+  if (sNULL (buf) != NULL)
     str = strdup (buf);
 
   return str;

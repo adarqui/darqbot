@@ -29,8 +29,8 @@ void
 __fnsc_init__ (void)
 {
 
-strlcpy_buf(mod_fnsc_info.name, "mod_fnsc");
-strlcpy_buf(mod_fnsc_info.trigger, "^fnsc");
+  strlcpy_buf (mod_fnsc_info.name, "mod_fnsc");
+  strlcpy_buf (mod_fnsc_info.trigger, "^fnsc");
 
   mod_fnsc_info.init = fnsc_init;
   mod_fnsc_info.fini = fnsc_fini;
@@ -88,11 +88,11 @@ fnsc_run (dlist_t * dlist_node, bot_t * bot)
   if (!dlist_node || !bot)
     return NULL;
 
-  stat_inc(bot,bot->trig_called);
+  stat_inc (bot, bot->trig_called);
 
   debug (bot,
-	     "fnsc_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	 "fnsc_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
 
   if (bot_shouldreturn (bot))
