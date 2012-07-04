@@ -1,0 +1,20 @@
+Package: fortune-mod
+Version: 1:1.99.1-4
+Architecture: i386
+Maintainer: Joshua Kwan <joshk@triplehelix.org>
+Installed-Size: 144
+Depends: libc6 (>= 2.3), librecode0 (>= 3.6)
+Recommends: fortunes-min | fortune-cookie-db
+Suggests: fortunes, x11-utils, bsdmainutils
+Conflicts: fortune
+Replaces: fortune
+Provides: fortune
+Section: games
+Priority: optional
+Description: provides fortune cookies on demand
+ These are the machine-dependent parts of the fortune package, i.e.
+ the fortune program and the programs used for generating the data files.
+ The fortune package displays epigrams selected randomly from a selection
+ of fortune files. This is an enhanced version of the BSD program.
+ The data files (which can be shared) are contained in the 'fortunes-min',
+ 'fortunes', and 'fortunes-off' packages.

@@ -1,0 +1,818 @@
+fortune-mod (1:1.99.1-4) unstable; urgency=low
+
+  * Take bulk attribution/typo corrections from Simon Danner's git. Thanks so
+    much! Saves me some work for sure.
+    closes: #411907, #400232, #502483, #497057, #497060, #385408
+    closes: #527198, #445470, #476770, #500282, #369662, #363095, #386503
+    closes: #501748, #498932, #491815, #485388, #361896, #514243, #476772
+  * Soften dependency chain between fortune-mod and fortunes-min. In this case,
+    fortunes-min now recommends fortune-mod, while fortune-mod recommends
+    fortunes-min | fortune-cookie-db. closes: #529065, #542935
+  * Add some new fortunes. closes: #432849, #416290, #411079, #390434, #373817,
+    closes: #359311, #350838, #347945, #546644, #521421, #499068, #376182
+    closes: #410254
+  * Add the 'tao' fortunefile, closes: #228930.
+  * Fix Mark Twain attribution, closes: #514144
+  * Correct some chess moves, closes: #388167
+  * Change dependency on xcontrib to x11-utils. closes: #462625
+  * Move fortune menu category to 'Applications'.
+  * Delete strange postinst that created /usr/local/share/games/fortunes/off.
+    If it fixed a real problem, I would like to rediscover it to figure out
+    why THAT was the solution so many years ago.
+
+ -- Joshua Kwan <joshk@triplehelix.org>  Tue, 29 Sep 2009 15:38:11 -0700
+
+fortune-mod (1:1.99.1-3.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * debian/rules: Fix bashism. (Closes: #444275)
+
+ -- Marc 'HE' Brockschmidt <he@debian.org>  Sun, 27 Jan 2008 23:52:26 +0100
+
+fortune-mod (1:1.99.1-3) unstable; urgency=low
+
+  [ Pascal Hakim ]
+    - datfiles/cookie: Added a quote
+    - Added a switch -u to stop fortune from recoding a fortune to the current
+      locale.
+    - datfiles: Trimed EOL spaces
+      (closes: #314392)
+    - datfiles: Added spaces after human initials in attributions
+    - datfiles/art: Attributed a quote to Robert Heinlein
+    - datfiles/computers: Removed two duplicate fortunes
+      (closes: #314397)
+    - datfiles/computers: Added missing fortune separator
+      (closes: #314395)
+    - datfiles/computers: Misc fixes
+      (closes: #314394)
+    - datfiles/computers: Removed some shortened duplicates
+      (closes: #314393)
+    - datfiles/computers: Added a space after initials in names in
+      attributions
+      (closes: #314390)
+    - datfiles/computers: Fixed spacing before attribution lines
+      (closes: #314389)
+    - datfiles/computers: Added a Bruce Schneier quote
+      (From: Anthony DeRobertis <asd@suespammers.org>)
+      (closes: #309375)
+    - datfile/computers: Attributed a Nicholas Ambrose quote
+    - datfile/computers: Added the rest of a missing Emily Postnews
+      quote.
+      (closes: #314396)
+    - datfile/cookies: Fixed a bunch of spelling mistakes
+      (From: James R. Van Zandt <jrvz@comcast.net>)
+      (closes: #346504)
+    - datfiles/definitions: Fixed a grammar mistake
+      (From: Henrik Christian Grove <hcg@b-one.net>)
+      (closes: #333860)
+    - datfiles/linux: Added a missing seperator between two fortunes
+      (closes: #300084)
+    - datfiles/linux: Added a Eric S. Raymond quote
+      (From: Danilo Piazzalunga <danilopiazza@libero.it>)
+      (closes: #316595)
+    - datfiles/literature: Added a Tamim Ansary quote
+      (From: Anthony DeRobertis <asd@suespammers.org>)
+      (closes: #305448)
+    - datfiles/literature: Fixed a quotation to Sir Walter Scott
+      (From: A Costa <agcosta@gis.net>)
+      (closes: #336154)
+    - datfiles/miscellaneous: Added a Paul Graham quote
+      (From: Anthony DeRobertis <asd@suespammers.org>)
+      (closes: #305446)
+    - datfiles/miscellaneous: Added a letter to the Outside editor quote
+    - datfiles/pets: Added a Wesley T. Williams quote
+    - datfiles/wisdom: Fixed up Anne Frank's name
+      (closes: #322275)
+    - datfiles/work: Misc fixes
+      (patch from: Tom Parker <debian@tevp.net>)
+      (closes: #320955)
+    - datfiles/off/black-humour: Updated a quote to a funnier version
+      (closes: #322663)
+    - datfiles/*: Fixed some attribution spacing errors and added missing end
+      separators
+  [ Joshua Kwan ]
+    - datfiles/off/unrotated/{art,debian,vulgarity}: add some offensive
+      quotes!
+    - datfiles/pratchett: New fortune file featuring only two Terry Pratchett
+      gems right now. Hopefully that will increase soon enough as I go back
+    - datfiles/linux: Add a quote from Anand Kumria, closes: #283607
+    - datfiles/*: Sequester away, or slightly reword (in the case of
+      'riddles') verbally offensive quotes. Round 1 of many, I suspect.
+      closes: #329479
+    - datfiles/art: Add a Roger Waters quote.
+    - datfiles/computers: Add a Jamie Zawinski quote.
+    - debian/control: Bumped up Standards-Version
+    - cleaned up man files to have minus signs where appropriate
+
+ -- Joshua Kwan <joshk@triplehelix.org>  Tue, 10 Jan 2006 03:27:38 -0800
+
+fortune-mod (1:1.99.1-2) unstable; urgency=low
+
+  * Erinn Clark
+    - datfiles/off/unrotated/religion: Add Robert Anton Wilson quote
+    (closes: #280145)
+    - Fix typo in README
+    - Fix wording in debian/README.Debian
+  * Joshua Kwan
+    - Remove dupe fortune in datfiles/linux.
+    - Fix Cincinnatti -> Cincinnati typo in datfiles/sports.
+    - datfiles/linux: Add quote from Alan Cox.
+    - datfiles/people: Add crazyphilman's kuro5hin signature, thanks
+      Anthony DeRobertis. closes: #273988
+    - Add quote from Paul Desmond.
+    - Add IRC quote involving asuffield.
+    - Add IRC quote involving nobse. :D
+    - s/Psalms/Proverbs/ for a Bible quote, closes: #268097
+    - datfiles/cookie: Fix spelling of 'elderberrys' -> 'elderberries'
+    - datfiles/off/debian: Add a quote from #debian-devel, offensive
+      because it pokes fun at religion. Also standardize trailer indentation
+    - datfiles/off/atheism: fixed a '%%'
+    - datfiles/law: fix some unterminated quotes
+    - datfiles/wisdom: Add an Anatole France quote.
+    - datfiles/art: Add some quotes from David Gilmour and George Harrison.
+    - datfiles/cookie: Remove a duplicate Bullwinkle quote.
+    - datfiles/off/misandry: Add an Erica Jong quote.
+    - datfiles/{off/,}definitions: Add the Mensa Invitational daffynitions
+      that first appeared in the Washington Post.
+  * Pascal Hakim
+    - Added the set of disclaimer fortunes (from mathew)
+    - Added a wisdom quote
+    - datfile/art: Fixed up a "The Treasure of the Sierra Madre" quote
+    - datfile/off/sex: Typo fix
+      (closes: #284542)
+    - datfile/Makefile: fixed up spelling of disclaimer so it actually
+      works.
+    - datfile/love: Added attribution to a quote
+      (thanks to Chris de Vidal)
+    - more updates to Readmes and copyright files
+    - datfile/platitudes: Fixed up quote
+      (Closes: #265963)
+    - datfile/humourist: Fixed up Douglas Adams name's spelling 
+
+ -- Joshua Kwan <joshk@triplehelix.org>  Wed,  9 Feb 2005 18:35:30 -0800
+
+fortune-mod (1:1.99.1-1) unstable; urgency=low
+
+  * Based off of Pascal's new _official_ fortune-mod release.
+    Updated debian/copyright.
+  * Pascal Hakim
+    - datfile/definitions: Fixed typo
+      (closes: #240176)
+    - datfile/wisdom: Fixed typo
+      (closes: #249382)
+    - datfile/computers: Added David Bradley quote
+      (from Dale Harris <rodmur@maybe.org>)
+      (closes: #230300)
+    - datfile/debian: Added Andrew Morton quote
+      (closes: #242151)
+    - datfiles/computers: Added Dave Cock quote
+    - datfiles/debian: Added Shawn McMahon
+      (closes: #241161)
+    - datfiles/{off/,}debian: Added some quotes from Andrew Suffield's
+      quote file
+      (closes: #236471)
+    - datfiles/debian: Added Daniel Stone quote
+      (closes: #256958)
+  * Joshua Kwan
+    - datfiles/off/unrotated/atheism: Fixed casual -> causal typo.
+      (closes: #259677)
+    - datfiles/computers: Added quote (from Adrian von Bidder
+      <avbidder@fortytwo.ch> (closes: #259686)
+    - datfiles/off/unrotated/limerick: Fixed typo.
+    - datfiles/off/unrotated/debian: added quote from ari and nickr
+    - datfiles/linux: added quote from Ciaran McCreesh on sparclinux
+    - datfiles/linux: added email snip from Falk Hueffner on G++; thanks
+      Martin (closes: #263181)
+    - Moved a buttload of quotes from datfiles/linux to datfiles/debian.
+    - Removed a buttload of unfunny quotes from datfiles/linux.
+    - Remove all the German quotes in datfiles/linux and send them to the
+      fortunes-de maintainer.
+
+ -- Joshua Kwan <joshk@triplehelix.org>  Fri,  6 Aug 2004 18:38:53 -0700
+
+fortune-mod (9708-37) unstable; urgency=low
+
+  * Pascal Hakim
+    - datfile/off/atheism: Fixed spelling mistake
+      (closes: #234988)
+    - datfile/zippy: Fixed spelling mistake
+      (closes: #226968)
+    - datfile/men-women: Fixed spelling mistake in attribution
+      (closes: #231811)
+    - datfile/cookie: Fixed spelling mistake
+      (closes: #234154)
+    - datfile/debian: Added IRC quote
+      (from Scott James Remnant <scott@netsplit.com>)
+      (closes: #227950)
+    - datfile/off/debian: Added IRC quote
+      (from Scott James Remnant <scott@netsplit.com>)
+      (closes: #235984)
+  * Joshua Kwan
+    - Add self to Uploaders.
+    - datfile/off/debian: Added IRC quote
+    - datfiles/debian: Added ML quotes from Adrian von Bidder
+      <avbidder@fortytwo.ch> (Closes: #247259)
+    - Manually invoke the man page build target before running install-cookie,
+      with a blank prefix, so that the paths are not munged to include
+      /buildd/... (Closes: #252019, #229355)
+    - datfiles/computers: Fix typo: Andy Tannenbaum -> Tanenbaum.
+      (Closes: #253909)
+    - Quote key values in debian/menu to conform with policy.
+
+ -- Joshua Kwan <joshk@triplehelix.org>  Sat, 26 Jun 2004 13:32:05 -0700
+
+fortune-mod (9708-36) unstable; urgency=low
+
+  * datfile/debian: Created a new fortune cookie file to hold debian
+    fortunes.
+      + Added quote from debian-legal
+        (from Anthony DeRobertis <asd@suespammers.org>)
+        (closes: #219385)
+      + Added whole bunch of quotes
+        (from: Adrian von Bidder <avbidder@fortytwo.ch>)
+        (closes: #220284)
+      + Added another whole bunch of quotes
+        (from: Joshua Kwan <joshk@triplehelix.org>)
+  * datfile/science: Added Greg Oetjen quote
+    (closes: #221022)
+  * datfile/platitudes: Typo fix
+  * datfile/knghtbrd: Typo fixes
+  * fortune/fortune.c: Make relative paths with no leading . work
+    (closes: #225535)
+
+ -- Pascal Hakim <pasc@debian.org>  Thu, 08 Jan 2004 22:05:45 +1100
+
+fortune-mod (9708-35) unstable; urgency=low
+
+  * datfile/politics: Fixed spelling of Gandhi
+  * datfile/cookie: Removed stray >
+    (closes: #211399)
+  * datfile/linuxcookie:492: Added vi VS emacs quote
+    (closes: #215884)
+  * datfile/politicis:2971: Added Bernanos quote
+    (closes: #217615)
+  * debian/menu: Gave the full path to the fortune binary
+    (closes: #218127)
+  * debian/politics:811: Removed duplicate (and wrong) Monty Python
+    quote
+    (closes: #214701)
+  * datfile/miscellaneous: Removed 3 spelling mistakes
+    (closes: #215470)
+  * datfile/humourist:1017: Added Nipsey Russell quote from Match Game 
+    75
+    (closes: #211144)
+  * fortune/fortune.c: Check that a character is a valid ASCII
+    character before rotating it when showing an offensive fortune
+    (closes: #213477)
+
+ -- Pascal Hakim <pasc@debian.org>  Fri, 31 Oct 2003 14:04:00 +1100
+
+fortune-mod (9708-34) unstable; urgency=low
+
+  * Updated to policy 3.6.1.0
+  * datfile/literature:298: Moved Anne Frank remark to the 
+    offensive section.
+    (closes: #208467, #208468)
+  * datfile/linux:1821: Added Andrew Suffield quote
+    (closes: #208975)
+  * Convert a fortune to the local charset before attempting a
+    search on it. Fortunes will now be displayed correctly when
+    searched for, and searches will work a bit better.
+    (closes: #205000)
+  * datfile/linux:1826: Added an Overfiend quote
+
+ -- Pascal Hakim <pasc@debian.org>  Mon,  8 Sep 2003 15:23:40 +1000
+
+fortune-mod (9708-33) unstable; urgency=low
+
+  * Use librecode instead of iconv, to deal with non-existing 
+    characters in locales better. (Patch from Aurelien Jarno 
+    <aurelien@aurel32.net>)
+    (closes: #205061, #201230)
+  * datfile/kids:144: fixed typo
+    (closes: #204199)
+
+ -- Pascal Hakim <pasc@debian.org>  Fri, 22 Aug 2003 11:22:46 +1000
+
+fortune-mod (9708-32) unstable; urgency=low
+
+  * Added missing % at the end of a number of fortune cookies
+    (closes: #202341)
+  * Added missing Build-Depends
+    (closes: #202325)
+
+ -- Pascal Hakim <pasc@debian.org>  Tue, 22 Jul 2003 12:21:29 +1000
+
+fortune-mod (9708-31) unstable; urgency=low
+
+  * datfile/off/linux:30: Fixed spelling of lactating
+    (closes: #200718)
+  * datfile/off/linux:37: Added tbm quote
+    (closes: #202220)
+  * Added utf-8 support.
+    (Patch from Eduard Bloch <edi@gmx.de>)
+    (closes: #178392, #179595)
+
+ -- Pascal Hakim <pasc@debian.org>  Mon, 21 Jul 2003 18:07:00 +1000
+
+fortune-mod (9708-30) unstable; urgency=low
+
+  * datfile/food:781: Fixed spelling mistake in "vegetarian"
+    (closes: #198083)
+  * datfile/definition:3568: Changed posistion to position
+    (closes: #198656)
+  * datfile/politics:2967: Added a Mohammed Saeed al-Sahaf quote
+    (closes: #199181)
+  * datfiles/computer:5439: Added a GNU Libtool Manual quote
+    (closes: #200613)
+  * datfiles/linuxcookies:4: Removed duplicate quote (off/linux)
+    (closes: #200615)
+  * datfiles/off/linux:28: Added Overfiend quote
+    (closes: #164941)
+
+ -- Pascal Hakim <pasc@debian.org>  Thu, 10 Jul 2003 01:18:07 +1000
+
+fortune-mod (9708-29) unstable; urgency=low
+
+  * datafile/linux: Added quote from debian-legal
+    (closes: #194346)
+  * fortune/fortune.c: Fixed copy to display proper paths in error messages.
+    (Patch from William Steve Applegate <wsapplegate@est.un.goret.info>)
+    (closes: #195729)
+  * fortune/fortune.c: Search /usr/local/share/games for fortune files when a
+    cookie file is specified. (Patch from Scott Wehrenberg
+    <wehresj@auburn.edu>)
+    (closes: #161741)
+  * fortune/fortune.c: Exit cleanly on bad patterns instead of segfaulting.
+    (Patch from Scott Wehrenberg <wehresj@auburn.edu>)
+    (closes: #191647)
+  * fortune/fortune.c: Don't search the local directory for languages
+    (closes: #159095)
+  * fortune/fortune.c: Changed the order in which LC_ALL and LC_MESSAGES are
+    interpreted
+    (closes: #157171)
+  * fortune/fortune.c: Display a message when no appropriate fortunes have
+    been found
+    (closes: #165563)
+  * datfiles/love:16: Removed duplicate entry
+    (closes: #178558)
+  * datfiles/translate-me: Added some translations. (Mostly thanks to
+    Christian Kurz <shorty@debian.org>)
+    (closes: #182613)
+  * datfiles/songs-poems:303: Fixed a typo in Gollum's riddle
+    (closes: #157105)
+  * datfiles/off/unrotated/limericks:5053: Removed a broken limeric.
+    (closes: #171114)
+  * fortune/fortune.c: New option: -c. Used to name the file from which the
+    cookie came.
+    (closes: #109167)
+  * datfile/off/unrotated/atheism: Added new cookie file
+    (closes: #95588)
+  * Lintian changes:
+    -Updated policy version
+    -fixed description
+  * Added some cookie files which weren't getting built to their directories
+    makefile.
+    
+ -- Pascal Hakim <pasc@debian.org>  Tue, 17 Jun 2003 01:24:59 +1000
+
+fortune-mod (9708-28) unstable; urgency=low
+
+  * Fixed broken encoding characters (patch from Sam Hocevar 
+    <sam@zoy.org>)
+    (closes: #188884)
+
+ -- Pascal Hakim <pasc@debian.org>  Tue, 20 May 2003 23:45:32 +1000
+
+fortune-mod (9708-27) unstable; urgency=low
+
+  * Fixed -f to provide correct filenames 
+    (closes: #156195)
+  * Fixed -e to provide correct percentages, when some percentages
+    are supplied on the command line. (patch from Michal 
+    Politowski <mpol@charybda.icm.edu.pl>)
+    (closes: #157197)
+  * Fixed Garrison Keillor quote in "ethnic"
+    (closes: #159273)
+  * Removed non-fortune from James Troup on debian's bug tracking
+    system in "linux"
+    (closes: #160252)
+  * Fixed attribution, and wording from Mark Twain to Oscar Wilde
+    in "paradoxum"
+    (closes: #171910)
+  * Don't choke when all files are empty. (patch from Aurelien 
+    Jarno <aurel32@debian.org>)
+    (closes: #176032)
+  * Fixed quoting, and attribution in "work", and removed duplicate 
+    in "cookie"
+    (closes: #176623)
+  * Moved two translated quotes from "translate-me" to "people" and
+    "science", and added attribution to Albert Einstein
+    (closes: #182612)
+  * Moved some translated quotes from "translate-me" to "wisdom"
+    (closes: #182623)
+  * Removed duplicate from "people", left copy in "science"
+    (closes: #182623)
+  * Removed duplicate from "science"
+    (closes: #182625)
+  * Added missing help in a quote in "work"
+    (closes: #192811)
+  * Made the 'nohup rm -fr /&' fortune slightly more obvious, in
+    "computer"
+    (closes: #149400)
+  * Removed duplicate (and wrong) riddle in "riddle"
+    (closes: #158604)
+  * Removed duplicate word in "cookie"
+    (closes: #164404)
+  * Fixed factual error in "arts"
+    (closes: #173497)
+  * Fixed lots of spelling mistakes in "computer"
+    (closes: #175524)
+  * Updated debian/copyright file
+    (closes: #171115)
+  * Fixed spelling mistakes in man page
+    (closes: #173948)
+  * Applied patch from "Aurelien Jarno <aurel32@debian.org>", to
+    stop the display of erroneous information when there are no
+    strings in a file.
+    (closes: #175774)
+  * Fixed typo in "linux"
+    (closes: #192036)
+  * Added a quote in "off/sex"
+    (closes: #193214)
+  * Fixed typo in "sport"
+    (closes: #173247)
+  * Added Linus Thorvalds quote in "linux"
+    (closes: #165524)
+  * Added a quote about Jim Flemming on NANOG in "cookies"
+    (closes: #162401)
+  * Added greenrd's law in "definitions"
+    (closes: #162188)
+  * Added Dragon Warrior quote in "off/religion"
+    (closes: #158301)
+  
+
+ -- Pascal Hakim <pasc@debian.org>  Tue, 20 May 2003 15:58:07 +1000
+
+fortune-mod (9708-26) unstable; urgency=low
+  
+  * Thanks for the corrections and submissions, everyone !
+  	Keep'em coming !
+  * Added new cookie files 
+      -  paradoxum
+  * Added a Dijkstra cookie to computers.
+  * Added 2 quotes from Baker.
+  * Moved offensive cookies (closes: #156820, #154404).
+  * linux:1439:s/nickle/nickel/  (closes: #141603).
+  * songs-poems:6246:s/Voicl/Voicel/ (closes: #141805).
+  * knghtbrd:14:s/say/day/ (closes: 146946).
+  * computers:5268:s/Jeffrey Honig/George Michaelson/ (closes: #153151).
+  * startrek:324: deleted extra " (closes: #154483).
+  * art,people:s/Jonathon Swift/Jonathan Swift/ (closes: #155585).
+  * riddles:s/lightbulb/light bulb/ (closes: #155388).
+  * Added Kant's epigraph to wisdom (closes: #142664).
+  * Added /. quote on cable modems to computers (closes: #146629).
+  * wisdom:239:s/Adams\?/Adams/ (closes: #149003).
+  * Added pullout method of virus prevention to sex (closes: #150041).
+  * i8n support thanks to Alastair McKinstry <mckinstry@computer.org>
+  	(closes: #122219).
+  
+	
+ -- Mark Ng <ng@debian.org>  Sat, 17 Aug 2002 13:26:18 +1000
+
+fortune-mod (9708-25) unstable; urgency=low
+
+  * Generally added new cookies and corrected mistakes.
+  * Added new knghtbrd cookies.
+  * No longer valid (closes: #64239) (closes: #93353)
+  * Added % to wisdom:1234 (closes: #118180)
+  * s/becannt/bekannt/ in songs-poems:1212 (closes: #118456)
+  * removed duplicated Mandelbrot quote from cookies (closes: #118603)
+  * s/Kalvin/Kelvin in men-women:1454 (closes: #126184)
+  * cleared up train-station/work-station entry in linux:1168 (closes: #135152)
+  * added % to magic:23 (closes: #138768)
+  * corrected Kenobi quote in art:1083 (closes:#140562)
+  * s/meet/see for Pink Floyd in songs-poems:2583 (closes: #140924)
+  * spelling mistakes in package descriptions
+    (closes: #124629) (closes: #124634) (closes: #124635)
+  * Harlan Ellison quote is mostly correct ;-) (closes: #126946)
+  * s/-300K/~300K/ in science:2395 (closes: #131630)
+  * moved Socrates' last words from off/private to miscellaneous
+    (closes: #136847)
+  * s/say tuned/stay tuned/ in love:151 (closes: #140218)
+  * Added Gandhi quote to wisdom (closes: #104225)
+  * Added modconf changelog message to linux (closes: #117869)
+  * Added task-p0rn to linux (closes: #127685)
+  * Added more cookies (closes: #133638)
+
+ -- Mark Ng <ng@debian.org>  Sat,  6 Apr 2002 01:07:32 +1000
+
+fortune-mod (9708-24) unstable; urgency=low
+
+  * New maintainer: Mark Ng <ng@debian.org>
+  * BSD License update. (closes: #123817)	
+  * Fixed minor spelling (closes: #124627)
+
+ -- Mark Ng <ng@debian.org>  Sat,  5 Jan 2002 23:58:24 +1100
+
+fortune-mod (9708-23) unstable; urgency=low
+
+  * Fix typos in:
+    + songs-poems: Correct word in Weird Al song. (closes: #112688)
+    + computers: Fix typo in Elizabeth Haley quote. (closes: #115918)
+    + startrek: Fix typo in Kirk quote. (closes: #112603)
+    + cookie: Fix Ben Franklin quote. (closes: #114097)
+    + linux: Separate two unrelated fortunes.
+    + knghtbrd: Remove duplicate fortune.
+    + linux: De-germanify attribution for a fortune.
+    + linux: Remove fortune that does not belong in linux.  (i. e.
+      no linux content, nor attributable to any Linux figure.)
+      (closes: #107158)
+    + cookie: Moved offensive fortune to off/cookie (closes: #108060)
+    + off/fortunes: Restored two fortunes dealing with suicide of
+      the user previously removed in 9708-22. (closes: #107265)
+    + riddles: Moved potentially offensive fortune and expanded
+      the offending acronym (as found elsewhere in off/riddles)
+      (closes: #107075)
+
+ -- Brian Bassett <brianb@debian.org>  Tue, 30 Oct 2001 23:17:39 -0800
+
+fortune-mod (9708-22) unstable; urgency=low
+
+  * Fix typos in:
+    + literature: Corrected typo in Mark Twain's name (closes: #102627)
+    + people: Removed duplicate 'is' (closes: #98858), split two fortunes
+              that had nothing to do with each other
+    + computers: Removed broken (ie, it does nothing when given to any
+      known shell) fortune (closes: #105552)
+    + songs-poems: Correctly attibute quote to Robert Loius Stevenson
+  * Removed two fortunes from fortunes dealing with the users' death and
+    suicide (closes: #98557, #106446)
+  * Relegated zippy to fortunes-off, as quite a number of these
+    non-sensical pieces of "humor" fail the criteria for offensiveness.
+    (closes: #35560)
+  * Fix bashism in menu file (closes: #97190)
+  * Update knightbrd from upstream author, Joseph Carter
+    <knghtbrd@debian.org>.
+
+ -- Brian Bassett <brianb@debian.org>  Sun, 29 Jul 2001 21:31:20 -0700
+
+fortune-mod (9708-21) unstable; urgency=low
+
+  * Corrected attributions in:
+    + education (closes: #60613)
+    + songs-poems (closes: #61194)
+  * Fixed typos in:
+    + computers (closes: #67311)
+    + cookie (closes: #71807)
+  * Removed duplicate cookie from linuxcookie, and added another quote
+    from Denis Ritchie to linux. (closes: #81162)
+  * Removed duplicate cookie from off/vulgarity. (closes: #66601)
+
+ -- Brian Bassett <brianb@debian.org>  Fri,  2 Feb 2001 21:20:47 -0800
+
+fortune-mod (9708-20) unstable; urgency=low
+
+  * Moved offensive fortunes from:
+    + riddles (closes: #58603)
+  * Fixed typos:
+    + off/limerick
+    + off/songs-poems (closes: #60686)
+  * Added new fortunes:
+    + off/religion (closes: #63247)
+    + art
+    + definitions
+    + literature
+    + miscellaneous
+    + people
+    + platitudes
+    + politics
+    + science
+    + songs-poems
+    + startrek
+    + wisdom (closes: #63248)
+  * Fixed menu entry. (closes: #65784)
+
+ -- Brian Bassett <brianb@debian.org>  Sun, 18 Jun 2000 16:29:42 -0700
+
+fortune-mod (9708-19) unstable; urgency=low
+
+  * Fixed problems with specifying a percentage along with a file
+    (closes: #54619)
+
+ -- Brian Bassett <brianb@debian.org>  Thu, 13 Jan 2000 15:24:44 -0800
+
+fortune-mod (9708-18) unstable; urgency=low
+
+  * Fixed typos in:
+    + songs-poems (closes: #50214)
+    + cookie (closes: #50905, #54040)
+
+ -- Brian Bassett <brianb@debian.org>  Sat,  8 Jan 2000 17:15:59 -0800
+
+fortune-mod (9708-17) unstable; urgency=low
+
+  * Fixed the menu entry for X, since xmessage is braindead wrt tabs and
+    sizes the window as if a tab is one column.  Brings in a Suggests:
+    on bsdmainutils for `col` (Shouldn't be necessary, as bsdmainutils
+    is Important, but better safe than sorry).  Fix courtesy of
+    Kevin Ryde <user42@zip.com.au>.
+
+ -- Brian Bassett <brianb@debian.org>  Sat,  6 Nov 1999 16:23:13 -0800
+
+fortune-mod (9708-16) unstable; urgency=low
+
+  * Fixed 'no place to put residual probablilty' error.  (closes: 
+    #47043)
+  * Corrected cookie typos.  (closes: #43553, #43554)
+
+ -- Brian Bassett <brianb@debian.org>  Mon, 11 Oct 1999 20:59:42 -0700
+
+fortune-mod (9708-15) unstable; urgency=low
+
+  * Updated to Standards-Version 3.0.1, FHS
+  * Applied patch to keep fortune from breaking if /usr/local dirs
+    don't exist. (closes: #44682)
+  * Fixed speeling error in zippy. (closes: #46630)
+  * Added a menu entry for fortune.  The X11 version of the menu entry
+    uses xmessage, bringing in a new Suggests: on xcontrib.
+    (closes: #46894)
+  * Fortune now Depends: on fortune-cookie-db to make sure `fortune`
+    works after an `apt-get install fortune`. (closes: #45728)
+  * Renamed "knghtbrd1" fortune file to "knghtbrd".
+
+ -- Brian Bassett <brianb@debian.org>  Fri,  8 Oct 1999 13:59:09 -0700
+
+fortune-mod (9708-14) unstable; urgency=low
+
+  * Applied patch from Torsten Landschoff <torsten@pclab.ifg.uni-kiel.de>
+    to clean up /usr/local patch from 9708-12.
+    + Fixes #42372, 42589, 43259: fortune -m prints "Bad file descriptor"
+    + Fixes #42823: fortune -e prints "Floating point exception"
+  * Added fortune file "knghtbrd1" from Joseph Carter <knghtbrd@debian.org>,
+    consisting of humorous IRC snippets.
+
+ -- Brian Bassett <brianb@debian.org>  Mon, 23 Aug 1999 09:45:03 -0700
+
+fortune-mod (9708-13) unstable; urgency=low
+
+  * Fixed `fortune -a` printing 'Bad address'. (#42326)
+
+ -- Brian Bassett <brianb@debian.org>  Mon,  2 Aug 1999 11:51:31 -0700
+
+fortune-mod (9708-12) unstable; urgency=low
+
+  * Adapted patch from OpenBSD's fortune to fix .dat file fields to
+    32-bit integers, especially on 64-bit platforms.
+    + As a result, the fortunes packages can now be built as arch
+      independant packages (#32142)
+    + As a side effect of bumping the database version, fortune-mod
+      conflicts with the old fortunes packages.  New fortunes packages
+      should Depend on "fortune-mod (>= 9708-12)".
+  * Fixed typos.
+    + Numerical typo (s/255/225/) in science (#41032)
+    + Restored chopped off line in off/limerick (#41075)
+    + Fixed mathematical errors in off/limerick (#41390)
+  * Fortune now looks in /usr/local/share/games/fortune for additional
+    fortunes. (#33835)
+  * Moved offensive fortune from ethnic to off/ethnic (#40752)
+  * Added my policy on moving offensive fortunes found in the main
+    database.
+
+ -- Brian Bassett <brianb@debian.org>  Sat, 31 Jul 1999 12:50:20 -0700
+
+fortune-mod (9708-11) unstable; urgency=low
+
+  * Aplied patch from Allover Stripes <allover@hedgehog.globalserve.net>
+    to fix problem with -m failing on offensive fortunes (which are
+    stored ROT13'd) (#35669)
+  * Fixed hardcoded access mode in open() calls.  Hamstrung the Hurd
+    folks (#37091)
+  * Fixed typo in linux (caught by Torsten Hilbrich
+    <Torsten.Hilbrich@gmx.net>
+  * Fixed typo in cookie (#33167)
+
+ -- Brian Bassett <brianb@debian.org>  Sat, 12 Jun 1999 15:07:52 -0700
+
+fortune-mod (9708-10) frozen unstable; urgency=low
+
+  * Fixed typo in copyright (lintian)
+  * Fixed typo in literature (#31015)
+  * Added Depends: fortunes-min to fortunes to upgrade smoothly from hamm.
+    (#31111)
+  * Added powerpc fix from Hartmut Koptein <koptein@et-inf.fho-emden.de>
+    (#31930)
+
+ -- Brian Bassett <brianb@debian.org>  Fri, 15 Jan 1999 18:25:42 -0800
+
+fortune-mod (9708-9) unstable; urgency=low
+
+  * Fix unpack-from-source problems reported by build daemons (#25416,#28542)
+
+ -- Brian Bassett <brianb@debian.org>  Mon, 26 Oct 1998 19:34:15 -0800
+
+fortune-mod (9708-8) unstable; urgency=low
+
+  * Fixed typo (#28231)
+  * Moved inappropriate fortune from law to off/sex (#28193)
+
+ -- Brian Bassett <brianb@debian.org>  Wed, 21 Oct 1998 23:26:44 -0700
+
+fortune-mod (9708-7) unstable; urgency=low
+
+  * Split fortunes into fortunes-min and fortunes for the bandwidth conscious
+  * Added "linux" cookie file by Martin Schulze <joey@infodrom.north.de>
+  * Added "perl" cookie file from http://www.perl.org/lwall-quote.txt
+  * Moved unstr and strfile to /usr/bin from /usr/sbin
+
+ -- Brian Bassett <brianb@debian.org>  Fri,  4 Sep 1998 15:01:58 -0700
+
+fortune-mod (9708-6) unstable; urgency=low
+
+  * Fixed typos and other mistakes (#21572,22247,23527)
+  * Changed mainainter address
+
+ -- Brian Bassett <brianb@debian.org>  Sat, 18 Jul 1998 20:52:17 -0700
+
+fortune-mod (9708-5) frozen unstable; urgency=low
+
+  * Fixed manpages in all packages problems (Fixes: #19738,#19844,#19879,#19844,#19895,#19879,#19918)
+
+ -- Brian Bassett <brian@butterfly.ml.org>  Fri, 20 Mar 1998 00:24:59 -0800
+
+fortune-mod (9708-4) unstable; urgency=low
+
+  * Fixed alpha datfiles problem (#18594,18595,18756)
+  * Fixed speeling error (#18170)
+  * Fixed typo in package description (#18957)
+  * Updated fortune.6 manpage to clarify -o and directory interaction (#17252)
+
+ -- Brian Bassett <brian@butterfly.ml.org>  Mon,  9 Mar 1998 23:10:01 -0800
+
+fortune-mod (9708-3) unstable; urgency=low
+
+  * Fixed overlap between bo and hamm packages
+  * Fixed lintian messages
+
+ -- Brian Bassett <brian@butterfly.ml.org>  Tue, 10 Feb 1998 16:42:26 -0800
+
+fortune-mod (9708-2) unstable; urgency=low
+
+  * Fixed spacing error (#15858)
+  * Fixed spelling error (#16580)
+  * Switched to debhelper
+
+ -- Brian Bassett <brian@butterfly.ml.org>  Fri, 12 Dec 1997 08:39:27 -0800
+
+fortune-mod (9708-1) unstable; urgency=low
+
+  * New maintainer
+  * Deleted corrupted fortune from off/limericks (#11089)
+  * Fixed noticed spelling errors (#10012, 10770)
+  * Split off offensive fortunes to package fortunes-off (#10079)
+  * Removed unchecked prompt from postinst (#12618)
+  * Fixed manpage (#13953)
+  * Left copyright uncompressed (#14400)
+
+ -- Brian Bassett <brian@butterfly.ml.org>  Sat,  6 Dec 1997 19:34:13 -0800
+
+fortune-mod (9708-0.1) unstable; urgency=low
+
+  * Non-maintainer release.
+  * New upstream source. (#13407)
+  * Libc6 compile. (#11681)
+
+ -- Martin Mitchell <martin@debian.org>  Fri, 14 Nov 1997 05:16:54 +1100
+
+fortune-mod (9510-4) frozen unstable; urgency=low
+
+  * fixed postinst script to display the default action
+  * fixed manpage which had the wrong paths 
+  * fixed several cookie files
+
+ -- Helmut Geyer <Helmut.Geyer@iwr.uni-heidelberg.de>  Fri, 18 Apr 1997 00:59:21 +0200
+
+fortune-mod (9510-3) unstable; urgency=low
+
+  * fixed copyright location.
+
+ -- Helmut Geyer <Helmut.Geyer@iwr.uni-heidelberg.de>  Wed, 19 Feb 1997 19:29:24 +0100
+
+fortune-mod (9510-2) unstable; urgency=low
+
+  * fixed package relationship of fortune-mod with fortune and fortunes
+  * fixed bogus manpage symlink.
+  * installed manpages compressed.
+
+ -- Helmut Geyer <Helmut.Geyer@iwr.uni-heidelberg.de>  Fri, 11 Oct 1996 19:54:58 +0200
+
+fortune-mod (9510-1) unstable; urgency=low
+
+  * new fortune package from the fortune-mod sources
+  * separated architecture dependent and independent parts
+  * incorporated cookies file from old fortune package
+  * fixed small bug in fortune -w
+
+ -- Helmut Geyer <Helmut.Geyer@iwr.uni-heidelberg.de>  Thu, 10 Oct 1996 13:26:22 +0200
+
+

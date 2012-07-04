@@ -1,0 +1,14 @@
+Package: fortunes
+Source: fortune-mod
+Version: 1:1.99.1-4
+Architecture: all
+Maintainer: Joshua Kwan <joshk@triplehelix.org>
+Installed-Size: 2784
+Depends: fortunes-min
+Recommends: fortune-mod (>= 9708-12)
+Provides: fortune-cookie-db
+Section: games
+Priority: optional
+Description: Data files containing fortune cookies
+ There are far over 15000 different 'fortune cookies' in this package.
+ You'll need the fortune-mod package to display the cookies.

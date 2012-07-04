@@ -1,0 +1,17 @@
+Package: fortunes-off
+Source: fortune-mod
+Version: 1:1.99.1-4
+Architecture: all
+Maintainer: Joshua Kwan <joshk@triplehelix.org>
+Installed-Size: 2024
+Depends: fortunes
+Recommends: fortune-mod (>= 9708-12)
+Replaces: fortunes (<= 9708-0.1)
+Provides: fortune-cookie-db
+Section: games
+Priority: optional
+Description: Data files containing offensive fortune cookies
+ This package contains 'fortune cookies' which some may consider to be
+ offensive.  Please do not install this package if you or your users are
+ easily offended.  You'll need the fortune-mod package to display the
+ cookies.

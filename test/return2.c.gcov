@@ -1,0 +1,50 @@
+        -:    0:Source:return2.c
+        -:    0:Graph:return2.gcno
+        -:    0:Data:return2.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include <stdio.h>
+        -:    2:#include <execinfo.h>
+        -:    3:
+        -:    4:int global_nesting;
+        -:    5:
+        -:    6:#define ENTER if(1) { \
+        -:    7: char ** strings; void *array[2]; int tab, size, i; \
+        -:    8:  size = backtrace(array,1); \
+        -:    9:  if(size > 0) { \
+        -:   10:   strings = backtrace_symbols(array, size); \
+        -:   11:   for(tab=0;tab<=global_nesting;tab++) printf(" "); \
+        -:   12:    printf("%s: Entered\n", strings[0]); \
+        -:   13:   global_nesting++; } }
+        -:   14:
+        -:   15:#define return_void if(1) { global_nesting--; return; }
+        -:   16:#define return_val(a) if(1) { global_nesting--; return((a)); }
+        -:   17:
+        -:   18:int foo_val (void);
+        -:   19:void foo_void (void);
+        -:   20:int main (void);
+        -:   21:
+        -:   22:int
+        1:   23:foo_val (void)
+        -:   24:{
+        1:   25:  ENTER ("foo_val");
+        1:   26:  foo_void ();
+        1:   27:  return_val (1);
+        -:   28:}
+        -:   29:
+        -:   30:void
+        2:   31:foo_void (void)
+        -:   32:{
+        2:   33:  ENTER ("foo_void");
+        2:   34:  return_void;
+        -:   35:}
+        -:   36:
+        -:   37:int
+        1:   38:main (void)
+        -:   39:{
+        -:   40:
+        1:   41:  ENTER ("main");
+        1:   42:  foo_val ();
+        1:   43:  foo_void ();
+        1:   44:  return_void;
+        -:   45:}

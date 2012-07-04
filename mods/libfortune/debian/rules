@@ -1,0 +1,72 @@
+#! /usr/bin/make -f
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+	$(MAKE)
+	touch $@
+
+clean:
+	dh_testdir
+	dh_testroot
+	$(MAKE) clean
+	rm -f build-stamp
+	dh_clean
+
+binary-indep: build
+	dh_testdir -i
+	dh_testroot -i
+	dh_prep -i
+	dh_installdirs -i
+	$(MAKE) fortune/fortune.man prefix=
+	$(MAKE) install-cookie prefix=$(CURDIR)/debian/fortunes
+	mv debian/fortunes/usr/share/games/fortunes/off \
+	   debian/fortunes-off/usr/share/games/fortunes
+	for i in fortunes literature riddles; do \
+		mv debian/fortunes/usr/share/games/fortunes/$$i \
+		   debian/fortunes-min/usr/share/games/fortunes; \
+		mv debian/fortunes/usr/share/games/fortunes/$$i.u8 \
+		   debian/fortunes-min/usr/share/games/fortunes; \
+		mv debian/fortunes/usr/share/games/fortunes/$$i.dat \
+		   debian/fortunes-min/usr/share/games/fortunes; \
+	done
+	dh_installdocs -i
+	dh_installchangelogs -i ChangeLog
+	dh_link -i
+	dh_strip -i
+	dh_compress -i
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+binary-arch: build
+	dh_testdir -a
+	dh_testroot -a
+	dh_prep -a
+	dh_installdirs -a
+	$(MAKE) install-fortune install-util install-man prefix=$(CURDIR)/debian/fortune-mod
+	dh_installdocs -a
+	dh_installmenu -a
+	dh_installchangelogs -a
+	dh_link -a
+	dh_strip -a
+	dh_compress -a
+	dh_fixperms -a
+	dh_installdeb -a
+	dh_shlibdeps -a
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
+
+source diff:
+	@echo >&2 'source and diff are obsolete - use dpkg-source -b'; false
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary
+
+# Local Variables:
+# mode: makefile
+# End:
+

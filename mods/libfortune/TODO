@@ -1,0 +1,25 @@
+* Replace current Makefiles with an autoconf setup (maybe use
+  automake?) (Do we even need this?)
+
+  This would probably be useful for getting people on other distributions
+  and operating systems going with fortune.
+
+* Split-off properly offensive fortune file generation (and provide a
+  fake offensive fortune for when it's not installed)
+
+* .fortunerc and /etc/fortunerc support
+
+* More fortunes!
+
+* Properly format all fortunes! (See notes for details)
+
+* Localised -a and -o fortune display
+
+  This can be mixed in with the configuration support. In addition, it'd be nice
+  to be able to have more than one language and so on.
+
+  At the moment, I (pasc) am working on re-doing the datfile finding code. This
+  would fix a number of small bugs that people have found over the years, and
+  should make it easier to select which sets of fortune you want to display.
+
+-- 20050121 Pascal Hakim <pasc@redellipse.net>

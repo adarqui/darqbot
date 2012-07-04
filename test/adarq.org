@@ -1,0 +1,116 @@
+
+
+<html lang="en">
+  <head>
+    <title>Doodles</title>
+    <link rel="stylesheet" type="text/css" href="/doodles/css/allstyles.css" />
+    <!--[if IE]>
+      <link href="/doodles/css/iestyles.css" rel="stylesheet" type="text/css" />
+    <![endif]-->
+    <!--[if IE 6]>
+      <link href="/doodles/css/ie6styles.css" rel="stylesheet" type="text/css" />
+    <![endif]-->
+    <link href="/doodles/doodles.xml" rel="alternate" title="Latest Google Doodles" type="application/rss+xml">
+    <meta name="google-site-verification"
+          content="dr6LvfGy2v_-FnxOJz4HFlNKNR_VpaN0xCA_T8RXAfk" />
+    <meta content="width=device-width; initial-scale=1.0; minimum-scale=1;"
+          name="viewport">
+    <meta name="google" value="notranslate" />
+    
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-25773869-2']);
+      _gaq.push(['_setCookiePath', '/doodles/']); 
+      _gaq.push(['_trackPageview']);
+      (function() {
+       var ga = document.createElement('script');
+       ga.type = 'text/javascript'; ga.async = true;
+       ga.src = ('https:' == document.location.protocol ?
+                 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+       var s = document.getElementsByTagName('script')[0];
+       s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  </head>
+  <body class="jfk-scrollbar ltr no-modules finder
+               scrolling-enabled"
+        dir="ltr">
+    <div id="header">
+  
+  <a id="logo" href="/doodles/">
+    <img src="//www.google.com/images/icons/ui/doodle_plus/doodle_plus_google_logo_on_grey.gif"
+         alt="Google" width="116" height="41" />
+  </a>
+  
+  <form action="/doodles/search" id="search">
+    <input type="text" name="query" value="" id="search_box"
+           placeholder="Search for doodles"/>
+    <button type="submit" class="jfk-button jfk-button-action" id="search_button">
+      <img src="//www.gstatic.com/ui/v1/button/search-white.png" />
+      <span>Search</span>
+    </button>
+  </form>
+</div>
+
+
+
+    <div id="all-content" class="ltr no-modules">
+
+      
+      <div id="top-content">
+        
+  <h1>Doodles</h1>
+  <form id="filter"></form>
+
+      </div>
+
+      
+      <div id="secondary-content">
+        
+      </div>
+
+      
+      
+
+      
+      <ul id="doodle-site-navigation">
+  <li class="selected">
+  <a onclick="_gaq.push(['_trackEvent', 'Left Nav', 'Doodles']);"
+     href="/doodles/finder">Home</a></li>
+  <li>
+  <a onclick="_gaq.push(['_trackEvent', 'Left Nav', 'About Doodles']);"
+     href="/doodles/about">About Doodles</a></li>
+  <li><a onclick="_gaq.push(['_trackEvent', 'Left Nav', 'Doodle Store']);"
+         href="http://www.zazzle.com/googledoodles">Doodle Store</a></li>
+</ul>
+
+
+      
+      <div id="main-content">
+        
+<ul id="doodle-list" class="thumbnail-list"></ul>
+
+<noscript>
+  Please <a href="http://www.google.com/support/bin/answer.py?answer=23852&hl=en" target="_blank">enable JavaScript</a> to use the Doodle Finder.
+</noscript>
+
+
+      </div>
+
+      <p id="footer">
+  © Google ·
+  <a href="/doodles/doodles.xml"><img alt="Latest Google Logos"
+     src="//www.google.com/images/feed-icon.gif">RSS</a>
+</p>
+
+
+    </div>
+
+    
+  <script src="/doodles/js/finder_javascript.js"></script>
+  <script type="text/javascript">
+    var finder = new doodleplus.Finder(_gaq);
+  </script>
+
+  </body>
+</html>

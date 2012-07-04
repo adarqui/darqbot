@@ -1,0 +1,27 @@
+fix mod_quote_files/big.eq <-- need to sort it by first field only
+
+04:24 < nogo> any idea?
+04:24 < Snooze> sort of
+04:24 < Snooze> i'm sure a better way exists
+04:24 < Snooze> sort -n file >sortedfile
+04:25 < Snooze> egrep '^1' sortedfile > 1_file
+04:25 < Snooze> egrep '^2' sortedfile > 1_file
+04:25 < Snooze> egrep '^3' sortedfile > 3_file
+04:25 < Snooze> so you have 3 files, right?
+04:25 < nogo> ok coo now how would u merge them properly?
+04:25 < nogo> field 3 is a long text quote
+04:25 < nogo> btw
+04:25 < nogo> but ya im following
+04:26 < Snooze> so check your man page for sort, some have sort -R wich is randomize
+04:26 < nogo> ya ive done that to unsort it
+04:26 < nogo> to then mess with it
+04:27 < Snooze> so do this
+04:27 < Snooze> (sort -R 1_file;sort -R 2_file; sort -R 3_file) > randomzied_sort
+04:27 < Snooze> and you should be done
+04:29 < nogo> ya but that will disorganize the data among the fields
+04:29 < nogo> ;/
+04:29 < Snooze> no
+04:29 < nogo> field 1 is word count, field 2 is filename, field 3 is the quote
+04:29 < Snooze> it does it by line
+04:29 < Snooze> so you're randomizing the lines
+0

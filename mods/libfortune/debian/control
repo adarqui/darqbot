@@ -1,0 +1,54 @@
+Source: fortune-mod
+Section: games
+Priority: optional
+Maintainer: Joshua Kwan <joshk@triplehelix.org>
+Standards-Version: 3.8.3
+Build-Depends: debhelper (>= 7), recode, librecode-dev
+
+Package: fortune-mod
+Architecture: any
+Replaces: fortune
+Provides: fortune
+Conflicts: fortune
+Depends: ${shlibs:Depends}
+Recommends: fortunes-min | fortune-cookie-db
+Suggests: fortunes, x11-utils, bsdmainutils
+Description: provides fortune cookies on demand
+ These are the machine-dependent parts of the fortune package, i.e.
+ the fortune program and the programs used for generating the data files.
+ The fortune package displays epigrams selected randomly from a selection
+ of fortune files. This is an enhanced version of the BSD program.
+ The data files (which can be shared) are contained in the 'fortunes-min',
+ 'fortunes', and 'fortunes-off' packages.
+
+Package: fortunes-min
+Architecture: all
+Recommends: fortune-mod (>= 9708-12)
+Replaces: fortunes (<= 9708-6)
+Provides: fortune-cookie-db
+Description: Data files containing fortune cookies
+ This package contains a small number of 'fortune cookies' for the
+ bandwidth conscious.  There are over 15000 different 'fortune cookies'
+ in the fortunes package.  You'll need the fortune-mod package to display
+ the cookies.
+
+Package: fortunes
+Architecture: all
+Recommends: fortune-mod (>= 9708-12)
+Depends: fortunes-min
+Provides: fortune-cookie-db
+Description: Data files containing fortune cookies
+ There are far over 15000 different 'fortune cookies' in this package.
+ You'll need the fortune-mod package to display the cookies.
+
+Package: fortunes-off
+Architecture: all
+Recommends: fortune-mod (>= 9708-12)
+Depends: fortunes
+Replaces: fortunes (<= 9708-0.1)
+Provides: fortune-cookie-db
+Description: Data files containing offensive fortune cookies
+ This package contains 'fortune cookies' which some may consider to be
+ offensive.  Please do not install this package if you or your users are
+ easily offended.  You'll need the fortune-mod package to display the
+ cookies.

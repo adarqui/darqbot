@@ -1,0 +1,914 @@
+   Link: canonical
+   Link: image_src
+   Stack Exchange
+   log in | careers | chat | meta | about | faq
+   _____________________________
+   Stack Overflow
+     * Questions
+     * Tags
+     * Users
+     * Badges
+     * Unanswered
+     * Ask Question
+   Link: http://cdn.sstatic.net/stackoverflow/img/apple-touch-icon.png
+
+                                    How to generate a stacktrace when my gcc C++ app crashes
+
+                                  When my c++ app crashes I would like to generate a stacktrace.                              
+                                                                                                                              
+                                  I already asked this but I guess I needed to clarify my needs.                              
+                                                                                                                              
+                                  My app is being run by many different users and it also runs on Linux, Windows and          
+                                  Macintosh ( all versions are compiled using gcc ).                                          
+                                                                                                                              
+   up vote 90 down vote favorite  I would like my program to be able to generate a stack trace when it crashes and the next   
+   91                             time the user run's it, it will ask them if it is ok to send the stack trace to me so I can 
+   share [g+] share [fb] share    track down the problem. I can handle the sending the info to me but I don't know how to     
+   [tw]                           generate the trace string. Any ideas?                                                       
+                                                                                                                              
+                                  c++ gcc crash stack-trace assert                                                            
+                                                                                                                              
+                                                             edited Sep 16 '08 at 21:02 asked Sep 16 '08 at 20:58             
+                                                                                  [IMG] [IMG]                                 
+                                  link|improve this question              Joel Coehoorn KPexEA                                
+                                                                           125k34228431 4,09632456                            
+                                                                                        82% accept rate                       
+                                   What OS, what shell? - Paul Tomblin Sep 16 '08 at 20:44                                    
+                                                                                                                              
+                                  feedback                                                                                    
+
+22 Answers
+
+   active oldest votes
+
+                        For Linux and I believe Mac OS X, if you're using gcc, or any compiler that uses glibc, you can use   
+                        the backtrace() functions in execinfo.h to print a stacktrace and exit gracefully when you get a      
+                        segmentation fault. Documentation can be found in the libc manual.                                    
+                                                                                                                              
+                        Here's an example program that installs a SIGSEGV handler and prints a stacktrace to stderr when it   
+                        segfaults. The baz() function here causes the segfault that triggers the handler:                     
+                                                                                                                              
+                        #include <stdio.h>                                                                                    
+                        #include <execinfo.h>                                                                                 
+                        #include <signal.h>                                                                                   
+                        #include <stdlib.h>                                                                                   
+                                                                                                                              
+                                                                                                                              
+                        void handler(int sig) {                                                                               
+                          void *array[10];                                                                                    
+                          size_t size;                                                                                        
+                                                                                                                              
+                          // get void*'s for all entries on the stack                                                         
+                          size = backtrace(array, 10);                                                                        
+                                                                                                                              
+                          // print out all the frames to stderr                                                               
+                          fprintf(stderr, "Error: signal %d:\n", sig);                                                        
+                          backtrace_symbols_fd(array, size, 2);                                                               
+                          exit(1);                                                                                            
+                        }                                                                                                     
+                                                                                                                              
+                        void baz() {                                                                                          
+                         int *foo = (int*)-1; // make a bad pointer                                                           
+                          printf("%d\n", *foo);       // causes segfault                                                      
+                        }                                                                                                     
+                                                                                                                              
+                        void bar() { baz(); }                                                                                 
+   up vote 81 down vote void foo() { bar(); }                                                                                 
+   accepted                                                                                                                   
+                                                                                                                              
+                        int main(int argc, char **argv) {                                                                     
+                          signal(SIGSEGV, handler);   // install our handler                                                  
+                          foo(); // this will call foo, bar, and baz.  baz segfaults.                                         
+                        }                                                                                                     
+                                                                                                                              
+                        Compiling with -g -rdynamic gets you symbol info in your output, which glibc can use to make a nice   
+                        stacktrace:                                                                                           
+                                                                                                                              
+                        $ gcc -g -rdynamic ./test.c -o test                                                                   
+                                                                                                                              
+                        Executing this gets you this output:                                                                  
+                                                                                                                              
+                        $ ./test                                                                                              
+                        Error: signal 11:                                                                                     
+                        ./test(handler+0x19)[0x400911]                                                                        
+                        /lib64/tls/libc.so.6[0x3a9b92e380]                                                                    
+                        ./test(baz+0x14)[0x400962]                                                                            
+                        ./test(bar+0xe)[0x400983]                                                                             
+                        ./test(foo+0xe)[0x400993]                                                                             
+                        ./test(main+0x28)[0x4009bd]                                                                           
+                        /lib64/tls/libc.so.6(__libc_start_main+0xdb)[0x3a9b91c4bb]                                            
+                        ./test[0x40086a]                                                                                      
+                                                                                                                              
+                        This shows the load module, offset, and function that each frame in the stack came from. Here you can 
+                        see the signal handler on top of the stack, and the libc functions before main in addition to main,   
+                        foo, bar, and baz.                                                                                    
+                                                                                                                              
+                                                                           answered Sep 16 '08 at 21:30                       
+                        link|improve this answer edited Feb 26 '10 at 0:29                        [IMG]                       
+                                                                                               tgamblin                       
+                                                                                               15k14467                       
+                        9   There's also /lib/libSegFault.so which you can use with LD_PRELOAD. - CesarB Oct 23 '08 at 15:05  
+                            It looks like the first two entries in your backtrace output contain a return address inside the  
+                            signal handler and probably one inside sigaction() in libc. While your backtrace appears to be    
+                        2   correct, I have sometimes found that additional steps are necessary to ensure the actual location 
+                            of the fault appears in the backtrace as it can be overwritten with sigaction() by the kernel.    
+                            - jschmier Mar 27 '10 at 19:11                                                                    
+                            I can confirm that this (the original reply) works on OS X. - Johannes Hoff Aug 31 '11 at 9:50    
+                            What would happen if the crash comes from inside malloc? Wouldn't you then hold a lock and then   
+                            get stuck as "backtrace" tries to allocate memory? - Mattias Nilsson Apr 17 at 6:39               
+                            You could then try some other stackwalking API, e.g.: DynInst's StackwalkerAPI                    
+                            dyninst.org/stackwalkerapi or nongnu.org/libunwind. Generally if you expect to walk out of stack  
+                            frames or interrupt frames inside malloc, you need to do special things to handle it. Many tools  
+                            use their own arena allocator to avoid conflicting with the libc malloc in situations like this.  
+                            - tgamblin Apr 18 at 0:19                                                                         
+                                                                                                                              
+                        feedback                                                                                              
+
+                   Linux                                                                                                      
+                                                                                                                              
+                   While the use of the backtrace() functions in execinfo.h to print a stacktrace and exit gracefully when    
+                   you get a segmentation fault has already been suggested, I see no mention of the intricacies necessary to  
+                   ensure the resulting backtrace points to the actual location of the fault (at least for some architectures 
+                   - x86 & ARM).                                                                                              
+                                                                                                                              
+                   The first two entries in the stack frame chain when you get into the signal handler contain a return       
+                   address inside the signal handler and one inside sigaction() in libc. The stack frame of the last function 
+                   called before the signal (which is the location of the fault) is lost.                                     
+                                                                                                                              
+                   Code                                                                                                       
+                                                                                                                              
+                   #ifndef _GNU_SOURCE                                                                                        
+                   #define _GNU_SOURCE                                                                                        
+                   #endif                                                                                                     
+                   #ifndef __USE_GNU                                                                                          
+                   #define __USE_GNU                                                                                          
+                   #endif                                                                                                     
+                                                                                                                              
+                   #include <execinfo.h>                                                                                      
+                   #include <signal.h>                                                                                        
+                   #include <stdio.h>                                                                                         
+                   #include <stdlib.h>                                                                                        
+                   #include <string.h>                                                                                        
+                   #include <ucontext.h>                                                                                      
+                   #include <unistd.h>                                                                                        
+                                                                                                                              
+                   /* This structure mirrors the one found in /usr/include/asm/ucontext.h */                                  
+                   typedef struct _sig_ucontext {                                                                             
+                    unsigned long     uc_flags;                                                                               
+                    struct ucontext   *uc_link;                                                                               
+                    stack_t           uc_stack;                                                                               
+                    struct sigcontext uc_mcontext;                                                                            
+                    sigset_t          uc_sigmask;                                                                             
+                   } sig_ucontext_t;                                                                                          
+                                                                                                                              
+                   void crit_err_hdlr(int sig_num, siginfo_t * info, void * ucontext)                                         
+                   {                                                                                                          
+                    void *             array[50];                                                                             
+                    void *             caller_address;                                                                        
+                    char **            messages;                                                                              
+                    int                size, i;                                                                               
+                    sig_ucontext_t *   uc;                                                                                    
+                                                                                                                              
+                    uc = (sig_ucontext_t *)ucontext;                                                                          
+                                                                                                                              
+                    /* Get the address at the time the signal was raised from the EIP (x86) */                                
+                    caller_address = (void *) uc->uc_mcontext.eip;                                                            
+                                                                                                                              
+                    fprintf(stderr, "signal %d (%s), address is %p from %p\n",                                                
+                     sig_num, strsignal(sig_num), info->si_addr,                                                              
+                     (void *)caller_address);                                                                                 
+                                                                                                                              
+                    size = backtrace(array, 50);                                                                              
+                                                                                                                              
+                    /* overwrite sigaction with caller's address */                                                           
+                    array[1] = caller_address;                                                                                
+                                                                                                                              
+                    messages = backtrace_symbols(array, size);                                                                
+                                                                                                                              
+                    /* skip first stack frame (points here) */                                                                
+                    for (i = 1; i < size && messages != NULL; ++i)                                                            
+                    {                                                                                                         
+                     fprintf(stderr, "[bt]: (%d) %s\n", i, messages[i]);                                                      
+                    }                                                                                                         
+                                                                                                                              
+                    free(messages);                                                                                           
+                                                                                                                              
+                    exit(EXIT_FAILURE);                                                                                       
+                   }                                                                                                          
+                                                                                                                              
+   up vote 30 down int crash()                                                                                                
+   vote            {                                                                                                          
+                    char * p = NULL;                                                                                          
+                    *p = 0;                                                                                                   
+                    return 0;                                                                                                 
+                   }                                                                                                          
+                                                                                                                              
+                   int foo4()                                                                                                 
+                   {                                                                                                          
+                    crash();                                                                                                  
+                    return 0;                                                                                                 
+                   }                                                                                                          
+                                                                                                                              
+                   int foo3()                                                                                                 
+                   {                                                                                                          
+                    foo4();                                                                                                   
+                    return 0;                                                                                                 
+                   }                                                                                                          
+                                                                                                                              
+                   int foo2()                                                                                                 
+                   {                                                                                                          
+                    foo3();                                                                                                   
+                    return 0;                                                                                                 
+                   }                                                                                                          
+                                                                                                                              
+                   int foo1()                                                                                                 
+                   {                                                                                                          
+                    foo2();                                                                                                   
+                    return 0;                                                                                                 
+                   }                                                                                                          
+                                                                                                                              
+                   int main(int argc, char ** argv)                                                                           
+                   {                                                                                                          
+                    struct sigaction sigact;                                                                                  
+                                                                                                                              
+                    sigact.sa_sigaction = crit_err_hdlr;                                                                      
+                    sigact.sa_flags = SA_RESTART | SA_SIGINFO;                                                                
+                                                                                                                              
+                    if (sigaction(SIGSEGV, &sigact, (struct sigaction *)NULL) != 0)                                           
+                    {                                                                                                         
+                     fprintf(stderr, "error setting signal handler for %d (%s)\n",                                            
+                       SIGSEGV, strsignal(SIGSEGV));                                                                          
+                                                                                                                              
+                     exit(EXIT_FAILURE);                                                                                      
+                    }                                                                                                         
+                                                                                                                              
+                    foo1();                                                                                                   
+                                                                                                                              
+                    exit(EXIT_SUCCESS);                                                                                       
+                   }                                                                                                          
+                                                                                                                              
+                   Output                                                                                                     
+                                                                                                                              
+                   signal 11 (Segmentation fault), address is (nil) from 0x8c50                                               
+                   [bt]: (1) ./test(crash+0x24) [0x8c50]                                                                      
+                   [bt]: (2) ./test(foo4+0x10) [0x8c70]                                                                       
+                   [bt]: (3) ./test(foo3+0x10) [0x8c8c]                                                                       
+                   [bt]: (4) ./test(foo2+0x10) [0x8ca8]                                                                       
+                   [bt]: (5) ./test(foo1+0x10) [0x8cc4]                                                                       
+                   [bt]: (6) ./test(main+0x74) [0x8d44]                                                                       
+                   [bt]: (7) /lib/libc.so.6(__libc_start_main+0xa8) [0x40032e44]                                              
+                                                                                                                              
+                   All the hazards of calling the backtrace() functions in a signal handler still exist and should not be     
+                   overlooked, but I find the functionality I described here quite helpful in debugging crashes.              
+                                                                                                                              
+                   It is important to note that the example I provided is developed/tested on Linux for x86. I have also      
+                   successfully implemented this on ARM using uc_mcontext.arm_pc instead of uc_mcontext.eip.                  
+                                                                                                                              
+                   Here's a link to the article where I learned the details for this implementation:                          
+                   http://www.linuxjournal.com/article/6391                                                                   
+                                                                                                                              
+                                                                       answered Dec 18 '09 at 0:05                            
+                   link|improve this answer edited Feb 22 '10 at 19:22                       [IMG]                            
+                                                                                          jschmier                            
+                                                                                        4,95221028                            
+                       On systems using GNU ld, remember to compile with -rdynamic to instruct the linker to add all symbols, 
+                   3   not only used ones, to the dynamic symbol table. This allows backtrace_symbols() to convert addresses  
+                       to function names - jschmier Mar 26 '10 at 20:00                                                       
+                       The output in the example above was taken from an test program compiled using a gcc-3.4.5-glibc-2.3.6  
+                       cross-toolchain and executed on an ARMv6-based platform running Linux Kernel 2.6.22. - jschmier May 24 
+                       '10 at 23:54                                                                                           
+                       enabling backtrace support is only meaningful when compiling for the Thumb mode in ARM - Manav Oct 17  
+                       '11 at 6:58                                                                                            
+                   1   Also, you need to add "-mapcs-frame" option to GCC''s command line to generate stack frames on ARM     
+                       platform - qehgt Feb 1 at 15:53                                                                        
+                                                                                                                              
+                   feedback                                                                                                   
+
+              Even though a correct answer has been provided that describes how to use the GNU libc backtrace() function1 and 
+              I provided my own answer that describes how to ensure a backtrace from a signal handler points to the actual    
+              location of the fault2, I don't see any mention of demangling C++ symbols output from the backtrace.            
+                                                                                                                              
+              When obtaining backtraces from a C++ program, the output can be run through c++filt1 to demangle the symbols or 
+              by using abi::__cxa_demangle1 directly.                                                                         
+                                                                                                                              
+                * 1 Linux & OS X Note that c++filt and __cxa_demangle are GCC specific                                        
+                * 2 Linux                                                                                                     
+                                                                                                                              
+                -----------------------------------------------------------------------------------------------------------   
+                                                                                                                              
+              The following C++ Linux example uses the same signal handler as my other answer and demonstrates how c++filt    
+              can be used to demangle the symbols.                                                                            
+                                                                                                                              
+              Code:                                                                                                           
+                                                                                                                              
+              class foo                                                                                                       
+              {                                                                                                               
+              public:                                                                                                         
+                  foo() { foo1(); }                                                                                           
+                                                                                                                              
+              private:                                                                                                        
+                  void foo1() { foo2(); }                                                                                     
+                  void foo2() { foo3(); }                                                                                     
+                  void foo3() { foo4(); }                                                                                     
+                  void foo4() { crash(); }                                                                                    
+                  void crash() { char * p = NULL; *p = 0; }                                                                   
+              };                                                                                                              
+                                                                                                                              
+              int main(int argc, char ** argv)                                                                                
+              {                                                                                                               
+                  // Setup signal handler for SIGSEGV                                                                         
+                  ...                                                                                                         
+                                                                                                                              
+                  foo * f = new foo();                                                                                        
+                  return 0;                                                                                                   
+              }                                                                                                               
+                                                                                                                              
+              Output (./test):                                                                                                
+                                                                                                                              
+              signal 11 (Segmentation fault), address is (nil) from 0x8048e07                                                 
+              [bt]: (1) ./test(crash__3foo+0x13) [0x8048e07]                                                                  
+              [bt]: (2) ./test(foo4__3foo+0x12) [0x8048dee]                                                                   
+              [bt]: (3) ./test(foo3__3foo+0x12) [0x8048dd6]                                                                   
+              [bt]: (4) ./test(foo2__3foo+0x12) [0x8048dbe]                                                                   
+              [bt]: (5) ./test(foo1__3foo+0x12) [0x8048da6]                                                                   
+              [bt]: (6) ./test(__3foo+0x12) [0x8048d8e]                                                                       
+              [bt]: (7) ./test(main+0xe0) [0x8048d18]                                                                         
+              [bt]: (8) ./test(__libc_start_main+0x95) [0x42017589]                                                           
+              [bt]: (9) ./test(__register_frame_info+0x3d) [0x8048981]                                                        
+                                                                                                                              
+              Demangled Output (./test 2>&1 | c++filt):                                                                       
+                                                                                                                              
+              signal 11 (Segmentation fault), address is (nil) from 0x8048e07                                                 
+              [bt]: (1) ./test(foo::crash(void)+0x13) [0x8048e07]                                                             
+              [bt]: (2) ./test(foo::foo4(void)+0x12) [0x8048dee]                                                              
+              [bt]: (3) ./test(foo::foo3(void)+0x12) [0x8048dd6]                                                              
+              [bt]: (4) ./test(foo::foo2(void)+0x12) [0x8048dbe]                                                              
+              [bt]: (5) ./test(foo::foo1(void)+0x12) [0x8048da6]                                                              
+              [bt]: (6) ./test(foo::foo(void)+0x12) [0x8048d8e]                                                               
+              [bt]: (7) ./test(main+0xe0) [0x8048d18]                                                                         
+              [bt]: (8) ./test(__libc_start_main+0x95) [0x42017589]                                                           
+              [bt]: (9) ./test(__register_frame_info+0x3d) [0x8048981]                                                        
+                                                                                                                              
+                -----------------------------------------------------------------------------------------------------------   
+                                                                                                                              
+              The following builds on the signal handler from my original answer and can replace the signal handler in the    
+              above example to demonstrate how abi::__cxa_demangle can be used to demangle the symbols. This signal handler   
+              produces the same demangled output as the above example.                                                        
+                                                                                                                              
+              Code:                                                                                                           
+                                                                                                                              
+              void crit_err_hdlr(int sig_num, siginfo_t * info, void * ucontext)                                              
+              {                                                                                                               
+                  sig_ucontext_t * uc = (sig_ucontext_t *)ucontext;                                                           
+                                                                                                                              
+                  void * caller_address = (void *) uc->uc_mcontext.eip; // x86 specific                                       
+   up vote 19                                                                                                                 
+   down vote      std::cerr << "signal " << sig_num                                                                           
+                            << " (" << strsignal(sig_num) << "), address is "                                                 
+                            << info->si_addr << " from " << caller_address                                                    
+                            << std::endl << std::endl;                                                                        
+                                                                                                                              
+                  void * array[50];                                                                                           
+                  int size = backtrace(array, 50);                                                                            
+                                                                                                                              
+                  array[1] = caller_address;                                                                                  
+                                                                                                                              
+                  char ** messages = backtrace_symbols(array, size);                                                          
+                                                                                                                              
+                  // skip first stack frame (points here)                                                                     
+                  for (int i = 1; i < size && messages != NULL; ++i)                                                          
+                  {                                                                                                           
+                      char *mangled_name = 0, *offset_begin = 0, *offset_end = 0;                                             
+                                                                                                                              
+                      // find parantheses and +address offset surrounding mangled name                                        
+                      for (char *p = messages[i]; *p; ++p)                                                                    
+                      {                                                                                                       
+                          if (*p == '(')                                                                                      
+                          {                                                                                                   
+                              mangled_name = p;                                                                               
+                          }                                                                                                   
+                          else if (*p == '+')                                                                                 
+                          {                                                                                                   
+                              offset_begin = p;                                                                               
+                          }                                                                                                   
+                          else if (*p == ')')                                                                                 
+                          {                                                                                                   
+                              offset_end = p;                                                                                 
+                              break;                                                                                          
+                          }                                                                                                   
+                      }                                                                                                       
+                                                                                                                              
+                      // if the line could be processed, attempt to demangle the symbol                                       
+                      if (mangled_name && offset_begin && offset_end &&                                                       
+                          mangled_name < offset_begin)                                                                        
+                      {                                                                                                       
+                          *mangled_name++ = '\0';                                                                             
+                          *offset_begin++ = '\0';                                                                             
+                          *offset_end++ = '\0';                                                                               
+                                                                                                                              
+                          int status;                                                                                         
+                          char * real_name = abi::__cxa_demangle(mangled_name, 0, 0, &status);                                
+                                                                                                                              
+                          // if demangling is successful, output the demangled function name                                  
+                          if (status == 0)                                                                                    
+                          {                                                                                                   
+                              std::cerr << "[bt]: (" << i << ") " << messages[i] << " : "                                     
+                                        << real_name << "+" << offset_begin << offset_end                                     
+                                        << std::endl;                                                                         
+                                                                                                                              
+                          }                                                                                                   
+                          // otherwise, output the mangled function name                                                      
+                          else                                                                                                
+                          {                                                                                                   
+                              std::cerr << "[bt]: (" << i << ") " << messages[i] << " : "                                     
+                                        << mangled_name << "+" << offset_begin << offset_end                                  
+                                        << std::endl;                                                                         
+                          }                                                                                                   
+                          free(real_name);                                                                                    
+                      }                                                                                                       
+                      // otherwise, print the whole line                                                                      
+                      else                                                                                                    
+                      {                                                                                                       
+                          std::cerr << "[bt]: (" << i << ") " << messages[i] << std::endl;                                    
+                      }                                                                                                       
+                  }                                                                                                           
+                  std::cerr << std::endl;                                                                                     
+                                                                                                                              
+                  free(messages);                                                                                             
+                                                                                                                              
+                  exit(EXIT_FAILURE);                                                                                         
+              }                                                                                                               
+                                                                                                                              
+                                                                 answered Mar 26 '10 at 19:52                                 
+              link|improve this answer edited Jan 5 '11 at 18:22                        [IMG]                                 
+                                                                                     jschmier                                 
+                                                                                   4,95221028                                 
+                                                                                                                              
+              feedback                                                                                                        
+
+                        Might be worth looking at Google Breakpad, a cross-platform crash dump generator and tools to process 
+                        the dumps.                                                                                            
+                                                                                                                              
+   up vote 15 down vote                          answered Sep 17 '08 at 11:31                                                 
+                        link|improve this answer                        [IMG]                                                 
+                                                                 Simon Steele                                                 
+                                                                    6,5791444                                                 
+                                                                                                                              
+                        feedback                                                                                              
+
+           It's even easier than "man backtrace", there's a little-documented library (GNU specific) distributed with glibc   
+           as libSegFault.so, which was I believe was written by Ulrich Drepper to support the program catchsegv (see "man    
+           catchsegv").                                                                                                       
+                                                                                                                              
+           This gives us 3 possibilities. Instead of running "program -o hai":                                                
+                                                                                                                              
+            1. Run within catchsegv:                                                                                          
+                                                                                                                              
+            $ catchsegv program -o hai                                                                                        
+                                                                                                                              
+            2. Link with libSegFault at runtime:                                                                              
+                                                                                                                              
+            $ LD_PRELOAD=/lib/libSegFault.so program -o hai                                                                   
+                                                                                                                              
+            3. Link with libSegFault at compile time:                                                                         
+                                                                                                                              
+            $ gcc -g1 -lSegFault -o program program.cc                                                                        
+            $ program -o hai                                                                                                  
+                                                                                                                              
+           In all 3 cases, you will get clearer backtraces with less optimization (gcc -O0 or -O1) and debugging symbols (gcc 
+           -g). Otherwise, you may just end up with a pile of memory addresses.                                               
+                                                                                                                              
+           You can also catch more signals for stack traces with something like:                                              
+                                                                                                                              
+           $ export SEGFAULT_SIGNALS="all"       # "all" signals                                                              
+           $ export SEGFAULT_SIGNALS="bus abrt"  # SIGBUS and SIGABRT                                                         
+                                                                                                                              
+           The output will look something like this (notice the backtrace at the bottom):                                     
+                                                                                                                              
+             * Segmentation fault Register dump:                                                                              
+                                                                                                                              
+   up vote   EAX: 0000000c EBX: 00000080 ECX: 00000000 EDX: 0000000c ESI: bfdbf080 EDI: 080497e0 EBP: bfdbee38 ESP: bfdbee20  
+   10 down                                                                                                                    
+   vote      EIP: 0805640f EFLAGS: 00010282                                                                                   
+                                                                                                                              
+             CS: 0073 DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b                                                            
+                                                                                                                              
+             Trap: 0000000e Error: 00000004                                                                                   
+             OldMask: 00000000 ESP/signal: bfdbee20 CR2: 00000024                                                             
+                                                                                                                              
+             FPUCW: ffff037f FPUSW: ffff0000                                                                                  
+             TAG: ffffffff IPOFF: 00000000                                                                                    
+             CSSEL: 0000 DATAOFF: 00000000                                                                                    
+             DATASEL: 0000                                                                                                    
+                                                                                                                              
+             ST(0) 0000 0000000000000000 ST(1) 0000 0000000000000000 ST(2) 0000 0000000000000000 ST(3) 0000 0000000000000000  
+             ST(4) 0000 0000000000000000 ST(5) 0000 0000000000000000 ST(6) 0000 0000000000000000 ST(7) 0000 0000000000000000  
+                                                                                                                              
+             Backtrace: /lib/libSegFault.so[0xb7f9e100] ??:0(??)[0xb7fa3400]                                                  
+             /usr/include/c++/4.3/bits/stl_queue.h:226(_ZNSt5queueISsSt5dequeISsSaISsEEE4pushERKSs)[0x805647a]                
+             /home/dbingham/src/middle-earth-mud/alpha6/src/engine/player.cpp:73(_ZN6Player5inputESs)[0x805377c]              
+             /home/dbingham/src/middle-earth-mud/alpha6/src/engine/socket.cpp:159(_ZN6Socket4ReadEv)[0x8050698]               
+             /home/dbingham/src/middle-earth-mud/alpha6/src/engine/socket.cpp:413(_ZN12ServerSocket4ReadEv)[0x80507ad]        
+             /home/dbingham/src/middle-earth-mud/alpha6/src/engine/socket.cpp:300(ZN12ServerSocket4pollEv)[0x8050b44]         
+             /home/dbingham/src/middle-earth-mud/alpha6/src/engine/main.cpp:34(main)[0x8049a72]                               
+             /lib/tls/i686/cmov/libc.so.6(_libc_start_main+0xe5)[0xb7d1b775]                                                  
+             /build/buildd/glibc-2.9/csu/../sysdeps/i386/elf/start.S:122(_start)[0x8049801]                                   
+                                                                                                                              
+           If you want to know the gory details, the best source is unfortunately the source: See                             
+           http://sourceware.org/git/?p=glibc.git;a=blob;f=debug/segfault.c and its parent directory                          
+           http://sourceware.org/git/?p=glibc.git;a=tree;f=debug                                                              
+                                                                                                                              
+                                                              answered Jul 6 '11 at 15:51                                     
+           link|improve this answer edited Jul 7 '11 at 17:27                       [IMG]                                     
+                                                                                  jhclark                                     
+                                                                                    17315                                     
+                                                                                                                              
+           feedback                                                                                                           
+
+                       You did not specify your operating system, so this is difficult to answer. If you are using a system   
+                       based on gnu libc, you might be able to use the libc function backtrace().                             
+                                                                                                                              
+                       GCC also has two builtins that can assist you, but which may or may not be implemented fully on your   
+                       architecture, and those are __builtin_frame_address and __builtin_return_address. Both of which want   
+   up vote 7 down vote an immediate integer level (by immediate, I mean it can't be a variable). If __builtin_frame_address   
+                       for a given level is non-zero, it should be safe to grab the return address of the same level.         
+                                                                                                                              
+                                                answered Sep 16 '08 at 20:52                                                  
+                       link|improve this answer                        [IMG]                                                  
+                                                              Brian Mitchell                                                  
+                                                                    1,428510                                                  
+                                                                                                                              
+                       feedback                                                                                               
+
+                  Ive been looking at this problem for a while.                                                               
+                                                                                                                              
+                  And buried deep in the Google Performance Tools README                                                      
+                                                                                                                              
+                  http://code.google.com/p/google-perftools/source/browse/trunk/README                                        
+                                                                                                                              
+                  talks about libunwind                                                                                       
+                                                                                                                              
+   up vote 7 down http://www.nongnu.org/libunwind/                                                                            
+   vote                                                                                                                       
+                  Would love to hear opinions of this library.                                                                
+                                                                                                                              
+                  The problem with -rdynamic is that it can increase the size of the binary relatively significantly in some  
+                  cases                                                                                                       
+                                                                                                                              
+                                           answered Sep 18 '08 at 2:55                                                        
+                  link|improve this answer                       [IMG]                                                        
+                                                               Gregory                                                        
+                                                                553411                                                        
+                  1   On x86/64, I have not seen -rdynamic increase binary size much. Adding -g makes for a much bigger       
+                      increase. - Dan Mar 24 '10 at 6:46                                                                      
+                                                                                                                              
+                  feedback                                                                                                    
+
+                       ulimit -c sets the core file size limit on unix. By default, the core file size limit is 0. You can    
+                       see your ulimit values with ulimit -a.                                                                 
+                                                                                                                              
+                       also, if you run your program from within gdb, it will halt your program on "segmentation violations"  
+                       (SIGSEGV, generally when you accessed a piece of memory that you hadn't allocated) or you can set      
+   up vote 5 down vote breakpoints.                                                                                           
+                                                                                                                              
+                       ddd and nemiver are front-ends for gdb which make working with it much easier for the novice.          
+                                                                                                                              
+                       link|improve this answer answered Sep 16 '08 at 21:23                                                  
+                                                                      Joseph                                                  
+                           Core dumps are infinitely more useful than stack traces because you can load the core dump in the  
+                       2   debugger and see the state of the whole program and its data at the point of the crash. - Adam     
+                           Hawes Feb 4 '09 at 13:07                                                                           
+                           The backtrace facility that others have suggested is probably better than nothing, but it is very  
+                           basic -- it doesn't even give line numbers. Using core dumps, on the other hand, let's you         
+                       1   retroactively view the entire state of your application at the time it crashed (including a        
+                           detailed stack trace). There might be practical issues with trying to use this for field           
+                           debugging, but it is definitely a more powerful tool for analyzing crashes and asserts during      
+                           development (at least on Linux). - nobar Oct 26 '10 at 13:36                                       
+                                                                                                                              
+                       feedback                                                                                               
+
+                       Some versions of libc contain functions that deal with stack traces; you might be able to use them:    
+                                                                                                                              
+                       http://www.gnu.org/software/libc/manual/html_node/Backtraces.html                                      
+                                                                                                                              
+                       I remember using libunwind a long time ago to get stack traces, but it may not be supported on your    
+   up vote 4 down vote platform.                                                                                              
+                                                                                                                              
+                                                answered Sep 16 '08 at 20:51                                                  
+                       link|improve this answer                        [IMG]                                                  
+                                                               Stephen Deken                                                  
+                                                                    1,795621                                                  
+                                                                                                                              
+                       feedback                                                                                               
+
+                       ulimit -c unlimited                                                                                    
+                                                                                                                              
+                       is a system variable, wich will allow to create a core dump after your application crashes. In this    
+                       case an unlimited amount. Look for a file called core in the very same directory. Make sure you        
+                       compiled your code with debugging informations enabled!                                                
+   up vote 3 down vote                                                                                                        
+                       regards                                                                                                
+                                                                                                                              
+                                                                           answered Sep 16 '08 at 20:47                       
+                       link|improve this answer edited Sep 16 '08 at 20:52                        [IMG]                       
+                                                                                                   mana                       
+                                                                                              1,1691418                       
+                       1   The user is not asking for a core dump. He's asking for a stack trace. See                         
+                           delorie.com/gnu/docs/glibc/libc_665.html - tgamblin Sep 16 '08 at 20:54                            
+                           a core dump will contain the call stack at the moment of the crash, won't it? - Mo. Sep 16 '08 at  
+                           20:57                                                                                              
+                       2   You're assuming he's on Unix, and using Bash. - Paul Tomblin Sep 16 '08 at 20:58                   
+                       1   If you are using tcsh, you have to do limit coredumpsize unlimited - ShaChris23 Nov 10 '10 at      
+                           19:46                                                                                              
+                                                                                                                              
+                       feedback                                                                                               
+
+                       Look at:                                                                                               
+                                                                                                                              
+                       man 3 backtrace                                                                                        
+                                                                                                                              
+                       And:                                                                                                   
+                                                                                                                              
+                       #include <exeinfo.h>                                                                                   
+   up vote 3 down vote int backtrace(void **buffer, int size);                                                                
+                                                                                                                              
+                       These are GNU extensions.                                                                              
+                                                                                                                              
+                                                answered Sep 16 '08 at 20:55                                                  
+                       link|improve this answer                        [IMG]                                                  
+                                                                    Stephane                                                  
+                                                                  1,44521330                                                  
+                       1   There may be additional examples to help out on this page I created a while back:                  
+                           charette.no-ip.com:81/programming/2010-01-25_Backtrace - Stephane Oct 10 '10 at 7:05               
+                                                                                                                              
+                       feedback                                                                                               
+
+                       It's important to note that once you generate a core file you'll need to use the gdb tool to look at   
+                       it. For gdb to make sense of your core file, you must tell gcc to instrument the binary with debugging 
+                       symbols: to do this, you compile with the -g flag:                                                     
+                                                                                                                              
+                       $ g++ -g prog.cpp -o prog                                                                              
+                                                                                                                              
+                       Then, you can either set "ulimit -c unlimited" to let it dump a core, or just run your program inside  
+                       gdb. I like the second approach more:                                                                  
+                                                                                                                              
+                       $ gdb ./prog                                                                                           
+   up vote 3 down vote ... gdb startup output ...                                                                             
+                       (gdb) run                                                                                              
+                       ... program runs and crashes ...                                                                       
+                       (gdb) where                                                                                            
+                       ... gdb outputs your stack trace ...                                                                   
+                                                                                                                              
+                       I hope this helps.                                                                                     
+                                                                                                                              
+                                                answered Sep 16 '08 at 20:57                                                  
+                       link|improve this answer                        [IMG]                                                  
+                                                                      Benson                                                  
+                                                                   3,5181025                                                  
+                           You can also call gdb right from your crashing program. Setup handler for SIGSEGV, SEGILL, SIGBUS, 
+                       2   SIGFPE that will call gdb. Details: stackoverflow.com/questions/3151779/... The advantage is that  
+                           you get beautiful, annotated backtrace like in bt full, also you can get stack traces of all       
+                           threads. - Vi. Jun 30 '10 at 22:20                                                                 
+                                                                                                                              
+                       feedback                                                                                               
+
+                       I can help with the Linux version: the function backtrace, backtrace_symbols and backtrace_symbols_fd  
+                       can be used. See the corresponding manual pages.                                                       
+                                                                                                                              
+   up vote 2 down vote                          answered Sep 16 '08 at 21:01                                                  
+                       link|improve this answer                        [IMG]                                                  
+                                                                    terminus                                                  
+                                                                    2,473816                                                  
+                                                                                                                              
+                       feedback                                                                                               
+
+                       win: How about StackWalk64 http://msdn.microsoft.com/en-us/library/ms680650.aspx 
+                                                                                                        
+   up vote 2 down vote                          answered Sep 16 '08 at 21:24                            
+                       link|improve this answer                        [IMG]                            
+                                                                     Roskoto                            
+                                                                      419414                            
+                                                                                                        
+                       feedback                                                                         
+
+                       See the Stack Trace facility in ACE (ADAPTIVE Communication Environment). It's already written to      
+                       cover all major platforms (and more). The library is BSD-style licensed so you can even copy/paste the 
+                       code if you don't want to use ACE.                                                                     
+   up vote 2 down vote                                                                                                        
+                                                answered Sep 17 '08 at 0:07                                                   
+                       link|improve this answer                       [IMG]                                                   
+                                                                  Adam Mitz                                                   
+                                                                  3,5231018                                                   
+                                                                                                                              
+                       feedback                                                                                               
+
+                       Usually when your application crashes, and you have the core files enabled, you'll get a core dump,    
+                       which you can analyze with gdb. To do this, you have to enable core dumps:                             
+                                                                                                                              
+                       $ ulimit -c unlimited                                                                                  
+                                                                                                                              
+   up vote 1 down vote Also, if you run your app using gdb, the app will halt if a signal is received. You can just get the   
+                       stack trace with the gdb command bt.                                                                   
+                                                                                                                              
+                                                answered Sep 16 '08 at 20:47                                                  
+                       link|improve this answer                        [IMG]                                                  
+                                                                    terminus                                                  
+                                                                    2,473816                                                  
+                       1   Missing the point of the question. - Jonathan Leffler Oct 3 '08 at 17:37                           
+                           tcsh-equivalent: limit coredumpsize unlimited - ShaChris23 Nov 10 '10 at 19:46                     
+                                                                                                                              
+                       feedback                                                                                               
+
+                         * Compile your code using the -g flag to include debug symbols in the binary.                        
+                         * Set up your system so that it core files are produced when applications crash (e.g. ulimit -c      
+                           unlimited).                                                                                        
+                         * When an application crashes, you can use the core file in a debugger (such as gdb, by running, for 
+                           example, gdb ./core) to get a backtrace (gdb command: bt).                                         
+                                                                                                                              
+                       Note that C++ symbol names are sometimes pretty garbled and the backtrace will probably be somewhat    
+   up vote 1 down vote incomprehensible.                                                                                      
+                                                                                                                              
+                       More helpful backtraces will probably need evil trickery (one solution I've heard of requires that you 
+                       add a special macro to the beginning of all methods that you write).                                   
+                                                                                                                              
+                                                answered Sep 16 '08 at 20:50                                                  
+                       link|improve this answer                        [IMG]                                                  
+                                                                 Jan Kru:ger                                                  
+                                                                    2,364615                                                  
+                       2   Missing the point of the question. - Jonathan Leffler Oct 3 '08 at 17:37                           
+                                                                                                                              
+                       feedback                                                                                               
+
+                       I would use the code that generates a stack trace for leaked memory in Visual Leak Detector. This only 
+                       works on Win32, though.                                                                                
+                                                                                                                              
+   up vote 1 down vote                          answered Sep 16 '08 at 21:00                                                  
+                       link|improve this answer                        [IMG]                                                  
+                                                                    Jim Buck                                                  
+                                                                  7,34851842                                                  
+                                                                                                                              
+                       feedback                                                                                               
+
+                       *nix: you can intercept SIGSEGV (usualy this signal is raised before crashing) and keep the info into  
+                       a file. (besides the core file which you can use to debug using gdb for example).                      
+                                                                                                                              
+                       win: Check this from msdn.                                                                             
+                                                                                                                              
+   up vote 1 down vote You can also look at the google's chrome code to see how it handles crashes. It has a nice exception   
+                       handling mechanism.                                                                                    
+                                                                                                                              
+                                                answered Sep 16 '08 at 21:09                                                  
+                       link|improve this answer                        [IMG]                                                  
+                                                                         INS                                                  
+                                                                   4,3201029                                                  
+                                                                                                                              
+                       feedback                                                                                               
+
+                       If your program crashes, it's the operating system itself that generates crash dump information. If    
+                       you're using a *nix OS, you simply need to not prevent it from doing so (check out the ulimit          
+                       command's 'coredump' options).                                                                         
+   up vote 0 down vote                                                                                                        
+                                                answered Sep 16 '08 at 21:01                                                  
+                       link|improve this answer                        [IMG]                                                  
+                                                                      nsayer                                                  
+                                                                    2,284720                                                  
+                                                                                                                              
+                       feedback                                                                                               
+
+                       On Linux/unix/MacOSX use core files (you can enable them with ulimit or compatible system call). On    
+                       Windows use Microsoft error reporting (you can become a partner and get access to your application     
+                       crash data).                                                                                           
+   up vote 0 down vote                                                                                                        
+                                                answered Sep 16 '08 at 21:16                                                  
+                       link|improve this answer                        [IMG]                                                  
+                                                                    Kasprzol                                                  
+                                                                    2,224812                                                  
+                                                                                                                              
+                       feedback                                                                                               
+
+                       I forgot about the GNOME tech of "apport", but I don't know much about using it. It is used to         
+                       generate stacktraces and other diagnostics for processing and can automatically file bugs. It's        
+   up vote 0 down vote certainly worth checking in to.                                                                        
+                                                                                                                              
+                       link|improve this answer answered Sep 16 '08 at 21:24                                                  
+                                                                      Joseph                                                  
+                                                                                                                              
+                       feedback                                                                                               
+
+Your Answer
+
+   _____________________________________________________________________________________________
+   _____________________________________________________________________________________________
+   _____________________________________________________________________________________________
+   _____________________________________________________________________________________________
+   _____________________________________________________________________________________________
+   _____________________________________________________________________________________________
+   _____________________________________________________________________________________________
+   _____________________________________________________________________________________________
+   _____________________________________________________________________________________________
+   _____________________________________________________________________________________________
+   _____________________________________________________________________________________________
+   _____________________________________________________________________________________________
+   _____________________________________________________________________________________________
+   _____________________________________________________________________________________________
+   _____________________________________________________________________________________________
+    
+   draft saved
+   draft discarded
+   _____________________
+
+             Name _______________________________                                      
+   log in or Email _________________________________________ required, but never shown 
+             Home Page _________________________________________                       
+
+   [ Post Your Answer ] discard
+
+Not the answer you're looking for? Browse other questions tagged c++ gcc crash stack-trace assert or ask your own question.
+
+    Hello World!
+
+   This is a collaboratively edited question and answer site for professional and enthusiast programmers. It's 100% free, no
+   registration required.
+
+   about >>   faq >>
+
+   tagged
+
+   c++  * 123652
+   gcc  * 6406
+   crash  * 2633
+   stack-trace  * 586
+   assert  * 438
+
+   asked  3 years ago  
+   viewed 41,373 times 
+   active 9 months ago 
+
+    Community Bulletin
+
+   event
+   Help clean up inappropriate and ambiguous tags! - ends in 6 days
+
+    Linked
+
+   Stack trace for C++ using gcc
+   C++ display stack trace on exception
+   Line number of segmentation fault
+   Call-stack for exceptions in C++
+   How it's better to invoke gdb from program to print its stacktrace?
+   How do I find where an exception was thrown in C++?
+   finding the caller of a constructor in C++
+   Crash Analysis on Linux
+   How to run gdb against a daemon in the background?
+   How to debug a segmentation fault while the gdb stack trace is full of '??'?
+   How do I know which illegal address the program access when a segmentation fault happens
+   stack traces stop before getting to my code (on Android using NDK)
+   Is there a function to invoke a stack dump in C?
+   Exceptions stacktrace
+   How to get a call stack backtrace? (deeply embedded, no library support)
+   Seg Fault when using std::string on an embedded Linux platform
+   C++ Get File Name and Line Number of "Segmentation Fault" Linux x64
+   How can I determine at runtime whether there is a catch block for a particular C++ exception class?
+   A simple, uniform and portable way of including tracing and backtracing into a C program
+   C++ program does not process any function call or printf during SIGSEGV in gcc
+   How to generate core dump file in Ubuntu
+   see more linked questions...
+
+    Related
+
+   How to get a stack trace when C++ program crashes? (using msvc8/2005)
+   Why does StackWalk64 return always true?
+   How do I obtain crash-data from my Android application?
+   How to extract debugging information from a crash
+   MFC Application Crashes while closing
+   How to get a full stacktrace from a crashed mixed mode exe/dll?
+   how to obtain a stack trace when WAMP server crashes?
+   Unexplainable NSUndoManager crash / assert in Cocoa app
+   Tools/techniques for diagnosing C app crash on Windows
+   Stack trace for C++ using gcc
+   iPhone Crash stack trace VS Crash report
+   How to generate stackdump and dumped register values when an application in gcc crashes without gdb?
+   Help me understanding a stacktrace
+   Code crashes when derived class' destructor is virtual and base class' dtor is not
+   How to get fullstacktrace using _Unwind_Backtrace on SIGSEGV
+   c++ stacktrace from the function an exception is thrown?
+   Program compiled with GCC 4.5 crashes, while GCC 4.4 is fine
+   Stackdump in C++ not showing the stack trace
+   How effective is g++/gcc at unrolling recursive inline functions?
+   Can an application programmatically generate its own stacktrace?
+   iOS BugSense stack-trace for App startup crash
+   Possible to use assert in C++ , displaying classname::function ( param ) in detail?
+   How to get stacktrace for all threads running in a process?
+   How to make good use of kernel's stack trace?
+   stack trace analysis tools
+   question feed
+   lang-c
+   about | faq | blog | chat | data | podcast | shop | legal | advertising info | mobile | contact us | feedback
+   fS stackoverflow.com  fS api/apps  fS careers  fS serverfault.com  fS superuser.com  fS meta  fS area 51  fS webapps 
+   fS gaming  fS ubuntu  fS webmasters  fS cooking  fS game development  fS math  fS photography  fS stats  fS tex 
+   fS english  fS theoretical cs  fS programmers  fS unix  fS apple  fS wordpress  fS physics  fS home improvement  fS gis 
+   fS electronics  fS android  fS security  fS bicycles  fS dba  fS drupal  fS sharepoint  fS scifi & fantasy  fS user
+   experience  fS skeptics  fS rpg 
+   rev 2012.4.29.2393
+   site design / logo (c) 2012 stack exchange inc; user contributions licensed under cc-wiki with attribution required
+   Stack Overflow works best with JavaScript enabled
