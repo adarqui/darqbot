@@ -142,8 +142,6 @@ xml_change_string (char *string, char *opt_str, int opt)
   /*Get the root element node */
   root_element = xmlDocGetRootElement (doc);
 
-  printf ("\n\nstring=[%s]\n\nopt_str=[%s]\n\n", string, opt_str);
-
   if (sNULL (opt_str))
     {
       dl_match_strings =
@@ -193,12 +191,6 @@ xml_op_traverse (dlist_t ** dl_text, xmlNode * a_node,
       str_ptr = NULL;
       if (cur_node->type == XML_ELEMENT_NODE)
 	{
-/*
-            printf("node type: Element, name: %s %s %p\n", cur_node->name, cur_node->content, cur_node->children);
-if(cur_node->children) {
-printf("\t%s\n", cur_node->children->content);
-}
-*/
 	  if (dl_match_strings)
 	    {
 	      str_ptr =
@@ -248,9 +240,6 @@ xml_compare (void *pa, void *pb)
 
   a = (char *) (pa);
   b = (char *) dlist_data (db);
-
-
-  printf ("a=%s, b=%s\n", a, b);
 
   if (!strcasecmp (a, b))
     return a;
