@@ -568,8 +568,8 @@ grelinkd_op_relink_notify (grelinkd_t * grelinkd)
 	puts ("GRELINKD RESULT NEW");
 	grelinkd->bot->txt_data_out_sz =
 	  relink_res_pack_buf_new (grelinkd->bot->txt_data_out, grelinkd->id);
-	relink_packet_hton ((relink_control_pkt_t *) grelinkd->
-			    bot->txt_data_out);
+	relink_packet_hton ((relink_control_pkt_t *) grelinkd->bot->
+			    txt_data_out);
 	break;
       }
     case 1:
@@ -578,8 +578,8 @@ grelinkd_op_relink_notify (grelinkd_t * grelinkd)
 	puts ("GRELINKD RESULT OLD");
 	grelinkd->bot->txt_data_out_sz =
 	  relink_res_pack_buf_old (grelinkd->bot->txt_data_out, grelinkd->id);
-	relink_packet_hton ((relink_control_pkt_t *) grelinkd->
-			    bot->txt_data_out);
+	relink_packet_hton ((relink_control_pkt_t *) grelinkd->bot->
+			    txt_data_out);
 	break;
       }
     case -1:
@@ -589,8 +589,8 @@ grelinkd_op_relink_notify (grelinkd_t * grelinkd)
 	grelinkd->bot->txt_data_out_sz =
 	  relink_res_pack_buf_error (grelinkd->bot->txt_data_out,
 				     grelinkd->id);
-	relink_packet_hton ((relink_control_pkt_t *) grelinkd->
-			    bot->txt_data_out);
+	relink_packet_hton ((relink_control_pkt_t *) grelinkd->bot->
+			    txt_data_out);
 	break;
       }
     default:

@@ -49,6 +49,7 @@ enum html_getopt_options
   MOD_HTML_OPT_USERAGENT = 0x40,
   MOD_HTML_OPT_COOKIE = 0x80,
   MOD_HTML_OPT_SOCKS = 0x100,
+  MOD_HTML_OPT_HEADER = 0x200,
 };
 
 typedef struct html_info

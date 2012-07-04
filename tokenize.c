@@ -28,7 +28,7 @@ tokenize (bot_t * bot, char *string, int opt, char *sep)
   char *str_a, *str_b;
   int str_len, need_break = 0;
   char *sep_orig;
-  char buf[1024], *buf_dup;
+  char buf[MAX_BUF_SZ+1], *buf_dup;
 
   int sep_len, sep_prefix_len;
 

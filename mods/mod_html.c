@@ -194,6 +194,11 @@ html_run (dlist_t * dlist_node, bot_t * bot)
 		opt |= MOD_HTML_OPT_VERBOSE;
 		break;
 	      }
+	    case 'H':
+	      {
+		opt |= MOD_HTML_OPT_HEADER;
+		break;
+	      }
 	    default:
 	      break;
 	    }
@@ -284,6 +289,15 @@ html_get (bot_t * bot, html_info_t * si)
     {
       curl_easy_setopt (si->curl, CURLOPT_POST, 1);
       curl_easy_setopt (si->curl, CURLOPT_POSTFIELDS, si->opt_postfields);
+    }
+
+  if (si->opt_flags & MOD_HTML_OPT_HEADER)
+    {
+      curl_easy_setopt (si->curl, CURLOPT_HEADER, 1);
+    }
+  else
+    {
+      curl_easy_setopt (si->curl, CURLOPT_HEADER, 0);
     }
 
   si->curl_res = curl_easy_perform (si->curl);

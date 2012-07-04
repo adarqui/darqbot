@@ -387,6 +387,7 @@ mod_guile.c       : embedded scheme-lisp interpreter, gnu guile.
 mod_help.c        : help system, returns general help or a help message of a specific module
 mod_howie.c       : embedded howie AIML bot
 mod_html.c        : uses curl to establish connections & retrieve html urls
+mod_xml.c         : an xml parser based on element name's, for use with ^html etc
 mod_hun.c         : hunspell spell correction
 mod_identify.c    : identifies a user based on their hostname stored in mongodb
 mod_internals.c   : returns info/sizes/lengths of the current state of internal buffers
@@ -1172,6 +1173,32 @@ issuing a GET through a socks5 proxy:
 12:39 < uas> Set-Cookie: expires=; expires=Mon, 01-Jan-1990 00:00:00 GMT; path=/; domain=.www.google.com
 12:39 < uas> Set-Cookie: path=; expires=Mon, 01-Jan-1990 00:00:00 GMT; path=/; domain=.www.google.com
 12:39 < uas> Set-Cookie: domain=; expires=Mon, 01-Jan-1990 00:00:00 GMT; path=/; domain=.www.google.com
+
+            case 'P':
+                opt |= MOD_HTML_OPT_PROXY;
+            case 'r':
+                opt |= MOD_HTML_OPT_REFERER;
+            case 'f':
+                opt |= MOD_HTML_OPT_FOLLOWLOCATION;
+            case 'p':
+                opt |= MOD_HTML_OPT_POST;
+            case 'h':
+                opt |= MOD_HTML_OPT_HELP;
+            case 'u':
+                opt |= MOD_HTML_OPT_USERAGENT;
+     case 's':
+                opt |= MOD_HTML_OPT_SOCKS;
+            case 'c':
+                opt |= MOD_HTML_OPT_COOKIE;
+            case 'v':
+                opt |= MOD_HTML_OPT_VERBOSE;
+            case 'H :
+                opt |= MOD_HTML_OPT_HEADER;
+
+use -H if you don't want the http headers, ie, just the actual html data
+ 
+
+
 
 
 
@@ -2025,6 +2052,40 @@ mod_whoami.c: ^whoami
 
 < kx> ^e|^whoami
 < dbot> kx
+
+
+
+
+
+mod_xml.c: ^xml, ^xml(element1,element2,...)
+--------------------------------------------
+- parses xml input
+
+
+to list all of the element names:
+
+< kx> ^html http://www.abbreviations.com/services/v2/defs.php?uid=1001&tokenid=tk324324&word=programmer|^e|^xml|^multi
+< uas>  results result term definition example partofspeech
+
+
+
+to list the definitions:
+
+< kx> ^html
+      http://www.abbreviations.com/services/v2/defs.php?uid=1001&tokenid=tk324324&word=programmer|^e|^xml(definition)|^multi
+< uas>  definition=a person who designs and writes and tests computer programs
+
+
+
+to list multiple elements:
+
+< kx> ^html
+http://www.abbreviations.com/services/v2/defs.php?uid=1001&tokenid=tk324324&word=programmer|^e|^xml(definition,partofspeech)|^multi
+< uas>  definition=a person who designs and writes and tests computer programs
+< uas>  partofspeech=noun
+
+
+
 
 
 

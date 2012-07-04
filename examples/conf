@@ -1,0 +1,27 @@
+# global config file
+# chroot stuff
++chroot=on
++chroot_uid=1000
++chroot_gid=1000
++chroot_dir=/darqbot/
++confdir=/.darqbot/
+#+bot_confdir=/darqbot/.darqbot/
+#+xmod_style=list
++xmod_style=tree
+# mods - all of our trigger modules
++modules=mod_echo, mod_quote, mod_attrib, mod_color, mod_dumbgames, mod_help, mod_sep, mod_alias, mod_md5, mod_auto_rejoin, mod_rand, mod_string, mod_caps, mod_rot13, mod_sort, mod_leet, mod_moby, mod_shake1, mod_emot, mod_tinypaw, mod_nop, mod_pcre, mod_hun, mod_tiny, mod_pmme, mod_whoami, mod_rss, mod_var, mod_sp, mod_howie, mod_rainbow, mod_packmulti, mod_identify, mod_smf, mod_sysvbanner, mod_char, mod_rf, mod_geoip, mod_festival, mod_backtrace, mod_vuln, mod_uu, mod_stack, mod_queue, mod_save, mod_fnsasmx86, mod_fnsc, mod_fortune, mod_console, mod_sig, mod_timer, mod_print, mod_bitvec, mod_relinkd, mod_map, mod_exec, mod_bsdavltree, mod_rant, mod_cmds, mod_tail, mod_fork, mod_html, mod_me, mod_internals, mod_cat, mod_avl, mod_quiz, mod_bin, mod_guile, mod_xml
+# mod_guile <-- have to take this out when valgrinding
+
+# pmods - all of our parser modules
++pmodules=pmod_parse2
+# gmods - all of our global protocol/daemon modules
++gmodules=gmod_graw, gmod_girc, gmod_grelay, gmod_grelinkd, gmod_grelinkc, gmod_gircd, gmod_gnull, gmod_gdaemon, gmod_gircpong, gmod_gssl, gmod_gpty, gmod_gexec, gmod_gsshd
+# debug stuff
++debug_backtrace=/.darqbot/debug/backtrace
+# trace/debug opts
++trace=only
+#+trace=all
++debug=all
++sigprotect ON
++timer_sleep 30
++timer_sort 600
