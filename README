@@ -371,6 +371,7 @@ mod_cat.c         : reads, writes, or appends files found in mods/mod_cat_files 
 mod_chan.c        : currently broken due to code changes: maintains lists of channels, users, etc
 mod_char.c        : changes text in a variety of ways, including "randomly" via RASCII, RUPPER, RPUNCT etc..
 mod_cmds.c        : returns current pipeline of commands instead of executing them
+mod_cmph.c        : libcmph test module, horrible.
 mod_color.c       : can modify foreground or background colors of text on irc
 mod_console.c     : allows end users to control the bot console over irc
 mod_dumbgames.c   : include dumb games (many dumb games in the future), such as dice/roulette.
@@ -1850,9 +1851,9 @@ mod_smf.c: ^smf, ^smf(journal-topic,journal-subforum)
 
 
 
-mod_sort.c: ^sort, ^sort(forc:backc:forw:backw:randc:randw)
------------------------------------------------------------
-- sort module
+mod_sort.c: ^sort, ^uniq, ^sort(forc:backc:forw:backw:randc:randw:uniqc:uniqw)
+-----------------------------------------------------------------------
+- sort module, uniq a sorted stream of chars
 
 < kx> a okdokd r9w j-02j9 d mof poj pofjpqw4i12ir`=0j 9 oisnd oin oi|^e|^sort
 < dbot> 9 a d j-02j9 mof oi oin oisnd okdokd pofjpqw4i12ir`=0j poj r9w
@@ -1868,6 +1869,10 @@ mod_sort.c: ^sort, ^sort(forc:backc:forw:backw:randc:randw)
 < dbot> iomn nipo dsio 9 j0`=rqi21ikp4wojfj jop fo d 92j0 -w9r dodko a
 < kx> a okdokd r9w j-02j9 d mof poj pofjpqw4i12ir`=0j 9 oisnd oin oi|^e|^sort(randw)
 < dbot> oi oin a 9 oisnd mof pofjpqw4i12ir`=0j poj d j-02j9 r9w okdokd
+
+
+< kx> a a a b c d d e f g g g h i j k l m n n n n n n o p q q q q q q q q q q|^sort(randw)|^sort|^sort|^uniqw|^e
+< uas> a b c d e f g h i j k l m n o p q
 
 
 
@@ -2094,3 +2099,4 @@ root@life:/darqbot-dev# wc *.[c,h] */*.[c,h]|tail -n 1
   69010  162155 1337645 total
 
 -- adarq
+

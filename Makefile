@@ -45,6 +45,6 @@ clean:
 	cd mongodb-c-driver && make clean
 	rm -f ./bot
 	rm -f ./bot_wrapper
-	rm -f ./bot_rooted
+	rm -f ./bot_rootd
 	cd mods && make clean
 

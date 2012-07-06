@@ -2172,3 +2172,47 @@ memdup_free (void *arg)
   free (mem);
   return;
 }
+
+
+
+
+
+int
+sort_compare_forward (const char *c1, const char *c2)
+{
+  return strcasecmp ( c1, c2);
+}
+
+int
+sort_compare_backward (const char *c1, const char *c2)
+{
+  return strcasecmp ( c2,  c1);
+}
+
+int
+sort_compare_randward (const char *c1, const char *c2)
+{
+int r = rand() % 2, s = rand() % 2;
+if(s) s = s*(-1);
+  return r*s;
+}
+
+int
+qsort_compare_forward (const void *c1, const void *c2)
+{
+  return strcasecmp (*(char *const *) c1, *(char *const *) c2);
+}
+
+int
+qsort_compare_backward (const void *c1, const void *c2)
+{
+  return strcasecmp (*(char *const *) c2, *(char *const *) c1);
+}
+
+int
+qsort_compare_randward (const void *c1, const void *c2)
+{
+int r = rand() % 2, s = rand() % 2;
+if(s) s = s*(-1);
+  return r*s;
+}

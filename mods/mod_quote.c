@@ -284,7 +284,7 @@ quote_add_files_to_db_file (char *name)
   DB *db = NULL;
   FILE *fp;
   char *name_db;
-  char buf[1024];
+ char buf[1024];
 
   char *tok_1 = NULL, *tok_2 = NULL;
   int count = 0;
@@ -314,18 +314,24 @@ quote_add_files_to_db_file (char *name)
 
       if (fgets (buf, sizeof (buf) - 1, fp) == NULL)
 	break;
+
       strstrip_nl (buf);
 
       tok_2 = eat_whitespace (buf);
+if(!sNULL(tok_2)) continue;
+
       str_shrink_quotes (tok_2);
+if(!sNULL(tok_2)) continue;
 
       if (buf[0] == '#')
 	continue;
 
-      if (strlen (buf) == 0)
+      if (!sNULL(buf))
 	continue;
 
       tok_1 = itocstr (count);
+
+if(!sNULL(tok_1))continue;
 
       xdb_write (db, tok_1, tok_2);
 

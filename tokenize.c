@@ -24,11 +24,11 @@
 dlist_t *
 tokenize (bot_t * bot, char *string, int opt, char *sep)
 {
-  dlist_t *dl, *dptr;
-  char *str_a, *str_b;
+  dlist_t *dl=NULL, *dptr=NULL;
+  char *str_a=NULL, *str_b=NULL;
   int str_len, need_break = 0;
   char *sep_orig;
-  char buf[MAX_BUF_SZ+1], *buf_dup;
+  char buf[MAX_BUF_SZ+1], *buf_dup=NULL;
 
   int sep_len, sep_prefix_len;
 
@@ -38,8 +38,6 @@ tokenize (bot_t * bot, char *string, int opt, char *sep)
   sep_len = strlen (sep);
 
   debug (bot, "tokenize: Entered, [\n[%s]\n]\n", string);
-
-  dl = dptr = NULL;
 
   str_len = fn_strlen (string);
   sep_orig = sep;
@@ -58,6 +56,9 @@ tokenize (bot_t * bot, char *string, int opt, char *sep)
 
       if (opt & TOKENIZE_EATWHITESPACE)
 	str_a = eat_whitespace (str_a);
+
+if(!sNULL(str_a)) break;
+
 
       if (!(opt & TOKENIZE_LEAVEQUOTES))
 	{
@@ -168,7 +169,7 @@ tokenize_array (bot_t * bot, char *string, int opt, char *sep, int *expecting)
   array = NULL;
   array_size = 0;
 
-  if (!string || !sep || !expecting)
+  if (!sNULL(string) || !sNULL(sep) || !expecting)
     return NULL;
 
   dl = tokenize (bot, string, opt, sep);
@@ -398,4 +399,57 @@ cleanup:
     tokenize_destroy (NULL, &dl);
 
   return argv;
+}
+
+
+
+
+
+
+
+void tokenize_sort_strings(char ** keys, int * nkeys, int how) {
+int i=0,j=0,o=0;
+
+
+if(!keys || !nkeys) return;
+
+if(*nkeys <=0 )
+return;
+
+if(how & TOKENIZE_SORT_STRINGS_FORWARD) {
+      qsort (&keys[0], *nkeys, sizeof (char *), qsort_compare_forward);
+}
+else if(how & TOKENIZE_SORT_STRINGS_BACKWARD) {
+      qsort (&keys[0], *nkeys, sizeof (char *), qsort_compare_backward);
+}
+else if(how & TOKENIZE_SORT_STRINGS_RANDWARD) {
+      qsort (&keys[0], *nkeys, sizeof (char *), qsort_compare_randward);
+}
+
+if(how & TOKENIZE_SORT_STRINGS_UNIQ) {
+o=0;
+for(i=0;keys[i]!=NULL;) {
+keys[o] = keys[i];
+
+o++;
+
+for(j=i+1;keys[j]!=NULL;j++) {
+if(!sort_compare_forward(keys[i], keys[j])) {
+free(keys[j]);
+keys[j]=NULL;
+}
+else break;
+
+if(keys[j+1] == NULL)  { j = j + 1; break; }
+}
+i= j;
+}
+
+for(i=o;i<j;i++)
+keys[i]=NULL;
+
+*nkeys=o;
+}
+
+return ;
 }

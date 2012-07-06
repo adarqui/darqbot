@@ -208,7 +208,7 @@ internals_change_string (bot_t * bot, char *string, int opt)
 
   if (opt & MOD_INTERNALS_OPT_GETPID)
     {
-      internals_op_getpid (&dl_text, &bot);
+      internals_op_getpid (&dl_text, bot);
     }
 
   str = dlist_to_str (dl_text);

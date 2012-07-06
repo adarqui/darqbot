@@ -449,6 +449,7 @@ global_off (void)
 
   bz (gi->fd_unix_path);
 
+/*
   dlist_fini (&gi->dl_module, xmodule_free_destroy);
   dlist_fini (&gi->dl_pmodule, xmodule_free_destroy);
   dlist_fini (&gi->dl_gmodule, xmodule_free_destroy);
@@ -456,6 +457,9 @@ global_off (void)
   dlist_fini (&gi->dl_gmod_gtimers, xmodule_free_destroy);
   dlist_fini (&gi->dl_mod_iohooks, xmodule_free_destroy);
   dlist_fini (&gi->dl_gmod_giohooks, xmodule_free_destroy);
+*/
+
+xmodule_destroy_everything();
 
   mongodb_fini (NULL);
 

@@ -60,4 +60,15 @@ char * tokenize_find_inside_of_brackets (char *, int) ;
 
 char ** tokenize_str2argv(char *, int *, int);
 
+
+
+enum tokenize_sort_strings_types {
+TOKENIZE_SORT_STRINGS_FORWARD=0x01,
+TOKENIZE_SORT_STRINGS_BACKWARD=0x02,
+TOKENIZE_SORT_STRINGS_RANDWARD=0x04,
+TOKENIZE_SORT_STRINGS_UNIQ=0x08,
+};
+
+void tokenize_sort_strings(char **, int *, int);
+
 #endif

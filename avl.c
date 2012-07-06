@@ -61,7 +61,8 @@ avl_find (const struct avl_table *tree, const void *item)
   const struct avl_node *p;
 
   assert (tree != NULL && item != NULL);
-  for (p = tree->avl_root; p != NULL;)
+/* FUNK : && p->avl_data.. */
+  for (p = tree->avl_root; p != NULL && p->avl_data != NULL;)
     {
       int cmp = tree->avl_compare (item, p->avl_data, tree->avl_param);
 // FUNK
@@ -823,14 +824,23 @@ avl_destroy (struct avl_table *tree, avl_item_func * destroy)
 {
   struct avl_node *p, *q;
 
+void * tmp_data=NULL;
+void * tmp_param=NULL;
+
   assert (tree != NULL);
 
   for (p = tree->avl_root; p != NULL; p = q)
     if (p->avl_link[0] == NULL)
       {
 	q = p->avl_link[1];
+/* FUNK */
 	if (destroy != NULL && p->avl_data != NULL)
-	  destroy (p->avl_data, tree->avl_param);
+{
+tmp_data = p->avl_data;
+tmp_param = tree->avl_param;
+p->avl_data=NULL;
+	  destroy (tmp_data, tree->avl_param);
+}
 	tree->avl_alloc->libavl_free (tree->avl_alloc, p);
       }
     else

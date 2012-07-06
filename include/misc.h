@@ -195,6 +195,16 @@ int isprog(int) ;
 
 char * ret_trig(char * ) ;
 
+int
+qsort_compare_forward (const void *, const void *);
+int qsort_compare_backward(const void *, const void *);
+int qsort_compare_randward(const void *, const void *);
+
+int
+sort_compare_forward (const char *, const char *);
+int sort_compare_backward(const char *, const char *);
+int sort_compare_randward(const char *, const char *);
+
 int dl_str_unite(dlist_t **, const char *, ...);
 
 int dl_str_dup(dlist_t **, const char *);

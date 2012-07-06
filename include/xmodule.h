@@ -106,6 +106,8 @@ module_t *xmodule_load_subtrigs(module_t * ) ;
 void xmodule_del_subtrigs(module_t *);
 
 void xmodule_free(void *);
+void xmodule_free_destroy(void *);
+void xmodule_free_destroy_dptr(void *);
 
 
 module_t * xmodule_unload(int, module_t *,char *);
@@ -125,6 +127,7 @@ void xmodule_update(int, module_t *, char *) ;
 void xmodule_lock(int, char *);
 void xmodule_unlock(int ,char *);
 void xmodule_unload_everything(void);
+void xmodule_destroy_everything(void);
 void xmodule_update_stats(int);
 void xmodule_sort(int );
 void * xmodule_sort_traverse(void * , void * );
@@ -133,6 +136,7 @@ void xmodule_parse_style(char *);
 /* AVL stuff */
 int xmodule_avl_compare(const void * , const void * , void *) ;
 void xmodule_avl_free(void *, void * ) ;
+void xmodule_avl_free_destroy(void *, void *);
 void * xmodule_tree_match_by_name(void * , void * ) ;
 void * xmodule_tree_print_node(void * ) ;
 void xmodule_del_timer(module_t *, char *);

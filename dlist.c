@@ -249,14 +249,11 @@ dlist_tree_fini (dlist_t ** dl, void (*fn) (void *, void *))
   if (!dl)
     return;
 
-
   if (!(*dl)->avl_tree)
     return;
 
-
   if ((*dl)->type != DLIST_TYPE_AVL)
     return;
-
 
   avl_destroy ((*dl)->avl_tree, fn != NULL ? fn : (*dl)->avl_free);
 

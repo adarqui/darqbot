@@ -81,6 +81,7 @@ MOD_INTERNALS = mod_internals.c
 MOD_CAT = mod_cat.c
 MOD_AVL = mod_avl.c
 MOD_XML = mod_xml.c
+MOD_CMPH = mod_cmph.c
 
 # pmods - parser modules, for handling how triggers are run/interpreted
 
@@ -123,6 +124,7 @@ all:
 
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(PMOD_PARSE2) -o pmod_parse2.so
 
+	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_CMPH) -lcmph -o mod_cmph.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared -I /usr/include/libxml2 -lxml2 $(MOD_XML) -o mod_xml.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_BIN) -o mod_bin.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_GUILE) -I/usr/include/guile -lguile-2.0 -o mod_guile.so

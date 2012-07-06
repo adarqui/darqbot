@@ -314,7 +314,9 @@ xmodule_load_new (int type, char *name)
 cleanup:
 
   if (module)
+{
     xmodule_free_destroy (module);
+}
 
   return NULL;
 }
@@ -336,7 +338,7 @@ xmodule_load_dlso (module_t * module)
 
   h = dlopen (module->filename, RTLD_LAZY | RTLD_GLOBAL);
 
-  debug (NULL, "module_load: h=%p, filename=%s\n", h, module->filename);
+  debug (NULL, "module_load: h=%p, filename=%s, error=%s\n", h, module->filename, dlerror());
 
   if (!h)
     goto cleanup;
@@ -910,6 +912,29 @@ xmodule_load_all (int type)
 
 
 void
+xmodule_free_destroy_dptr (void *arg)
+{
+dlist_t  *dptr_mod=NULL;
+  module_t *mod = NULL;
+
+dptr_mod = (dlist_t*)arg;
+if(!dptr_mod) return;
+
+  mod = (module_t *) dlist_data(dptr_mod);
+  if (!mod)
+    return;
+
+  xmodule_unload (mod->type, mod, NULL);
+
+  free (mod);
+
+  return;
+}
+
+
+
+
+void
 xmodule_free_destroy (void *arg)
 {
   module_t *mod = NULL;
@@ -926,6 +951,7 @@ xmodule_free_destroy (void *arg)
 }
 
 
+/*
 void
 module_deactivate_dptr (void *arg)
 {
@@ -944,9 +970,11 @@ module_deactivate_dptr (void *arg)
 
   return;
 }
+*/
 
 
 
+/*
 void
 module_deactivate (void *arg)
 {
@@ -963,6 +991,7 @@ module_deactivate (void *arg)
 
   return;
 }
+*/
 
 
 
@@ -975,6 +1004,36 @@ xmodule_unload_everything (void)
   xmodule_unload_all (XMODULE_TYPE_PMODULE);
   xmodule_unload_all (XMODULE_TYPE_GMODULE);
   return;
+}
+
+
+void xmodule_destroy_everything(void) {
+void (*f)(void *)=NULL;
+
+if(gi->var_xmod_style == XMODULE_STYLE_TREE)
+{
+f = xmodule_free_destroy_dptr;
+if(gi->dl_module)
+gi->dl_module->avl_free = xmodule_avl_free_destroy;
+if(gi->dl_pmodule)
+gi->dl_pmodule->avl_free = xmodule_avl_free_destroy;
+if(gi->dl_gmodule)
+gi->dl_gmodule->avl_free = xmodule_avl_free_destroy;
+}
+else
+{
+f = xmodule_free_destroy;
+}
+
+  dlist_fini (&gi->dl_module, f);
+  dlist_fini (&gi->dl_pmodule, f);
+  dlist_fini (&gi->dl_gmodule, f);
+  dlist_fini (&gi->dl_mod_timers, xmodule_free_destroy);
+  dlist_fini (&gi->dl_gmod_gtimers, xmodule_free_destroy);
+  dlist_fini (&gi->dl_mod_iohooks, xmodule_free_destroy);
+  dlist_fini (&gi->dl_gmod_giohooks, xmodule_free_destroy);
+
+return;
 }
 
 
@@ -1476,10 +1535,34 @@ xmodule_avl_free (void *data, void *param)
   if (!mod)
     return;
 
-  module_deactivate (mod);
+  xmodule_unload (mod->type, mod, NULL);
 
   return;
 }
+
+
+
+void xmodule_avl_free_destroy(void * data, void * param) {
+  dlist_t *dptr = (dlist_t *) data;
+  module_t *mod = NULL;
+  if (!data)
+    return;
+
+  mod = (module_t *) dlist_data (dptr);
+  if (!mod)
+    return;
+
+  xmodule_unload (mod->type, mod, NULL);
+
+  free (mod);
+dptr->data=NULL;
+free(dptr);
+
+return;
+}
+
+
+
 
 
 
@@ -2027,3 +2110,11 @@ xmodule_free (void *arg)
 
   return;
 }
+
+
+
+
+
+
+
+

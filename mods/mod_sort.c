@@ -32,6 +32,10 @@ __sort_init__ (void)
   strlcpy_buf (mod_sort_info.name, "mod_sort");
   strlcpy_buf (mod_sort_info.trigger, "^sort");
 
+module_add_subtrigs(&mod_sort_info, "^uniqc");
+module_add_subtrigs(&mod_sort_info, "^uniqw");
+module_add_subtrigs(&mod_sort_info, "^uniq");
+
   mod_sort_info.init = sort_init;
   mod_sort_info.fini = sort_fini;
   mod_sort_info.help = sort_help;
@@ -73,7 +77,7 @@ sort_help (dlist_t * dlist_node, bot_t * bot)
     return NULL;
 
   bot->dl_module_help =
-    "^sort || ^sort(forw:backw:randw:forc:backc:randc) || ^sort(...,<optional_delim>)";
+    "^sort || ^sort(forw:backw:randw:forc:backc:randc:uniqc:uniqw:uniq) || ^sort(...,<optional_delim>)";
 
   return NULL;
 }
@@ -102,6 +106,16 @@ sort_run (dlist_t * dlist_node, bot_t * bot)
 
   opt = SORT_FORW;
 
+if(!strcasecmp(bot->trig_called, "^uniq")) {
+opt = SORT_UNIQW;
+}
+else if(!strcasecmp(bot->trig_called, "^uniqc")) {
+opt = SORT_UNIQC;
+}
+else if(!strcasecmp(bot->trig_called, "^uniqw")) {
+opt = SORT_UNIQW;
+}
+
   MOD_OPTIONS_TOP_HALF;
 
   if (!strncasecmp_len (dl_options_ptr, "forw"))
@@ -116,6 +130,15 @@ sort_run (dlist_t * dlist_node, bot_t * bot)
     opt = SORT_BACKC;
   else if (!strncasecmp_len (dl_options_ptr, "randc"))
     opt = SORT_RANDC;
+else if(!strncasecmp_len(dl_options_ptr, "uniqc"))
+{
+opt = SORT_UNIQC;
+}
+else if(!strncasecmp_len(dl_options_ptr, "uniqw"))
+{
+opt = SORT_UNIQW;
+}
+
 
   opt_delim = strchr (dl_options_ptr, ',');
   if (opt_delim)
@@ -134,25 +157,6 @@ sort_run (dlist_t * dlist_node, bot_t * bot)
 
 
 
-
-
-int
-sort_compare_forword (const void *c1, const void *c2)
-{
-  return strcasecmp (*(char *const *) c1, *(char *const *) c2);
-}
-
-int
-sort_compare_backword (const void *c1, const void *c2)
-{
-  return strcasecmp (*(char *const *) c2, *(char *const *) c1);
-}
-
-int
-sort_compare_randword (const void *c1, const void *c2)
-{
-  return (rand () % 10);
-}
 
 
 
@@ -182,7 +186,7 @@ sort_change_string (char *string, int string_size, int opt, char *delim)
   if (!sNULL (delim))
     delim = " ";
 
-  if (opt == SORT_FORC || opt == SORT_BACKC || opt == SORT_RANDC)
+  if (opt == SORT_FORC || opt == SORT_BACKC || opt == SORT_RANDC || opt == SORT_UNIQC)
     {
       delim = "";
       str_p_array = (char **) calloc (strlen (string) + 1, sizeof (char *));
@@ -196,7 +200,7 @@ sort_change_string (char *string, int string_size, int opt, char *delim)
 	}
 
     }
-  else if (opt == SORT_FORW || opt == SORT_BACKW || opt == SORT_RANDW)
+  else if (opt == SORT_FORW || opt == SORT_BACKW || opt == SORT_RANDW || opt == SORT_UNIQW)
     {
 
       str_p_array =
@@ -208,18 +212,25 @@ sort_change_string (char *string, int string_size, int opt, char *delim)
   if (!str_p_array)
     return NULL;
 
+
+if(opt == SORT_UNIQC || opt == SORT_UNIQW) {
+tokenize_sort_strings(str_p_array, &word, TOKENIZE_SORT_STRINGS_UNIQ);
+}
+
+
   if (opt == SORT_FORW || opt == SORT_FORC)
     {
-      qsort (&str_p_array[0], word, sizeof (char *), sort_compare_forword);
+tokenize_sort_strings(str_p_array, &word, TOKENIZE_SORT_STRINGS_FORWARD);
     }
   else if (opt == SORT_BACKW || opt == SORT_BACKC)
     {
-      qsort (&str_p_array[0], word, sizeof (char *), sort_compare_backword);
+tokenize_sort_strings(str_p_array, &word, TOKENIZE_SORT_STRINGS_BACKWARD);
     }
   else if (opt == SORT_RANDW || opt == SORT_RANDC)
     {
-      qsort (&str_p_array[0], word, sizeof (char *), sort_compare_randword);
+tokenize_sort_strings(str_p_array, &word, TOKENIZE_SORT_STRINGS_RANDWARD);
     }
+
 
   str = arraystr_to_str (str_p_array, word, delim);
 
