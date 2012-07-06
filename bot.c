@@ -140,9 +140,12 @@ bot_fini (void *bot_arg)
 	  }
       }
 
+/*
       dlist_remove_and_free (&bot_orig->parent->dl_subs, &bot_orig->dptr_self,
 			     free);
-
+*/
+dlist_remove_and_free(&bot_orig->parent->dl_subs, &bot_orig->dptr_self, NULL);
+free(bot_orig);
 
 
     }

@@ -1549,7 +1549,7 @@ strdup_len (char *s, int l)
 /* man strndup .. */
   char *ns;
 
-  if (!sNULL (s))
+  if (!sNULL (s) || l <= 0)
     return NULL;
 
   ns = (char *) calloc (1, l + 1);

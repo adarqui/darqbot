@@ -280,7 +280,7 @@ cmph_op_build (bot_t * bot, cmphx_t ** cmphx, char *string)
   char *str = NULL;
 
   char **keys = NULL;
-  int nkeys = 0, i = 0;
+  int nkeys = 0;
 
   debug (NULL, "cmph_op_build: Entered: %p %p %p\n", bot, cmphx, string);
 
