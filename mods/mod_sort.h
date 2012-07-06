@@ -37,8 +37,8 @@ enum
   SORT_FORC = 4,
   SORT_BACKC = 5,
   SORT_RANDC = 6,
-SORT_UNIQC = 7,
-SORT_UNIQW = 8,
+  SORT_UNIQC = 7,
+  SORT_UNIQW = 8,
 };
 
 module_t mod_sort_info;

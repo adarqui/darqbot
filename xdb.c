@@ -124,8 +124,8 @@ xdb_get_recnum (DB * db, int recnum)
   if (!db || recnum < 0)
     return NULL;
 
-bz2(db_key);
-bz2(db_value);
+  bz2 (db_key);
+  bz2 (db_value);
 
   count = xdb_count (db);
   if (recnum > count || recnum == 0)
@@ -168,7 +168,7 @@ cleanup:
 int
 xdb_count (DB * db)
 {
-  struct __db_bt_stat *bts=NULL;
+  struct __db_bt_stat *bts = NULL;
   int count = 0;
 
   debug (NULL, "xdb_count: Entered\n");

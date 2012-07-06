@@ -32,9 +32,9 @@ __sort_init__ (void)
   strlcpy_buf (mod_sort_info.name, "mod_sort");
   strlcpy_buf (mod_sort_info.trigger, "^sort");
 
-module_add_subtrigs(&mod_sort_info, "^uniqc");
-module_add_subtrigs(&mod_sort_info, "^uniqw");
-module_add_subtrigs(&mod_sort_info, "^uniq");
+  module_add_subtrigs (&mod_sort_info, "^uniqc");
+  module_add_subtrigs (&mod_sort_info, "^uniqw");
+  module_add_subtrigs (&mod_sort_info, "^uniq");
 
   mod_sort_info.init = sort_init;
   mod_sort_info.fini = sort_fini;
@@ -106,15 +106,18 @@ sort_run (dlist_t * dlist_node, bot_t * bot)
 
   opt = SORT_FORW;
 
-if(!strcasecmp(bot->trig_called, "^uniq")) {
-opt = SORT_UNIQW;
-}
-else if(!strcasecmp(bot->trig_called, "^uniqc")) {
-opt = SORT_UNIQC;
-}
-else if(!strcasecmp(bot->trig_called, "^uniqw")) {
-opt = SORT_UNIQW;
-}
+  if (!strcasecmp (bot->trig_called, "^uniq"))
+    {
+      opt = SORT_UNIQW;
+    }
+  else if (!strcasecmp (bot->trig_called, "^uniqc"))
+    {
+      opt = SORT_UNIQC;
+    }
+  else if (!strcasecmp (bot->trig_called, "^uniqw"))
+    {
+      opt = SORT_UNIQW;
+    }
 
   MOD_OPTIONS_TOP_HALF;
 
@@ -130,14 +133,14 @@ opt = SORT_UNIQW;
     opt = SORT_BACKC;
   else if (!strncasecmp_len (dl_options_ptr, "randc"))
     opt = SORT_RANDC;
-else if(!strncasecmp_len(dl_options_ptr, "uniqc"))
-{
-opt = SORT_UNIQC;
-}
-else if(!strncasecmp_len(dl_options_ptr, "uniqw"))
-{
-opt = SORT_UNIQW;
-}
+  else if (!strncasecmp_len (dl_options_ptr, "uniqc"))
+    {
+      opt = SORT_UNIQC;
+    }
+  else if (!strncasecmp_len (dl_options_ptr, "uniqw"))
+    {
+      opt = SORT_UNIQW;
+    }
 
 
   opt_delim = strchr (dl_options_ptr, ',');
@@ -186,7 +189,8 @@ sort_change_string (char *string, int string_size, int opt, char *delim)
   if (!sNULL (delim))
     delim = " ";
 
-  if (opt == SORT_FORC || opt == SORT_BACKC || opt == SORT_RANDC || opt == SORT_UNIQC)
+  if (opt == SORT_FORC || opt == SORT_BACKC || opt == SORT_RANDC
+      || opt == SORT_UNIQC)
     {
       delim = "";
       str_p_array = (char **) calloc (strlen (string) + 1, sizeof (char *));
@@ -200,7 +204,8 @@ sort_change_string (char *string, int string_size, int opt, char *delim)
 	}
 
     }
-  else if (opt == SORT_FORW || opt == SORT_BACKW || opt == SORT_RANDW || opt == SORT_UNIQW)
+  else if (opt == SORT_FORW || opt == SORT_BACKW || opt == SORT_RANDW
+	   || opt == SORT_UNIQW)
     {
 
       str_p_array =
@@ -213,22 +218,26 @@ sort_change_string (char *string, int string_size, int opt, char *delim)
     return NULL;
 
 
-if(opt == SORT_UNIQC || opt == SORT_UNIQW) {
-tokenize_sort_strings(str_p_array, &word, TOKENIZE_SORT_STRINGS_UNIQ);
-}
+  if (opt == SORT_UNIQC || opt == SORT_UNIQW)
+    {
+      tokenize_sort_strings (str_p_array, &word, TOKENIZE_SORT_STRINGS_UNIQ);
+    }
 
 
   if (opt == SORT_FORW || opt == SORT_FORC)
     {
-tokenize_sort_strings(str_p_array, &word, TOKENIZE_SORT_STRINGS_FORWARD);
+      tokenize_sort_strings (str_p_array, &word,
+			     TOKENIZE_SORT_STRINGS_FORWARD);
     }
   else if (opt == SORT_BACKW || opt == SORT_BACKC)
     {
-tokenize_sort_strings(str_p_array, &word, TOKENIZE_SORT_STRINGS_BACKWARD);
+      tokenize_sort_strings (str_p_array, &word,
+			     TOKENIZE_SORT_STRINGS_BACKWARD);
     }
   else if (opt == SORT_RANDW || opt == SORT_RANDC)
     {
-tokenize_sort_strings(str_p_array, &word, TOKENIZE_SORT_STRINGS_RANDWARD);
+      tokenize_sort_strings (str_p_array, &word,
+			     TOKENIZE_SORT_STRINGS_RANDWARD);
     }
 
 

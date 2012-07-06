@@ -459,7 +459,7 @@ global_off (void)
   dlist_fini (&gi->dl_gmod_giohooks, xmodule_free_destroy);
 */
 
-xmodule_destroy_everything();
+  xmodule_destroy_everything ();
 
   mongodb_fini (NULL);
 

@@ -2180,21 +2180,22 @@ memdup_free (void *arg)
 int
 sort_compare_forward (const char *c1, const char *c2)
 {
-  return strcasecmp ( c1, c2);
+  return strcasecmp (c1, c2);
 }
 
 int
 sort_compare_backward (const char *c1, const char *c2)
 {
-  return strcasecmp ( c2,  c1);
+  return strcasecmp (c2, c1);
 }
 
 int
 sort_compare_randward (const char *c1, const char *c2)
 {
-int r = rand() % 2, s = rand() % 2;
-if(s) s = s*(-1);
-  return r*s;
+  int r = rand () % 2, s = rand () % 2;
+  if (s)
+    s = s * (-1);
+  return r * s;
 }
 
 int
@@ -2212,7 +2213,8 @@ qsort_compare_backward (const void *c1, const void *c2)
 int
 qsort_compare_randward (const void *c1, const void *c2)
 {
-int r = rand() % 2, s = rand() % 2;
-if(s) s = s*(-1);
-  return r*s;
+  int r = rand () % 2, s = rand () % 2;
+  if (s)
+    s = s * (-1);
+  return r * s;
 }
