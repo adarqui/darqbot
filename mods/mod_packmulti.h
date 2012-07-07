@@ -28,19 +28,15 @@
 
 #include "bot.h"
 
-
-
 module_t mod_packmulti_info;
 
-bot_t *packmulti_init (dlist_t *, bot_t *);
-bot_t *packmulti_fini (dlist_t *, bot_t *);
-bot_t *packmulti_help (dlist_t *, bot_t *);
-bot_t *packmulti_run (dlist_t *, bot_t *);
+bot_t *packmulti_init(dlist_t *, bot_t *);
+bot_t *packmulti_fini(dlist_t *, bot_t *);
+bot_t *packmulti_help(dlist_t *, bot_t *);
+bot_t *packmulti_run(dlist_t *, bot_t *);
 
+char *packmulti_change_string(bot_t *, char *, int);
 
-char *packmulti_change_string (bot_t *, char *, int);
-
-
-void __packmulti_init__ (void) __attribute__ ((constructor));
+void __packmulti_init__(void) __attribute__ ((constructor));
 
 #endif

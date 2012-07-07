@@ -28,39 +28,33 @@
 
 #include "bot.h"
 
-
-
-enum
-{
-  MOBY_SINGLE = 1,
-  MOBY_LIST
+enum {
+	MOBY_SINGLE = 1,
+	MOBY_LIST
 };
 
 module_t mod_moby_info;
 
-bot_t *moby_init (dlist_t *, bot_t *);
-bot_t *moby_fini (dlist_t *, bot_t *);
-bot_t *moby_help (dlist_t *, bot_t *);
-bot_t *moby_run (dlist_t *, bot_t *);
+bot_t *moby_init(dlist_t *, bot_t *);
+bot_t *moby_fini(dlist_t *, bot_t *);
+bot_t *moby_help(dlist_t *, bot_t *);
+bot_t *moby_run(dlist_t *, bot_t *);
 
-typedef struct moby_info
-{
+typedef struct moby_info {
 
-  int initialized;
-  char db_name[132];
-  int count;
+	int initialized;
+	char db_name[132];
+	int count;
 
 } moby_info_t;
 
 moby_info_t moby_info;
 
+char *moby_change_string(char *, int);
+void moby_create_db(bot_t *);
+char *moby_get_syn(DB *, char *, int);
+int moby_transform_word(char *, char *);
 
-char *moby_change_string (char *, int);
-void moby_create_db (bot_t *);
-char *moby_get_syn (DB *, char *, int);
-int moby_transform_word (char *, char *);
-
-
-void __moby_init__ (void) __attribute__ ((constructor));
+void __moby_init__(void) __attribute__ ((constructor));
 
 #endif

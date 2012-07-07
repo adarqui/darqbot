@@ -28,37 +28,30 @@
 
 #include "bot.h"
 
-
 #define RC_MAX 30
 
+enum opts {
+	RAINBOW_OPT_RAND = 0x01,
+	RAINBOW_OPT_NOSPACE = 0x02,
+	RAINBOW_OPT_NOCHAR = 0x04,
+};
 
-enum opts
-{
-  RAINBOW_OPT_RAND = 0x01,
-  RAINBOW_OPT_NOSPACE = 0x02,
-  RAINBOW_OPT_NOCHAR = 0x04,
-}
- ;
-
-typedef struct rainbow_colors
-{
-  char *val;
-  char *type;
+typedef struct rainbow_colors {
+	char *val;
+	char *type;
 } rainbow_colors_t;
-
 
 module_t mod_rainbow_info;
 
-bot_t *rainbow_init (dlist_t *, bot_t *);
-bot_t *rainbow_fini (dlist_t *, bot_t *);
-bot_t *rainbow_help (dlist_t *, bot_t *);
-bot_t *rainbow_run (dlist_t *, bot_t *);
+bot_t *rainbow_init(dlist_t *, bot_t *);
+bot_t *rainbow_fini(dlist_t *, bot_t *);
+bot_t *rainbow_help(dlist_t *, bot_t *);
+bot_t *rainbow_run(dlist_t *, bot_t *);
 
+char *rainbow_change_string(char *, int, rainbow_colors_t *, int);
+int rainbow_defaults(rainbow_colors_t *, int *, char *);
+int rainbow_add_colors(dlist_t *, rainbow_colors_t *, int *, char *);
 
-char *rainbow_change_string (char *, int, rainbow_colors_t *, int);
-int rainbow_defaults (rainbow_colors_t *, int *, char *);
-int rainbow_add_colors (dlist_t *, rainbow_colors_t *, int *, char *);
-
-void __rainbow_init__ (void) __attribute__ ((constructor));
+void __rainbow_init__(void) __attribute__ ((constructor));
 
 #endif

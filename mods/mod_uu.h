@@ -28,26 +28,23 @@
 
 #include "bot.h"
 
-
-enum
-{
-  MOD_UU_ENC = 1,
-  MOD_UU_DEC = 2,
+enum {
+	MOD_UU_ENC = 1,
+	MOD_UU_DEC = 2,
 };
 
 module_t mod_uu_info;
 
-bot_t *uu_init (dlist_t *, bot_t *);
-bot_t *uu_fini (dlist_t *, bot_t *);
-bot_t *uu_help (dlist_t *, bot_t *);
-bot_t *uu_run (dlist_t *, bot_t *);
+bot_t *uu_init(dlist_t *, bot_t *);
+bot_t *uu_fini(dlist_t *, bot_t *);
+bot_t *uu_help(dlist_t *, bot_t *);
+bot_t *uu_run(dlist_t *, bot_t *);
 
+char *uu_change_string(char *, int, int *);
 
-char *uu_change_string (char *, int, int *);
+char *xxencode(char *, int);
+int xxdecode(char *, int *, int *);
 
-char *xxencode (char *, int);
-int xxdecode (char *, int *, int *);
-
-void __uu_init__ (void) __attribute__ ((constructor));
+void __uu_init__(void) __attribute__ ((constructor));
 
 #endif

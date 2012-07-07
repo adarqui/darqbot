@@ -21,256 +21,227 @@
 */
 #include "bot.h"
 
-DB *
-xdb_open (char *filename)
+DB *xdb_open(char *filename)
 {
 
-  DB *db = NULL;
-  int ret;
+	DB *db = NULL;
+	int ret;
 
-  debug (NULL, "xdb_open: Entered: %s\n", filename);
+	debug(NULL, "xdb_open: Entered: %s\n", filename);
 
-  if (!sNULL (filename))
-    return NULL;
+	if (!sNULL(filename))
+		return NULL;
 
-  ret = db_create (&db, NULL, 0);
+	ret = db_create(&db, NULL, 0);
 
-  if (!db || ret != 0)
-    return NULL;
+	if (!db || ret != 0)
+		return NULL;
 
-  ret = db->set_flags (db, DB_RECNUM);
+	ret = db->set_flags(db, DB_RECNUM);
 
-  ret = db->open (db, NULL, filename, NULL, DB_BTREE, DB_CREATE, 0644);
-  if (ret != 0)
-    goto cleanup;
+	ret = db->open(db, NULL, filename, NULL, DB_BTREE, DB_CREATE, 0644);
+	if (ret != 0)
+		goto cleanup;
 
-  return db;
+	return db;
 
+ cleanup:
+	if (db)
+		db->close(db, 0);
 
-cleanup:
-  if (db)
-    db->close (db, 0);
-
-  return NULL;
+	return NULL;
 }
 
-
-int
-xdb_write (DB * db, char *key, char *value)
+int xdb_write(DB * db, char *key, char *value)
 {
-  DBT db_key, db_value;
-  int ret = 0;
+	DBT db_key, db_value;
+	int ret = 0;
 
-  if (!db || !sNULL (key) || !sNULL (value))
-    return -1;
+	if (!db || !sNULL(key) || !sNULL(value))
+		return -1;
 
-  bz2 (db_key);
-  bz2 (db_value);
+	bz2(db_key);
+	bz2(db_value);
 
-  db_key.data = key;
-  db_key.size = strlen (key);
+	db_key.data = key;
+	db_key.size = strlen(key);
 
-  db_value.data = value;
-  db_value.size = strlen (value);
+	db_value.data = value;
+	db_value.size = strlen(value);
 
-  ret = db->put (db, NULL, &db_key, &db_value, DB_NOOVERWRITE);
+	ret = db->put(db, NULL, &db_key, &db_value, DB_NOOVERWRITE);
 
-  return ret;
+	return ret;
 }
 
-
-xdb_pair_t *
-xdb_get (DB * db, char *key)
+xdb_pair_t *xdb_get(DB * db, char *key)
 {
-  xdb_pair_t *pair = NULL;
+	xdb_pair_t *pair = NULL;
 
-  DBT db_key, db_value;
+	DBT db_key, db_value;
 
-  int ret;
+	int ret;
 
-  if (!db || !sNULL (key))
-    return NULL;
+	if (!db || !sNULL(key))
+		return NULL;
 
+	bz2(db_key);
+	bz2(db_value);
 
-  bz2 (db_key);
-  bz2 (db_value);
+	db_key.data = key;
+	db_key.size = strlen(key);
 
-  db_key.data = key;
-  db_key.size = strlen (key);
+	ret = db->get(db, NULL, &db_key, &db_value, 0);
+	if (ret != 0)
+		return NULL;
 
-  ret = db->get (db, NULL, &db_key, &db_value, 0);
-  if (ret != 0)
-    return NULL;
+	pair =
+	    xdb_pair_create(db_key.data, db_key.size, db_value.data,
+			    db_value.size);
 
-  pair =
-    xdb_pair_create (db_key.data, db_key.size, db_value.data, db_value.size);
-
-  return pair;
+	return pair;
 }
 
-
-
-
-xdb_pair_t *
-xdb_get_recnum (DB * db, int recnum)
+xdb_pair_t *xdb_get_recnum(DB * db, int recnum)
 {
-  xdb_pair_t *pair = NULL;
-  DBC *dbc = NULL;
-  int ret;
-  int count;
+	xdb_pair_t *pair = NULL;
+	DBC *dbc = NULL;
+	int ret;
+	int count;
 
-  DBT db_key, db_value;
+	DBT db_key, db_value;
 
-  if (!db || recnum < 0)
-    return NULL;
+	if (!db || recnum < 0)
+		return NULL;
 
-  bz2 (db_key);
-  bz2 (db_value);
+	bz2(db_key);
+	bz2(db_value);
 
-  count = xdb_count (db);
-  if (recnum > count || recnum == 0)
-    {
-      while (1)
-	{
-	  recnum = rand () % (count + 1);
-	  if (recnum > 0)
-	    break;
+	count = xdb_count(db);
+	if (recnum > count || recnum == 0) {
+		while (1) {
+			recnum = rand() % (count + 1);
+			if (recnum > 0)
+				break;
+		}
 	}
-    }
 
-  ret = db->cursor (db, NULL, &dbc, 0);
+	ret = db->cursor(db, NULL, &dbc, 0);
 
-  if (ret != 0)
-    return NULL;
+	if (ret != 0)
+		return NULL;
 
-  bz2 (db_key);
-  bz2 (db_value);
+	bz2(db_key);
+	bz2(db_value);
 
-  db_key.data = &recnum;
-  db_key.size = sizeof (recnum);
+	db_key.data = &recnum;
+	db_key.size = sizeof(recnum);
 
-  ret = db->get (db, NULL, &db_key, &db_value, DB_SET_RECNO);
-  if (ret != 0)
-    goto cleanup;
+	ret = db->get(db, NULL, &db_key, &db_value, DB_SET_RECNO);
+	if (ret != 0)
+		goto cleanup;
 
-  pair =
-    xdb_pair_create (db_key.data, db_key.size, db_value.data, db_value.size);
+	pair =
+	    xdb_pair_create(db_key.data, db_key.size, db_value.data,
+			    db_value.size);
 
-cleanup:
-  if (dbc)
-    dbc->c_close (dbc);
+ cleanup:
+	if (dbc)
+		dbc->c_close(dbc);
 
-  return pair;
+	return pair;
 }
 
-
-
-int
-xdb_count (DB * db)
+int xdb_count(DB * db)
 {
-  struct __db_bt_stat *bts = NULL;
-  int count = 0;
+	struct __db_bt_stat *bts = NULL;
+	int count = 0;
 
-  debug (NULL, "xdb_count: Entered\n");
+	debug(NULL, "xdb_count: Entered\n");
 
-  if (!db)
-    return 0;
+	if (!db)
+		return 0;
 
-  //memset (&bts, 0, sizeof (bts));
+	//memset (&bts, 0, sizeof (bts));
 
-  db->stat (db, NULL, &bts, DB_FAST_STAT);
+	db->stat(db, NULL, &bts, DB_FAST_STAT);
 
-  debug (NULL, "xdb_count: %i records\n", bts->bt_nkeys);
+	debug(NULL, "xdb_count: %i records\n", bts->bt_nkeys);
 
-  count = bts->bt_nkeys;
+	count = bts->bt_nkeys;
 
-  free (bts);
+	free(bts);
 
-  return count;
+	return count;
 }
 
-
-xdb_pair_t *
-xdb_pair_create (char *s1, int s1_len, char *s2, int s2_len)
+xdb_pair_t *xdb_pair_create(char *s1, int s1_len, char *s2, int s2_len)
 {
 
-  xdb_pair_t *pair = NULL;
+	xdb_pair_t *pair = NULL;
 
-  if (!sNULL (s1) || s1_len <= 0 || !sNULL (s2) || s2_len <= 0)
-    return NULL;
+	if (!sNULL(s1) || s1_len <= 0 || !sNULL(s2) || s2_len <= 0)
+		return NULL;
 
-  pair = (xdb_pair_t *) calloc (1, sizeof (xdb_pair_t));
-  if (!pair)
-    return NULL;
+	pair = (xdb_pair_t *) calloc(1, sizeof(xdb_pair_t));
+	if (!pair)
+		return NULL;
 
-  pair->key = strdup_len (s1, s1_len);
-  pair->value = strdup_len (s2, s2_len);
+	pair->key = strdup_len(s1, s1_len);
+	pair->value = strdup_len(s2, s2_len);
 
-  return pair;
+	return pair;
 }
 
-
-void
-xdb_pair_destroy (void *arg)
+void xdb_pair_destroy(void *arg)
 {
-  xdb_pair_t *pair = (xdb_pair_t *) arg;
-  if (!pair)
-    return;
+	xdb_pair_t *pair = (xdb_pair_t *) arg;
+	if (!pair)
+		return;
 
-  if (pair->key)
-    free (pair->key);
-  if (pair->value)
-    free (pair->value);
+	if (pair->key)
+		free(pair->key);
+	if (pair->value)
+		free(pair->value);
 
-  free (pair);
-  return;
+	free(pair);
+	return;
 }
 
-
-void
-xdb_fini (DB * db)
+void xdb_fini(DB * db)
 {
 
-  debug (NULL, "xdb_fini: Entered\n");
+	debug(NULL, "xdb_fini: Entered\n");
 
-  if (!db)
-    return;
+	if (!db)
+		return;
 
-  db->close (db, 0);
+	db->close(db, 0);
 
-  return;
+	return;
 }
 
-
-
-
-
-
-
-xdb_pair_t *
-xdb_pair_find_by_key (dlist_t * dl, char *key)
+xdb_pair_t *xdb_pair_find_by_key(dlist_t * dl, char *key)
 {
 
-  dlist_t *dptr;
+	dlist_t *dptr;
 
-  xdb_pair_t *pair = NULL;
+	xdb_pair_t *pair = NULL;
 
-  if (!dl || !sNULL (key))
-    return NULL;
+	if (!dl || !sNULL(key))
+		return NULL;
 
-  dlist_fornext (dl, dptr)
-  {
-    pair = (xdb_pair_t *) dlist_data (dptr);
-    if (!pair)
-      continue;
-    if (!pair->key)
-      continue;
+	dlist_fornext(dl, dptr) {
+		pair = (xdb_pair_t *) dlist_data(dptr);
+		if (!pair)
+			continue;
+		if (!pair->key)
+			continue;
 
-    if (!strcasecmp (pair->key, key))
-      return pair;
+		if (!strcasecmp(pair->key, key))
+			return pair;
 
-  }
+	}
 
-
-  return NULL;
+	return NULL;
 }

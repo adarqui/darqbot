@@ -28,18 +28,15 @@
 
 #include "bot.h"
 
-
 module_t mod_fnsc_info;
 
-bot_t *fnsc_init (dlist_t *, bot_t *);
-bot_t *fnsc_fini (dlist_t *, bot_t *);
-bot_t *fnsc_help (dlist_t *, bot_t *);
-bot_t *fnsc_run (dlist_t *, bot_t *);
+bot_t *fnsc_init(dlist_t *, bot_t *);
+bot_t *fnsc_fini(dlist_t *, bot_t *);
+bot_t *fnsc_help(dlist_t *, bot_t *);
+bot_t *fnsc_run(dlist_t *, bot_t *);
 
+char *fnsc_change_string(char *, int);
 
-char *fnsc_change_string (char *, int);
-
-
-void __fnsc_init__ (void) __attribute__ ((constructor));
+void __fnsc_init__(void) __attribute__ ((constructor));
 
 #endif

@@ -28,27 +28,23 @@
 
 #include "bot.h"
 
-
-enum
-{
-  CAPS_ALTC = 1,
-  CAPS_RANDC = 2,
-  CAPS_ALTW = 3,
-  CAPS_RANDW = 4,
-  CAPS_LOW = 5,
+enum {
+	CAPS_ALTC = 1,
+	CAPS_RANDC = 2,
+	CAPS_ALTW = 3,
+	CAPS_RANDW = 4,
+	CAPS_LOW = 5,
 };
 
 module_t mod_caps_info;
 
-bot_t *caps_init (dlist_t *, bot_t *);
-bot_t *caps_fini (dlist_t *, bot_t *);
-bot_t *caps_help (dlist_t *, bot_t *);
-bot_t *caps_run (dlist_t *, bot_t *);
+bot_t *caps_init(dlist_t *, bot_t *);
+bot_t *caps_fini(dlist_t *, bot_t *);
+bot_t *caps_help(dlist_t *, bot_t *);
+bot_t *caps_run(dlist_t *, bot_t *);
 
+char *caps_change_string(char *, int);
 
-char *caps_change_string (char *, int);
-
-
-void __caps_init__ (void) __attribute__ ((constructor));
+void __caps_init__(void) __attribute__ ((constructor));
 
 #endif

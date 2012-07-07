@@ -28,26 +28,24 @@
 
 #include "bot.h"
 
-
-enum
-{
-  RAND_WORD = 0,
-  RAND_NUM,
-  RAND_DATA
+enum {
+	RAND_WORD = 0,
+	RAND_NUM,
+	RAND_DATA
 };
 
 module_t mod_rand_info;
 
-bot_t *rand_init (dlist_t *, bot_t *);
-bot_t *rand_fini (dlist_t *, bot_t *);
-bot_t *rand_help (dlist_t *, bot_t *);
-bot_t *rand_run (dlist_t *, bot_t *);
+bot_t *rand_init(dlist_t *, bot_t *);
+bot_t *rand_fini(dlist_t *, bot_t *);
+bot_t *rand_help(dlist_t *, bot_t *);
+bot_t *rand_run(dlist_t *, bot_t *);
 
-void __rand_init__ (void) __attribute__ ((constructor));
+void __rand_init__(void) __attribute__ ((constructor));
 
-char *rand_change_string (char *, int);
-char *rand_op_data (char *);
-char *rand_op_num (char *);
-char *rand_op_word (char *);
+char *rand_change_string(char *, int);
+char *rand_op_data(char *);
+char *rand_op_num(char *);
+char *rand_op_word(char *);
 
 #endif

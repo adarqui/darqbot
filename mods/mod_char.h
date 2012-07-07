@@ -28,18 +28,15 @@
 
 #include "bot.h"
 
-
 module_t mod_char_info;
 
-bot_t *char_init (dlist_t *, bot_t *);
-bot_t *char_fini (dlist_t *, bot_t *);
-bot_t *char_help (dlist_t *, bot_t *);
-bot_t *char_run (dlist_t *, bot_t *);
+bot_t *char_init(dlist_t *, bot_t *);
+bot_t *char_fini(dlist_t *, bot_t *);
+bot_t *char_help(dlist_t *, bot_t *);
+bot_t *char_run(dlist_t *, bot_t *);
 
+char *char_change_string(char *, int, int);
 
-char *char_change_string (char *, int, int);
-
-
-void __char_init__ (void) __attribute__ ((constructor));
+void __char_init__(void) __attribute__ ((constructor));
 
 #endif

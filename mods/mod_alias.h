@@ -29,34 +29,29 @@
 #include "bot.h"
 #include "mongo.h"
 
-
-enum alias_opts
-{
-  ALIAS_OPT_RUN = 0,
-  ALIAS_OPT_GET = 1,
-  ALIAS_OPT_DEL = 2,
-  ALIAS_OPT_ADD = 3,
-  ALIAS_OPT_GETMORE = 4,
+enum alias_opts {
+	ALIAS_OPT_RUN = 0,
+	ALIAS_OPT_GET = 1,
+	ALIAS_OPT_DEL = 2,
+	ALIAS_OPT_ADD = 3,
+	ALIAS_OPT_GETMORE = 4,
 };
 
 module_t mod_alias_info;
 
-bot_t *alias_init (dlist_t *, bot_t *);
-bot_t *alias_fini (dlist_t *, bot_t *);
-bot_t *alias_help (dlist_t *, bot_t *);
-bot_t *alias_run (dlist_t *, bot_t *);
+bot_t *alias_init(dlist_t *, bot_t *);
+bot_t *alias_fini(dlist_t *, bot_t *);
+bot_t *alias_help(dlist_t *, bot_t *);
+bot_t *alias_run(dlist_t *, bot_t *);
 
+void __alias_init__(void) __attribute__ ((constructor));
 
-void __alias_init__ (void) __attribute__ ((constructor));
+char *alias_change_string(dlist_t *, bot_t *, int, char *);
 
-
-char *alias_change_string (dlist_t *, bot_t *, int, char *);
-
-
-char *alias_op_run (dlist_t *, bot_t *, char *);
-char *alias_op_get (bot_t *, char *);
-char *alias_op_del (bot_t *, char *);
-char *alias_op_add (bot_t *, char *, char *);
-char *alias_op_getmore (bot_t *, char *);
+char *alias_op_run(dlist_t *, bot_t *, char *);
+char *alias_op_get(bot_t *, char *);
+char *alias_op_del(bot_t *, char *);
+char *alias_op_add(bot_t *, char *, char *);
+char *alias_op_getmore(bot_t *, char *);
 
 #endif

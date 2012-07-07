@@ -28,14 +28,13 @@
 
 #include "bot.h"
 
-
 module_t mod_whoami_info;
 
-bot_t *whoami_init (dlist_t *, bot_t *);
-bot_t *whoami_fini (dlist_t *, bot_t *);
-bot_t *whoami_help (dlist_t *, bot_t *);
-bot_t *whoami_run (dlist_t *, bot_t *);
+bot_t *whoami_init(dlist_t *, bot_t *);
+bot_t *whoami_fini(dlist_t *, bot_t *);
+bot_t *whoami_help(dlist_t *, bot_t *);
+bot_t *whoami_run(dlist_t *, bot_t *);
 
-void __whoami_init__ (void) __attribute__ ((constructor));
+void __whoami_init__(void) __attribute__ ((constructor));
 
 #endif

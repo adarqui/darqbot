@@ -33,40 +33,35 @@
 
 /* libguile/posix.c execl */
 
-enum data_opts
-{
-  DATA_OPT_OUT = 0,
-  DATA_OPT_ARG = 1,
+enum data_opts {
+	DATA_OPT_OUT = 0,
+	DATA_OPT_ARG = 1,
 };
 
-typedef struct guile_info
-{
+typedef struct guile_info {
 
-  int pipefds[2];
-  dlist_t *text_list;
-  bot_t *bot;
-  int data_opt;
-  int ison;
-  int alarm;
+	int pipefds[2];
+	dlist_t *text_list;
+	bot_t *bot;
+	int data_opt;
+	int ison;
+	int alarm;
 } guile_info_t;
 
 guile_info_t guile_info;
 
-
-void guile_alarm_handler (int);
+void guile_alarm_handler(int);
 
 module_t mod_guile_info;
 
-bot_t *guile_init (dlist_t *, bot_t *);
-bot_t *guile_fini (dlist_t *, bot_t *);
-bot_t *guile_help (dlist_t *, bot_t *);
-bot_t *guile_run (dlist_t *, bot_t *);
+bot_t *guile_init(dlist_t *, bot_t *);
+bot_t *guile_fini(dlist_t *, bot_t *);
+bot_t *guile_help(dlist_t *, bot_t *);
+bot_t *guile_run(dlist_t *, bot_t *);
 
+char *guile_change_string(bot_t *, char *, int);
+static void guile_inner_main(void *, int, char **);
 
-char *guile_change_string (bot_t *, char *, int);
-static void guile_inner_main (void *, int, char **);
-
-
-void __guile_init__ (void) __attribute__ ((constructor));
+void __guile_init__(void) __attribute__ ((constructor));
 
 #endif

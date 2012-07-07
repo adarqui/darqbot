@@ -32,28 +32,27 @@ dlist_t *dl_mod_rant_unique;
 
 module_t mod_rant_info;
 
-bot_t *rant_init (dlist_t *, bot_t *);
-bot_t *rant_fini (dlist_t *, bot_t *);
-bot_t *rant_help (dlist_t *, bot_t *);
-bot_t *rant_run (dlist_t *, bot_t *);
-bot_t *rant_input (dlist_t *, bot_t *);
+bot_t *rant_init(dlist_t *, bot_t *);
+bot_t *rant_fini(dlist_t *, bot_t *);
+bot_t *rant_help(dlist_t *, bot_t *);
+bot_t *rant_run(dlist_t *, bot_t *);
+bot_t *rant_input(dlist_t *, bot_t *);
 
-char *rant_change_string (bot_t *, char *, int);
-void __rant_init__ (void) __attribute__ ((constructor));
+char *rant_change_string(bot_t *, char *, int);
+void __rant_init__(void) __attribute__ ((constructor));
 
-enum mod_rant_stuff
-{
-  MOD_RANT_PUSH = 1,
-  MOD_RANT_POP,
-  MOD_RANT_CLEAR,
-  MOD_RANT_SIZE,
-  MOD_RANT_LIST,
+enum mod_rant_stuff {
+	MOD_RANT_PUSH = 1,
+	MOD_RANT_POP,
+	MOD_RANT_CLEAR,
+	MOD_RANT_SIZE,
+	MOD_RANT_LIST,
 };
 
-char *rant_op_clear (bot_t *, dlist_t **);
-char *rant_op_size (bot_t *, dlist_t **);
-char *rant_op_push (bot_t *, dlist_t **, char *);
-char *rant_op_pop (bot_t *, dlist_t **);
-char *rant_op_list (bot_t *, dlist_t **);
+char *rant_op_clear(bot_t *, dlist_t **);
+char *rant_op_size(bot_t *, dlist_t **);
+char *rant_op_push(bot_t *, dlist_t **, char *);
+char *rant_op_pop(bot_t *, dlist_t **);
+char *rant_op_list(bot_t *, dlist_t **);
 
 #endif

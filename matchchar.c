@@ -21,104 +21,75 @@
 */
 #include "bot.h"
 
-int
-matchchar_seed (int seed)
+int matchchar_seed(int seed)
 {
-  if (seed != 0)
-    srand (seed);
-  return 0;
+	if (seed != 0)
+		srand(seed);
+	return 0;
 }
 
-int
-matchchar (int c1, int c2)
+int matchchar(int c1, int c2)
 {
 
-  if (c1 == 0)
-    return 1;
+	if (c1 == 0)
+		return 1;
 
-  if (c2 == ' ' && (c1 != MATCHCHAR_SPACE && c1 != MATCHCHAR_INVERT))
-    return 0;
+	if (c2 == ' ' && (c1 != MATCHCHAR_SPACE && c1 != MATCHCHAR_INVERT))
+		return 0;
 
-  if (c1 < MATCHCHAR_BASE)
-    {
-      return c1 == c2;
-    }
+	if (c1 < MATCHCHAR_BASE) {
+		return c1 == c2;
+	}
 
-  if (c1 == MATCHCHAR_ASCII)
-    {
-      if (isascii (c2))
-	return 1;
-    }
-  else if (c1 == MATCHCHAR_ALPHA)
-    {
-      if (isalpha (c2))
-	return 1;
-    }
-  else if (c1 == MATCHCHAR_ALNUM)
-    {
-      if (isalnum (c2))
-	return 1;
-    }
-  else if (c1 == MATCHCHAR_DIGIT)
-    {
-      if (isdigit (c2))
-	return 1;
-    }
-  else if (c1 == MATCHCHAR_LOWER)
-    {
-      if (islower (c2))
-	return 1;
-    }
-  else if (c1 == MATCHCHAR_UPPER)
-    {
-      if (isupper (c2))
-	return 1;
-    }
-  else if (c1 == MATCHCHAR_PUNCT)
-    {
-      if (ispunct (c2))
-	return 1;
-    }
-  else if (c1 == MATCHCHAR_BINARY)
-    {
-      if (isbinary (c2))
-	return 1;
-    }
-  else if (c1 == MATCHCHAR_SAME)
-    {
-      return 1;
-    }
-  else if (c1 == MATCHCHAR_SPACE)
-    {
-      if (c2 == ' ' || c2 == '\t')
-	return 1;
-    }
-  else if (c1 == MATCHCHAR_INVERT)
-    {
-      return 1;
-    }
-  else
-    return 0;
+	if (c1 == MATCHCHAR_ASCII) {
+		if (isascii(c2))
+			return 1;
+	} else if (c1 == MATCHCHAR_ALPHA) {
+		if (isalpha(c2))
+			return 1;
+	} else if (c1 == MATCHCHAR_ALNUM) {
+		if (isalnum(c2))
+			return 1;
+	} else if (c1 == MATCHCHAR_DIGIT) {
+		if (isdigit(c2))
+			return 1;
+	} else if (c1 == MATCHCHAR_LOWER) {
+		if (islower(c2))
+			return 1;
+	} else if (c1 == MATCHCHAR_UPPER) {
+		if (isupper(c2))
+			return 1;
+	} else if (c1 == MATCHCHAR_PUNCT) {
+		if (ispunct(c2))
+			return 1;
+	} else if (c1 == MATCHCHAR_BINARY) {
+		if (isbinary(c2))
+			return 1;
+	} else if (c1 == MATCHCHAR_SAME) {
+		return 1;
+	} else if (c1 == MATCHCHAR_SPACE) {
+		if (c2 == ' ' || c2 == '\t')
+			return 1;
+	} else if (c1 == MATCHCHAR_INVERT) {
+		return 1;
+	} else
+		return 0;
 
-  return 0;
+	return 0;
 }
 
-
-int
-matchchar_str (char *str)
+int matchchar_str(char *str)
 {
-  int x;
+	int x;
 
-  if (!str)
-    {
-      return 0;
-    }
+	if (!str) {
+		return 0;
+	}
 
+	if (str[0] == ' ')
+		return 0;
 
-  if (str[0] == ' ')
-    return 0;
-
-  x = str[0];
+	x = str[0];
 
 /*
   if (!strstr (str, "MATCH"))
@@ -127,69 +98,36 @@ matchchar_str (char *str)
     }
 */
 
+	if (!strncasecmp(str, "MASCII", fn_strlen("MASCII"))) {
+		x = MATCHCHAR_ASCII;
+	} else if (!strncasecmp(str, "MALPHA", fn_strlen("MALPHA"))) {
+		x = MATCHCHAR_ALPHA;
+	} else if (!strncasecmp(str, "MALNUM", fn_strlen("MALNUM"))) {
+		x = MATCHCHAR_ALNUM;
+	} else if (!strncasecmp(str, "MDIGIT", fn_strlen("MDIGIT"))) {
+		x = MATCHCHAR_DIGIT;
+	} else if (!strncasecmp(str, "MLOWER", fn_strlen("MLOWER"))) {
+		x = MATCHCHAR_LOWER;
+	} else if (!strncasecmp(str, "MUPPER", fn_strlen("MUPPER"))) {
+		x = MATCHCHAR_UPPER;
+	} else if (!strncasecmp(str, "MPUNCT", fn_strlen("MPUNCT"))) {
+		x = MATCHCHAR_PUNCT;
+	} else if (!strncasecmp(str, "MBINARY", fn_strlen("MBINARY"))) {
+		x = MATCHCHAR_BINARY;
+	} else if (!strncasecmp(str, "MSPACE", fn_strlen("MSPACE"))) {
+		x = MATCHCHAR_SPACE;
+	} else if (!strncasecmp(str, "MSAME", fn_strlen("MSAME"))) {
+		x = MATCHCHAR_SAME;
+	} else if (!strncasecmp(str, "MINVERT", fn_strlen("MINVERT"))) {
+		x = MATCHCHAR_INVERT;
+	}
 
-  if (!strncasecmp (str, "MASCII", fn_strlen ("MASCII")))
-    {
-      x = MATCHCHAR_ASCII;
-    }
-  else if (!strncasecmp (str, "MALPHA", fn_strlen ("MALPHA")))
-    {
-      x = MATCHCHAR_ALPHA;
-    }
-  else if (!strncasecmp (str, "MALNUM", fn_strlen ("MALNUM")))
-    {
-      x = MATCHCHAR_ALNUM;
-    }
-  else if (!strncasecmp (str, "MDIGIT", fn_strlen ("MDIGIT")))
-    {
-      x = MATCHCHAR_DIGIT;
-    }
-  else if (!strncasecmp (str, "MLOWER", fn_strlen ("MLOWER")))
-    {
-      x = MATCHCHAR_LOWER;
-    }
-  else if (!strncasecmp (str, "MUPPER", fn_strlen ("MUPPER")))
-    {
-      x = MATCHCHAR_UPPER;
-    }
-  else if (!strncasecmp (str, "MPUNCT", fn_strlen ("MPUNCT")))
-    {
-      x = MATCHCHAR_PUNCT;
-    }
-  else if (!strncasecmp (str, "MBINARY", fn_strlen ("MBINARY")))
-    {
-      x = MATCHCHAR_BINARY;
-    }
-  else if (!strncasecmp (str, "MSPACE", fn_strlen ("MSPACE")))
-    {
-      x = MATCHCHAR_SPACE;
-    }
-  else if (!strncasecmp (str, "MSAME", fn_strlen ("MSAME")))
-    {
-      x = MATCHCHAR_SAME;
-    }
-  else if (!strncasecmp (str, "MINVERT", fn_strlen ("MINVERT")))
-    {
-      x = MATCHCHAR_INVERT;
-    }
-
-
-  return x;
+	return x;
 }
 
-
-
-
-
-
-
-
-
-
-char *
-matchchar_retstr (int c)
+char *matchchar_retstr(int c)
 {
-  char buf[2];
+	char buf[2];
 
 /*
   if (!strstr (str, "MATCH"))
@@ -198,33 +136,32 @@ matchchar_retstr (int c)
     }
 */
 
-
-  if (c == MATCHCHAR_ASCII)
-    return "MASCII";
-  else if (c == MATCHCHAR_ALPHA)
-    return "MALPHA";
-  else if (c == MATCHCHAR_ALNUM)
-    return "MALNUM";
-  else if (c == MATCHCHAR_DIGIT)
-    return "MDIGIT";
-  else if (c == MATCHCHAR_LOWER)
-    return "MLOWER";
-  else if (c == MATCHCHAR_UPPER)
-    return "MUPPER";
-  else if (c == MATCHCHAR_PUNCT)
-    return "MPUNCT";
-  else if (c == MATCHCHAR_BINARY)
-    return "MBINARY";
-  else if (c == MATCHCHAR_SPACE)
-    return "MSPACE";
-  else if (c == MATCHCHAR_SAME)
-    return "MSAME";
-  else if (c == MATCHCHAR_INVERT)
-    return "MINVERT";
+	if (c == MATCHCHAR_ASCII)
+		return "MASCII";
+	else if (c == MATCHCHAR_ALPHA)
+		return "MALPHA";
+	else if (c == MATCHCHAR_ALNUM)
+		return "MALNUM";
+	else if (c == MATCHCHAR_DIGIT)
+		return "MDIGIT";
+	else if (c == MATCHCHAR_LOWER)
+		return "MLOWER";
+	else if (c == MATCHCHAR_UPPER)
+		return "MUPPER";
+	else if (c == MATCHCHAR_PUNCT)
+		return "MPUNCT";
+	else if (c == MATCHCHAR_BINARY)
+		return "MBINARY";
+	else if (c == MATCHCHAR_SPACE)
+		return "MSPACE";
+	else if (c == MATCHCHAR_SAME)
+		return "MSAME";
+	else if (c == MATCHCHAR_INVERT)
+		return "MINVERT";
 
 // FUNK FREE THE STRDUP'd STRING
-  buf[0] = c;
-  buf[1] = 0;
+	buf[0] = c;
+	buf[1] = 0;
 
-  return strdup (buf);
+	return strdup(buf);
 }

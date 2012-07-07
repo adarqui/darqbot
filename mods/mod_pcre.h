@@ -31,26 +31,24 @@
 
 #include <pcre.h>
 
-
-enum pcre_opt_flags
-{
-  OPT_NOCASE = 0x01,
-  OPT_EXTENDED = 0x02,
-  OPT_REMOVE = 0x04,
-  OPT_EXTRACT = 0x08,
-  OPT_UNGREEDY = 0x10,
-  OPT_REMOVELINE = 0x20,
+enum pcre_opt_flags {
+	OPT_NOCASE = 0x01,
+	OPT_EXTENDED = 0x02,
+	OPT_REMOVE = 0x04,
+	OPT_EXTRACT = 0x08,
+	OPT_UNGREEDY = 0x10,
+	OPT_REMOVELINE = 0x20,
 };
 
 module_t mod_pcre_info;
 
-bot_t *pcre_init (dlist_t *, bot_t *);
-bot_t *pcre_fini (dlist_t *, bot_t *);
-bot_t *pcre_help (dlist_t *, bot_t *);
-bot_t *pcre_run (dlist_t *, bot_t *);
+bot_t *pcre_init(dlist_t *, bot_t *);
+bot_t *pcre_fini(dlist_t *, bot_t *);
+bot_t *pcre_help(dlist_t *, bot_t *);
+bot_t *pcre_run(dlist_t *, bot_t *);
 
-char *pcre_change_string (bot_t *, char *, int);
+char *pcre_change_string(bot_t *, char *, int);
 
-void __pcre_init__ (void) __attribute__ ((constructor));
+void __pcre_init__(void) __attribute__ ((constructor));
 
 #endif

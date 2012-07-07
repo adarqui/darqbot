@@ -28,60 +28,59 @@
 
 #include "bot.h"
 
-typedef struct gmod_grelinkc
-{
-  bot_t *bot;
-  dlist_t *dptr_gmod;
-  bot_gmod_elm_t *gmod;
+typedef struct gmod_grelinkc {
+	bot_t *bot;
+	dlist_t *dptr_gmod;
+	bot_gmod_elm_t *gmod;
 
-  int initialized;
+	int initialized;
 
-  int id;
+	int id;
 
-  char *line;
+	char *line;
 
 } grelinkc_t;
 
 module_t gmod_grelinkc_info;
 
-void __grelinkc_init__ (void) __attribute__ ((constructor));
+void __grelinkc_init__(void) __attribute__ ((constructor));
 
-bot_t *grelinkc_init (dlist_t *, bot_t *);
-bot_t *grelinkc_fini (dlist_t *, bot_t *);
-bot_t *grelinkc_help (dlist_t *, bot_t *);
-bot_t *grelinkc_run (dlist_t *, bot_t *);
-bot_t *grelinkc_control (dlist_t *, bot_t *, int, va_list);
+bot_t *grelinkc_init(dlist_t *, bot_t *);
+bot_t *grelinkc_fini(dlist_t *, bot_t *);
+bot_t *grelinkc_help(dlist_t *, bot_t *);
+bot_t *grelinkc_run(dlist_t *, bot_t *);
+bot_t *grelinkc_control(dlist_t *, bot_t *, int, va_list);
 
-bot_t *grelinkc_input (dlist_t *, bot_t *);
-bot_t *grelinkc_output (dlist_t *, bot_t *);
+bot_t *grelinkc_input(dlist_t *, bot_t *);
+bot_t *grelinkc_output(dlist_t *, bot_t *);
 
-bot_t *grelinkc_destroy_up (dlist_t *, bot_t *);
-bot_t *grelinkc_destroy_down (dlist_t *, bot_t *);
+bot_t *grelinkc_destroy_up(dlist_t *, bot_t *);
+bot_t *grelinkc_destroy_down(dlist_t *, bot_t *);
 
-bot_t *grelinkc_control_up (dlist_t *, bot_t *);
-bot_t *grelinkc_control_down (dlist_t *, bot_t *);
+bot_t *grelinkc_control_up(dlist_t *, bot_t *);
+bot_t *grelinkc_control_down(dlist_t *, bot_t *);
 
-bot_t *grelinkc_off (dlist_t *, bot_t *);
+bot_t *grelinkc_off(dlist_t *, bot_t *);
 
-int grelinkc_input_client (grelinkc_t *);
-char *grelinkc_change_string (bot_t *, char *, int);
-char *grelinkc_process_options (grelinkc_t *, char *);
-void grelinkc_process_options_parse (grelinkc_t *, char *);
-void grelinkc_process_options_parse_line (grelinkc_t *, char *);
-void grelinkc_process_options_parse_id (grelinkc_t *, char *);
+int grelinkc_input_client(grelinkc_t *);
+char *grelinkc_change_string(bot_t *, char *, int);
+char *grelinkc_process_options(grelinkc_t *, char *);
+void grelinkc_process_options_parse(grelinkc_t *, char *);
+void grelinkc_process_options_parse_line(grelinkc_t *, char *);
+void grelinkc_process_options_parse_id(grelinkc_t *, char *);
 
-bot_t *grelinkc_destroy_up_grelinkc (grelinkc_t *);
-bot_t *grelinkc_destroy_down_grelinkc (grelinkc_t *);
+bot_t *grelinkc_destroy_up_grelinkc(grelinkc_t *);
+bot_t *grelinkc_destroy_down_grelinkc(grelinkc_t *);
 
-void grelinkc_gmod_init (bot_t *, bot_gmod_elm_t *, dlist_t *);
+void grelinkc_gmod_init(bot_t *, bot_gmod_elm_t *, dlist_t *);
 
-void grelinkc_free (void *);
+void grelinkc_free(void *);
 
-int grelinkc_op_nop (grelinkc_t *, relink_control_pkt_t *);
-int grelinkc_op_relink (grelinkc_t *, relink_control_pkt_t *);
-int grelinkc_op_hello (grelinkc_t *, relink_control_pkt_t *);
-int grelinkc_op_result (grelinkc_t *, relink_control_pkt_t *);
-int grelinkc_op_data_notify (grelinkc_t *);
-int grelinkc_op_data (grelinkc_t *, relink_control_pkt_t *);
+int grelinkc_op_nop(grelinkc_t *, relink_control_pkt_t *);
+int grelinkc_op_relink(grelinkc_t *, relink_control_pkt_t *);
+int grelinkc_op_hello(grelinkc_t *, relink_control_pkt_t *);
+int grelinkc_op_result(grelinkc_t *, relink_control_pkt_t *);
+int grelinkc_op_data_notify(grelinkc_t *);
+int grelinkc_op_data(grelinkc_t *, relink_control_pkt_t *);
 
 #endif

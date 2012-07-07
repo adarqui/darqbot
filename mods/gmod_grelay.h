@@ -30,23 +30,23 @@
 
 module_t gmod_grelay_info;
 
-bot_t *grelay_init (dlist_t *, bot_t *);
-bot_t *grelay_fini (dlist_t *, bot_t *);
-bot_t *grelay_help (dlist_t *, bot_t *);
-bot_t *grelay_run (dlist_t *, bot_t *);
-bot_t *grelay_control (dlist_t *, bot_t *, int, va_list);
+bot_t *grelay_init(dlist_t *, bot_t *);
+bot_t *grelay_fini(dlist_t *, bot_t *);
+bot_t *grelay_help(dlist_t *, bot_t *);
+bot_t *grelay_run(dlist_t *, bot_t *);
+bot_t *grelay_control(dlist_t *, bot_t *, int, va_list);
 
-bot_t *grelay_output (dlist_t *, bot_t *);
-bot_t *grelay_input (dlist_t *, bot_t *);
+bot_t *grelay_output(dlist_t *, bot_t *);
+bot_t *grelay_input(dlist_t *, bot_t *);
 
-bot_t *grelay_off (dlist_t *, bot_t *);
-bot_t *grelay_destroy_up (dlist_t *, bot_t *);
-bot_t *grelay_destroy_down (dlist_t *, bot_t *);
-bot_t *grelay_control_up (dlist_t *, bot_t *);
-bot_t *grelay_control_down (dlist_t *, bot_t *);
+bot_t *grelay_off(dlist_t *, bot_t *);
+bot_t *grelay_destroy_up(dlist_t *, bot_t *);
+bot_t *grelay_destroy_down(dlist_t *, bot_t *);
+bot_t *grelay_control_up(dlist_t *, bot_t *);
+bot_t *grelay_control_down(dlist_t *, bot_t *);
 
-char *grelay_change_string (bot_t *, char *, int);
+char *grelay_change_string(bot_t *, char *, int);
 
-void __grelay_init__ (void) __attribute__ ((constructor));
+void __grelay_init__(void) __attribute__ ((constructor));
 
 #endif

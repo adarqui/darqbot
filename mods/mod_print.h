@@ -30,33 +30,29 @@
 
 module_t mod_print_info;
 
-bot_t *print_init (dlist_t *, bot_t *);
-bot_t *print_fini (dlist_t *, bot_t *);
-bot_t *print_help (dlist_t *, bot_t *);
-bot_t *print_run (dlist_t *, bot_t *);
+bot_t *print_init(dlist_t *, bot_t *);
+bot_t *print_fini(dlist_t *, bot_t *);
+bot_t *print_help(dlist_t *, bot_t *);
+bot_t *print_run(dlist_t *, bot_t *);
 
-char *print_change_string (char *, int, int, int);
+char *print_change_string(char *, int, int, int);
 
+void __print_init__(void) __attribute__ ((constructor));
 
-void __print_init__ (void) __attribute__ ((constructor));
-
-
-enum mod_print_type
-{
-  PRINT_OPT_BINARY = 1,
-  PRINT_OPT_HEX,
-  PRINT_OPT_CHAR,
-  PRINT_OPT_REVERSE,
-  PRINT_OPT_FORWARD
+enum mod_print_type {
+	PRINT_OPT_BINARY = 1,
+	PRINT_OPT_HEX,
+	PRINT_OPT_CHAR,
+	PRINT_OPT_REVERSE,
+	PRINT_OPT_FORWARD
 };
 
+char *print_op_binary(int, int, char *);
 
-char *print_op_binary (int, int, char *);
+char *print_op_binary_forward(int, char *);
+char *print_op_binary_forward_char(char *);
 
-char *print_op_binary_forward (int, char *);
-char *print_op_binary_forward_char (char *);
-
-char *print_op_binary_reverse (int, char *);
-char *print_op_binary_reverse_char (char *);
+char *print_op_binary_reverse(int, char *);
+char *print_op_binary_reverse_char(char *);
 
 #endif

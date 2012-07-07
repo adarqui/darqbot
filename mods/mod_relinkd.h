@@ -30,31 +30,29 @@
 
 module_t mod_relinkd_info;
 
-bot_t *relinkd_init (dlist_t *, bot_t *);
-bot_t *relinkd_fini (dlist_t *, bot_t *);
-bot_t *relinkd_help (dlist_t *, bot_t *);
-bot_t *relinkd_run (dlist_t *, bot_t *);
+bot_t *relinkd_init(dlist_t *, bot_t *);
+bot_t *relinkd_fini(dlist_t *, bot_t *);
+bot_t *relinkd_help(dlist_t *, bot_t *);
+bot_t *relinkd_run(dlist_t *, bot_t *);
 
-char *relinkd_change_string (bot_t *, char *, int, int);
-void __relinkd_init__ (void) __attribute__ ((constructor));
+char *relinkd_change_string(bot_t *, char *, int, int);
+void __relinkd_init__(void) __attribute__ ((constructor));
 
-
-enum relinkd_opts
-{
-  RELINKD_OPT_QUERY_LINKS = 1,
-  RELINKD_OPT_QUERY_SUBS,
-  RELINKD_OPT_QUERY_RELOAD,
-  RELINKD_OPT_DESTROY_LINK,
-  RELINKD_OPT_DESTROY_SUB,
-  RELINKD_OPT_DESTROY_ALL,
+enum relinkd_opts {
+	RELINKD_OPT_QUERY_LINKS = 1,
+	RELINKD_OPT_QUERY_SUBS,
+	RELINKD_OPT_QUERY_RELOAD,
+	RELINKD_OPT_DESTROY_LINK,
+	RELINKD_OPT_DESTROY_SUB,
+	RELINKD_OPT_DESTROY_ALL,
 };
 
-char *relinkd_op_query_links (bot_t *, int);
-char *relinkd_op_query_subs (bot_t *, int);
-char *relinkd_op_query_reload_modules (bot_t *, int);
-char *relinkd_op_destroy_link (bot_t *, int, int);
-char *relinkd_op_destroy_sub (bot_t *, int, int);
-char *relinkd_op_destroy_all (bot_t *, int);
-char *relinkd_op_reload (bot_t *, int);
+char *relinkd_op_query_links(bot_t *, int);
+char *relinkd_op_query_subs(bot_t *, int);
+char *relinkd_op_query_reload_modules(bot_t *, int);
+char *relinkd_op_destroy_link(bot_t *, int, int);
+char *relinkd_op_destroy_sub(bot_t *, int, int);
+char *relinkd_op_destroy_all(bot_t *, int);
+char *relinkd_op_reload(bot_t *, int);
 
 #endif

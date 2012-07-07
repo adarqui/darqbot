@@ -33,18 +33,15 @@ char *tiny_url;
 
 module_t mod_tiny_info;
 
-bot_t *tiny_init (dlist_t *, bot_t *);
-bot_t *tiny_fini (dlist_t *, bot_t *);
-bot_t *tiny_help (dlist_t *, bot_t *);
-bot_t *tiny_run (dlist_t *, bot_t *);
+bot_t *tiny_init(dlist_t *, bot_t *);
+bot_t *tiny_fini(dlist_t *, bot_t *);
+bot_t *tiny_help(dlist_t *, bot_t *);
+bot_t *tiny_run(dlist_t *, bot_t *);
 
+char *tiny_change_string(bot_t *, char *, int);
 
-char *tiny_change_string (bot_t *, char *, int);
+size_t tiny_curl_write(void *, size_t, size_t, void *);
 
-
-size_t tiny_curl_write (void *, size_t, size_t, void *);
-
-
-void __tiny_init__ (void) __attribute__ ((constructor));
+void __tiny_init__(void) __attribute__ ((constructor));
 
 #endif

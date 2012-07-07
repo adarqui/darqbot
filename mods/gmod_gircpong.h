@@ -28,50 +28,49 @@
 
 #include "bot.h"
 
-typedef struct gmod_gircpong
-{
-  bot_t *bot;
-  dlist_t *dptr_gmod;
-  bot_gmod_elm_t *gmod;
+typedef struct gmod_gircpong {
+	bot_t *bot;
+	dlist_t *dptr_gmod;
+	bot_gmod_elm_t *gmod;
 
-  int initialized;
+	int initialized;
 
-  int null;
+	int null;
 
 } gircpong_t;
 
 module_t gmod_gircpong_info;
 
-void __gircpong_init__ (void) __attribute__ ((constructor));
+void __gircpong_init__(void) __attribute__ ((constructor));
 
-bot_t *gircpong_init (dlist_t *, bot_t *);
-bot_t *gircpong_fini (dlist_t *, bot_t *);
-bot_t *gircpong_help (dlist_t *, bot_t *);
-bot_t *gircpong_run (dlist_t *, bot_t *);
-bot_t *gircpong_control (dlist_t *, bot_t *, int, va_list);
+bot_t *gircpong_init(dlist_t *, bot_t *);
+bot_t *gircpong_fini(dlist_t *, bot_t *);
+bot_t *gircpong_help(dlist_t *, bot_t *);
+bot_t *gircpong_run(dlist_t *, bot_t *);
+bot_t *gircpong_control(dlist_t *, bot_t *, int, va_list);
 
-bot_t *gircpong_input (dlist_t *, bot_t *);
-bot_t *gircpong_output (dlist_t *, bot_t *);
+bot_t *gircpong_input(dlist_t *, bot_t *);
+bot_t *gircpong_output(dlist_t *, bot_t *);
 
-bot_t *gircpong_destroy_up (dlist_t *, bot_t *);
-bot_t *gircpong_destroy_down (dlist_t *, bot_t *);
+bot_t *gircpong_destroy_up(dlist_t *, bot_t *);
+bot_t *gircpong_destroy_down(dlist_t *, bot_t *);
 
-bot_t *gircpong_control_up (dlist_t *, bot_t *);
-bot_t *gircpong_control_down (dlist_t *, bot_t *);
+bot_t *gircpong_control_up(dlist_t *, bot_t *);
+bot_t *gircpong_control_down(dlist_t *, bot_t *);
 
-bot_t *gircpong_off (dlist_t *, bot_t *);
+bot_t *gircpong_off(dlist_t *, bot_t *);
 
-int gircpong_input_client (gircpong_t *);
-char *gircpong_change_string (bot_t *, char *, int);
-char *gircpong_process_options (gircpong_t *, char *);
-void gircpong_process_options_parse (gircpong_t *, char *);
-void gircpong_process_options_parse_null (gircpong_t *, char *);
+int gircpong_input_client(gircpong_t *);
+char *gircpong_change_string(bot_t *, char *, int);
+char *gircpong_process_options(gircpong_t *, char *);
+void gircpong_process_options_parse(gircpong_t *, char *);
+void gircpong_process_options_parse_null(gircpong_t *, char *);
 
-bot_t *gircpong_destroy_up_gircpong (gircpong_t *);
-bot_t *gircpong_destroy_down_gircpong (gircpong_t *);
+bot_t *gircpong_destroy_up_gircpong(gircpong_t *);
+bot_t *gircpong_destroy_down_gircpong(gircpong_t *);
 
-void gircpong_gmod_init (bot_t *, bot_gmod_elm_t *, dlist_t *);
+void gircpong_gmod_init(bot_t *, bot_gmod_elm_t *, dlist_t *);
 
-void gircpong_free (void *);
+void gircpong_free(void *);
 
 #endif

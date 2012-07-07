@@ -198,10 +198,8 @@ gcc -I ./include/ -I ./mod_text/ -I ../include/ -I ../mongodb-c-driver/src/ -I /
 gcc -I ./include/ -I ./mod_text/ -I ../include/ -I ../mongodb-c-driver/src/ -I /custom_builds/include -Wall --std=c99 -rdynamic -finstrument-functions -ggdb -g -levent -ldl -fPIC -lc -L /custom_builds/lib/ -shared mod_guile.c -I/usr/include/guile -lguile-2.0 -o mod_guile.so
 gcc -I ./include/ -I ./mod_text/ -I ../include/ -I ../mongodb-c-driver/src/ -I /custom_builds/include -Wall --std=c99 -rdynamic -finstrument-functions -ggdb -g -levent -ldl -fPIC -lc -L /custom_builds/lib/ -shared -I ./mod_avl_files/ ./mod_avl_files/texilib.c mod_avl.c -o mod_avl.so
 gcc -I ./include/ -I ./mod_text/ -I ../include/ -I ../mongodb-c-driver/src/ -I /custom_builds/include -Wall --std=c99 -rdynamic -finstrument-functions -ggdb -g -levent -ldl -fPIC -lc -L /custom_builds/lib/ -shared mod_timer.c -o mod_timer.so
-gcc -I ./include/ -I ./mod_text/ -I ../include/ -I ../mongodb-c-driver/src/ -I /custom_builds/include -Wall --std=c99 -rdynamic -finstrument-functions -ggdb -g -levent -ldl -fPIC -lc -L /custom_builds/lib/ -shared mod_fnsasmx86.c -o mod_fnsasmx86.so
-mod_fnsasmx86.c: Assembler messages:
-mod_fnsasmx86.c:293: Warning: using `%cl' instead of `%ecx' due to `b' suffix
-mod_fnsasmx86.c:307: Warning: using `%al' instead of `%eax' due to `b' suffix
+gcc -I ./include/ -I ./mod_text/ -I ../include/ -I ../mongodb-c-driver/src/ -I /custom_builds/include -Wall --std=c99 -rdynamic -finstrument-functions -ggdb -g -levent -ldl -fPIC -lc -L /custom_builds/lib/ -shared mod_fnsintel.c -o mod_fnsintel.so
+mod_fnsintel.c: Assembler messages:
 gcc -I ./include/ -I ./mod_text/ -I ../include/ -I ../mongodb-c-driver/src/ -I /custom_builds/include -Wall --std=c99 -rdynamic -finstrument-functions -ggdb -g -levent -ldl -fPIC -lc -L /custom_builds/lib/ -shared mod_geoip.c -lGeoIP -o mod_geoip.so
 In file included from mod_geoip.h:31,
                  from mod_geoip.c:26:
@@ -379,7 +377,7 @@ mod_echo.c        : probably the most important module, needed to echo text that
 mod_emot.c        : returns an emoticon based on a keyword
 mod_exec.c        : executes a pipeline of commands
 mod_festival.c    : currently broken: pipes data over speech to text (festival)
-mod_fnsasmx86.c   : "fns" asm x86 functions, eventually will contain "libc" in intel asm.
+mod_fnsintel.c    : fns fptr replacer, intel asm version. eventually will add hooks to mod_intel functions
 mod_fnsc.c        : "fns C functions, eventually will contain custom "libc" in C
 mod_fork.c        : causes the current pipeline to branch off into a fork child and continue executing
 mod_fortune.c     : returns a unix fortune, same syntax as the command line version.
@@ -388,7 +386,7 @@ mod_guile.c       : embedded scheme-lisp interpreter, gnu guile.
 mod_help.c        : help system, returns general help or a help message of a specific module
 mod_howie.c       : embedded howie AIML bot
 mod_html.c        : uses curl to establish connections & retrieve html urls
-mod_xml.c         : an xml parser based on element name's, for use with ^html etc
+mod_intel.c       : contains intel ASM procedures in mod_intel.S
 mod_hun.c         : hunspell spell correction
 mod_identify.c    : identifies a user based on their hostname stored in mongodb
 mod_internals.c   : returns info/sizes/lengths of the current state of internal buffers
@@ -432,6 +430,7 @@ mod_uu.c          : base64 encoding, allows for transferring of raw data
 mod_var.c         : modify important bot variables such as flood limits, flood sleep times, buffer sizes, etc
 mod_vuln.c        : currently broken: irony.
 mod_whoami.c      : tells you who you are
+mod_xml.c         : an xml parser based on element name's, for use with ^html etc
 pmod_parse2.c     : powerful parser which provides the interface to using the various mod_*'s
 
 
@@ -1014,11 +1013,11 @@ mod_fnsc.c: ^fnsc, ^fnsc(test)
 
 
 
-mod_fnsasmx86.c: ^fnsasmx86, ^fnsasmx86(test)
+mod_fnsintel.c: ^fnsintel, ^fnsintel(test)
 ---------------------------------------------
 - ...
 
-^fnsasmx86(test)
+^fnsintel(test)
 
 
 
@@ -1144,6 +1143,7 @@ example of turning the chat into howie-chat
 
 
 mod_html.c: ^html, ^html(options..)
+-----------------------------------
 - raw html module
 
 issuing a GET:
@@ -1242,6 +1242,15 @@ mod_internals.c: ^internals, ^internals(all,in_sz,out_sz,in_strlen,out_strlen,in
 
 < kx> ^internals(all)|^e
 < dbot> in_sz=56 out_sz=0 in_strlen=0 out_strlen=0 in_data= trig_prefix= getpid=12815
+
+
+
+
+
+
+mod_intel.c: ^intel, ^intel((true,false,self,strlen,strcmp,bzero,memset,mul,imul,sub,add},<optional args>) ...
+-------------------------------------------------------------
+- intel ASM procedures
 
 
 
@@ -1392,7 +1401,7 @@ mod_help.c: ^help, ^help ^trigger
         (360),^avl_tree (360),^bgc (-1),^bavlt (623),^bgcolor (-1),^bin (238),^color (-1),^caps (252),^bv (60),^bsdavltree
         (623),^caesar (12287),^char (516),^cat (31),^cmds (64),^dice (48),^dequeue (79),^console (117),^e (3695),^dumbgames
         (48),^howie (184),^fgcolor (-1),^festival (63),^enqueue (79),^emot (50),^exec (17816),^fgc (-1),^forkfortune
-        (358),^fnsc (-1),^fnsasmx86 (69),^fork (35),^geoip (56),^fortune (358),^help (164),^guile (1422),^index (235),^hun
+        (358),^fnsc (-1),^fnsintel (69),^fork (35),^geoip (56),^fortune (358),^help (164),^guile (1422),^index (235),^hun
         (66),^html (138),^identify (221),^md5 (208),^leet (189),^internals (39),^map (381),^memset (235),^me (34),^moby
         (613),^say (3695),^quote (705),^pcre (194),^p (72),^nop (2),^packmulti (114),^push (184),^pop (184),^pmme (29),^print
         (72),^queue (79),^quiz (2042),^rindex (235),^relinkd (301),^rand (2986),^rainbow (1032),^rant (144)
@@ -1411,7 +1420,7 @@ mod_packmulti.c: ^packmulti(num)
 < dbot> _list (355),^avl_ins (355),^avl_tree (355),^bgc (-1),^bavlt (623),^bgcolor (-1),^bin (237),^color (-
 < dbot> 1),^caps (246),^bv (23),^bsdavltree (623),^caesar (12287),^char (511),^cat (25),^cmds (63),^dice (47
 < dbot> ),^dequeue (79),^console (111),^e (3690),^dumbgames (47),^howie (184),^fgcolor (-1),^festival (63),^
-< dbot> enqueue (79),^emot (48),^exec (17810),^fgc (-1),^forkfortune (356),^fnsc (-1),^fnsasmx86 (69),^fork
+< dbot> enqueue (79),^emot (48),^exec (17810),^fgc (-1),^forkfortune (356),^fnsc (-1),^fnsintel (69),^fork
 < dbot> (34),^geoip (55),^fortune (356),^help (163),^guile (1407),^index (235),^hun (66),^html (138),^identi
 < dbot> fy (221),^md5 (201),^leet (184),^internals (33),^map (362),^memset (235),^me (34),^moby (613),^say (
 < dbot> 3690),^quote (695),^pcre (194),^p (72),^nop (2),^packmulti (113),^push (184),^pop (184),^pmme (29),^

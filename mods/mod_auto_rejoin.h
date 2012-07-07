@@ -28,21 +28,18 @@
 
 #include "bot.h"
 
-
 module_t mod_auto_rejoin_info;
 
-bot_t *mod_auto_rejoin_init (dlist_t *, bot_t *);
-bot_t *mod_auto_rejoin_fini (dlist_t *, bot_t *);
-bot_t *mod_auto_rejoin_help (dlist_t *, bot_t *);
-bot_t *mod_auto_rejoin_run (dlist_t *, bot_t *);
-bot_t *mod_auto_rejoin_output (dlist_t *, bot_t *);
-bot_t *mod_auto_rejoin_input (dlist_t *, bot_t *);
-
-
+bot_t *mod_auto_rejoin_init(dlist_t *, bot_t *);
+bot_t *mod_auto_rejoin_fini(dlist_t *, bot_t *);
+bot_t *mod_auto_rejoin_help(dlist_t *, bot_t *);
+bot_t *mod_auto_rejoin_run(dlist_t *, bot_t *);
+bot_t *mod_auto_rejoin_output(dlist_t *, bot_t *);
+bot_t *mod_auto_rejoin_input(dlist_t *, bot_t *);
 
 /* ^auto_rejoin(match) #jumping #bosshogs poopface <-- will only work for #jumping, #bosshogs, or poopface pm */
 char *mod_auto_rejoin_chan_match;
 
-void __auto_rejoin_init__ (void) __attribute__ ((constructor));
+void __auto_rejoin_init__(void) __attribute__ ((constructor));
 
 #endif

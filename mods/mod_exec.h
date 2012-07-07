@@ -30,24 +30,21 @@
 
 module_t mod_exec_info;
 
-bot_t *exec_init (dlist_t *, bot_t *);
-bot_t *exec_fini (dlist_t *, bot_t *);
-bot_t *exec_help (dlist_t *, bot_t *);
-bot_t *exec_run (dlist_t *, bot_t *);
+bot_t *exec_init(dlist_t *, bot_t *);
+bot_t *exec_fini(dlist_t *, bot_t *);
+bot_t *exec_help(dlist_t *, bot_t *);
+bot_t *exec_run(dlist_t *, bot_t *);
 
+char *exec_change_string(dlist_t *, bot_t *, char *, int);
 
-char *exec_change_string (dlist_t *, bot_t *, char *, int);
+void __exec_init__(void) __attribute__ ((constructor));
 
-void __exec_init__ (void) __attribute__ ((constructor));
-
-
-enum mod_exec_types
-{
-  EXEC_OPT_NORMAL = 1,
-  EXEC_OPT_FORK,
+enum mod_exec_types {
+	EXEC_OPT_NORMAL = 1,
+	EXEC_OPT_FORK,
 };
 
-char *exec_op_normal (dlist_t *, bot_t *, char *);
-char *exec_op_fork (dlist_t *, bot_t *, char *);
+char *exec_op_normal(dlist_t *, bot_t *, char *);
+char *exec_op_fork(dlist_t *, bot_t *, char *);
 
 #endif

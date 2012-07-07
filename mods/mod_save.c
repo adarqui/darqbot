@@ -25,167 +25,141 @@
  */
 #include "mod_save.h"
 
-void
-__save_init__ (void)
+void __save_init__(void)
 {
 
-  strlcpy_buf (mod_save_info.name, "mod_save");
-  strlcpy_buf (mod_save_info.trigger, "^save");
+	strlcpy_buf(mod_save_info.name, "mod_save");
+	strlcpy_buf(mod_save_info.trigger, "^save");
 
-  mod_save_info.init = save_init;
-  mod_save_info.fini = save_fini;
-  mod_save_info.help = save_help;
-  mod_save_info.run = save_run;
+	mod_save_info.init = save_init;
+	mod_save_info.fini = save_fini;
+	mod_save_info.help = save_help;
+	mod_save_info.run = save_run;
 
+	mod_save_info.output = NULL;
+	mod_save_info.input = NULL;
 
-  mod_save_info.output = NULL;
-  mod_save_info.input = NULL;
+	debug(NULL, "__save_init__: Loaded mod_save\n");
 
-
-  debug (NULL, "__save_init__: Loaded mod_save\n");
-
-  return;
+	return;
 }
 
-
-
-bot_t *
-save_init (dlist_t * dlist_node, bot_t * bot)
+bot_t *save_init(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "save_init: Entered\n");
-  return NULL;
-}
-
-bot_t *
-save_fini (dlist_t * dlist_node, bot_t * bot)
-{
-  debug (bot, "save_fini: Entered\n");
-  return NULL;
-}
-
-bot_t *
-save_help (dlist_t * dlist_node, bot_t * bot)
-{
-  debug (bot, "save_help: Entered\n");
-
-
-  if (!bot)
-    return NULL;
-
-  bot->dl_module_help = "^save";
-
-  return NULL;
-}
-
-bot_t *
-save_run (dlist_t * dlist_node, bot_t * bot)
-{
-  char *dl_module_arg_after_options, *dl_options_ptr, *new_str, *opt_str =
-    NULL;
-  int opt;
-
-  debug (bot, "save_run: Entered\n");
-
-  if (!dlist_node || !bot)
-    return NULL;
-
-  stat_inc (bot, bot->trig_called);
-
-  debug (bot,
-	 "save_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
-
-
-  if (bot_shouldreturn (bot))
-    return NULL;
-
-  opt = 0;
-  new_str = NULL;
-  opt_str = NULL;
-
-
-  MOD_OPTIONS_TOP_HALF;
-  opt_str = dl_options_ptr;
-  MOD_OPTIONS_BOTTOM_HALF;
-
-  if (!opt_str)
-    return NULL;
-
-  new_str = save_change_string (bot, opt_str);
-  if (new_str)
-    {
-      strlcat_bot (bot->txt_data_out, new_str);
-      free (new_str);
-      new_str = NULL;
-    }
-
-
-  return bot;
-}
-
-
-
-char *
-save_change_string (bot_t * bot, char *opt_str)
-{
-  bot_t *bot_new;
-  char *str = NULL;
-  char buf[MAX_BUF_SZ];
-
-  debug (bot, "save_change_string: %s\n", opt_str);
-
-  if (!bot)
-    return NULL;
-
-  if (opt_str)
-    {
-      bot_new = bot_find_tag (opt_str);
-      if (!bot_new)
+	debug(bot, "save_init: Entered\n");
 	return NULL;
-      bot = bot_new;
-    }
-
-  memset (buf, 0, sizeof (buf));
-
-  strlcatfmt_bot (buf, "%s saved.", bot->tag);
-  save_bot (bot);
-
-  if (sNULL (buf) != NULL)
-    str = strdup (buf);
-
-  return str;
 }
 
-
-
-
-
-void
-save_bot (bot_t * bot)
+bot_t *save_fini(dlist_t * dlist_node, bot_t * bot)
 {
-  dlist_t *dptr;
-  FILE *fp = stdout;
-  server_t *server = NULL;
-  nick_t *nick = NULL;
-  channel_t *channel = NULL;
-  char *str;
+	debug(bot, "save_fini: Entered\n");
+	return NULL;
+}
 
-  if (!bot)
-    return;
+bot_t *save_help(dlist_t * dlist_node, bot_t * bot)
+{
+	debug(bot, "save_help: Entered\n");
 
+	if (!bot)
+		return NULL;
+
+	bot->dl_module_help = "^save";
+
+	return NULL;
+}
+
+bot_t *save_run(dlist_t * dlist_node, bot_t * bot)
+{
+	char *dl_module_arg_after_options, *dl_options_ptr, *new_str, *opt_str =
+	    NULL;
+	int opt;
+
+	debug(bot, "save_run: Entered\n");
+
+	if (!dlist_node || !bot)
+		return NULL;
+
+	stat_inc(bot, bot->trig_called);
+
+	debug(bot,
+	      "save_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+
+	if (bot_shouldreturn(bot))
+		return NULL;
+
+	opt = 0;
+	new_str = NULL;
+	opt_str = NULL;
+
+	MOD_OPTIONS_TOP_HALF;
+	opt_str = dl_options_ptr;
+	MOD_OPTIONS_BOTTOM_HALF;
+
+	if (!opt_str)
+		return NULL;
+
+	new_str = save_change_string(bot, opt_str);
+	if (new_str) {
+		strlcat_bot(bot->txt_data_out, new_str);
+		free(new_str);
+		new_str = NULL;
+	}
+
+	return bot;
+}
+
+char *save_change_string(bot_t * bot, char *opt_str)
+{
+	bot_t *bot_new;
+	char *str = NULL;
+	char buf[MAX_BUF_SZ];
+
+	debug(bot, "save_change_string: %s\n", opt_str);
+
+	if (!bot)
+		return NULL;
+
+	if (opt_str) {
+		bot_new = bot_find_tag(opt_str);
+		if (!bot_new)
+			return NULL;
+		bot = bot_new;
+	}
+
+	memset(buf, 0, sizeof(buf));
+
+	strlcatfmt_bot(buf, "%s saved.", bot->tag);
+	save_bot(bot);
+
+	if (sNULL(buf) != NULL)
+		str = strdup(buf);
+
+	return str;
+}
+
+void save_bot(bot_t * bot)
+{
+	dlist_t *dptr;
+	FILE *fp = stdout;
+	server_t *server = NULL;
+	nick_t *nick = NULL;
+	channel_t *channel = NULL;
+	char *str;
+
+	if (!bot)
+		return;
 
 /* fp = fopen .. */
-  fp = fopen (bot->conffile, "w");
-  if (!fp)
-    {
-      str =
-	str_unite_static ("%s/tmp/%s.conf.%i", bot->confdir, bot->tag,
-			  getpid ());
-      fp = fopen (str, "w");
-      if (!fp)
-	fp = stdout;
-    }
-
+	fp = fopen(bot->conffile, "w");
+	if (!fp) {
+		str =
+		    str_unite_static("%s/tmp/%s.conf.%i", bot->confdir,
+				     bot->tag, getpid());
+		fp = fopen(str, "w");
+		if (!fp)
+			fp = stdout;
+	}
 
 /* XXX 
   fprintf (fp, "# ^save generated conf\n");
@@ -199,7 +173,6 @@ save_bot (bot_t * bot)
 
   if (bot->logfile)
     fprintf (fp, "+logfile %s\n", bot->logfile);
-
 
   if (bot->dl_server)
     {
@@ -228,7 +201,6 @@ save_bot (bot_t * bot)
     }
 
   fprintf (fp, "+%s\n", bot->mute ? "mute" : "unmute");
-
 
   if (bot->dl_channel)
     {
@@ -272,5 +244,5 @@ save_bot (bot_t * bot)
 
 */
 
-  return;
+	return;
 }

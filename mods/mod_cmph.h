@@ -29,38 +29,35 @@
 #include "bot.h"
 #include <cmph.h>
 
-enum mod_cmph_stuff
-{
-  MOD_CMPH_BUILD = 1,
-  MOD_CMPH_CLEAR,
-  MOD_CMPH_FIND,
-  MOD_CMPH_SIZE,
-  MOD_CMPH_LIST,
+enum mod_cmph_stuff {
+	MOD_CMPH_BUILD = 1,
+	MOD_CMPH_CLEAR,
+	MOD_CMPH_FIND,
+	MOD_CMPH_SIZE,
+	MOD_CMPH_LIST,
 };
 
 dlist_t *dl_mod_cmph_unique;
 
 module_t mod_cmph_info;
 
-bot_t *cmph_init (dlist_t *, bot_t *);
-bot_t *cmph_fini (dlist_t *, bot_t *);
-bot_t *cmph_help (dlist_t *, bot_t *);
-bot_t *cmph_run (dlist_t *, bot_t *);
+bot_t *cmph_init(dlist_t *, bot_t *);
+bot_t *cmph_fini(dlist_t *, bot_t *);
+bot_t *cmph_help(dlist_t *, bot_t *);
+bot_t *cmph_run(dlist_t *, bot_t *);
 
-char *cmph_change_string (bot_t *, char *, int);
+char *cmph_change_string(bot_t *, char *, int);
 
-void __cmph_init__ (void) __attribute__ ((constructor));
+void __cmph_init__(void) __attribute__ ((constructor));
 
-
-typedef struct __brz_data
-{
-  CMPH_ALGO algo;		// CMPH algo for generating the MPHFs for the buckets (Just CMPH_FCH and CMPH_BMZ8)
-  cmph_uint32 m;		// edges (words) count
-  double c;			// constant c
-  cmph_uint8 *size;		// size[i] stores the number of edges represented by g[i][...].
-  cmph_uint32 *offset;		// offset[i] stores the sum: size[0] + size[1] + ... size[i-1].
-  cmph_uint8 **g;		// g function.
-  cmph_uint32 k;		// number of components
+typedef struct __brz_data {
+	CMPH_ALGO algo;		// CMPH algo for generating the MPHFs for the buckets (Just CMPH_FCH and CMPH_BMZ8)
+	cmph_uint32 m;		// edges (words) count
+	double c;		// constant c
+	cmph_uint8 *size;	// size[i] stores the number of edges represented by g[i][...].
+	cmph_uint32 *offset;	// offset[i] stores the sum: size[0] + size[1] + ... size[i-1].
+	cmph_uint8 **g;		// g function.
+	cmph_uint32 k;		// number of components
 /*
         hash_state_t **h1;
         hash_state_t **h2;
@@ -68,19 +65,17 @@ typedef struct __brz_data
 */
 } __brz_data_t;
 
-
-typedef struct cmph_wrapper
-{
-  cmph_t *hash;
-  cmph_io_adapter_t *source;
-  cmph_config_t *config;
-  FILE *fp;
+typedef struct cmph_wrapper {
+	cmph_t *hash;
+	cmph_io_adapter_t *source;
+	cmph_config_t *config;
+	FILE *fp;
 } cmphx_t;
 
-char *cmph_op_build (bot_t *, cmphx_t **, char *);
-char *cmph_op_clear (bot_t *, cmphx_t **, char *);
-char *cmph_op_find (bot_t *, cmphx_t **, char *);
-char *cmph_op_size (bot_t *, cmphx_t **, char *);
-char *cmph_op_list (bot_t *, cmphx_t **, char *);
+char *cmph_op_build(bot_t *, cmphx_t **, char *);
+char *cmph_op_clear(bot_t *, cmphx_t **, char *);
+char *cmph_op_find(bot_t *, cmphx_t **, char *);
+char *cmph_op_size(bot_t *, cmphx_t **, char *);
+char *cmph_op_list(bot_t *, cmphx_t **, char *);
 
 #endif

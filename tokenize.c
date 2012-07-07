@@ -21,451 +21,355 @@
 */
 #include "bot.h"
 
-dlist_t *
-tokenize (bot_t * bot, char *string, int opt, char *sep)
+dlist_t *tokenize(bot_t * bot, char *string, int opt, char *sep)
 {
-  dlist_t *dl = NULL, *dptr = NULL;
-  char *str_a = NULL, *str_b = NULL;
-  int str_len, need_break = 0;
-  char *sep_orig;
-  char buf[MAX_BUF_SZ + 1], *buf_dup = NULL;
+	dlist_t *dl = NULL, *dptr = NULL;
+	char *str_a = NULL, *str_b = NULL;
+	int str_len, need_break = 0;
+	char *sep_orig;
+	char buf[MAX_BUF_SZ + 1], *buf_dup = NULL;
 
-  int sep_len, sep_prefix_len;
+	int sep_len, sep_prefix_len;
 
-  if (!sNULL (string) || !opt || !sNULL (sep))
-    return NULL;
+	if (!sNULL(string) || !opt || !sNULL(sep))
+		return NULL;
 
-  sep_len = strlen (sep);
+	sep_len = strlen(sep);
 
-  debug (bot, "tokenize: Entered, [\n[%s]\n]\n", string);
+	debug(bot, "tokenize: Entered, [\n[%s]\n]\n", string);
 
-  str_len = fn_strlen (string);
-  sep_orig = sep;
+	str_len = fn_strlen(string);
+	sep_orig = sep;
 
-  if (opt & TOKENIZE_EATWHITESPACE)
-    str_a = eat_whitespace (string);
-  else
-    str_a = string;
+	if (opt & TOKENIZE_EATWHITESPACE)
+		str_a = eat_whitespace(string);
+	else
+		str_a = string;
 
-  str_b = str_a;
-  while (1)
-    {
-      sep_prefix_len = 0;
-      sep = sep_orig;
-      bz (buf);
+	str_b = str_a;
+	while (1) {
+		sep_prefix_len = 0;
+		sep = sep_orig;
+		bz(buf);
 
-      if (opt & TOKENIZE_EATWHITESPACE)
-	str_a = eat_whitespace (str_a);
+		if (opt & TOKENIZE_EATWHITESPACE)
+			str_a = eat_whitespace(str_a);
 
-      if (!sNULL (str_a))
-	break;
+		if (!sNULL(str_a))
+			break;
 
-
-      if (!(opt & TOKENIZE_LEAVEQUOTES))
-	{
-	  if (*str_a == '\"')
-	    {
-	      sep = "\"";
-	      sep_prefix_len = 1;
-	    }
-	}
-
-      if (opt & TOKENIZE_IGNORECASE)
-	{
-	  str_b =
-	    strcasestr (sep != sep_orig ? str_a + sep_prefix_len : str_a,
-			sep);
-	}
-      else if (opt & TOKENIZE_MATCHANY)
-	{
-	  str_b =
-	    strchr_str (sep != sep_orig ? str_a + sep_prefix_len : str_a, sep,
-			&sep_len);
-	}
-      else
-	{
-	  str_b =
-	    strstr (sep != sep_orig ? str_a + sep_prefix_len : str_a, sep);
-	}
-
-      if (!str_b)
-	{
-	  str_b = string + fn_strlen (string);
-	  need_break = 1;
-	}
-
-      if (opt & TOKENIZE_NORMAL)
-	{
-
-
-	  if (sep != sep_orig)
-	    str_b++;
-
-	  memcopy (buf, str_a, sizeof (buf) - 1,
-		   (opt & TOKENIZE_LEAVESEP) ? ((str_b + sep_len) -
-						str_a) : (str_b - str_a));
-
-
-	  if (fn_strlen (buf) > 0)
-	    {
-	      buf_dup = strdup (buf);
-	      if (buf_dup)
-		{
-		  dlist_Dinsert_after (&dl, buf_dup);
+		if (!(opt & TOKENIZE_LEAVEQUOTES)) {
+			if (*str_a == '\"') {
+				sep = "\"";
+				sep_prefix_len = 1;
+			}
 		}
-	    }
 
-	  str_b += sep_len;
+		if (opt & TOKENIZE_IGNORECASE) {
+			str_b =
+			    strcasestr(sep !=
+				       sep_orig ? str_a +
+				       sep_prefix_len : str_a, sep);
+		} else if (opt & TOKENIZE_MATCHANY) {
+			str_b =
+			    strchr_str(sep !=
+				       sep_orig ? str_a +
+				       sep_prefix_len : str_a, sep, &sep_len);
+		} else {
+			str_b =
+			    strstr(sep !=
+				   sep_orig ? str_a + sep_prefix_len : str_a,
+				   sep);
+		}
+
+		if (!str_b) {
+			str_b = string + fn_strlen(string);
+			need_break = 1;
+		}
+
+		if (opt & TOKENIZE_NORMAL) {
+
+			if (sep != sep_orig)
+				str_b++;
+
+			memcopy(buf, str_a, sizeof(buf) - 1,
+				(opt & TOKENIZE_LEAVESEP) ? ((str_b + sep_len) -
+							     str_a) : (str_b -
+								       str_a));
+
+			if (fn_strlen(buf) > 0) {
+				buf_dup = strdup(buf);
+				if (buf_dup) {
+					dlist_Dinsert_after(&dl, buf_dup);
+				}
+			}
+
+			str_b += sep_len;
+
+		}
+
+		str_a = str_b;
+
+		if (need_break)
+			break;
+	}
+
+	dlist_fornext(dl, dptr) {
+		str_a = (char *)dlist_data(dptr);
+
+		if (!(opt & TOKENIZE_LEAVEQUOTES)) {
+			str_shrink_quotes(str_a);
+		}
 
 	}
 
-      str_a = str_b;
-
-      if (need_break)
-	break;
-    }
-
-  dlist_fornext (dl, dptr)
-  {
-    str_a = (char *) dlist_data (dptr);
-
-    if (!(opt & TOKENIZE_LEAVEQUOTES))
-      {
-	str_shrink_quotes (str_a);
-      }
-
-  }
-
-  return dl;
+	return dl;
 }
 
-
-
-
-void
-tokenize_destroy (bot_t * bot, dlist_t ** dl)
+void tokenize_destroy(bot_t * bot, dlist_t ** dl)
 {
 
+	if (!dl)
+		return;
 
-  if (!dl)
-    return;
+	dlist_fini(dl, free);
 
-  dlist_fini (dl, free);
-
-  return;
+	return;
 }
 
-
-
-
-
-char **
-tokenize_array (bot_t * bot, char *string, int opt, char *sep, int *expecting)
+char **tokenize_array(bot_t * bot, char *string, int opt, char *sep,
+		      int *expecting)
 {
-  dlist_t *dl, *dptr;
-  char **array, *str_ptr;
-  int array_size, i;
+	dlist_t *dl, *dptr;
+	char **array, *str_ptr;
+	int array_size, i;
 
+	array = NULL;
+	array_size = 0;
 
-  array = NULL;
-  array_size = 0;
+	if (!sNULL(string) || !sNULL(sep) || !expecting)
+		return NULL;
 
-  if (!sNULL (string) || !sNULL (sep) || !expecting)
-    return NULL;
+	dl = tokenize(bot, string, opt, sep);
+	if (!dl)
+		return NULL;
 
-  dl = tokenize (bot, string, opt, sep);
-  if (!dl)
-    return NULL;
+	array_size = dlist_size(dl);
+	if (*expecting > 0) {
+		array_size = *expecting;
+	} else
+		*expecting = array_size;
 
-  array_size = dlist_size (dl);
-  if (*expecting > 0)
-    {
-      array_size = *expecting;
-    }
-  else
-    *expecting = array_size;
+	array = (char **)calloc(array_size + 1, sizeof(char *));
+	if (!array)
+		goto cleanup;
 
-  array = (char **) calloc (array_size + 1, sizeof (char *));
-  if (!array)
-    goto cleanup;
-
-
-  i = 0;
-  dlist_fornext (dl, dptr)
-  {
-    str_ptr = (char *) dlist_data (dptr);
-    if (!str_ptr)
-      continue;
-    if (i > array_size)
-      break;
-    array[i] = strdup (str_ptr);
-    i++;
-  }
-
-cleanup:
-  if (dl)
-
-    tokenize_destroy (bot, &dl);
-
-  return array;
-}
-
-
-
-
-void
-tokenize_destroy_array (bot_t * bot, char **array)
-{
-  int i;
-
-  if (!array)
-    return;
-
-  for (i = 0; array[i] != NULL; i++)
-    {
-      if (array[i])
-	free (array[i]);
-    }
-
-  free (array);
-
-  return;
-}
-
-
-
-
-
-
-char *
-tokenize_find_closing_bracket (char *str, int c)
-{
-  int p_cnt, p_cnt_tog;
-  int c_open, c_close;
-
-  if (!str)
-    return NULL;
-
-
-  if (c == '(' || c == ')')
-    {
-      c_open = '(';
-      c_close = ')';
-    }
-  else if (c == '{' || c == '}')
-    {
-      c_open = '{';
-      c_close = '}';
-    }
-  else if (c == '[' || c == ']')
-    {
-      c_open = '[';
-      c_close = ']';
-    }
-  else
-    return NULL;
-
-  p_cnt = p_cnt_tog = 0;
-  while (*str)
-    {
-      if (*str == c_open)
-	{
-	  p_cnt++;
-	  p_cnt_tog++;
+	i = 0;
+	dlist_fornext(dl, dptr) {
+		str_ptr = (char *)dlist_data(dptr);
+		if (!str_ptr)
+			continue;
+		if (i > array_size)
+			break;
+		array[i] = strdup(str_ptr);
+		i++;
 	}
-      else if (*str == c_close)
-	p_cnt--;
 
-      if (p_cnt < 0)
+ cleanup:
+	if (dl)
+
+		tokenize_destroy(bot, &dl);
+
+	return array;
+}
+
+void tokenize_destroy_array(bot_t * bot, char **array)
+{
+	int i;
+
+	if (!array)
+		return;
+
+	for (i = 0; array[i] != NULL; i++) {
+		if (array[i])
+			free(array[i]);
+	}
+
+	free(array);
+
+	return;
+}
+
+char *tokenize_find_closing_bracket(char *str, int c)
+{
+	int p_cnt, p_cnt_tog;
+	int c_open, c_close;
+
+	if (!str)
+		return NULL;
+
+	if (c == '(' || c == ')') {
+		c_open = '(';
+		c_close = ')';
+	} else if (c == '{' || c == '}') {
+		c_open = '{';
+		c_close = '}';
+	} else if (c == '[' || c == ']') {
+		c_open = '[';
+		c_close = ']';
+	} else
+		return NULL;
+
+	p_cnt = p_cnt_tog = 0;
+	while (*str) {
+		if (*str == c_open) {
+			p_cnt++;
+			p_cnt_tog++;
+		} else if (*str == c_close)
+			p_cnt--;
+
+		if (p_cnt < 0)
+			return NULL;
+
+		if (p_cnt == 0 && p_cnt_tog)
+			return str;
+
+		str++;
+	}
+
 	return NULL;
-
-      if (p_cnt == 0 && p_cnt_tog)
-	return str;
-
-      str++;
-    }
-
-  return NULL;
 }
 
-
-
-
-
-
-char *
-tokenize_find_inside_of_brackets (char *str, int c)
+char *tokenize_find_inside_of_brackets(char *str, int c)
 {
-  int p_cnt, p_cnt_tog;
-  int c_open, c_close;
+	int p_cnt, p_cnt_tog;
+	int c_open, c_close;
 
-  char *str_begin = NULL;
+	char *str_begin = NULL;
 
-  if (!str)
-    return NULL;
+	if (!str)
+		return NULL;
 
-
-  if (c == '(' || c == ')')
-    {
-      c_open = '(';
-      c_close = ')';
-    }
-  else if (c == '{' || c == '}')
-    {
-      c_open = '{';
-      c_close = '}';
-    }
-  else if (c == '[' || c == ']')
-    {
-      c_open = '[';
-      c_close = ']';
-    }
-  else if (c == '\"')
-    {
-      c_open = '\"';
-      c_close = '\"';
-    }
-
-  else
-    return NULL;
-
-  p_cnt = p_cnt_tog = 0;
-  while (*str)
-    {
-      if (*str == c_open)
-	{
-	  p_cnt++;
-	  p_cnt_tog++;
-	  str_begin = str;
+	if (c == '(' || c == ')') {
+		c_open = '(';
+		c_close = ')';
+	} else if (c == '{' || c == '}') {
+		c_open = '{';
+		c_close = '}';
+	} else if (c == '[' || c == ']') {
+		c_open = '[';
+		c_close = ']';
+	} else if (c == '\"') {
+		c_open = '\"';
+		c_close = '\"';
 	}
-      else if (*str == c_close)
-	p_cnt--;
 
-      if (p_cnt < 0)
+	else
+		return NULL;
+
+	p_cnt = p_cnt_tog = 0;
+	while (*str) {
+		if (*str == c_open) {
+			p_cnt++;
+			p_cnt_tog++;
+			str_begin = str;
+		} else if (*str == c_close)
+			p_cnt--;
+
+		if (p_cnt < 0)
+			return NULL;
+
+		if (p_cnt == 0 && p_cnt_tog) {
+			return strdup_len(str_begin, str - str_begin);
+		}
+
+		str++;
+	}
+
 	return NULL;
-
-      if (p_cnt == 0 && p_cnt_tog)
-	{
-	  return strdup_len (str_begin, str - str_begin);
-	}
-
-
-      str++;
-    }
-
-  return NULL;
 }
 
-
-
-
-
-
-
-
-
-char **
-tokenize_str2argv (char *string, int *argc, int opt)
+char **tokenize_str2argv(char *string, int *argc, int opt)
 {
-  dlist_t *dl = NULL;
-  char **argv = NULL;
+	dlist_t *dl = NULL;
+	char **argv = NULL;
 
-  debug (NULL, "tokenize_str2argv: Entered\n");
+	debug(NULL, "tokenize_str2argv: Entered\n");
 
-  if (!string || !argc)
-    return NULL;
+	if (!string || !argc)
+		return NULL;
 
 /*
 *argc = 0;
 
 argv = (char **) tokenize_array(NULL, string, TOKENIZE_NORMAL, " ", argc);
 */
-  dl = tokenize (NULL, string, TOKENIZE_NORMAL, " ");
-  if (!dl)
-    goto cleanup;
+	dl = tokenize(NULL, string, TOKENIZE_NORMAL, " ");
+	if (!dl)
+		goto cleanup;
 
-  if (opt & TOKENIZE_STR2ARGV_ARGV0)
-    {
-      dlist_Dinsert_before (&dl, strdup ("argv0"));
-    }
-
-  argv = (char **) dlist_convert_dlist_to_array_new (dl);
-  if (!argv)
-    goto cleanup;
-
-  *argc = dlist_size (dl);
-
-cleanup:
-  if (dl)
-    tokenize_destroy (NULL, &dl);
-
-  return argv;
-}
-
-
-
-
-
-
-
-void
-tokenize_sort_strings (char **keys, int *nkeys, int how)
-{
-  int i = 0, j = 0, o = 0;
-
-
-  if (!keys || !nkeys)
-    return;
-
-  if (*nkeys <= 0)
-    return;
-
-  if (how & TOKENIZE_SORT_STRINGS_FORWARD)
-    {
-      qsort (&keys[0], *nkeys, sizeof (char *), qsort_compare_forward);
-    }
-  else if (how & TOKENIZE_SORT_STRINGS_BACKWARD)
-    {
-      qsort (&keys[0], *nkeys, sizeof (char *), qsort_compare_backward);
-    }
-  else if (how & TOKENIZE_SORT_STRINGS_RANDWARD)
-    {
-      qsort (&keys[0], *nkeys, sizeof (char *), qsort_compare_randward);
-    }
-
-  if (how & TOKENIZE_SORT_STRINGS_UNIQ)
-    {
-      o = 0;
-      for (i = 0; keys[i] != NULL;)
-	{
-	  keys[o] = keys[i];
-
-	  o++;
-
-	  for (j = i + 1; keys[j] != NULL; j++)
-	    {
-	      if (!sort_compare_forward (keys[i], keys[j]))
-		{
-		  free (keys[j]);
-		  keys[j] = NULL;
-		}
-	      else
-		break;
-
-	      if (keys[j + 1] == NULL)
-		{
-		  j = j + 1;
-		  break;
-		}
-	    }
-	  i = j;
+	if (opt & TOKENIZE_STR2ARGV_ARGV0) {
+		dlist_Dinsert_before(&dl, strdup("argv0"));
 	}
 
-      for (i = o; i < j; i++)
-	keys[i] = NULL;
+	argv = (char **)dlist_convert_dlist_to_array_new(dl);
+	if (!argv)
+		goto cleanup;
 
-      *nkeys = o;
-    }
+	*argc = dlist_size(dl);
 
-  return;
+ cleanup:
+	if (dl)
+		tokenize_destroy(NULL, &dl);
+
+	return argv;
+}
+
+void tokenize_sort_strings(char **keys, int *nkeys, int how)
+{
+	int i = 0, j = 0, o = 0;
+
+	if (!keys || !nkeys)
+		return;
+
+	if (*nkeys <= 0)
+		return;
+
+	if (how & TOKENIZE_SORT_STRINGS_FORWARD) {
+		qsort(&keys[0], *nkeys, sizeof(char *), qsort_compare_forward);
+	} else if (how & TOKENIZE_SORT_STRINGS_BACKWARD) {
+		qsort(&keys[0], *nkeys, sizeof(char *), qsort_compare_backward);
+	} else if (how & TOKENIZE_SORT_STRINGS_RANDWARD) {
+		qsort(&keys[0], *nkeys, sizeof(char *), qsort_compare_randward);
+	}
+
+	if (how & TOKENIZE_SORT_STRINGS_UNIQ) {
+		o = 0;
+		for (i = 0; keys[i] != NULL;) {
+			keys[o] = keys[i];
+
+			o++;
+
+			for (j = i + 1; keys[j] != NULL; j++) {
+				if (!sort_compare_forward(keys[i], keys[j])) {
+					free(keys[j]);
+					keys[j] = NULL;
+				} else
+					break;
+
+				if (keys[j + 1] == NULL) {
+					j = j + 1;
+					break;
+				}
+			}
+			i = j;
+		}
+
+		for (i = o; i < j; i++)
+			keys[i] = NULL;
+
+		*nkeys = o;
+	}
+
+	return;
 }

@@ -28,14 +28,13 @@
 
 #include "bot.h"
 
-
 module_t mod_pmme_info;
 
-bot_t *pmme_init (dlist_t *, bot_t *);
-bot_t *pmme_fini (dlist_t *, bot_t *);
-bot_t *pmme_help (dlist_t *, bot_t *);
-bot_t *pmme_run (dlist_t *, bot_t *);
+bot_t *pmme_init(dlist_t *, bot_t *);
+bot_t *pmme_fini(dlist_t *, bot_t *);
+bot_t *pmme_help(dlist_t *, bot_t *);
+bot_t *pmme_run(dlist_t *, bot_t *);
 
-void __pmme_init__ (void) __attribute__ ((constructor));
+void __pmme_init__(void) __attribute__ ((constructor));
 
 #endif

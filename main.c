@@ -21,17 +21,15 @@
 */
 #include "bot.h"
 
-
-int
-main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 
 /* fn pointers */
-  gi = &global_info;
+	gi = &global_info;
 
-  fns_load_defaults ();
+	fns_load_defaults();
 
-  debug_trace_init_mandatory ();
+	debug_trace_init_mandatory();
 /* XXX
   debug_trace_init ();
 */
@@ -41,54 +39,49 @@ main (int argc, char *argv[])
   bot_alloc_verbose_on ();
 */
 
-  srand (getpid ());
-  SSL_library_init ();
-  SSL_load_error_strings ();
+	srand(getpid());
+	SSL_library_init();
+	SSL_load_error_strings();
 //  OpenSSL_add_all_algorithms ();
 
-  setlocale (LC_ALL, "");
+	setlocale(LC_ALL, "");
 
-  global_signal_hooks ();
+	global_signal_hooks();
 
-  global_defaults ();
+	global_defaults();
 
+	global_getopt(argc, argv);
 
-  global_getopt (argc, argv);
+	global_set_proc_ptrs(&argc, argv, environ);
 
-  global_set_proc_ptrs (&argc, argv, environ);
+	global_conf_parse();
 
-  global_conf_parse ();
+	if (global_chroot() < 0) {
+		debug_err(NULL, "main: bot_chroot: Failed\n");
+	}
 
-  if (global_chroot () < 0)
-    {
-      debug_err (NULL, "main: bot_chroot: Failed\n");
-    }
-
-
-  global_on ();
+	global_on();
 
 /*
   event_dispatch ();
 */
-  setjmp (gi->sigprotect_buf);
-  sigsetjmp (gi->sigprotect_sigbuf, 1);
+	setjmp(gi->sigprotect_buf);
+	sigsetjmp(gi->sigprotect_sigbuf, 1);
 
-  while (1)
-    {
+	while (1) {
 
 /*trying to fix gmod_grelinkd reload */
 /*
 global_gcmd();
 */
 
-      gi->bot_current = NULL;
-      pmodule_cur_clear ();
-      event_loop (EVLOOP_ONCE);
+		gi->bot_current = NULL;
+		pmodule_cur_clear();
+		event_loop(EVLOOP_ONCE);
 
-      timer_shouldwerun ();
+		timer_shouldwerun();
 
-    }
+	}
 
-
-  return 0;
+	return 0;
 }

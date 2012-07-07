@@ -30,20 +30,17 @@
 #include <GeoIP.h>
 #include <GeoIPCity.h>
 
-
 module_t mod_geoip_info;
 
-bot_t *geoip_init (dlist_t *, bot_t *);
-bot_t *geoip_fini (dlist_t *, bot_t *);
-bot_t *geoip_help (dlist_t *, bot_t *);
-bot_t *geoip_run (dlist_t *, bot_t *);
+bot_t *geoip_init(dlist_t *, bot_t *);
+bot_t *geoip_fini(dlist_t *, bot_t *);
+bot_t *geoip_help(dlist_t *, bot_t *);
+bot_t *geoip_run(dlist_t *, bot_t *);
 
+static const char *_mk_NA(const char *);
 
-static const char *_mk_NA (const char *);
+char *geoip_change_string(char *, int);
 
-char *geoip_change_string (char *, int);
-
-
-void __geoip_init__ (void) __attribute__ ((constructor));
+void __geoip_init__(void) __attribute__ ((constructor));
 
 #endif

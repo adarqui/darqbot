@@ -28,46 +28,40 @@
 
 #include "bot.h"
 
-
-
 module_t mod_chan_info;
 
-bot_t *mod_chan_init (dlist_t *, bot_t *);
-bot_t *mod_chan_fini (dlist_t *, bot_t *);
-bot_t *mod_chan_help (dlist_t *, bot_t *);
-bot_t *mod_chan_run (dlist_t *, bot_t *);
-bot_t *mod_chan_output (dlist_t *, bot_t *);
-bot_t *mod_chan_input (dlist_t *, bot_t *);
+bot_t *mod_chan_init(dlist_t *, bot_t *);
+bot_t *mod_chan_fini(dlist_t *, bot_t *);
+bot_t *mod_chan_help(dlist_t *, bot_t *);
+bot_t *mod_chan_run(dlist_t *, bot_t *);
+bot_t *mod_chan_output(dlist_t *, bot_t *);
+bot_t *mod_chan_input(dlist_t *, bot_t *);
 
-char *chan_change_string (bot_t *, char *, int, char *);
-char *chan_list (bot_t *, char *);
-char *chan_users (bot_t *, char *);
-char *chan_topic (bot_t *, char *, char *);
-char *chan_join (bot_t *, char *);
-char *chan_part (bot_t *, char *);
-char *chan_mode (bot_t *, char *, char *);
-char *chan_quit (bot_t *, char *);
-char *chan_nick (bot_t *, char *);
+char *chan_change_string(bot_t *, char *, int, char *);
+char *chan_list(bot_t *, char *);
+char *chan_users(bot_t *, char *);
+char *chan_topic(bot_t *, char *, char *);
+char *chan_join(bot_t *, char *);
+char *chan_part(bot_t *, char *);
+char *chan_mode(bot_t *, char *, char *);
+char *chan_quit(bot_t *, char *);
+char *chan_nick(bot_t *, char *);
 
-enum
-{
-  MOD_CHAN_NONE = 0,
-  MOD_CHAN_LIST = 1,
-  MOD_CHAN_USERS,
-  MOD_CHAN_MODE,
-  MOD_CHAN_JOIN,
-  MOD_CHAN_PART,
-  MOD_CHAN_TOPIC,
-  MOD_CHAN_QUIT,
-  MOD_CHAN_NICK,
-}
- ;
-
+enum {
+	MOD_CHAN_NONE = 0,
+	MOD_CHAN_LIST = 1,
+	MOD_CHAN_USERS,
+	MOD_CHAN_MODE,
+	MOD_CHAN_JOIN,
+	MOD_CHAN_PART,
+	MOD_CHAN_TOPIC,
+	MOD_CHAN_QUIT,
+	MOD_CHAN_NICK,
+};
 
 /* ^chan(match) #jumping #bosshogs poopface <-- will only work for #jumping, #bosshogs, or poopface pm */
 char *mod_chan_chan_match;
 
-
-void __chan_init__ (void) __attribute__ ((constructor));
+void __chan_init__(void) __attribute__ ((constructor));
 
 #endif

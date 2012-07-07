@@ -25,78 +25,67 @@
  */
 #include "mod_whoami.h"
 
-void
-__whoami_init__ (void)
+void __whoami_init__(void)
 {
 
-  strlcpy_buf (mod_whoami_info.name, "mod_whoami");
-  strlcpy_buf (mod_whoami_info.trigger, "^whoami");
+	strlcpy_buf(mod_whoami_info.name, "mod_whoami");
+	strlcpy_buf(mod_whoami_info.trigger, "^whoami");
 
-  mod_whoami_info.init = whoami_init;
-  mod_whoami_info.fini = whoami_fini;
-  mod_whoami_info.help = whoami_help;
-  mod_whoami_info.run = whoami_run;
+	mod_whoami_info.init = whoami_init;
+	mod_whoami_info.fini = whoami_fini;
+	mod_whoami_info.help = whoami_help;
+	mod_whoami_info.run = whoami_run;
 
+	mod_whoami_info.output = NULL;
+	mod_whoami_info.input = NULL;
 
-  mod_whoami_info.output = NULL;
-  mod_whoami_info.input = NULL;
+	debug(NULL, "__whoami_init__: Loaded mod_whoami\n");
 
-
-  debug (NULL, "__whoami_init__: Loaded mod_whoami\n");
-
-  return;
+	return;
 }
 
-
-
-bot_t *
-whoami_init (dlist_t * dlist_node, bot_t * bot)
+bot_t *whoami_init(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "whoami_init: Entered\n");
-  return NULL;
+	debug(bot, "whoami_init: Entered\n");
+	return NULL;
 }
 
-bot_t *
-whoami_fini (dlist_t * dlist_node, bot_t * bot)
+bot_t *whoami_fini(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "whoami_fini: Entered\n");
-  return NULL;
+	debug(bot, "whoami_fini: Entered\n");
+	return NULL;
 }
 
-bot_t *
-whoami_help (dlist_t * dlist_node, bot_t * bot)
+bot_t *whoami_help(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "whoami_help: Entered\n");
+	debug(bot, "whoami_help: Entered\n");
 
+	if (!bot)
+		return NULL;
 
-  if (!bot)
-    return NULL;
+	bot->dl_module_help = "^whoami";
 
-  bot->dl_module_help = "^whoami";
-
-  return NULL;
+	return NULL;
 }
 
-bot_t *
-whoami_run (dlist_t * dlist_node, bot_t * bot)
+bot_t *whoami_run(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "whoami_run: Entered\n");
+	debug(bot, "whoami_run: Entered\n");
 
-  if (!dlist_node || !bot)
-    return NULL;
+	if (!dlist_node || !bot)
+		return NULL;
 
-  stat_inc (bot, bot->trig_called);
+	stat_inc(bot, bot->trig_called);
 
-  debug (bot,
-	 "whoami_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	debug(bot,
+	      "whoami_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
+	if (bot_shouldreturn(bot))
+		return NULL;
 
-  if (bot_shouldreturn (bot))
-    return NULL;
+	strlcat_bot(bot->txt_data_out, bot->txt_nick);
+	strlcat_bot(bot->txt_data_out, eat_whitespace(bot->dl_module_arg));
 
-  strlcat_bot (bot->txt_data_out, bot->txt_nick);
-  strlcat_bot (bot->txt_data_out, eat_whitespace (bot->dl_module_arg));
-
-  return bot;
+	return bot;
 }

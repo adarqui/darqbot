@@ -25,217 +25,183 @@
  */
 #include "mod_hun.h"
 
-void
-__hun_init__ (void)
+void __hun_init__(void)
 {
 
-  strlcpy_buf (mod_hun_info.name, "mod_hun");
-  strlcpy_buf (mod_hun_info.trigger, "^hun");
+	strlcpy_buf(mod_hun_info.name, "mod_hun");
+	strlcpy_buf(mod_hun_info.trigger, "^hun");
 
-  mod_hun_info.init = hun_init;
-  mod_hun_info.fini = hun_fini;
-  mod_hun_info.help = hun_help;
-  mod_hun_info.run = hun_run;
+	mod_hun_info.init = hun_init;
+	mod_hun_info.fini = hun_fini;
+	mod_hun_info.help = hun_help;
+	mod_hun_info.run = hun_run;
 
+	mod_hun_info.output = NULL;
+	mod_hun_info.input = NULL;
 
-  mod_hun_info.output = NULL;
-  mod_hun_info.input = NULL;
+	debug(NULL, "__hun_init__: Loaded mod_hun\n");
 
-
-  debug (NULL, "__hun_init__: Loaded mod_hun\n");
-
-  return;
+	return;
 }
 
-
-
-bot_t *
-hun_init (dlist_t * dlist_node, bot_t * bot)
+bot_t *hun_init(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "hun_init: Entered\n");
-  return NULL;
+	debug(bot, "hun_init: Entered\n");
+	return NULL;
 }
 
-bot_t *
-hun_fini (dlist_t * dlist_node, bot_t * bot)
+bot_t *hun_fini(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "hun_fini: Entered\n");
-  return NULL;
+	debug(bot, "hun_fini: Entered\n");
+	return NULL;
 }
 
-bot_t *
-hun_help (dlist_t * dlist_node, bot_t * bot)
+bot_t *hun_help(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "hun_help: Entered\n");
+	debug(bot, "hun_help: Entered\n");
 
+	if (!bot)
+		return NULL;
 
-  if (!bot)
-    return NULL;
+	bot->dl_module_help =
+	    "^hun || ^hun(en_US(english):en_CA(canadian):fr(french):ar(arabic)):de-DE(german):ro(romanian):vi(vietnamese)";
 
-  bot->dl_module_help =
-    "^hun || ^hun(en_US(english):en_CA(canadian):fr(french):ar(arabic)):de-DE(german):ro(romanian):vi(vietnamese)";
-
-  return NULL;
+	return NULL;
 }
 
-bot_t *
-hun_run (dlist_t * dlist_node, bot_t * bot)
+bot_t *hun_run(dlist_t * dlist_node, bot_t * bot)
 {
-  char *dl_module_arg_after_options, *dl_options_ptr;
-  int opt;
+	char *dl_module_arg_after_options, *dl_options_ptr;
+	int opt;
 
-  char *opt_2 = NULL;
+	char *opt_2 = NULL;
 
-  debug (bot, "hun_run: Entered\n");
+	debug(bot, "hun_run: Entered\n");
 
-  if (!dlist_node || !bot)
-    return NULL;
+	if (!dlist_node || !bot)
+		return NULL;
 
+	stat_inc(bot, bot->trig_called);
 
-  stat_inc (bot, bot->trig_called);
+	debug(bot,
+	      "hun_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-  debug (bot,
-	 "hun_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	if (bot_shouldreturn(bot))
+		return NULL;
 
+	opt = 0;
 
-  if (bot_shouldreturn (bot))
-    return NULL;
+	opt_2 = "en_US";
 
+	MOD_OPTIONS_TOP_HALF;
 
-  opt = 0;
+	opt_2 = strtok(dl_options_ptr + 1, ")");
+	if (!opt_2)
+		return NULL;
 
-  opt_2 = "en_US";
+	MOD_OPTIONS_BOTTOM_HALF;
 
-  MOD_OPTIONS_TOP_HALF;
+	MOD_PARSE_TOP_HALF;
+	l_new_str = hun_change_string(l_str_ptr, opt, opt_2);
+	MOD_PARSE_BOTTOM_HALF;
 
-  opt_2 = strtok (dl_options_ptr + 1, ")");
-  if (!opt_2)
-    return NULL;
-
-  MOD_OPTIONS_BOTTOM_HALF;
-
-  MOD_PARSE_TOP_HALF;
-  l_new_str = hun_change_string (l_str_ptr, opt, opt_2);
-  MOD_PARSE_BOTTOM_HALF;
-
-  return bot;
+	return bot;
 }
 
-
-
-char *
-hun_change_string (char *string, int opt, char *opt_2)
+char *hun_change_string(char *string, int opt, char *opt_2)
 {
 /* opt_2 = language file */
 
-  char *str = NULL;
-  char buf[MAX_BUF_SZ];
-  int i;
-  char *sep_ptr;
-  char *word;
+	char *str = NULL;
+	char buf[MAX_BUF_SZ];
+	int i;
+	char *sep_ptr;
+	char *word;
 
-  Hunhandle *hunh;
-  int hunh_res;
-  char **hunh_words;
-  char hunh_path_1[132], hunh_path_2[132];
+	Hunhandle *hunh;
+	int hunh_res;
+	char **hunh_words;
+	char hunh_path_1[132], hunh_path_2[132];
 
-  if (!string || !opt_2)
-    return NULL;
+	if (!string || !opt_2)
+		return NULL;
 
-  sep_ptr = str_find_sep (string);
-  if (sep_ptr)
-    string = sep_ptr;
+	sep_ptr = str_find_sep(string);
+	if (sep_ptr)
+		string = sep_ptr;
 
-  memset (buf, 0, sizeof (buf));
+	memset(buf, 0, sizeof(buf));
 
-  hun_clean_path (opt_2);
+	hun_clean_path(opt_2);
 
-  bz (hunh_path_1);
-  bz (hunh_path_2);
+	bz(hunh_path_1);
+	bz(hunh_path_2);
 
-  strlcpy_buf (hunh_path_1,
-	       str_unite_static ("%s/%s.aff", MOD_HUNH_DIR, opt_2));
-  if (!sNULL (hunh_path_1))
-    return NULL;
+	strlcpy_buf(hunh_path_1,
+		    str_unite_static("%s/%s.aff", MOD_HUNH_DIR, opt_2));
+	if (!sNULL(hunh_path_1))
+		return NULL;
 
-  strlcpy_buf (hunh_path_2,
-	       str_unite_static ("%s/%s.dic", MOD_HUNH_DIR, opt_2));
-  if (!sNULL (hunh_path_2))
-    return NULL;
+	strlcpy_buf(hunh_path_2,
+		    str_unite_static("%s/%s.dic", MOD_HUNH_DIR, opt_2));
+	if (!sNULL(hunh_path_2))
+		return NULL;
 
-  hunh = Hunspell_create (hunh_path_1, hunh_path_2);
-  if (!hunh)
-    return NULL;
+	hunh = Hunspell_create(hunh_path_1, hunh_path_2);
+	if (!hunh)
+		return NULL;
 
-  word = string;
-  while (1)
-    {
-      word = strtok (word, " ");
-      if (!word)
-	break;
+	word = string;
+	while (1) {
+		word = strtok(word, " ");
+		if (!word)
+			break;
 
+		hunh_res = Hunspell_spell(hunh, word);
+		if (hunh_res == 1) {
+			strlcat_bot(buf, word);
+			charcat_bot(buf, ' ');
+		} else {
+			hunh_res = Hunspell_suggest(hunh, &hunh_words, word);
+			if (!hunh_res) {
+				strlcat_bot(buf, word);
+				charcat_bot(buf, ' ');
+			} else {
+				strlcat_bot(buf, word);
+				strlcat_bot(buf, "={");
+				for (i = 0; i < hunh_res; i++) {
+					strlcat_bot(buf, hunh_words[i]);
+					if (i + 1 < hunh_res)
+						charcat_bot(buf, ',');
+				}
+				strlcat_bot(buf, "} ");
 
-      hunh_res = Hunspell_spell (hunh, word);
-      if (hunh_res == 1)
-	{
-	  strlcat_bot (buf, word);
-	  charcat_bot (buf, ' ');
-	}
-      else
-	{
-	  hunh_res = Hunspell_suggest (hunh, &hunh_words, word);
-	  if (!hunh_res)
-	    {
-	      strlcat_bot (buf, word);
-	      charcat_bot (buf, ' ');
-	    }
-	  else
-	    {
-	      strlcat_bot (buf, word);
-	      strlcat_bot (buf, "={");
-	      for (i = 0; i < hunh_res; i++)
-		{
-		  strlcat_bot (buf, hunh_words[i]);
-		  if (i + 1 < hunh_res)
-		    charcat_bot (buf, ',');
+			}
 		}
-	      strlcat_bot (buf, "} ");
 
-	    }
+		word = NULL;
 	}
 
-      word = NULL;
-    }
+	Hunspell_destroy(hunh);
 
-  Hunspell_destroy (hunh);
+	if (sNULL(buf) != NULL)
+		str = strdup(buf);
 
-  if (sNULL (buf) != NULL)
-    str = strdup (buf);
-
-  return str;
+	return str;
 }
 
-
-
-
-
-int
-hun_clean_path (char *str)
+int hun_clean_path(char *str)
 {
-  if (!str)
-    return 0;
-  while (*str)
-    {
-      if (*str == '_')
-	{
+	if (!str)
+		return 0;
+	while (*str) {
+		if (*str == '_') {
+		} else if (!isalpha(*str)) {
+			*str = '\0';
+		}
+		str++;
 	}
-      else if (!isalpha (*str))
-	{
-	  *str = '\0';
-	}
-      str++;
-    }
 
-  return 0;
+	return 0;
 }

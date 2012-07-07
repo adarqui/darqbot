@@ -25,88 +25,76 @@
  */
 #include "mod_pmme.h"
 
-void
-__pmme_init__ (void)
+void __pmme_init__(void)
 {
 
-  strlcpy_buf (mod_pmme_info.name, "mod_pmme");
-  strlcpy_buf (mod_pmme_info.trigger, "^pmme");
+	strlcpy_buf(mod_pmme_info.name, "mod_pmme");
+	strlcpy_buf(mod_pmme_info.trigger, "^pmme");
 
-  mod_pmme_info.init = pmme_init;
-  mod_pmme_info.fini = pmme_fini;
-  mod_pmme_info.help = pmme_help;
-  mod_pmme_info.run = pmme_run;
+	mod_pmme_info.init = pmme_init;
+	mod_pmme_info.fini = pmme_fini;
+	mod_pmme_info.help = pmme_help;
+	mod_pmme_info.run = pmme_run;
 
+	mod_pmme_info.output = NULL;
+	mod_pmme_info.input = NULL;
 
-  mod_pmme_info.output = NULL;
-  mod_pmme_info.input = NULL;
+	debug(NULL, "__pmme_init__: Loaded mod_pmme\n");
 
-
-  debug (NULL, "__pmme_init__: Loaded mod_pmme\n");
-
-  return;
+	return;
 }
 
-
-
-bot_t *
-pmme_init (dlist_t * dlist_node, bot_t * bot)
+bot_t *pmme_init(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "pmme_init: Entered\n");
-  return NULL;
+	debug(bot, "pmme_init: Entered\n");
+	return NULL;
 }
 
-bot_t *
-pmme_fini (dlist_t * dlist_node, bot_t * bot)
+bot_t *pmme_fini(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "pmme_fini: Entered\n");
-  return NULL;
+	debug(bot, "pmme_fini: Entered\n");
+	return NULL;
 }
 
-bot_t *
-pmme_help (dlist_t * dlist_node, bot_t * bot)
+bot_t *pmme_help(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "pmme_help: Entered\n");
+	debug(bot, "pmme_help: Entered\n");
 
+	if (!bot)
+		return NULL;
 
-  if (!bot)
-    return NULL;
+	bot->dl_module_help = "^pmme";
 
-  bot->dl_module_help = "^pmme";
-
-  return NULL;
+	return NULL;
 }
 
-bot_t *
-pmme_run (dlist_t * dlist_node, bot_t * bot)
+bot_t *pmme_run(dlist_t * dlist_node, bot_t * bot)
 {
-  char *dl_module_arg_after_options, *dl_options_ptr;
+	char *dl_module_arg_after_options, *dl_options_ptr;
 
-  debug (bot, "pmme_run: Entered\n");
+	debug(bot, "pmme_run: Entered\n");
 
-  if (!dlist_node || !bot)
-    return NULL;
+	if (!dlist_node || !bot)
+		return NULL;
 
-  stat_inc (bot, bot->trig_called);
+	stat_inc(bot, bot->trig_called);
 
-  debug (bot,
-	 "pmme_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	debug(bot,
+	      "pmme_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
+	if (bot_shouldreturn(bot))
+		return NULL;
 
-  if (bot_shouldreturn (bot))
-    return NULL;
+	MOD_OPTIONS_TOP_HALF;
+	MOD_OPTIONS_BOTTOM_HALF;
 
-  MOD_OPTIONS_TOP_HALF;
-  MOD_OPTIONS_BOTTOM_HALF;
+	MOD_PARSE_TOP_HALF;
+	if (l_str_ptr) {
+		strlcpy_buf(bot->txt_to, bot->txt_nick);
+		l_new_str = strdup(l_str_ptr);
+	}
+	MOD_PARSE_BOTTOM_HALF;
 
-  MOD_PARSE_TOP_HALF;
-  if (l_str_ptr)
-    {
-      strlcpy_buf (bot->txt_to, bot->txt_nick);
-      l_new_str = strdup (l_str_ptr);
-    }
-  MOD_PARSE_BOTTOM_HALF;
-
-  return bot;
+	return bot;
 }

@@ -30,15 +30,13 @@
 
 module_t mod_sig_info;
 
-bot_t *sig_init (dlist_t *, bot_t *);
-bot_t *sig_fini (dlist_t *, bot_t *);
-bot_t *sig_help (dlist_t *, bot_t *);
-bot_t *sig_run (dlist_t *, bot_t *);
+bot_t *sig_init(dlist_t *, bot_t *);
+bot_t *sig_fini(dlist_t *, bot_t *);
+bot_t *sig_help(dlist_t *, bot_t *);
+bot_t *sig_run(dlist_t *, bot_t *);
 
+char *sig_change_string(char *, int);
 
-char *sig_change_string (char *, int);
-
-
-void __sig_init__ (void) __attribute__ ((constructor));
+void __sig_init__(void) __attribute__ ((constructor));
 
 #endif

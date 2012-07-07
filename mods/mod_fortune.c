@@ -25,153 +25,129 @@
  */
 #include "mod_fortune.h"
 
-void
-__fortune_init__ (void)
+void __fortune_init__(void)
 {
 
-  strlcpy_buf (mod_fortune_info.name, "mod_fortune");
-  strlcpy_buf (mod_fortune_info.trigger, "^fortune");
+	strlcpy_buf(mod_fortune_info.name, "mod_fortune");
+	strlcpy_buf(mod_fortune_info.trigger, "^fortune");
 
-  module_add_subtrigs (&mod_fortune_info, "^forkfortune");
+	module_add_subtrigs(&mod_fortune_info, "^forkfortune");
 
-  mod_fortune_info.init = fortune_init;
-  mod_fortune_info.fini = fortune_fini;
-  mod_fortune_info.help = fortune_help;
-  mod_fortune_info.run = fortune_run;
+	mod_fortune_info.init = fortune_init;
+	mod_fortune_info.fini = fortune_fini;
+	mod_fortune_info.help = fortune_help;
+	mod_fortune_info.run = fortune_run;
 
+	mod_fortune_info.output = NULL;
+	mod_fortune_info.input = NULL;
 
-  mod_fortune_info.output = NULL;
-  mod_fortune_info.input = NULL;
+	debug(NULL, "__fortune_init__: Loaded mod_fortune\n");
 
-
-  debug (NULL, "__fortune_init__: Loaded mod_fortune\n");
-
-  return;
+	return;
 }
 
-
-
-bot_t *
-fortune_init (dlist_t * dlist_node, bot_t * bot)
+bot_t *fortune_init(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "fortune_init: Entered\n");
-  return NULL;
+	debug(bot, "fortune_init: Entered\n");
+	return NULL;
 }
 
-bot_t *
-fortune_fini (dlist_t * dlist_node, bot_t * bot)
+bot_t *fortune_fini(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "fortune_fini: Entered\n");
-  return NULL;
+	debug(bot, "fortune_fini: Entered\n");
+	return NULL;
 }
 
-bot_t *
-fortune_help (dlist_t * dlist_node, bot_t * bot)
+bot_t *fortune_help(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "fortune_help: Entered\n");
+	debug(bot, "fortune_help: Entered\n");
 
+	if (!bot)
+		return NULL;
 
-  if (!bot)
-    return NULL;
+	bot->dl_module_help = "^fortune";
 
-  bot->dl_module_help = "^fortune";
-
-  return NULL;
+	return NULL;
 }
 
-bot_t *
-fortune_run (dlist_t * dlist_node, bot_t * bot)
+bot_t *fortune_run(dlist_t * dlist_node, bot_t * bot)
 {
-  pid_t pid;
-  char *new_str = NULL;
-  char *dl_module_arg_after_options, *dl_options_ptr;
+	pid_t pid;
+	char *new_str = NULL;
+	char *dl_module_arg_after_options, *dl_options_ptr;
 
-  int argc = 0;
-  char **argv = NULL;
+	int argc = 0;
+	char **argv = NULL;
 
-  char local_arg_buf[1024];
+	char local_arg_buf[1024];
 
-  int opt = 0;
+	int opt = 0;
 
-  debug (bot, "fortune_run: Entered\n");
+	debug(bot, "fortune_run: Entered\n");
 
+	if (!dlist_node || !bot)
+		return NULL;
 
-  if (!dlist_node || !bot)
-    return NULL;
+	debug(bot,
+	      "fortune_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-  debug (bot,
-	 "fortune_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	stat_inc(bot, bot->trig_called);
 
-  stat_inc (bot, bot->trig_called);
+	if (bot_shouldreturn(bot))
+		return NULL;
 
-
-
-  if (bot_shouldreturn (bot))
-    return NULL;
-
-  if (!strcasecmp (bot->trig_called, "^forkfortune"))
-    {
-      opt = 1;
-    }
-
-
-  MOD_OPTIONS_TOP_HALF;
-  MOD_OPTIONS_BOTTOM_HALF;
-
-  memset (local_arg_buf, 0, sizeof (local_arg_buf));
-
-  strlcpy_buf (local_arg_buf, "fortune");
-
-
-  if (strlen (dl_options_ptr) == 0)
-    {
-      strlcat_buf (local_arg_buf, "-c -a");
-    }
-  else
-    {
-      strlcat_buf (local_arg_buf, dl_options_ptr);
-    }
-
-  printf
-    ("TRIG_CALLED=%s, MODULE_ARG=%s, LOCAL_ARG_BUF=%s, DL_OPTIONS_PTR=%s\n",
-     bot->trig_called, &bot->dl_module_arg[0], local_arg_buf, dl_options_ptr);
-
-  argv = tokenize_array (bot, local_arg_buf, TOKENIZE_NORMAL, " ", &argc);
-  if (!argv)
-    return NULL;
-
-  if (argc <= 0)
-    goto cleanup;
-
-  if (opt)
-    {
-      pid = bot_fork_clean (bot);
-      if (!pid)
-	{
-
-	  new_str = libfortune_main (argc, argv);
-	  if (new_str)
-	    {
-	      strlcat_bot (bot->txt_data_out, new_str);
-	      free (new_str);
-	    }
-	  return NULL;
+	if (!strcasecmp(bot->trig_called, "^forkfortune")) {
+		opt = 1;
 	}
 
-    }
-  else
-    {
-      new_str = libfortune_main (argc, argv);
-      if (new_str)
-	{
-	  strlcat_bot (bot->txt_data_out, new_str);
-	  free (new_str);
+	MOD_OPTIONS_TOP_HALF;
+	MOD_OPTIONS_BOTTOM_HALF;
+
+	memset(local_arg_buf, 0, sizeof(local_arg_buf));
+
+	strlcpy_buf(local_arg_buf, "fortune");
+
+	if (strlen(dl_options_ptr) == 0) {
+		strlcat_buf(local_arg_buf, "-c -a");
+	} else {
+		strlcat_buf(local_arg_buf, dl_options_ptr);
 	}
-    }
 
-cleanup:
-  tokenize_destroy_array (bot, argv);
+	printf
+	    ("TRIG_CALLED=%s, MODULE_ARG=%s, LOCAL_ARG_BUF=%s, DL_OPTIONS_PTR=%s\n",
+	     bot->trig_called, &bot->dl_module_arg[0], local_arg_buf,
+	     dl_options_ptr);
 
-  return bot;
+	argv = tokenize_array(bot, local_arg_buf, TOKENIZE_NORMAL, " ", &argc);
+	if (!argv)
+		return NULL;
+
+	if (argc <= 0)
+		goto cleanup;
+
+	if (opt) {
+		pid = bot_fork_clean(bot);
+		if (!pid) {
+
+			new_str = libfortune_main(argc, argv);
+			if (new_str) {
+				strlcat_bot(bot->txt_data_out, new_str);
+				free(new_str);
+			}
+			return NULL;
+		}
+
+	} else {
+		new_str = libfortune_main(argc, argv);
+		if (new_str) {
+			strlcat_bot(bot->txt_data_out, new_str);
+			free(new_str);
+		}
+	}
+
+ cleanup:
+	tokenize_destroy_array(bot, argv);
+
+	return bot;
 }

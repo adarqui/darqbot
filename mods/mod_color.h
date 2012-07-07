@@ -28,24 +28,21 @@
 
 #include "bot.h"
 
-
-
 module_t mod_color_info;
 
-bot_t *color_init (dlist_t *, bot_t *);
-bot_t *color_fini (dlist_t *, bot_t *);
-bot_t *color_help (dlist_t *, bot_t *);
-bot_t *color_run (dlist_t *, bot_t *);
+bot_t *color_init(dlist_t *, bot_t *);
+bot_t *color_fini(dlist_t *, bot_t *);
+bot_t *color_help(dlist_t *, bot_t *);
+bot_t *color_run(dlist_t *, bot_t *);
 
-void __color_init__ (void) __attribute__ ((constructor));
+void __color_init__(void) __attribute__ ((constructor));
 
-enum color_types
-{
-  MOD_COLOR_COLOR = 1,
-  MOD_COLOR_FGCOLOR,
-  MOD_COLOR_BGCOLOR,
+enum color_types {
+	MOD_COLOR_COLOR = 1,
+	MOD_COLOR_FGCOLOR,
+	MOD_COLOR_BGCOLOR,
 };
 
-char *color_change_string (char *, char *, int);
+char *color_change_string(char *, char *, int);
 
 #endif

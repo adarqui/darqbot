@@ -33,34 +33,30 @@
 #include "bot.h"
 #include "mongo.h"
 
+void __identify_init__(void) __attribute__ ((constructor));
 
-void __identify_init__ (void) __attribute__ ((constructor));
-
-enum identify_opts
-{
-  IDENTIFY_OPT_RUN = 0,
-  IDENTIFY_OPT_GET = 1,
-  IDENTIFY_OPT_DEL = 2,
-  IDENTIFY_OPT_ADD = 3,
+enum identify_opts {
+	IDENTIFY_OPT_RUN = 0,
+	IDENTIFY_OPT_GET = 1,
+	IDENTIFY_OPT_DEL = 2,
+	IDENTIFY_OPT_ADD = 3,
 };
 
 module_t mod_identify_info;
 
-bot_t *identify_init (dlist_t *, bot_t *);
-bot_t *identify_fini (dlist_t *, bot_t *);
-bot_t *identify_help (dlist_t *, bot_t *);
-bot_t *identify_run (dlist_t *, bot_t *);
+bot_t *identify_init(dlist_t *, bot_t *);
+bot_t *identify_fini(dlist_t *, bot_t *);
+bot_t *identify_help(dlist_t *, bot_t *);
+bot_t *identify_run(dlist_t *, bot_t *);
 
+char *identify_change_string(bot_t *, char *, int);
 
+char *identify_op_get(bot_t *, char *);
+char *identify_op_del(bot_t *, char *);
+char *identify_op_add(bot_t *, char *, char *);
+char *identify_op_run(bot_t *);
 
-char *identify_change_string (bot_t *, char *, int);
-
-char *identify_op_get (bot_t *, char *);
-char *identify_op_del (bot_t *, char *);
-char *identify_op_add (bot_t *, char *, char *);
-char *identify_op_run (bot_t *);
-
-char *identify_change_string_fn_null (bot_t *, char *, int);
-extern char *pcre_change_string (bot_t *, char *, int);
+char *identify_change_string_fn_null(bot_t *, char *, int);
+extern char *pcre_change_string(bot_t *, char *, int);
 
 #endif

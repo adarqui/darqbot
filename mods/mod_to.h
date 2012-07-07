@@ -30,41 +30,33 @@
 
 module_t mod_to_info;
 
+typedef struct to_info {
 
-typedef struct to_info
-{
+	int initialized;
 
-  int initialized;
+	FILE *fp_conf;
+	char *conf;
 
-  FILE *fp_conf;
-  char *conf;
+	FILE *fp_pms;
+	char *log_pms;
 
-  FILE *fp_pms;
-  char *log_pms;
+	int allowpms;
 
-  int allowpms;
-
-  dlist_t *dl_controlchans;
-  dlist_t *dl_ignore;
+	dlist_t *dl_controlchans;
+	dlist_t *dl_ignore;
 
 } to_info_t;
 
-
-
-bot_t *to_init (dlist_t *, bot_t *);
-bot_t *to_fini (dlist_t *, bot_t *);
-bot_t *to_help (dlist_t *, bot_t *);
-bot_t *to_run (dlist_t *, bot_t *);
-
-
+bot_t *to_init(dlist_t *, bot_t *);
+bot_t *to_fini(dlist_t *, bot_t *);
+bot_t *to_help(dlist_t *, bot_t *);
+bot_t *to_run(dlist_t *, bot_t *);
 
 to_info_t to_info;
 
-
-void to_parse (bot_t *);
-int to_parse_controlchans (bot_t *, char *, int);
-int to_parse_ignore (bot_t *, char *, int);
-void to_print (bot_t *);
-
+void to_parse(bot_t *);
+int to_parse_controlchans(bot_t *, char *, int);
+int to_parse_ignore(bot_t *, char *, int);
+void to_print(bot_t *);
 
 #endif

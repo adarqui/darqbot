@@ -28,64 +28,62 @@
 
 #include "bot.h"
 
-typedef struct gmod_gexec
-{
-  bot_t *bot;
-  dlist_t *dptr_gmod;
-  bot_gmod_elm_t *gmod;
+typedef struct gmod_gexec {
+	bot_t *bot;
+	dlist_t *dptr_gmod;
+	bot_gmod_elm_t *gmod;
 
-  int initialized;
+	int initialized;
 
-  char *bin;
-  int pipe[2];
-  int pipe_b[2];
+	char *bin;
+	int pipe[2];
+	int pipe_b[2];
 
 /* for libevent */
-  fd_link_t link;
+	fd_link_t link;
 
-  pid_t pid;
+	pid_t pid;
 
 } gexec_t;
 
 module_t gmod_gexec_info;
 
-void __gexec_init__ (void) __attribute__ ((constructor));
+void __gexec_init__(void) __attribute__ ((constructor));
 
-bot_t *gexec_init (dlist_t *, bot_t *);
-bot_t *gexec_fini (dlist_t *, bot_t *);
-bot_t *gexec_help (dlist_t *, bot_t *);
-bot_t *gexec_run (dlist_t *, bot_t *);
-bot_t *gexec_control (dlist_t *, bot_t *, int, va_list);
+bot_t *gexec_init(dlist_t *, bot_t *);
+bot_t *gexec_fini(dlist_t *, bot_t *);
+bot_t *gexec_help(dlist_t *, bot_t *);
+bot_t *gexec_run(dlist_t *, bot_t *);
+bot_t *gexec_control(dlist_t *, bot_t *, int, va_list);
 
-bot_t *gexec_input (dlist_t *, bot_t *);
-bot_t *gexec_output (dlist_t *, bot_t *);
+bot_t *gexec_input(dlist_t *, bot_t *);
+bot_t *gexec_output(dlist_t *, bot_t *);
 
-bot_t *gexec_destroy_up (dlist_t *, bot_t *);
-bot_t *gexec_destroy_down (dlist_t *, bot_t *);
+bot_t *gexec_destroy_up(dlist_t *, bot_t *);
+bot_t *gexec_destroy_down(dlist_t *, bot_t *);
 
-bot_t *gexec_control_up (dlist_t *, bot_t *);
-bot_t *gexec_control_down (dlist_t *, bot_t *);
+bot_t *gexec_control_up(dlist_t *, bot_t *);
+bot_t *gexec_control_down(dlist_t *, bot_t *);
 
-bot_t *gexec_off (dlist_t *, bot_t *);
+bot_t *gexec_off(dlist_t *, bot_t *);
 
-int gexec_input_client (gexec_t *);
-char *gexec_change_string (bot_t *, char *, int);
-char *gexec_process_options (gexec_t *, char *);
-void gexec_process_options_parse (gexec_t *, char *);
-void gexec_process_options_parse_bin (gexec_t *, char *);
+int gexec_input_client(gexec_t *);
+char *gexec_change_string(bot_t *, char *, int);
+char *gexec_process_options(gexec_t *, char *);
+void gexec_process_options_parse(gexec_t *, char *);
+void gexec_process_options_parse_bin(gexec_t *, char *);
 
-bot_t *gexec_destroy_up_gexec (gexec_t *);
-bot_t *gexec_destroy_down_gexec (gexec_t *);
+bot_t *gexec_destroy_up_gexec(gexec_t *);
+bot_t *gexec_destroy_down_gexec(gexec_t *);
 
-void gexec_gmod_init (bot_t *, bot_gmod_elm_t *, dlist_t *);
+void gexec_gmod_init(bot_t *, bot_gmod_elm_t *, dlist_t *);
 
-void gexec_free (void *);
-int gexec_exec (gexec_t *);
+void gexec_free(void *);
+int gexec_exec(gexec_t *);
 
-void gexec_evhook_link (int, short, void *);
-int gexec_set_evhooks (gexec_t *);
-int gexec_unset_evhooks (gexec_t *);
-void gexec_free (void *);
-
+void gexec_evhook_link(int, short, void *);
+int gexec_set_evhooks(gexec_t *);
+int gexec_unset_evhooks(gexec_t *);
+void gexec_free(void *);
 
 #endif

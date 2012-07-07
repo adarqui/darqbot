@@ -30,33 +30,31 @@
 
 module_t mod_internals_info;
 
-bot_t *internals_init (dlist_t *, bot_t *);
-bot_t *internals_fini (dlist_t *, bot_t *);
-bot_t *internals_help (dlist_t *, bot_t *);
-bot_t *internals_run (dlist_t *, bot_t *);
+bot_t *internals_init(dlist_t *, bot_t *);
+bot_t *internals_fini(dlist_t *, bot_t *);
+bot_t *internals_help(dlist_t *, bot_t *);
+bot_t *internals_run(dlist_t *, bot_t *);
 
+char *internals_change_string(bot_t *, char *, int);
 
-char *internals_change_string (bot_t *, char *, int);
+void __internals_init__(void) __attribute__ ((constructor));
 
-void __internals_init__ (void) __attribute__ ((constructor));
-
-enum internals_types
-{
-  MOD_INTERNALS_OPT_IN_SZ = 0x01,
-  MOD_INTERNALS_OPT_OUT_SZ = 0x02,
-  MOD_INTERNALS_OPT_IN_DATA = 0x04,
-  MOD_INTERNALS_OPT_IN_STRLEN = 0x08,
-  MOD_INTERNALS_OPT_OUT_STRLEN = 0x10,
-  MOD_INTERNALS_OPT_TRIG_PREFIX = 0x20,
-  MOD_INTERNALS_OPT_GETPID = 0x40,
+enum internals_types {
+	MOD_INTERNALS_OPT_IN_SZ = 0x01,
+	MOD_INTERNALS_OPT_OUT_SZ = 0x02,
+	MOD_INTERNALS_OPT_IN_DATA = 0x04,
+	MOD_INTERNALS_OPT_IN_STRLEN = 0x08,
+	MOD_INTERNALS_OPT_OUT_STRLEN = 0x10,
+	MOD_INTERNALS_OPT_TRIG_PREFIX = 0x20,
+	MOD_INTERNALS_OPT_GETPID = 0x40,
 };
 
-int internals_op_in_sz (dlist_t **, bot_t *);
-int internals_op_out_sz (dlist_t **, bot_t *);
-int internals_op_in_data (dlist_t **, bot_t *);
-int internals_op_in_strlen (dlist_t **, bot_t *);
-int internals_op_out_strlen (dlist_t **, bot_t *);
-int internals_op_trig_prefix (dlist_t **, bot_t *, char *);
-int internals_op_getpid (dlist_t **, bot_t *);
+int internals_op_in_sz(dlist_t **, bot_t *);
+int internals_op_out_sz(dlist_t **, bot_t *);
+int internals_op_in_data(dlist_t **, bot_t *);
+int internals_op_in_strlen(dlist_t **, bot_t *);
+int internals_op_out_strlen(dlist_t **, bot_t *);
+int internals_op_trig_prefix(dlist_t **, bot_t *, char *);
+int internals_op_getpid(dlist_t **, bot_t *);
 
 #endif

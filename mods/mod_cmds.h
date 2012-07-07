@@ -28,25 +28,23 @@
 
 #include "bot.h"
 
-enum mod_cmds_stuff
-{
-  MOD_CMDS_SIZE,
-  MOD_CMDS_GET,
-  MOD_CMDS_LIST,
+enum mod_cmds_stuff {
+	MOD_CMDS_SIZE,
+	MOD_CMDS_GET,
+	MOD_CMDS_LIST,
 };
 
 module_t mod_cmds_info;
 
-bot_t *cmds_init (dlist_t *, bot_t *);
-bot_t *cmds_fini (dlist_t *, bot_t *);
-bot_t *cmds_help (dlist_t *, bot_t *);
-bot_t *cmds_run (dlist_t *, bot_t *);
+bot_t *cmds_init(dlist_t *, bot_t *);
+bot_t *cmds_fini(dlist_t *, bot_t *);
+bot_t *cmds_help(dlist_t *, bot_t *);
+bot_t *cmds_run(dlist_t *, bot_t *);
 
+char *cmds_change_string(bot_t *, char *, int);
 
-char *cmds_change_string (bot_t *, char *, int);
+void __cmds_init__(void) __attribute__ ((constructor));
 
-void __cmds_init__ (void) __attribute__ ((constructor));
-
-void cmds_clean_str (char *);
+void cmds_clean_str(char *);
 
 #endif

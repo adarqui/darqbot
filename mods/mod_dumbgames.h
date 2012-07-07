@@ -28,24 +28,22 @@
 
 #include "bot.h"
 
-
 module_t mod_dumbgames_info;
 
-bot_t *dumbgames_init (dlist_t *, bot_t *);
-bot_t *dumbgames_fini (dlist_t *, bot_t *);
-bot_t *dumbgames_help (dlist_t *, bot_t *);
-bot_t *dumbgames_run (dlist_t *, bot_t *);
+bot_t *dumbgames_init(dlist_t *, bot_t *);
+bot_t *dumbgames_fini(dlist_t *, bot_t *);
+bot_t *dumbgames_help(dlist_t *, bot_t *);
+bot_t *dumbgames_run(dlist_t *, bot_t *);
 
-void __dumbgames_init__ (void) __attribute__ ((constructor));
+void __dumbgames_init__(void) __attribute__ ((constructor));
 
-enum dumbgames_sub_types
-{
-  MOD_DUMBGAMES,
-  MOD_DUMBGAMES_DICE,
-  MOD_DUMBGAMES_ROULETTE,
+enum dumbgames_sub_types {
+	MOD_DUMBGAMES,
+	MOD_DUMBGAMES_DICE,
+	MOD_DUMBGAMES_ROULETTE,
 };
 
-char *dice_change_string (int);
-char *roulette_change_string (int);
+char *dice_change_string(int);
+char *roulette_change_string(int);
 
 #endif

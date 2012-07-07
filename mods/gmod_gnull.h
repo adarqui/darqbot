@@ -28,50 +28,49 @@
 
 #include "bot.h"
 
-typedef struct gmod_gnull
-{
-  bot_t *bot;
-  dlist_t *dptr_gmod;
-  bot_gmod_elm_t *gmod;
+typedef struct gmod_gnull {
+	bot_t *bot;
+	dlist_t *dptr_gmod;
+	bot_gmod_elm_t *gmod;
 
-  int initialized;
+	int initialized;
 
-  int null;
+	int null;
 
 } gnull_t;
 
 module_t gmod_gnull_info;
 
-void __gnull_init__ (void) __attribute__ ((constructor));
+void __gnull_init__(void) __attribute__ ((constructor));
 
-bot_t *gnull_init (dlist_t *, bot_t *);
-bot_t *gnull_fini (dlist_t *, bot_t *);
-bot_t *gnull_help (dlist_t *, bot_t *);
-bot_t *gnull_run (dlist_t *, bot_t *);
-bot_t *gnull_control (dlist_t *, bot_t *, int, va_list);
+bot_t *gnull_init(dlist_t *, bot_t *);
+bot_t *gnull_fini(dlist_t *, bot_t *);
+bot_t *gnull_help(dlist_t *, bot_t *);
+bot_t *gnull_run(dlist_t *, bot_t *);
+bot_t *gnull_control(dlist_t *, bot_t *, int, va_list);
 
-bot_t *gnull_input (dlist_t *, bot_t *);
-bot_t *gnull_output (dlist_t *, bot_t *);
+bot_t *gnull_input(dlist_t *, bot_t *);
+bot_t *gnull_output(dlist_t *, bot_t *);
 
-bot_t *gnull_destroy_up (dlist_t *, bot_t *);
-bot_t *gnull_destroy_down (dlist_t *, bot_t *);
+bot_t *gnull_destroy_up(dlist_t *, bot_t *);
+bot_t *gnull_destroy_down(dlist_t *, bot_t *);
 
-bot_t *gnull_control_up (dlist_t *, bot_t *);
-bot_t *gnull_control_down (dlist_t *, bot_t *);
+bot_t *gnull_control_up(dlist_t *, bot_t *);
+bot_t *gnull_control_down(dlist_t *, bot_t *);
 
-bot_t *gnull_off (dlist_t *, bot_t *);
+bot_t *gnull_off(dlist_t *, bot_t *);
 
-int gnull_input_client (gnull_t *);
-char *gnull_change_string (bot_t *, char *, int);
-char *gnull_process_options (gnull_t *, char *);
-void gnull_process_options_parse (gnull_t *, char *);
-void gnull_process_options_parse_null (gnull_t *, char *);
+int gnull_input_client(gnull_t *);
+char *gnull_change_string(bot_t *, char *, int);
+char *gnull_process_options(gnull_t *, char *);
+void gnull_process_options_parse(gnull_t *, char *);
+void gnull_process_options_parse_null(gnull_t *, char *);
 
-bot_t *gnull_destroy_up_gnull (gnull_t *);
-bot_t *gnull_destroy_down_gnull (gnull_t *);
+bot_t *gnull_destroy_up_gnull(gnull_t *);
+bot_t *gnull_destroy_down_gnull(gnull_t *);
 
-void gnull_gmod_init (bot_t *, bot_gmod_elm_t *, dlist_t *);
+void gnull_gmod_init(bot_t *, bot_gmod_elm_t *, dlist_t *);
 
-void gnull_free (void *);
+void gnull_free(void *);
 
 #endif

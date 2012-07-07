@@ -28,28 +28,25 @@
 
 #include "bot.h"
 
-
-
 module_t mod_attrib_info;
 
-bot_t *attrib_init (dlist_t *, bot_t *);
-bot_t *attrib_fini (dlist_t *, bot_t *);
-bot_t *attrib_help (dlist_t *, bot_t *);
-bot_t *attrib_run (dlist_t *, bot_t *);
+bot_t *attrib_init(dlist_t *, bot_t *);
+bot_t *attrib_fini(dlist_t *, bot_t *);
+bot_t *attrib_help(dlist_t *, bot_t *);
+bot_t *attrib_run(dlist_t *, bot_t *);
 
-void __attrib_init__ (void) __attribute__ ((constructor));
+void __attrib_init__(void) __attribute__ ((constructor));
 
-enum attrib_sub_types
-{
-  MOD_ATTRIB = 0,
-  MOD_ATTRIB_BOLD,
-  MOD_ATTRIB_UNDERLINE,
-  MOD_ATTRIB_MULTI
+enum attrib_sub_types {
+	MOD_ATTRIB = 0,
+	MOD_ATTRIB_BOLD,
+	MOD_ATTRIB_UNDERLINE,
+	MOD_ATTRIB_MULTI
 };
 
-char *attrib_change_string (bot_t *, char *, int);
-char *bold_change_string (bot_t *, char *, int);
-char *underline_change_string (bot_t *, char *, int);
-char *multi_change_string (bot_t *);
+char *attrib_change_string(bot_t *, char *, int);
+char *bold_change_string(bot_t *, char *, int);
+char *underline_change_string(bot_t *, char *, int);
+char *multi_change_string(bot_t *);
 
 #endif

@@ -28,21 +28,17 @@
 
 #include "bot.h"
 
-
 module_t mod_festival_info;
 
-bot_t *festival_init (dlist_t *, bot_t *);
-bot_t *festival_fini (dlist_t *, bot_t *);
-bot_t *festival_help (dlist_t *, bot_t *);
-bot_t *festival_run (dlist_t *, bot_t *);
+bot_t *festival_init(dlist_t *, bot_t *);
+bot_t *festival_fini(dlist_t *, bot_t *);
+bot_t *festival_help(dlist_t *, bot_t *);
+bot_t *festival_run(dlist_t *, bot_t *);
 
+int festival_send(bot_t *, char *, int);
 
-int festival_send (bot_t *, char *, int);
+char *festival_change_string(char *, int);
 
-
-char *festival_change_string (char *, int);
-
-
-void __festival_init__ (void) __attribute__ ((constructor));
+void __festival_init__(void) __attribute__ ((constructor));
 
 #endif

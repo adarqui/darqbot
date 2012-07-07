@@ -23,167 +23,139 @@
 
 #include "bot.h"
 
-xpid_t *
-xpid_add (bot_t * bot, pid_t pid)
+xpid_t *xpid_add(bot_t * bot, pid_t pid)
 {
-  xpid_t *bp = NULL;
+	xpid_t *bp = NULL;
 
-  debug (NULL, "xpid_add: Entered: pid=%i\n", pid);
+	debug(NULL, "xpid_add: Entered: pid=%i\n", pid);
 
-  if (!bot || pid <= 1)
-    return NULL;
+	if (!bot || pid <= 1)
+		return NULL;
 
-  bp = (xpid_t *) calloc (1, sizeof (xpid_t));
-  if (!bp)
-    return NULL;
+	bp = (xpid_t *) calloc(1, sizeof(xpid_t));
+	if (!bp)
+		return NULL;
 
+	bp->tag = strdup(bot->tag);
+	bp->pid = pid;
 
-  bp->tag = strdup (bot->tag);
-  bp->pid = pid;
+	dlist_Dinsert_after(&gi->dl_pid, bp);
 
-  dlist_Dinsert_after (&gi->dl_pid, bp);
-
-  return bp;
+	return bp;
 }
 
-
-void
-xpid_destroy (bot_t * bot, int signum)
+void xpid_destroy(bot_t * bot, int signum)
 {
-  dlist_t *dptr_bp = NULL, *dptr_tmp;
-  xpid_t *bp = NULL;
+	dlist_t *dptr_bp = NULL, *dptr_tmp;
+	xpid_t *bp = NULL;
 
+	debug(NULL, "xpid_destroy: Entered\n");
 
-  debug (NULL, "xpid_destroy: Entered\n");
+	if (!bot || signum < 0)
+		return;
 
-  if (!bot || signum < 0)
-    return;
+	dlist_fornext_retarded(gi->dl_pid, dptr_bp, dptr_tmp) {
+		if (!dptr_bp)
+			break;
+		bp = (xpid_t *) dlist_data(dptr_bp);
+		if (!bp)
+			continue;
 
-  dlist_fornext_retarded (gi->dl_pid, dptr_bp, dptr_tmp)
-  {
-    if (!dptr_bp)
-      break;
-    bp = (xpid_t *) dlist_data (dptr_bp);
-    if (!bp)
-      continue;
+		if (!strcasecmp(bp->tag, bot->tag)) {
+			if (bp->pid > 1)
+				kill(bp->pid, signum);
 
-    if (!strcasecmp (bp->tag, bot->tag))
-      {
-	if (bp->pid > 1)
-	  kill (bp->pid, signum);
+			dlist_remove_and_free(&gi->dl_pid, &dptr_bp, xpid_free);
+		}
+	}
 
-	dlist_remove_and_free (&gi->dl_pid, &dptr_bp, xpid_free);
-      }
-  }
-
-  return;
-}
-
-
-
-void
-xpid_del (bot_t * bot, pid_t pid)
-{
-  xpid_t *bp = NULL;
-  dlist_t *dptr_bp, *dptr_tmp;
-
-  debug (NULL, "xpid_del: Entered: pid=%i\n", pid);
-
-  if (pid <= 1)
-    return;
-
-  dlist_fornext_retarded (gi->dl_pid, dptr_bp, dptr_tmp)
-  {
-    if (!dptr_bp)
-      break;
-    bp = (xpid_t *) dlist_data (dptr_bp);
-    if (!bp)
-      continue;
-
-    if (bp->pid == pid)
-      {
-	dlist_remove_and_free (&gi->dl_pid, &dptr_bp, xpid_free);
 	return;
-      }
-
-  }
-
-  return;
 }
 
-
-
-
-void
-xpid_free (void *arg)
+void xpid_del(bot_t * bot, pid_t pid)
 {
-  xpid_t *bp = (xpid_t *) arg;
+	xpid_t *bp = NULL;
+	dlist_t *dptr_bp, *dptr_tmp;
 
-  debug (NULL, "xpid_free: Entered\n");
+	debug(NULL, "xpid_del: Entered: pid=%i\n", pid);
 
-  if (!bp)
-    return;
+	if (pid <= 1)
+		return;
 
-  if (bp->tag)
-    free (bp->tag);
+	dlist_fornext_retarded(gi->dl_pid, dptr_bp, dptr_tmp) {
+		if (!dptr_bp)
+			break;
+		bp = (xpid_t *) dlist_data(dptr_bp);
+		if (!bp)
+			continue;
 
-  free (bp);
+		if (bp->pid == pid) {
+			dlist_remove_and_free(&gi->dl_pid, &dptr_bp, xpid_free);
+			return;
+		}
 
-  return;
+	}
+
+	return;
 }
 
-
-
-
-void
-xpid_console_print (bot_t * bot, char *tag)
+void xpid_free(void *arg)
 {
-  dlist_t *dptr = NULL;
-  xpid_t *bp = NULL;
+	xpid_t *bp = (xpid_t *) arg;
 
-  debug (NULL, "xpid_console_print: Entered: tag=%s\n", tag);
+	debug(NULL, "xpid_free: Entered\n");
 
+	if (!bp)
+		return;
 
-  if (!bot)
-    return;
+	if (bp->tag)
+		free(bp->tag);
 
-  bot_dl_print (bot, "dl_pid: size=%i\n", dlist_size (gi->dl_pid));
+	free(bp);
 
-  dlist_fornext (gi->dl_pid, dptr)
-  {
-    bp = (xpid_t *) dlist_data (dptr);
-    if (!bp)
-      continue;
-
-    if (tag)
-      {
-	if (strcasecmp (bp->tag, tag))
-	  continue;
-      }
-
-    bot_dl_print (bot, "\ttag=%s : pid=%i\n", bp->tag, bp->pid);
-  }
-
-  return;
+	return;
 }
 
-
-
-
-void
-xpid_waitpid (void)
+void xpid_console_print(bot_t * bot, char *tag)
 {
-  pid_t pid;
-  int status;
+	dlist_t *dptr = NULL;
+	xpid_t *bp = NULL;
 
-  pid = waitpid (-1, &status, WNOHANG);
+	debug(NULL, "xpid_console_print: Entered: tag=%s\n", tag);
 
-  debug (NULL, "xpid_waitpid: pid=%i\n", pid);
+	if (!bot)
+		return;
 
-  if (pid > 1)
-    {
-      xpid_del (NULL, pid);
-    }
+	bot_dl_print(bot, "dl_pid: size=%i\n", dlist_size(gi->dl_pid));
 
-  return;
+	dlist_fornext(gi->dl_pid, dptr) {
+		bp = (xpid_t *) dlist_data(dptr);
+		if (!bp)
+			continue;
+
+		if (tag) {
+			if (strcasecmp(bp->tag, tag))
+				continue;
+		}
+
+		bot_dl_print(bot, "\ttag=%s : pid=%i\n", bp->tag, bp->pid);
+	}
+
+	return;
+}
+
+void xpid_waitpid(void)
+{
+	pid_t pid;
+	int status;
+
+	pid = waitpid(-1, &status, WNOHANG);
+
+	debug(NULL, "xpid_waitpid: pid=%i\n", pid);
+
+	if (pid > 1) {
+		xpid_del(NULL, pid);
+	}
+
+	return;
 }

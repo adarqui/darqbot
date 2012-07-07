@@ -28,28 +28,26 @@
 
 #include "bot.h"
 
-
-enum
-{
-  SORT_FORW = 1,
-  SORT_BACKW = 2,
-  SORT_RANDW = 3,
-  SORT_FORC = 4,
-  SORT_BACKC = 5,
-  SORT_RANDC = 6,
-  SORT_UNIQC = 7,
-  SORT_UNIQW = 8,
+enum {
+	SORT_FORW = 1,
+	SORT_BACKW = 2,
+	SORT_RANDW = 3,
+	SORT_FORC = 4,
+	SORT_BACKC = 5,
+	SORT_RANDC = 6,
+	SORT_UNIQC = 7,
+	SORT_UNIQW = 8,
 };
 
 module_t mod_sort_info;
 
-bot_t *sort_init (dlist_t *, bot_t *);
-bot_t *sort_fini (dlist_t *, bot_t *);
-bot_t *sort_help (dlist_t *, bot_t *);
-bot_t *sort_run (dlist_t *, bot_t *);
+bot_t *sort_init(dlist_t *, bot_t *);
+bot_t *sort_fini(dlist_t *, bot_t *);
+bot_t *sort_help(dlist_t *, bot_t *);
+bot_t *sort_run(dlist_t *, bot_t *);
 
-void __sort_init__ (void) __attribute__ ((constructor));
+void __sort_init__(void) __attribute__ ((constructor));
 
-char *sort_change_string (char *, int, int, char *);
+char *sort_change_string(char *, int, int, char *);
 
 #endif

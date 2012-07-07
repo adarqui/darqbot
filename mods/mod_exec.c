@@ -25,180 +25,153 @@
  */
 #include "mod_exec.h"
 
-void
-__exec_init__ (void)
+void __exec_init__(void)
 {
 
-  strlcpy_buf (mod_exec_info.name, "mod_exec");
-  strlcpy_buf (mod_exec_info.trigger, "^exec");
+	strlcpy_buf(mod_exec_info.name, "mod_exec");
+	strlcpy_buf(mod_exec_info.trigger, "^exec");
 
-  mod_exec_info.init = exec_init;
-  mod_exec_info.fini = exec_fini;
-  mod_exec_info.help = exec_help;
-  mod_exec_info.run = exec_run;
+	mod_exec_info.init = exec_init;
+	mod_exec_info.fini = exec_fini;
+	mod_exec_info.help = exec_help;
+	mod_exec_info.run = exec_run;
 
+	mod_exec_info.output = NULL;
+	mod_exec_info.input = NULL;
 
-  mod_exec_info.output = NULL;
-  mod_exec_info.input = NULL;
+	debug(NULL, "__exec_init__: Loaded mod_exec\n");
 
-
-  debug (NULL, "__exec_init__: Loaded mod_exec\n");
-
-  return;
+	return;
 }
 
-
-
-bot_t *
-exec_init (dlist_t * dlist_node, bot_t * bot)
+bot_t *exec_init(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "exec_init: Entered\n");
-  return NULL;
+	debug(bot, "exec_init: Entered\n");
+	return NULL;
 }
 
-bot_t *
-exec_fini (dlist_t * dlist_node, bot_t * bot)
+bot_t *exec_fini(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "exec_fini: Entered\n");
-  return NULL;
+	debug(bot, "exec_fini: Entered\n");
+	return NULL;
 }
 
-bot_t *
-exec_help (dlist_t * dlist_node, bot_t * bot)
+bot_t *exec_help(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "exec_help: Entered\n");
+	debug(bot, "exec_help: Entered\n");
 
+	if (!bot)
+		return NULL;
 
-  if (!bot)
-    return NULL;
+	bot->dl_module_help = "^exec";
 
-  bot->dl_module_help = "^exec";
-
-  return NULL;
+	return NULL;
 }
 
-bot_t *
-exec_run (dlist_t * dlist_node, bot_t * bot)
+bot_t *exec_run(dlist_t * dlist_node, bot_t * bot)
 {
-  char *dl_module_arg_after_options, *dl_options_ptr;
-  int opt;
+	char *dl_module_arg_after_options, *dl_options_ptr;
+	int opt;
 
-  debug (bot, "exec_run: Entered\n");
+	debug(bot, "exec_run: Entered\n");
 
-  if (!dlist_node || !bot)
-    return NULL;
+	if (!dlist_node || !bot)
+		return NULL;
 
-  stat_inc (bot, bot->trig_called);
+	stat_inc(bot, bot->trig_called);
 
-  debug (bot,
-	 "exec_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	debug(bot,
+	      "exec_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
+	if (bot_shouldreturn(bot))
+		return NULL;
 
-  if (bot_shouldreturn (bot))
-    return NULL;
+	opt = EXEC_OPT_NORMAL;
 
-  opt = EXEC_OPT_NORMAL;
+	MOD_OPTIONS_TOP_HALF;
+	MOD_OPTIONS_BOTTOM_HALF;
 
-  MOD_OPTIONS_TOP_HALF;
-  MOD_OPTIONS_BOTTOM_HALF;
+	MOD_PARSE_TOP_HALF_NODL;
+	l_new_str = exec_change_string(dlist_node, bot, l_str_ptr, opt);
+	MOD_PARSE_BOTTOM_HALF_NODL;
 
-  MOD_PARSE_TOP_HALF_NODL;
-  l_new_str = exec_change_string (dlist_node, bot, l_str_ptr, opt);
-  MOD_PARSE_BOTTOM_HALF_NODL;
-
-  return bot;
+	return bot;
 }
 
-
-
-char *
-exec_change_string (dlist_t * dlist_node, bot_t * bot, char *string, int opt)
+char *exec_change_string(dlist_t * dlist_node, bot_t * bot, char *string,
+			 int opt)
 {
-  char *str = NULL;
-  char buf[MAX_BUF_SZ];
+	char *str = NULL;
+	char buf[MAX_BUF_SZ];
 
+	char *sep_ptr;
 
-  char *sep_ptr;
+	if (!bot || !dlist_node || !string)
+		return NULL;
 
-  if (!bot || !dlist_node || !string)
-    return NULL;
+	sep_ptr = str_find_sep(string);
+	if (sep_ptr)
+		string = sep_ptr;
 
+	memset(buf, 0, sizeof(buf));
 
-  sep_ptr = str_find_sep (string);
-  if (sep_ptr)
-    string = sep_ptr;
+	switch (opt) {
+	case EXEC_OPT_NORMAL:
+		{
+			str = exec_op_normal(dlist_node, bot, string);
+			break;
+		}
+	case EXEC_OPT_FORK:
+		{
+			str = exec_op_fork(dlist_node, bot, string);
+			break;
+		}
+	default:
+		break;
+	}
 
-  memset (buf, 0, sizeof (buf));
-
-  switch (opt)
-    {
-    case EXEC_OPT_NORMAL:
-      {
-	str = exec_op_normal (dlist_node, bot, string);
-	break;
-      }
-    case EXEC_OPT_FORK:
-      {
-	str = exec_op_fork (dlist_node, bot, string);
-	break;
-      }
-    default:
-      break;
-    }
-
-  return str;
+	return str;
 }
 
-
-
-char *
-exec_op_normal (dlist_t * dlist_node, bot_t * bot, char *string)
+char *exec_op_normal(dlist_t * dlist_node, bot_t * bot, char *string)
 {
-  char *str = NULL;
+	char *str = NULL;
 
+	if (!dlist_node || !bot || !string)
+		return NULL;
 
-  if (!dlist_node || !bot || !string)
-    return NULL;
+	bot->txt_data_in_sz = strlen(bot->txt_data_out);
 
-  bot->txt_data_in_sz = strlen (bot->txt_data_out);
-
-  memcpy (bot->txt_data_in, bot->txt_data_out, bot->txt_data_in_sz);
-  memset (bot->txt_data_out, 0, sizeof (bot->txt_data_out));
-  pmodule_cur_run2 (bot);
+	memcpy(bot->txt_data_in, bot->txt_data_out, bot->txt_data_in_sz);
+	memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
+	pmodule_cur_run2(bot);
 
 /* added 04/12/2012 */
-  if (sNULL (bot->txt_data_out) != NULL)
-    str = strdup (bot->txt_data_out);
+	if (sNULL(bot->txt_data_out) != NULL)
+		str = strdup(bot->txt_data_out);
 
-  return str;
+	return str;
 }
 
-
-
-
-
-char *
-exec_op_fork (dlist_t * dlist_node, bot_t * bot, char *string)
+char *exec_op_fork(dlist_t * dlist_node, bot_t * bot, char *string)
 {
-  char *str = NULL;
+	char *str = NULL;
 
+	if (!dlist_node || !bot || !string)
+		return NULL;
 
-  if (!dlist_node || !bot || !string)
-    return NULL;
+	bot->txt_data_in_sz = strlen(bot->txt_data_out);
+	memcpy(bot->txt_data_in, bot->txt_data_out, bot->txt_data_in_sz);
+	memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
 
-  bot->txt_data_in_sz = strlen (bot->txt_data_out);
-  memcpy (bot->txt_data_in, bot->txt_data_out, bot->txt_data_in_sz);
-  memset (bot->txt_data_out, 0, sizeof (bot->txt_data_out));
-
-  if (!bot_fork_clean (bot))
-    {
-      pmodule_cur_run2 (bot);
+	if (!bot_fork_clean(bot)) {
+		pmodule_cur_run2(bot);
 
 /* added 04/12/2012 */
-      if (sNULL (bot->txt_data_out) != NULL)
-	str = strdup (bot->txt_data_out);
-    }
+		if (sNULL(bot->txt_data_out) != NULL)
+			str = strdup(bot->txt_data_out);
+	}
 
-  return str;
+	return str;
 }

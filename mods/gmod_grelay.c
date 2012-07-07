@@ -25,76 +25,68 @@
  */
 #include "gmod_grelay.h"
 
-void
-__grelay_init__ (void)
+void __grelay_init__(void)
 {
 
 /*
   gmod_grelay_info.name = "gmod_grelay";
   gmod_grelay_info.trigger = strdup ("^relay");
 */
-  strlcpy_buf (gmod_grelay_info.name, "gmod_grelay");
-  strlcpy_buf (gmod_grelay_info.trigger, "^grelay");
+	strlcpy_buf(gmod_grelay_info.name, "gmod_grelay");
+	strlcpy_buf(gmod_grelay_info.trigger, "^grelay");
 
-  gmod_grelay_info.init = grelay_init;
-  gmod_grelay_info.fini = grelay_fini;
-  gmod_grelay_info.help = grelay_help;
-  gmod_grelay_info.run = grelay_run;
-  gmod_grelay_info.control = NULL;
+	gmod_grelay_info.init = grelay_init;
+	gmod_grelay_info.fini = grelay_fini;
+	gmod_grelay_info.help = grelay_help;
+	gmod_grelay_info.run = grelay_run;
+	gmod_grelay_info.control = NULL;
 
-  gmod_grelay_info.output = grelay_output;
-  gmod_grelay_info.input = grelay_input;
+	gmod_grelay_info.output = grelay_output;
+	gmod_grelay_info.input = grelay_input;
 
-  gmod_grelay_info.off = grelay_off;
+	gmod_grelay_info.off = grelay_off;
 
-  gmod_grelay_info.control_up = grelay_control_up;
-  gmod_grelay_info.control_down = grelay_control_down;
+	gmod_grelay_info.control_up = grelay_control_up;
+	gmod_grelay_info.control_down = grelay_control_down;
 
-  gmod_grelay_info.destroy_up = grelay_destroy_up;
-  gmod_grelay_info.destroy_down = grelay_destroy_down;
+	gmod_grelay_info.destroy_up = grelay_destroy_up;
+	gmod_grelay_info.destroy_down = grelay_destroy_down;
 
-  gmod_grelay_info.self = &gmod_grelay_info;
+	gmod_grelay_info.self = &gmod_grelay_info;
 
-  debug (NULL, "__grelay_init__: Loaded gmod_grelay\n");
+	debug(NULL, "__grelay_init__: Loaded gmod_grelay\n");
 
-  return;
+	return;
 }
 
-
-
-bot_t *
-grelay_init (dlist_t * dlist_node, bot_t * bot)
+bot_t *grelay_init(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "grelay_init: Entered\n");
-  return NULL;
+	debug(bot, "grelay_init: Entered\n");
+	return NULL;
 }
 
-bot_t *
-grelay_fini (dlist_t * dlist_node, bot_t * bot)
+bot_t *grelay_fini(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "grelay_fini: Entered\n");
-  return NULL;
+	debug(bot, "grelay_fini: Entered\n");
+	return NULL;
 }
 
-bot_t *
-grelay_off (dlist_t * dlist_node, bot_t * bot)
+bot_t *grelay_off(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "grelay_off: Entered\n");
-  return NULL;
+	debug(bot, "grelay_off: Entered\n");
+	return NULL;
 }
 
-bot_t *
-grelay_help (dlist_t * dlist_node, bot_t * bot)
+bot_t *grelay_help(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "grelay_help: Entered\n");
+	debug(bot, "grelay_help: Entered\n");
 
+	if (!bot)
+		return NULL;
 
-  if (!bot)
-    return NULL;
+	bot->dl_module_help = "^grelay";
 
-  bot->dl_module_help = "^grelay";
-
-  return NULL;
+	return NULL;
 }
 
 /*
@@ -111,10 +103,9 @@ grelay_control (dlist_t * dlist_node, bot_t * bot, int what, va_list ap)
 }
 */
 
-bot_t *
-grelay_run (dlist_t * dlist_node, bot_t * bot)
+bot_t *grelay_run(dlist_t * dlist_node, bot_t * bot)
 {
-  bot_gmod_elm_t *gmod = NULL;
+	bot_gmod_elm_t *gmod = NULL;
 /*
   dlist_t *dl, *dptr;
   module_t *module;
@@ -134,7 +125,6 @@ grelay_run (dlist_t * dlist_node, bot_t * bot)
 	     "grelay_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
 	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-
   if (bot_shouldreturn (bot))
     return NULL;
 
@@ -143,7 +133,6 @@ if(!gmod) {
 puts("GMOD_GRELAY RUN GMOD=NULL");
 return NULL;
 }
-
 
   opt = 0;
   new_str = NULL;
@@ -157,7 +146,6 @@ return NULL;
   MOD_OPTIONS_TOP_HALF;
   printf ("relay trigger: [%s]\n", dl_options_ptr);
   MOD_OPTIONS_BOTTOM_HALF;
-
 
   tok_1 = strtok (dl_options_ptr, ",");
   if (!tok_1)
@@ -202,7 +190,6 @@ return NULL;
   if (!module->run)
     goto cleanup;
 
-
   memset (bot->trig_called, 0, sizeof (bot->trig_called));
   strlcpy_buf (bot->trig_called, tok_2, sizeof (bot->trig_called) - 1);
 
@@ -218,293 +205,237 @@ cleanup:
 
 */
 
-  gmodule_set_can_pass_up (gmod);
-  gmodule_set_can_pass_down (gmod);
+	gmodule_set_can_pass_up(gmod);
+	gmodule_set_can_pass_down(gmod);
 
-  grelay_input (dlist_node, bot);
+	grelay_input(dlist_node, bot);
 
-  gmodule_set_has_run (gmod);
+	gmodule_set_has_run(gmod);
 
-  return bot;
+	return bot;
 }
 
-
-
-char *
-grelay_change_string (bot_t * bot, char *string, int opt)
+char *grelay_change_string(bot_t * bot, char *string, int opt)
 {
-  char *str = NULL;
-  char buf[MAX_BUF_SZ];
+	char *str = NULL;
+	char buf[MAX_BUF_SZ];
 
+	char *sep_ptr;
 
-  char *sep_ptr;
+	if (!bot || !string)
+		return NULL;
 
+	sep_ptr = str_find_sep(string);
+	if (sep_ptr)
+		string = sep_ptr;
 
-  if (!bot || !string)
-    return NULL;
+	memset(buf, 0, sizeof(buf));
 
-
-  sep_ptr = str_find_sep (string);
-  if (sep_ptr)
-    string = sep_ptr;
-
-  memset (buf, 0, sizeof (buf));
-
-  return str;
+	return str;
 }
 
-
-
-
-
-
-
-bot_t *
-grelay_output (dlist_t * dlist_node, bot_t * bot)
+bot_t *grelay_output(dlist_t * dlist_node, bot_t * bot)
 {
 
-  debug (bot, "grelay_output: Entered\n");
+	debug(bot, "grelay_output: Entered\n");
 
-  gmodule_down (dlist_node, bot);
+	gmodule_down(dlist_node, bot);
 
-  return NULL;
+	return NULL;
 }
 
-
-bot_t *
-grelay_input (dlist_t * dlist_node, bot_t * bot)
+bot_t *grelay_input(dlist_t * dlist_node, bot_t * bot)
 {
-  bot_gmod_elm_t *gmod = NULL;
-  dlist_t *dl, *dptr;
-  module_t *module;
-  char *str_ptr, *dl_module_arg_after_options, *new_str;
-  int opt, type;
+	bot_gmod_elm_t *gmod = NULL;
+	dlist_t *dl, *dptr;
+	module_t *module;
+	char *str_ptr, *dl_module_arg_after_options, *new_str;
+	int opt, type;
 
-  char *tok_1, *tok_2, *tok_3;
+	char *tok_1, *tok_2, *tok_3;
 
+	debug(bot, "grelay_input: Entered\n");
 
-  debug (bot, "grelay_input: Entered\n");
+	if (!dlist_node || !bot)
+		return NULL;
 
-  if (!dlist_node || !bot)
-    return NULL;
+	stat_inc(bot, bot->trig_called);
 
-  stat_inc (bot, bot->trig_called);
+	debug(bot,
+	      "grelay_input: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
+	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-  debug (bot,
-	 "grelay_input: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
-	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	if (bot_shouldreturn(bot))
+		return NULL;
 
+	gmod = (bot_gmod_elm_t *) dlist_data(dlist_node);
+	if (!gmod)
+		return NULL;
 
-  if (bot_shouldreturn (bot))
-    return NULL;
+	gmodule_set_can_pass_up(gmod);
+	gmodule_set_can_pass_down(gmod);
 
-  gmod = (bot_gmod_elm_t *) dlist_data (dlist_node);
-  if (!gmod)
-    return NULL;
+	gmodule_set_has_run(gmod);
 
-  gmodule_set_can_pass_up (gmod);
-  gmodule_set_can_pass_down (gmod);
+	opt = 0;
+	new_str = NULL;
 
-  gmodule_set_has_run (gmod);
+	dl = dptr = NULL;
 
+	tok_1 = tok_2 = tok_3 = NULL;
 
-  opt = 0;
-  new_str = NULL;
+	printf("dl_module_arg=%s\n", bot->dl_module_arg);
 
-  dl = dptr = NULL;
+	if (bot->txt_data_in_sz > 0) {
 
-  tok_1 = tok_2 = tok_3 = NULL;
+		dl_module_arg_after_options = bot->dl_module_arg;
+		if (bot->dl_module_arg[0] == '(') {
+			int len_options_area = 0;
 
-  printf ("dl_module_arg=%s\n", bot->dl_module_arg);
+			dl_module_arg_after_options =
+			    tokenize_find_closing_bracket(bot->dl_module_arg,
+							  '(');
+			if (!dl_module_arg_after_options)
+				return NULL;
 
-  if (bot->txt_data_in_sz > 0)
-    {
+			*dl_module_arg_after_options = '\0';
+			dl_module_arg_after_options++;
 
-      dl_module_arg_after_options = bot->dl_module_arg;
-      if (bot->dl_module_arg[0] == '(')
-	{
-	  int len_options_area = 0;
+			len_options_area =
+			    dl_module_arg_after_options - bot->dl_module_arg;
 
-	  dl_module_arg_after_options =
-	    tokenize_find_closing_bracket (bot->dl_module_arg, '(');
-	  if (!dl_module_arg_after_options)
-	    return NULL;
+			printf("relay trigger: [%s]\n", &bot->dl_module_arg[1]);
+		}
 
-	  *dl_module_arg_after_options = '\0';
-	  dl_module_arg_after_options++;
+		tok_1 = strtok(&bot->dl_module_arg[1], ",");
+		if (!tok_1)
+			return NULL;
 
-	  len_options_area = dl_module_arg_after_options - bot->dl_module_arg;
+		tok_2 = strtok(NULL, "");
+		if (!tok_2)
+			return NULL;
 
-	  printf ("relay trigger: [%s]\n", &bot->dl_module_arg[1]);
-	}
+		tok_2 = strdup(tok_2);
 
+		str_ptr = strchr(tok_2, '(');
 
-      tok_1 = strtok (&bot->dl_module_arg[1], ",");
-      if (!tok_1)
-	return NULL;
+		if (str_ptr) {
+			tok_3 = strdup_len(tok_2, (str_ptr - tok_2));
+		} else {
+			tok_3 = strdup(tok_2);
+		}
 
-      tok_2 = strtok (NULL, "");
-      if (!tok_2)
-	return NULL;
+		if (!strcasecmp(tok_1, "p")) {
+			dl = gi->dl_pmodule;
+			type = XMODULE_TYPE_PMODULE;
+		} else if (!strcasecmp(tok_1, "g")) {
+			dl = gi->dl_gmodule;
+			type = XMODULE_TYPE_GMODULE;
+		} else if (!strcasecmp(tok_1, "m")) {
+			dl = gi->dl_module;
+			type = XMODULE_TYPE_MODULE;
+		} else
+			return NULL;
 
-      tok_2 = strdup (tok_2);
+		puts("WTF1");
 
-      str_ptr = strchr (tok_2, '(');
+		module = xmodule_find_by_trig(type, tok_3);
+		if (!module)
+			goto cleanup;
 
-      if (str_ptr)
-	{
-	  tok_3 = strdup_len (tok_2, (str_ptr - tok_2));
-	}
-      else
-	{
-	  tok_3 = strdup (tok_2);
-	}
+		puts("WTF2");
 
-      if (!strcasecmp (tok_1, "p"))
-	{
-	  dl = gi->dl_pmodule;
-	  type = XMODULE_TYPE_PMODULE;
-	}
-      else if (!strcasecmp (tok_1, "g"))
-	{
-	  dl = gi->dl_gmodule;
-	  type = XMODULE_TYPE_GMODULE;
-	}
-      else if (!strcasecmp (tok_1, "m"))
-	{
-	  dl = gi->dl_module;
-	  type = XMODULE_TYPE_MODULE;
-	}
-      else
-	return NULL;
-
-      puts ("WTF1");
-
-      module = xmodule_find_by_trig (type, tok_3);
-      if (!module)
-	goto cleanup;
-
-      puts ("WTF2");
-
-      if (!module->run)
-	goto cleanup;
+		if (!module->run)
+			goto cleanup;
 
 /*
       memset (&bot->trig_called, 0, sizeof (bot->trig_called));
 */
-      bz (bot->trig_called);
-      strlcpy_buf (bot->trig_called, tok_2);
-      bot->dl_module_arg = bot->trig_called + fn_strlen (tok_3);
-      printf ("trig_called=%s, tok_2=%s, tok_3=%s\n", bot->trig_called, tok_2,
-	      tok_3);
+		bz(bot->trig_called);
+		strlcpy_buf(bot->trig_called, tok_2);
+		bot->dl_module_arg = bot->trig_called + fn_strlen(tok_3);
+		printf("trig_called=%s, tok_2=%s, tok_3=%s\n", bot->trig_called,
+		       tok_2, tok_3);
 
+		bot->isprivmsg = 1;
 
-      bot->isprivmsg = 1;
+		if (type == XMODULE_TYPE_MODULE) {
+			gmodule_fix_data_in_to_out(bot);
+		}
 
-      if (type == XMODULE_TYPE_MODULE)
-	{
-	  gmodule_fix_data_in_to_out (bot);
+		module->run(dlist_node, bot);
+
+		bot->txt_data_out_sz = strlen(bot->txt_data_out);
+
 	}
 
-      module->run (dlist_node, bot);
+	gmodule_up(dlist_node, bot);
 
-      bot->txt_data_out_sz = strlen (bot->txt_data_out);
-
-    }
-
-  gmodule_up (dlist_node, bot);
-
-  if (bot->txt_data_out_sz && bot->shouldsend)
-    {
-      gmodule_down (dlist_node, bot);
+	if (bot->txt_data_out_sz && bot->shouldsend) {
+		gmodule_down(dlist_node, bot);
 /* ...
 bot_line_clear(bot);
 */
-    }
+	}
 
+ cleanup:
+	puts("WHYYYYYYYYYYYYYYYYYYYYYYYYY");
 
-cleanup:
-  puts ("WHYYYYYYYYYYYYYYYYYYYYYYYYY");
+	if (tok_3)
+		free(tok_3);
 
-  if (tok_3)
-    free (tok_3);
+	if (tok_2)
+		free(tok_2);
 
-  if (tok_2)
-    free (tok_2);
-
-
-  return bot;
+	return bot;
 }
 
-
-
-
-
-
-bot_t *
-grelay_destroy_gmod (dlist_t * dlist_node, bot_t * bot)
+bot_t *grelay_destroy_gmod(dlist_t * dlist_node, bot_t * bot)
 {
 
-  debug (NULL, "grelay_destroy_gmod: Entered\n");
+	debug(NULL, "grelay_destroy_gmod: Entered\n");
 
-  return NULL;
+	return NULL;
 }
 
-
-
-
-
-bot_t *
-grelay_destroy_down (dlist_t * dlist_node, bot_t * bot)
+bot_t *grelay_destroy_down(dlist_t * dlist_node, bot_t * bot)
 {
-  bot_t *ret = NULL;
+	bot_t *ret = NULL;
 
+	debug(NULL, "grelay_destroy_down: Entered\n");
 
-  debug (NULL, "grelay_destroy_down: Entered\n");
+	ret = grelay_destroy_gmod(dlist_node, bot);
 
-  ret = grelay_destroy_gmod (dlist_node, bot);
+	gmodule_destroy_down(dlist_node, bot);
 
-  gmodule_destroy_down (dlist_node, bot);
-
-  return ret;
+	return ret;
 }
 
-
-
-
-bot_t *
-grelay_destroy_up (dlist_t * dlist_node, bot_t * bot)
+bot_t *grelay_destroy_up(dlist_t * dlist_node, bot_t * bot)
 {
-  bot_t *ret = NULL;
+	bot_t *ret = NULL;
 
-  debug (NULL, "grelay_destroy_up: Entere\n");
+	debug(NULL, "grelay_destroy_up: Entere\n");
 
-  gmodule_destroy_up (dlist_node, bot);
+	gmodule_destroy_up(dlist_node, bot);
 
-  ret = grelay_destroy_gmod (dlist_node, bot);
+	ret = grelay_destroy_gmod(dlist_node, bot);
 
-  return ret;
+	return ret;
 }
 
-
-
-
-bot_t *
-grelay_control_down (dlist_t * dlist_node, bot_t * bot)
+bot_t *grelay_control_down(dlist_t * dlist_node, bot_t * bot)
 {
 
-  debug (NULL, "grelay_control_down: Entered\n");
+	debug(NULL, "grelay_control_down: Entered\n");
 
-  return NULL;
+	return NULL;
 }
 
-
-
-bot_t *
-grelay_control_up (dlist_t * dlist_node, bot_t * bot)
+bot_t *grelay_control_up(dlist_t * dlist_node, bot_t * bot)
 {
 
-  debug (NULL, "grelay_control_up: Entered\n");
+	debug(NULL, "grelay_control_up: Entered\n");
 
-  return NULL;
+	return NULL;
 }

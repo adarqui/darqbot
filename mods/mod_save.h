@@ -28,19 +28,17 @@
 
 #include "bot.h"
 
-
 module_t mod_save_info;
 
-bot_t *save_init (dlist_t *, bot_t *);
-bot_t *save_fini (dlist_t *, bot_t *);
-bot_t *save_help (dlist_t *, bot_t *);
-bot_t *save_run (dlist_t *, bot_t *);
+bot_t *save_init(dlist_t *, bot_t *);
+bot_t *save_fini(dlist_t *, bot_t *);
+bot_t *save_help(dlist_t *, bot_t *);
+bot_t *save_run(dlist_t *, bot_t *);
 
-void save_bot (bot_t *);
+void save_bot(bot_t *);
 
-char *save_change_string (bot_t *, char *);
+char *save_change_string(bot_t *, char *);
 
-
-void __save_init__ (void) __attribute__ ((constructor));
+void __save_init__(void) __attribute__ ((constructor));
 
 #endif

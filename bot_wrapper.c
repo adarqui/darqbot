@@ -31,60 +31,52 @@
 #include <sys/wait.h>
 #include <signal.h>
 
-int kill (pid_t, int);
+int kill(pid_t, int);
 
 //extern char * environ[];
 
 pid_t pid;
 
-void
-sigint_handler (int signum)
+void sigint_handler(int signum)
 {
 
-  kill (pid, SIGKILL);
-  exit (0);
+	kill(pid, SIGKILL);
+	exit(0);
 
-  return;
+	return;
 }
 
-int
-main ()
+int main()
 {
-  int status, exit_code;
-  char *nargv[2];
+	int status, exit_code;
+	char *nargv[2];
 
-  nargv[0] = "./bot_main_process";
-  nargv[1] = NULL;
+	nargv[0] = "./bot_main_process";
+	nargv[1] = NULL;
 
-  signal (SIGINT, sigint_handler);
+	signal(SIGINT, sigint_handler);
 
-  while (1)
-    {
+	while (1) {
 
-      pid = fork ();
+		pid = fork();
 
-      if (!pid)
-	{
-	  pid = execve (nargv[0], nargv, NULL);
-	  exit (pid);
-	}
-      else
-	{
-	  wait (&status);
-	  exit_code = WEXITSTATUS (status);
-	  printf ("status=%i, exit_code=%i\n", status, exit_code);
+		if (!pid) {
+			pid = execve(nargv[0], nargv, NULL);
+			exit(pid);
+		} else {
+			wait(&status);
+			exit_code = WEXITSTATUS(status);
+			printf("status=%i, exit_code=%i\n", status, exit_code);
 
-	  if (exit_code == 254)
-	    {
-	      kill (pid, SIGKILL);
-	      exit (0);
-	    }
+			if (exit_code == 254) {
+				kill(pid, SIGKILL);
+				exit(0);
+			}
 
-	  sleep (30);
+			sleep(30);
+		}
+
 	}
 
-    }
-
-
-  return 0;
+	return 0;
 }

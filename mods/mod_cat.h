@@ -30,26 +30,24 @@
 
 module_t mod_cat_info;
 
-bot_t *cat_init (dlist_t *, bot_t *);
-bot_t *cat_fini (dlist_t *, bot_t *);
-bot_t *cat_help (dlist_t *, bot_t *);
-bot_t *cat_run (dlist_t *, bot_t *);
+bot_t *cat_init(dlist_t *, bot_t *);
+bot_t *cat_fini(dlist_t *, bot_t *);
+bot_t *cat_help(dlist_t *, bot_t *);
+bot_t *cat_run(dlist_t *, bot_t *);
 
+char *cat_change_string(bot_t *, char *, int);
 
-char *cat_change_string (bot_t *, char *, int);
+void __cat_init__(void) __attribute__ ((constructor));
 
-void __cat_init__ (void) __attribute__ ((constructor));
-
-enum cat_types
-{
-  MOD_CAT_OPT_READ = 1,
-  MOD_CAT_OPT_WRITE,
-  MOD_CAT_OPT_APPEND,
+enum cat_types {
+	MOD_CAT_OPT_READ = 1,
+	MOD_CAT_OPT_WRITE,
+	MOD_CAT_OPT_APPEND,
 };
 
-char *cat_op_read (char *);
-char *cat_op_write (bot_t *, char *, int);
+char *cat_op_read(char *);
+char *cat_op_write(bot_t *, char *, int);
 
-int cat_illegal_fname (char *);
+int cat_illegal_fname(char *);
 
 #endif

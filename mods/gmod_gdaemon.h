@@ -28,53 +28,52 @@
 
 #include "bot.h"
 
-typedef struct gmod_gdaemon
-{
-  bot_t *bot;
-  dlist_t *dptr_gmod;
-  bot_gmod_elm_t *gmod;
+typedef struct gmod_gdaemon {
+	bot_t *bot;
+	dlist_t *dptr_gmod;
+	bot_gmod_elm_t *gmod;
 
-  int initialized;
+	int initialized;
 
 /* options */
-  int flags;
-  char *new_name;
-  char *fd_unix_path;
+	int flags;
+	char *new_name;
+	char *fd_unix_path;
 
-  dlist_t *dl_mod_names;
+	dlist_t *dl_mod_names;
 
 } gdaemon_t;
 
 module_t gmod_gdaemon_info;
 
-void __gdaemon_init__ (void) __attribute__ ((constructor));
+void __gdaemon_init__(void) __attribute__ ((constructor));
 
-bot_t *gdaemon_init (dlist_t *, bot_t *);
-bot_t *gdaemon_fini (dlist_t *, bot_t *);
-bot_t *gdaemon_help (dlist_t *, bot_t *);
-bot_t *gdaemon_run (dlist_t *, bot_t *);
-bot_t *gdaemon_control (dlist_t *, bot_t *, int, va_list);
+bot_t *gdaemon_init(dlist_t *, bot_t *);
+bot_t *gdaemon_fini(dlist_t *, bot_t *);
+bot_t *gdaemon_help(dlist_t *, bot_t *);
+bot_t *gdaemon_run(dlist_t *, bot_t *);
+bot_t *gdaemon_control(dlist_t *, bot_t *, int, va_list);
 
-bot_t *gdaemon_input (dlist_t *, bot_t *);
-bot_t *gdaemon_output (dlist_t *, bot_t *);
+bot_t *gdaemon_input(dlist_t *, bot_t *);
+bot_t *gdaemon_output(dlist_t *, bot_t *);
 
-bot_t *gdaemon_destroy_up (dlist_t *, bot_t *);
-bot_t *gdaemon_destroy_down (dlist_t *, bot_t *);
+bot_t *gdaemon_destroy_up(dlist_t *, bot_t *);
+bot_t *gdaemon_destroy_down(dlist_t *, bot_t *);
 
-bot_t *gdaemon_control_up (dlist_t *, bot_t *);
-bot_t *gdaemon_control_down (dlist_t *, bot_t *);
+bot_t *gdaemon_control_up(dlist_t *, bot_t *);
+bot_t *gdaemon_control_down(dlist_t *, bot_t *);
 
-bot_t *gdaemon_off (dlist_t *, bot_t *);
+bot_t *gdaemon_off(dlist_t *, bot_t *);
 
-int gdaemon_input_client (gdaemon_t *);
-char *gdaemon_change_string (bot_t *, char *, int);
-char *gdaemon_process_options (gdaemon_t *, char *);
-void gdaemon_process_options_parse (gdaemon_t *, char *);
-void gdaemon_process_options_parse_mod_names (gdaemon_t *, char *);
+int gdaemon_input_client(gdaemon_t *);
+char *gdaemon_change_string(bot_t *, char *, int);
+char *gdaemon_process_options(gdaemon_t *, char *);
+void gdaemon_process_options_parse(gdaemon_t *, char *);
+void gdaemon_process_options_parse_mod_names(gdaemon_t *, char *);
 
-bot_t *gdaemon_destroy_up_gdaemon (gdaemon_t *);
-bot_t *gdaemon_destroy_down_gdaemon (gdaemon_t *);
+bot_t *gdaemon_destroy_up_gdaemon(gdaemon_t *);
+bot_t *gdaemon_destroy_down_gdaemon(gdaemon_t *);
 
-void gdaemon_gmod_init (bot_t *, bot_gmod_elm_t *, dlist_t *);
+void gdaemon_gmod_init(bot_t *, bot_gmod_elm_t *, dlist_t *);
 
 #endif

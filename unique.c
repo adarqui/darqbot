@@ -21,220 +21,189 @@
 */
 #include "bot.h"
 
-unique_t *
-unique_create (bot_t * bot, dlist_t ** dl_unique, int id_flags)
+unique_t *unique_create(bot_t * bot, dlist_t ** dl_unique, int id_flags)
 {
-  dlist_t *dptr_bu = NULL;
-  unique_t *bu = NULL;
+	dlist_t *dptr_bu = NULL;
+	unique_t *bu = NULL;
 
-  if (!bot || !dl_unique)
-    return NULL;
+	if (!bot || !dl_unique)
+		return NULL;
 
-  bu = unique_find (bot, dl_unique);
-  if (bu)
-    return bu;
+	bu = unique_find(bot, dl_unique);
+	if (bu)
+		return bu;
 
-  bu = (unique_t *) calloc (1, sizeof (unique_t));
-  if (!bu)
-    return NULL;
+	bu = (unique_t *) calloc(1, sizeof(unique_t));
+	if (!bu)
+		return NULL;
 
-  bu->id_flags = id_flags;
+	bu->id_flags = id_flags;
 
-  if (id_flags & UNIQUE_ID_NICK)
-    {
-      bu->nick = strdup (bot->txt_nick);
-    }
-  if (id_flags & UNIQUE_ID_CHAN)
-    {
-      bu->chan = strdup (bot->txt_to);
-    }
-  if (id_flags & UNIQUE_ID_HOST)
-    {
-      bu->host = strdup (bot->txt_host);
-    }
-  if (id_flags & UNIQUE_ID_TAG)
-    {
-      bu->tag = strdup (bot->tag);
-    }
-  if (id_flags & UNIQUE_ID_ID)
-    {
-      bu->ID = bot->ID;
-    }
+	if (id_flags & UNIQUE_ID_NICK) {
+		bu->nick = strdup(bot->txt_nick);
+	}
+	if (id_flags & UNIQUE_ID_CHAN) {
+		bu->chan = strdup(bot->txt_to);
+	}
+	if (id_flags & UNIQUE_ID_HOST) {
+		bu->host = strdup(bot->txt_host);
+	}
+	if (id_flags & UNIQUE_ID_TAG) {
+		bu->tag = strdup(bot->tag);
+	}
+	if (id_flags & UNIQUE_ID_ID) {
+		bu->ID = bot->ID;
+	}
 
-  dptr_bu = dlist_Dinsert_after (dl_unique, bu);
-  bu->dptr_self = dptr_bu;
+	dptr_bu = dlist_Dinsert_after(dl_unique, bu);
+	bu->dptr_self = dptr_bu;
 
-
-  return bu;
+	return bu;
 }
 
-unique_t *
-unique_find (bot_t * bot, dlist_t ** dl_unique)
+unique_t *unique_find(bot_t * bot, dlist_t ** dl_unique)
 {
-  dlist_t *dptr = NULL;
-  unique_t *bu = NULL;
+	dlist_t *dptr = NULL;
+	unique_t *bu = NULL;
 
-  if (!bot || !dl_unique)
-    return NULL;
+	if (!bot || !dl_unique)
+		return NULL;
 
-  dlist_fornext (*dl_unique, dptr)
-  {
-    bu = (unique_t *) dlist_data (dptr);
-    if (!bu)
-      continue;
+	dlist_fornext(*dl_unique, dptr) {
+		bu = (unique_t *) dlist_data(dptr);
+		if (!bu)
+			continue;
 
-    if (bu->id_flags & UNIQUE_ID_NICK)
-      {
-	if (strcasecmp (bu->nick, bot->txt_nick))
-	  continue;
-      }
+		if (bu->id_flags & UNIQUE_ID_NICK) {
+			if (strcasecmp(bu->nick, bot->txt_nick))
+				continue;
+		}
 
-    if (bu->id_flags & UNIQUE_ID_CHAN)
-      {
-	if (strcasecmp (bu->chan, bot->txt_to))
-	  continue;
-      }
+		if (bu->id_flags & UNIQUE_ID_CHAN) {
+			if (strcasecmp(bu->chan, bot->txt_to))
+				continue;
+		}
 
-    if (bu->id_flags & UNIQUE_ID_HOST)
-      {
-	if (strcasecmp (bu->host, bot->txt_host))
-	  continue;
-      }
+		if (bu->id_flags & UNIQUE_ID_HOST) {
+			if (strcasecmp(bu->host, bot->txt_host))
+				continue;
+		}
 
-    if (bu->id_flags & UNIQUE_ID_TAG)
-      {
-	if (strcasecmp (bu->tag, bot->tag))
-	  continue;
-      }
-    if (bu->id_flags & UNIQUE_ID_ID)
-      {
-	if (bu->ID != bot->ID)
-	  continue;
-      }
+		if (bu->id_flags & UNIQUE_ID_TAG) {
+			if (strcasecmp(bu->tag, bot->tag))
+				continue;
+		}
+		if (bu->id_flags & UNIQUE_ID_ID) {
+			if (bu->ID != bot->ID)
+				continue;
+		}
 
+		return bu;
+	}
 
-    return bu;
-  }
-
-
-  return NULL;
+	return NULL;
 }
 
-
-void *
-unique_get (bot_t * bot, dlist_t ** dl_unique)
+void *unique_get(bot_t * bot, dlist_t ** dl_unique)
 {
-  unique_t *bu = NULL;
+	unique_t *bu = NULL;
 
-  if (!bot || !dl_unique)
-    return NULL;
+	if (!bot || !dl_unique)
+		return NULL;
 
-  bu = unique_find (bot, dl_unique);
-  if (!bu)
-    return NULL;
+	bu = unique_find(bot, dl_unique);
+	if (!bu)
+		return NULL;
 
-  return bu->data;
+	return bu->data;
 }
 
-
-
-unique_t *
-unique_delete (bot_t * bot, dlist_t ** dl_unique, void (*fn) (void *))
+unique_t *unique_delete(bot_t * bot, dlist_t ** dl_unique, void (*fn) (void *))
 {
-  dlist_t *dptr = NULL;
-  unique_t *bu = NULL;
+	dlist_t *dptr = NULL;
+	unique_t *bu = NULL;
 
-  if (!bot || !dl_unique)
-    return NULL;
+	if (!bot || !dl_unique)
+		return NULL;
 
-  bu = unique_find (bot, dl_unique);
-  if (!bu)
-    return NULL;
+	bu = unique_find(bot, dl_unique);
+	if (!bu)
+		return NULL;
 
+	if (fn)
+		fn(bu->data);
 
-  if (fn)
-    fn (bu->data);
+	dptr = dlist_remove(dl_unique, bu->dptr_self);
+	if (dptr)
+		free(dptr);
 
-  dptr = dlist_remove (dl_unique, bu->dptr_self);
-  if (dptr)
-    free (dptr);
+	unique_free(bu);
 
-  unique_free (bu);
-
-  return NULL;
+	return NULL;
 }
 
-void
-unique_free (void *arg)
+void unique_free(void *arg)
 {
-  unique_t *bu = (unique_t *) arg;
+	unique_t *bu = (unique_t *) arg;
 
-  if (!bu)
-    return;
+	if (!bu)
+		return;
 
-  if (bu->nick)
-    free (bu->nick);
+	if (bu->nick)
+		free(bu->nick);
 
-  if (bu->chan)
-    free (bu->chan);
+	if (bu->chan)
+		free(bu->chan);
 
-  if (bu->host)
-    free (bu->host);
+	if (bu->host)
+		free(bu->host);
 
-  if (bu->tag)
-    free (bu->tag);
+	if (bu->tag)
+		free(bu->tag);
 
-  free (bu);
+	free(bu);
 
-  return;
+	return;
 }
 
-void
-unique_destroy (bot_t * bot, dlist_t ** dl_unique, void (*fn) (void *))
+void unique_destroy(bot_t * bot, dlist_t ** dl_unique, void (*fn) (void *))
 {
-  dlist_t *dptr_a, *dptr_b, *dptr_c;
-  unique_t *bu = NULL;
+	dlist_t *dptr_a, *dptr_b, *dptr_c;
+	unique_t *bu = NULL;
 
-  if (!bot || !dl_unique || !fn)
-    return;
+	if (!bot || !dl_unique || !fn)
+		return;
 
-  dlist_fornext_retarded (*dl_unique, dptr_a, dptr_b)
-  {
-    if (!dptr_a)
-      break;
-    dptr_c = dlist_remove (dl_unique, dptr_a);
-    if (dptr_c)
-      {
-	bu = (unique_t *) dlist_data (dptr_c);
-	fn (bu->data);
-	unique_free (bu);
-	free (dptr_c);
-      }
-  }
+	dlist_fornext_retarded(*dl_unique, dptr_a, dptr_b) {
+		if (!dptr_a)
+			break;
+		dptr_c = dlist_remove(dl_unique, dptr_a);
+		if (dptr_c) {
+			bu = (unique_t *) dlist_data(dptr_c);
+			fn(bu->data);
+			unique_free(bu);
+			free(dptr_c);
+		}
+	}
 
-  return;
+	return;
 }
 
-
-
-char *
-unique_bu2str (unique_t * bu, int flags)
+char *unique_bu2str(unique_t * bu, int flags)
 {
-  char *str = NULL;
-  int c = '\0';
+	char *str = NULL;
+	int c = '\0';
 
+	if (!bu) {
+		return NULL;
+	}
 
-  if (!bu)
-    {
-      return NULL;
-    }
+	if (flags & UNIQUE_BU2STR_NEWLINE)
+		c = '\n';
 
-  if (flags & UNIQUE_BU2STR_NEWLINE)
-    c = '\n';
+	str =
+	    str_unite("tag=[%s] : host=[%s] : nick=[%s] : chan=[%s]%c", bu->tag,
+		      bu->host, bu->nick, bu->chan, c);
 
-  str =
-    str_unite ("tag=[%s] : host=[%s] : nick=[%s] : chan=[%s]%c", bu->tag,
-	       bu->host, bu->nick, bu->chan, c);
-
-  return str;
+	return str;
 }

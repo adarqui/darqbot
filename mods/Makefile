@@ -58,7 +58,7 @@ MOD_STACK = mod_stack.c
 MOD_QUEUE = mod_queue.c
 MOD_SAVE = mod_save.c
 MOD_FNSC = mod_fnsc.c
-MOD_FNSASMX86 = mod_fnsasmx86.c
+MOD_FNSINTEL = mod_fnsintel.c
 MOD_FORTUNE = mod_fortune.c
 MOD_QUIZ = mod_quiz.c
 MOD_CONSOLE = mod_console.c
@@ -82,6 +82,7 @@ MOD_CAT = mod_cat.c
 MOD_AVL = mod_avl.c
 MOD_XML = mod_xml.c
 MOD_CMPH = mod_cmph.c
+MOD_INTEL = mod_intel.c
 
 # pmods - parser modules, for handling how triggers are run/interpreted
 
@@ -101,6 +102,8 @@ GMOD_GIRCPONG = gmod_gircpong.c
 GMOD_GSSL = gmod_gssl.c
 GMOD_GPTY = gmod_gpty.c
 GMOD_GEXEC = gmod_gexec.c
+GMOD_GFDPASSD = gmod_gfdpassd.c
+GMOD_GFDPASSC = gmod_gfdpassc.c
 
 all:
 
@@ -108,6 +111,7 @@ all:
 	mkdir /darqbot/.darqbot/pmods &
 	mkdir /darqbot/.darqbot/gmods &
 
+	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(GMOD_GFDPASSD) -o gmod_gfdpassd.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(GMOD_GEXEC) -o gmod_gexec.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(GMOD_GPTY) -o gmod_gpty.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(GMOD_GSSL) -o gmod_gssl.so
@@ -124,13 +128,14 @@ all:
 
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(PMOD_PARSE2) -o pmod_parse2.so
 
+	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_INTEL) mod_intel.S -o mod_intel.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_CMPH) -lcmph -o mod_cmph.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared -I /usr/include/libxml2 -lxml2 $(MOD_XML) -o mod_xml.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_BIN) -o mod_bin.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_GUILE) -I/usr/include/guile -lguile-2.0 -o mod_guile.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared -I ./mod_avl_files/ ./mod_avl_files/texilib.c $(MOD_AVL) -o mod_avl.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_TIMER) -o mod_timer.so
-	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_FNSASMX86) -o mod_fnsasmx86.so
+	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_FNSINTEL) -o mod_fnsintel.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_GEOIP) -lGeoIP -o mod_geoip.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_RF) -o mod_rf.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared -lcurl -lxml2 -I /usr/include/libxml2/ $(MOD_RSS) -o mod_rss.so

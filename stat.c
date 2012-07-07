@@ -21,38 +21,33 @@
 */
 #include "bot.h"
 
-int
-stat_inc (bot_t * bot, char *trig)
+int stat_inc(bot_t * bot, char *trig)
 {
-  int ret;
+	int ret;
 
-  if (!trig)
-    return -1;
+	if (!trig)
+		return -1;
 
-  ret = mongodb_update_key_stat (bot, "test.darqbotstat", trig, 0);
-  if (ret < 0)
-    {
-      mongodb_init (bot);
-    }
+	ret = mongodb_update_key_stat(bot, "test.darqbotstat", trig, 0);
+	if (ret < 0) {
+		mongodb_init(bot);
+	}
 
-  debug (bot, "stat_inc: insert returned %i\n", ret);
+	debug(bot, "stat_inc: insert returned %i\n", ret);
 
-  return 0;
+	return 0;
 }
 
-
-
-int
-stat_retcnt (bot_t * bot, char *trig)
+int stat_retcnt(bot_t * bot, char *trig)
 {
-  int ret;
+	int ret;
 
-  if (!trig)
-    return -1;
+	if (!trig)
+		return -1;
 
-  ret = mongodb_retrieve_key_stat (bot, "test.darqbotstat", trig);
+	ret = mongodb_retrieve_key_stat(bot, "test.darqbotstat", trig);
 
-  debug (bot, "stat_retcnt: ret is %i\n", ret);
+	debug(bot, "stat_retcnt: ret is %i\n", ret);
 
-  return ret;
+	return ret;
 }

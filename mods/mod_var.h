@@ -28,25 +28,24 @@
 
 #include "bot.h"
 
-
 module_t mod_var_info;
 
-bot_t *var_init (dlist_t *, bot_t *);
-bot_t *var_fini (dlist_t *, bot_t *);
-bot_t *var_help (dlist_t *, bot_t *);
-bot_t *var_run (dlist_t *, bot_t *);
+bot_t *var_init(dlist_t *, bot_t *);
+bot_t *var_fini(dlist_t *, bot_t *);
+bot_t *var_help(dlist_t *, bot_t *);
+bot_t *var_run(dlist_t *, bot_t *);
 
-char *var_usleep_fn (bot_t *, char *);
-char *var_multi_fn (bot_t *, char *);
-char *var_bufsz_fn (bot_t *, char *);
-char *var_maxflood_fn (bot_t *, char *);
-char *var_nesting_fn (bot_t *, char *);
-char *var_nesting_cur_fn (bot_t *, char *);
-char *var_allowpm_fn (bot_t *, char *);
-char *var_sigprotect_fn (bot_t *, char *);
-char *var_timer_sleep_fn (bot_t *, char *);
-char *var_timer_sort_fn (bot_t *, char *);
+char *var_usleep_fn(bot_t *, char *);
+char *var_multi_fn(bot_t *, char *);
+char *var_bufsz_fn(bot_t *, char *);
+char *var_maxflood_fn(bot_t *, char *);
+char *var_nesting_fn(bot_t *, char *);
+char *var_nesting_cur_fn(bot_t *, char *);
+char *var_allowpm_fn(bot_t *, char *);
+char *var_sigprotect_fn(bot_t *, char *);
+char *var_timer_sleep_fn(bot_t *, char *);
+char *var_timer_sort_fn(bot_t *, char *);
 
-void __var_init__ (void) __attribute__ ((constructor));
+void __var_init__(void) __attribute__ ((constructor));
 
 #endif

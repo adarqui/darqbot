@@ -33,15 +33,15 @@
 
 module_t mod_xml_info;
 
-bot_t *xml_init (dlist_t *, bot_t *);
-bot_t *xml_fini (dlist_t *, bot_t *);
-bot_t *xml_help (dlist_t *, bot_t *);
-bot_t *xml_run (dlist_t *, bot_t *);
+bot_t *xml_init(dlist_t *, bot_t *);
+bot_t *xml_fini(dlist_t *, bot_t *);
+bot_t *xml_help(dlist_t *, bot_t *);
+bot_t *xml_run(dlist_t *, bot_t *);
 
-void __xml_init__ (void) __attribute__ ((constructor));
+void __xml_init__(void) __attribute__ ((constructor));
 
-char *xml_change_string (char *, char *, int);
-void xml_op_traverse (dlist_t **, xmlNode *, dlist_t **);
-void *xml_compare (void *, void *);
+char *xml_change_string(char *, char *, int);
+void xml_op_traverse(dlist_t **, xmlNode *, dlist_t **);
+void *xml_compare(void *, void *);
 
 #endif

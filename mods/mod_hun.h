@@ -28,23 +28,20 @@
 
 #include "bot.h"
 
-
 #include <hunspell/hunspell.h>
 
 #define MOD_HUNH_DIR "/usr/share/hunspell"
 
-
 module_t mod_hun_info;
 
-bot_t *hun_init (dlist_t *, bot_t *);
-bot_t *hun_fini (dlist_t *, bot_t *);
-bot_t *hun_help (dlist_t *, bot_t *);
-bot_t *hun_run (dlist_t *, bot_t *);
+bot_t *hun_init(dlist_t *, bot_t *);
+bot_t *hun_fini(dlist_t *, bot_t *);
+bot_t *hun_help(dlist_t *, bot_t *);
+bot_t *hun_run(dlist_t *, bot_t *);
 
+char *hun_change_string(char *, int, char *);
+int hun_clean_path(char *);
 
-char *hun_change_string (char *, int, char *);
-int hun_clean_path (char *);
-
-void __hun_init__ (void) __attribute__ ((constructor));
+void __hun_init__(void) __attribute__ ((constructor));
 
 #endif

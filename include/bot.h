@@ -248,6 +248,7 @@ char trig_prefix[16];
 
 #include "my_unix.h"
 #include "fn_all.h"
+#include "fdpass.h"
 
 
 

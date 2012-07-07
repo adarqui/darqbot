@@ -28,16 +28,14 @@
 
 #include "bot.h"
 
-
 module_t mod_nop_info;
 
-bot_t *mod_nop_init (dlist_t *, bot_t *);
-bot_t *mod_nop_fini (dlist_t *, bot_t *);
-bot_t *mod_nop_help (dlist_t *, bot_t *);
-bot_t *mod_nop_run (dlist_t *, bot_t *);
-bot_t *mod_nop_output (dlist_t *, bot_t *);
-bot_t *mod_nop_input (dlist_t *, bot_t *);
-
+bot_t *mod_nop_init(dlist_t *, bot_t *);
+bot_t *mod_nop_fini(dlist_t *, bot_t *);
+bot_t *mod_nop_help(dlist_t *, bot_t *);
+bot_t *mod_nop_run(dlist_t *, bot_t *);
+bot_t *mod_nop_output(dlist_t *, bot_t *);
+bot_t *mod_nop_input(dlist_t *, bot_t *);
 
 char *mod_nop_out_str_prepend;
 char *mod_nop_out_str_append;
@@ -46,11 +44,9 @@ char *mod_nop_in_str_append;
 int mod_nop_out_prob;
 int mod_nop_in_prob;
 
-
 /* ^nop(match) #jumping #bosshogs poopface <-- will only work for #jumping, #bosshogs, or poopface pm */
 char *mod_nop_chan_match;
 
-void __nop_init__ (void) __attribute__ ((constructor));
-
+void __nop_init__(void) __attribute__ ((constructor));
 
 #endif

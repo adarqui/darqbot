@@ -21,79 +21,68 @@
 */
 #include "bot.h"
 
-dlist_t *
-files_get_listing (bot_t * bot, char *dir, int opts)
+dlist_t *files_get_listing(bot_t * bot, char *dir, int opts)
 {
-  dlist_t *dl, *dptr;
+	dlist_t *dl, *dptr;
 
-  dl = dptr = NULL;
+	dl = dptr = NULL;
 
-  if (!dir)
-    return NULL;
+	if (!dir)
+		return NULL;
 
-  files_get_listing_run (bot, dir, opts, &dl);
+	files_get_listing_run(bot, dir, opts, &dl);
 
-  return dl;
+	return dl;
 }
 
-
-
-void
-files_get_listing_run (bot_t * bot, char *dir, int opts, dlist_t ** dl)
+void files_get_listing_run(bot_t * bot, char *dir, int opts, dlist_t ** dl)
 {
-  DIR *dirp;
-  struct dirent *dirp_e;
-  char buf[1024], *str;
+	DIR *dirp;
+	struct dirent *dirp_e;
+	char buf[1024], *str;
 
-  if (!dir || !dl)
-    return;
+	if (!dir || !dl)
+		return;
 
-  dirp = opendir (dir);
-  if (!dirp)
-    return;
+	dirp = opendir(dir);
+	if (!dirp)
+		return;
 
-  while (1)
-    {
-      dirp_e = readdir (dirp);
-      if (!dirp_e)
-	break;
+	while (1) {
+		dirp_e = readdir(dirp);
+		if (!dirp_e)
+			break;
 
-      if (!strcmp (dirp_e->d_name, ".") || !strcmp (dirp_e->d_name, "..")
-	  || dirp_e->d_type == DT_LNK)
-	continue;
+		if (!strcmp(dirp_e->d_name, ".")
+		    || !strcmp(dirp_e->d_name, "..")
+		    || dirp_e->d_type == DT_LNK)
+			continue;
 
-      if (dirp_e->d_type == DT_DIR)
-	{
-	  bz (buf);
-	  snprintf_buf (buf, "%s%s", dir, dirp_e->d_name);
-	  files_get_listing_run (bot, buf, opts, dl);
-	}
-      else
-	{
-	  str = str_unite ("%s/%s", dir, dirp_e->d_name);
-	  if (str)
-	    {
-	      dlist_Dinsert_after (dl, str);
-	    }
+		if (dirp_e->d_type == DT_DIR) {
+			bz(buf);
+			snprintf_buf(buf, "%s%s", dir, dirp_e->d_name);
+			files_get_listing_run(bot, buf, opts, dl);
+		} else {
+			str = str_unite("%s/%s", dir, dirp_e->d_name);
+			if (str) {
+				dlist_Dinsert_after(dl, str);
+			}
+		}
+
 	}
 
-    }
+	closedir(dirp);
 
-  closedir (dirp);
-
-  return;
+	return;
 }
 
-
-
-void
-files_destroy (bot_t * bot, dlist_t ** dl)
+void files_destroy(bot_t * bot, dlist_t ** dl)
 {
 
-  if (!dl)
-    return;
+	if (!dl)
+		return;
 
-  dlist_fini (dl, free);
+	dlist_fini(dl, free);
 
-  return;
+	return;
 }

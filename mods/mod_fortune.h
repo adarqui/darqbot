@@ -28,16 +28,15 @@
 
 #include "bot.h"
 
-
 module_t mod_fortune_info;
 
-bot_t *fortune_init (dlist_t *, bot_t *);
-bot_t *fortune_fini (dlist_t *, bot_t *);
-bot_t *fortune_help (dlist_t *, bot_t *);
-bot_t *fortune_run (dlist_t *, bot_t *);
+bot_t *fortune_init(dlist_t *, bot_t *);
+bot_t *fortune_fini(dlist_t *, bot_t *);
+bot_t *fortune_help(dlist_t *, bot_t *);
+bot_t *fortune_run(dlist_t *, bot_t *);
 
-char *libfortune_main (int, char **);
+char *libfortune_main(int, char **);
 
-void __fortune_init__ (void) __attribute__ ((constructor));
+void __fortune_init__(void) __attribute__ ((constructor));
 
 #endif

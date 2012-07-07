@@ -25,138 +25,119 @@
  */
 #include "mod_backtrace.h"
 
-void
-__backtrace_init__ (void)
+void __backtrace_init__(void)
 {
 
-  strlcpy_buf (mod_backtrace_info.name, "mod_backtrace");
-  strlcpy_buf (mod_backtrace_info.trigger, "^backtrace");
+	strlcpy_buf(mod_backtrace_info.name, "mod_backtrace");
+	strlcpy_buf(mod_backtrace_info.trigger, "^backtrace");
 
-  mod_backtrace_info.init = backtrace_init;
-  mod_backtrace_info.fini = backtrace_fini;
-  mod_backtrace_info.help = backtrace_help;
-  mod_backtrace_info.run = backtrace_run;
+	mod_backtrace_info.init = backtrace_init;
+	mod_backtrace_info.fini = backtrace_fini;
+	mod_backtrace_info.help = backtrace_help;
+	mod_backtrace_info.run = backtrace_run;
 
+	mod_backtrace_info.output = NULL;
+	mod_backtrace_info.input = NULL;
 
-  mod_backtrace_info.output = NULL;
-  mod_backtrace_info.input = NULL;
+	debug(NULL, "__backtrace_init__: Loaded mod_backtrace\n");
 
-
-  debug (NULL, "__backtrace_init__: Loaded mod_backtrace\n");
-
-  return;
+	return;
 }
 
-
-
-bot_t *
-backtrace_init (dlist_t * dlist_node, bot_t * bot)
+bot_t *backtrace_init(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "backtrace_init: Entered\n");
-  return NULL;
+	debug(bot, "backtrace_init: Entered\n");
+	return NULL;
 }
 
-bot_t *
-backtrace_fini (dlist_t * dlist_node, bot_t * bot)
+bot_t *backtrace_fini(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "backtrace_fini: Entered\n");
-  return NULL;
+	debug(bot, "backtrace_fini: Entered\n");
+	return NULL;
 }
 
-bot_t *
-backtrace_help (dlist_t * dlist_node, bot_t * bot)
+bot_t *backtrace_help(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "backtrace_help: Entered\n");
+	debug(bot, "backtrace_help: Entered\n");
 
+	if (!bot)
+		return NULL;
 
-  if (!bot)
-    return NULL;
+	bot->dl_module_help = "^backtrace || ^backtrace(num)";
 
-  bot->dl_module_help = "^backtrace || ^backtrace(num)";
-
-  return NULL;
+	return NULL;
 }
 
-bot_t *
-backtrace_run (dlist_t * dlist_node, bot_t * bot)
+bot_t *backtrace_run(dlist_t * dlist_node, bot_t * bot)
 {
-  char *dl_module_arg_after_options, *dl_options_ptr;
-  int opt;
+	char *dl_module_arg_after_options, *dl_options_ptr;
+	int opt;
 
-  debug (bot, "backtrace_run: Entered\n");
+	debug(bot, "backtrace_run: Entered\n");
 
-  if (!dlist_node || !bot)
-    return NULL;
+	if (!dlist_node || !bot)
+		return NULL;
 
-  stat_inc (bot, bot->trig_called);
+	stat_inc(bot, bot->trig_called);
 
-  debug (bot,
-	 "backtrace_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	debug(bot,
+	      "backtrace_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
+	if (bot_shouldreturn(bot))
+		return NULL;
 
-  if (bot_shouldreturn (bot))
-    return NULL;
+	opt = 7;
 
-  opt = 7;
+	MOD_OPTIONS_TOP_HALF;
+	opt = atoi(dl_options_ptr);
+	MOD_OPTIONS_BOTTOM_HALF;
 
-  MOD_OPTIONS_TOP_HALF;
-  opt = atoi (dl_options_ptr);
-  MOD_OPTIONS_BOTTOM_HALF;
+	if (opt <= 0)
+		opt = 1;
 
+	MOD_PARSE_TOP_HALF_VOID;
+	l_new_str = backtrace_change_string(l_str_ptr, opt);
+	MOD_PARSE_BOTTOM_HALF_VOID;
 
-  if (opt <= 0)
-    opt = 1;
-
-
-  MOD_PARSE_TOP_HALF_VOID;
-  l_new_str = backtrace_change_string (l_str_ptr, opt);
-  MOD_PARSE_BOTTOM_HALF_VOID;
-
-  return bot;
+	return bot;
 }
 
-
-
-char *
-backtrace_change_string (char *string, int opt)
+char *backtrace_change_string(char *string, int opt)
 {
-  char *str = NULL;
-  char buf[MAX_BUF_SZ];
+	char *str = NULL;
+	char buf[MAX_BUF_SZ];
 
-  void *bt_array[opt + 1];
-  char **bt_strings = NULL;
-  size_t bt_size;
+	void *bt_array[opt + 1];
+	char **bt_strings = NULL;
+	size_t bt_size;
 
-  int i;
+	int i;
 
-  if (opt <= 0)
-    return NULL;
+	if (opt <= 0)
+		return NULL;
 
-  memset (buf, 0, sizeof (buf));
+	memset(buf, 0, sizeof(buf));
 
-  memset (bt_array, 0, (opt + 1) * sizeof (void *));
-  bt_size = backtrace (bt_array, opt);
+	memset(bt_array, 0, (opt + 1) * sizeof(void *));
+	bt_size = backtrace(bt_array, opt);
 
-  bt_strings = backtrace_symbols (bt_array, bt_size);
-  if (!bt_strings)
-    goto cleanup;
+	bt_strings = backtrace_symbols(bt_array, bt_size);
+	if (!bt_strings)
+		goto cleanup;
 
-  for (i = 0; i < bt_size; i++)
-    {
-      printf ("bt_strings[%i]=%s\n", i, bt_strings[i]);
-      strlcatfmt_bot (buf, "%s\n", bt_strings[i]);
-    }
+	for (i = 0; i < bt_size; i++) {
+		printf("bt_strings[%i]=%s\n", i, bt_strings[i]);
+		strlcatfmt_bot(buf, "%s\n", bt_strings[i]);
+	}
 
+ cleanup:
 
-cleanup:
+	if (sNULL(buf) != NULL)
+		str = strdup(buf);
 
-  if (sNULL (buf) != NULL)
-    str = strdup (buf);
+	if (bt_strings)
+		free(bt_strings);
 
-  if (bt_strings)
-    free (bt_strings);
-
-
-  return str;
+	return str;
 }

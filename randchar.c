@@ -21,105 +21,78 @@
 */
 #include "bot.h"
 
-int
-randchar_seed (int seed)
+int randchar_seed(int seed)
 {
-  if (seed != 0)
-    srand (seed);
-  return 0;
+	if (seed != 0)
+		srand(seed);
+	return 0;
 }
 
-int
-randchar (int c, int char_orig)
+int randchar(int c, int char_orig)
 {
-  int x;
+	int x;
 
-  if (c < RANDCHAR_BASE)
-    {
-      return c;
-    }
-
-  x = c;
-
-  for (;;)
-    {
-      x = rand ();
-      x = x % 255;
-
-      if (c == RANDCHAR_ASCII)
-	{
-	  if (isascii (x))
-	    break;
-	}
-      else if (c == RANDCHAR_ALPHA)
-	{
-	  if (isalpha (x))
-	    break;
-	}
-      else if (c == RANDCHAR_ALNUM)
-	{
-	  if (isalnum (x))
-	    break;
-	}
-      else if (c == RANDCHAR_DIGIT)
-	{
-	  if (isdigit (x))
-	    break;
-	}
-      else if (c == RANDCHAR_LOWER)
-	{
-	  if (islower (x))
-	    break;
-	}
-      else if (c == RANDCHAR_UPPER)
-	{
-	  if (isupper (x))
-	    break;
-	}
-      else if (c == RANDCHAR_PUNCT)
-	{
-	  if (ispunct (x))
-	    break;
-	}
-      else if (c == RANDCHAR_BINARY)
-	{
-	  if (isbinary (x))
-	    break;
-	}
-      else if (c == RANDCHAR_SAME)
-	{
-	  return char_orig;
-	}
-      else if (c == RANDCHAR_SPACE)
-	{
-	  if (isspace (x))
-	    return ' ';
+	if (c < RANDCHAR_BASE) {
+		return c;
 	}
 
-      else
-	return c;
+	x = c;
 
-    }
+	for (;;) {
+		x = rand();
+		x = x % 255;
 
-  return x;
+		if (c == RANDCHAR_ASCII) {
+			if (isascii(x))
+				break;
+		} else if (c == RANDCHAR_ALPHA) {
+			if (isalpha(x))
+				break;
+		} else if (c == RANDCHAR_ALNUM) {
+			if (isalnum(x))
+				break;
+		} else if (c == RANDCHAR_DIGIT) {
+			if (isdigit(x))
+				break;
+		} else if (c == RANDCHAR_LOWER) {
+			if (islower(x))
+				break;
+		} else if (c == RANDCHAR_UPPER) {
+			if (isupper(x))
+				break;
+		} else if (c == RANDCHAR_PUNCT) {
+			if (ispunct(x))
+				break;
+		} else if (c == RANDCHAR_BINARY) {
+			if (isbinary(x))
+				break;
+		} else if (c == RANDCHAR_SAME) {
+			return char_orig;
+		} else if (c == RANDCHAR_SPACE) {
+			if (isspace(x))
+				return ' ';
+		}
+
+		else
+			return c;
+
+	}
+
+	return x;
 }
 
-
-int
-randchar_str (char *str)
+int randchar_str(char *str)
 {
-  int x;
+	int x;
 
-  if (!str)
-    {
-      return 0;
-    }
+	if (!str) {
+		return 0;
+	}
 
+	if (str[0] == ' ')
+		return 0;
 
-  if (str[0] == ' ')
-    return 0;
-
-  x = str[0];
+	x = str[0];
 
 /*
   if (!strstr (str, "RAND"))
@@ -128,60 +101,34 @@ randchar_str (char *str)
     }
 */
 
+	if (!strncasecmp(str, "RASCII", fn_strlen("RASCII"))) {
+		x = RANDCHAR_ASCII;
+	} else if (!strncasecmp(str, "RALPHA", fn_strlen("RALPHA"))) {
+		x = RANDCHAR_ALPHA;
+	} else if (!strncasecmp(str, "RALNUM", fn_strlen("RALNUM"))) {
+		x = RANDCHAR_ALNUM;
+	} else if (!strncasecmp(str, "RDIGIT", fn_strlen("RDIGIT"))) {
+		x = RANDCHAR_DIGIT;
+	} else if (!strncasecmp(str, "RLOWER", fn_strlen("RLOWER"))) {
+		x = RANDCHAR_LOWER;
+	} else if (!strncasecmp(str, "RUPPER", fn_strlen("RUPPER"))) {
+		x = RANDCHAR_UPPER;
+	} else if (!strncasecmp(str, "RPUNCT", fn_strlen("RPUNCT"))) {
+		x = RANDCHAR_PUNCT;
+	} else if (!strncasecmp(str, "RBINARY", fn_strlen("RBINARY"))) {
+		x = RANDCHAR_BINARY;
+	} else if (!strncasecmp(str, "RSPACE", fn_strlen("RSPACE"))) {
+		x = RANDCHAR_SPACE;
+	} else if (!strncasecmp(str, "RSAME", fn_strlen("RSAME"))) {
+		x = RANDCHAR_SAME;
+	}
 
-  if (!strncasecmp (str, "RASCII", fn_strlen ("RASCII")))
-    {
-      x = RANDCHAR_ASCII;
-    }
-  else if (!strncasecmp (str, "RALPHA", fn_strlen ("RALPHA")))
-    {
-      x = RANDCHAR_ALPHA;
-    }
-  else if (!strncasecmp (str, "RALNUM", fn_strlen ("RALNUM")))
-    {
-      x = RANDCHAR_ALNUM;
-    }
-  else if (!strncasecmp (str, "RDIGIT", fn_strlen ("RDIGIT")))
-    {
-      x = RANDCHAR_DIGIT;
-    }
-  else if (!strncasecmp (str, "RLOWER", fn_strlen ("RLOWER")))
-    {
-      x = RANDCHAR_LOWER;
-    }
-  else if (!strncasecmp (str, "RUPPER", fn_strlen ("RUPPER")))
-    {
-      x = RANDCHAR_UPPER;
-    }
-  else if (!strncasecmp (str, "RPUNCT", fn_strlen ("RPUNCT")))
-    {
-      x = RANDCHAR_PUNCT;
-    }
-  else if (!strncasecmp (str, "RBINARY", fn_strlen ("RBINARY")))
-    {
-      x = RANDCHAR_BINARY;
-    }
-  else if (!strncasecmp (str, "RSPACE", fn_strlen ("RSPACE")))
-    {
-      x = RANDCHAR_SPACE;
-    }
-  else if (!strncasecmp (str, "RSAME", fn_strlen ("RSAME")))
-    {
-      x = RANDCHAR_SAME;
-    }
-
-
-
-  return x;
+	return x;
 }
 
-
-
-
-char *
-randchar_retstr (int c)
+char *randchar_retstr(int c)
 {
-  char buf[2];
+	char buf[2];
 
 /*
   if (!strstr (str, "MATCH"))
@@ -190,31 +137,30 @@ randchar_retstr (int c)
     }
 */
 
-
-  if (c == RANDCHAR_ASCII)
-    return "RASCII";
-  else if (c == RANDCHAR_ALPHA)
-    return "RALPHA";
-  else if (c == RANDCHAR_ALNUM)
-    return "RALNUM";
-  else if (c == RANDCHAR_DIGIT)
-    return "RDIGIT";
-  else if (c == RANDCHAR_LOWER)
-    return "RLOWER";
-  else if (c == RANDCHAR_UPPER)
-    return "RUPPER";
-  else if (c == RANDCHAR_PUNCT)
-    return "RPUNCT";
-  else if (c == RANDCHAR_BINARY)
-    return "RBINARY";
-  else if (c == RANDCHAR_SPACE)
-    return "RSPACE";
-  else if (c == RANDCHAR_SAME)
-    return "RSAME";
+	if (c == RANDCHAR_ASCII)
+		return "RASCII";
+	else if (c == RANDCHAR_ALPHA)
+		return "RALPHA";
+	else if (c == RANDCHAR_ALNUM)
+		return "RALNUM";
+	else if (c == RANDCHAR_DIGIT)
+		return "RDIGIT";
+	else if (c == RANDCHAR_LOWER)
+		return "RLOWER";
+	else if (c == RANDCHAR_UPPER)
+		return "RUPPER";
+	else if (c == RANDCHAR_PUNCT)
+		return "RPUNCT";
+	else if (c == RANDCHAR_BINARY)
+		return "RBINARY";
+	else if (c == RANDCHAR_SPACE)
+		return "RSPACE";
+	else if (c == RANDCHAR_SAME)
+		return "RSAME";
 
 // FREE THE STRDUP'd STRING
-  buf[0] = c;
-  buf[1] = 0;
+	buf[0] = c;
+	buf[1] = 0;
 
-  return strdup (buf);
+	return strdup(buf);
 }

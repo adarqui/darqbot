@@ -25,467 +25,392 @@
  */
 #include "mod_html.h"
 
-void
-__html_init__ (void)
+void __html_init__(void)
 {
 
-  strlcpy_buf (mod_html_info.name, "mod_html");
-  strlcpy_buf (mod_html_info.trigger, "^html");
+	strlcpy_buf(mod_html_info.name, "mod_html");
+	strlcpy_buf(mod_html_info.trigger, "^html");
 
-  mod_html_info.init = html_init;
-  mod_html_info.fini = html_fini;
-  mod_html_info.help = html_help;
-  mod_html_info.run = html_run;
+	mod_html_info.init = html_init;
+	mod_html_info.fini = html_fini;
+	mod_html_info.help = html_help;
+	mod_html_info.run = html_run;
 
+	mod_html_info.output = NULL;
+	mod_html_info.input = NULL;
 
-  mod_html_info.output = NULL;
-  mod_html_info.input = NULL;
+	mod_html_info.max_nesting = 2;
 
+	debug(NULL, "__html_init__: Loaded mod_html\n");
 
-  mod_html_info.max_nesting = 2;
-
-  debug (NULL, "__html_init__: Loaded mod_html\n");
-
-  return;
+	return;
 }
 
-
-
-bot_t *
-html_init (dlist_t * dlist_node, bot_t * bot)
+bot_t *html_init(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "html_init: Entered\n");
+	debug(bot, "html_init: Entered\n");
 
-
-  return NULL;
+	return NULL;
 }
 
-bot_t *
-html_fini (dlist_t * dlist_node, bot_t * bot)
+bot_t *html_fini(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "html_fini: Entered\n");
-  return NULL;
+	debug(bot, "html_fini: Entered\n");
+	return NULL;
 }
 
-bot_t *
-html_help (dlist_t * dlist_node, bot_t * bot)
+bot_t *html_help(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "html_help: Entered\n");
+	debug(bot, "html_help: Entered\n");
 
+	if (!bot)
+		return NULL;
 
-  if (!bot)
-    return NULL;
+	bot->dl_module_help = "^html";
 
-  bot->dl_module_help = "^html";
-
-  return NULL;
+	return NULL;
 }
 
-bot_t *
-html_run (dlist_t * dlist_node, bot_t * bot)
+bot_t *html_run(dlist_t * dlist_node, bot_t * bot)
 {
-  char *dl_module_arg_after_options, *dl_options_ptr, *new_str = NULL;
-  int opt;
+	char *dl_module_arg_after_options, *dl_options_ptr, *new_str = NULL;
+	int opt;
 
-  char **argv = NULL;
-  int argc = 0;
+	char **argv = NULL;
+	int argc = 0;
 
-  int c;
+	int c;
 
-  html_info_t *si = NULL;
+	html_info_t *si = NULL;
 
-  debug (bot, "html_run: Entered\n");
+	debug(bot, "html_run: Entered\n");
 
-  if (!dlist_node || !bot)
-    return NULL;
+	if (!dlist_node || !bot)
+		return NULL;
 
-  stat_inc (bot, bot->trig_called);
+	stat_inc(bot, bot->trig_called);
 
+	debug(bot,
+	      "html_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-  debug (bot,
-	 "html_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	if (bot_shouldreturn(bot))
+		return NULL;
 
+	if (bot->var_nesting_cur > mod_html_info.max_nesting)
+		return NULL;
 
-  if (bot_shouldreturn (bot))
-    return NULL;
+	opt = 0;
+	new_str = NULL;
 
+	si = html_initx(bot);
+	if (!si)
+		return NULL;
 
-  if (bot->var_nesting_cur > mod_html_info.max_nesting)
-    return NULL;
+	MOD_OPTIONS_TOP_HALF;
 
-  opt = 0;
-  new_str = NULL;
+	argv =
+	    tokenize_str2argv(dl_options_ptr, &argc, TOKENIZE_STR2ARGV_ARGV0);
+	if (argv) {
 
-  si = html_initx (bot);
-  if (!si)
-    return NULL;
+		optind = 0;
 
-  MOD_OPTIONS_TOP_HALF;
-
-  argv = tokenize_str2argv (dl_options_ptr, &argc, TOKENIZE_STR2ARGV_ARGV0);
-  if (argv)
-    {
-
-      optind = 0;
-
-      while ((c = getopt (argc, argv, "p:r:P:fhu:c:vs")) != -1)
-	{
-	  switch (c)
-	    {
-	    case 'P':
-	      {
+		while ((c = getopt(argc, argv, "p:r:P:fhu:c:vs")) != -1) {
+			switch (c) {
+			case 'P':
+				{
 /* PROXY */
-		opt |= MOD_HTML_OPT_PROXY;
-		if (si->opt_proxy)
-		  free (si->opt_proxy);
-		si->opt_proxy = strdup (optarg);
-		break;
-	      }
-	    case 'r':
-	      {
-		opt |= MOD_HTML_OPT_REFERER;
-		if (si->opt_referer)
-		  free (si->opt_referer);
-		si->opt_referer = strdup (optarg);
-		break;
-	      }
-	    case 'f':
-	      {
-		opt |= MOD_HTML_OPT_FOLLOWLOCATION;
-		break;
-	      }
-	    case 'p':
-	      {
-		opt |= MOD_HTML_OPT_POST;
-		if (si->opt_postfields)
-		  free (si->opt_postfields);
-		si->opt_postfields = strdup (optarg);
-		break;
-	      }
-	    case 'h':
-	      {
-		opt |= MOD_HTML_OPT_HELP;
-		break;
-	      }
-	    case 'u':
-	      {
-		opt |= MOD_HTML_OPT_USERAGENT;
-		if (si->opt_useragent)
-		  free (si->opt_useragent);
-		si->opt_useragent = strdup (optarg);
-		break;
-	      }
-	    case 's':
-	      {
-		opt |= MOD_HTML_OPT_SOCKS;
-		break;
-	      }
-	    case 'c':
-	      {
-		opt |= MOD_HTML_OPT_COOKIE;
-		if (si->opt_cookie)
-		  free (si->opt_cookie);
-		si->opt_cookie = strdup (optarg);
-		break;
-	      }
-	    case 'v':
-	      {
-		opt |= MOD_HTML_OPT_VERBOSE;
-		break;
-	      }
-	    case 'H':
-	      {
-		opt |= MOD_HTML_OPT_HEADER;
-		break;
-	      }
-	    default:
-	      break;
-	    }
+					opt |= MOD_HTML_OPT_PROXY;
+					if (si->opt_proxy)
+						free(si->opt_proxy);
+					si->opt_proxy = strdup(optarg);
+					break;
+				}
+			case 'r':
+				{
+					opt |= MOD_HTML_OPT_REFERER;
+					if (si->opt_referer)
+						free(si->opt_referer);
+					si->opt_referer = strdup(optarg);
+					break;
+				}
+			case 'f':
+				{
+					opt |= MOD_HTML_OPT_FOLLOWLOCATION;
+					break;
+				}
+			case 'p':
+				{
+					opt |= MOD_HTML_OPT_POST;
+					if (si->opt_postfields)
+						free(si->opt_postfields);
+					si->opt_postfields = strdup(optarg);
+					break;
+				}
+			case 'h':
+				{
+					opt |= MOD_HTML_OPT_HELP;
+					break;
+				}
+			case 'u':
+				{
+					opt |= MOD_HTML_OPT_USERAGENT;
+					if (si->opt_useragent)
+						free(si->opt_useragent);
+					si->opt_useragent = strdup(optarg);
+					break;
+				}
+			case 's':
+				{
+					opt |= MOD_HTML_OPT_SOCKS;
+					break;
+				}
+			case 'c':
+				{
+					opt |= MOD_HTML_OPT_COOKIE;
+					if (si->opt_cookie)
+						free(si->opt_cookie);
+					si->opt_cookie = strdup(optarg);
+					break;
+				}
+			case 'v':
+				{
+					opt |= MOD_HTML_OPT_VERBOSE;
+					break;
+				}
+			case 'H':
+				{
+					opt |= MOD_HTML_OPT_HEADER;
+					break;
+				}
+			default:
+				break;
+			}
 
+		}
+
+		tokenize_destroy_array(NULL, argv);
 	}
 
-      tokenize_destroy_array (NULL, argv);
-    }
+	MOD_OPTIONS_BOTTOM_HALF;
 
-  MOD_OPTIONS_BOTTOM_HALF;
+	MOD_PARSE_TOP_HALF_NODL;
 
+	if (!bot_fork_clean(bot)) {
+		si->opt_flags = opt;
+		l_new_str = html_change_string(bot, si, l_str_ptr);
+	}
 
-  MOD_PARSE_TOP_HALF_NODL;
+	MOD_PARSE_BOTTOM_HALF_NODL;
 
-  if (!bot_fork_clean (bot))
-    {
-      si->opt_flags = opt;
-      l_new_str = html_change_string (bot, si, l_str_ptr);
-    }
+	if (si)
+		html_finix(bot, si);
 
-  MOD_PARSE_BOTTOM_HALF_NODL;
-
-  if (si)
-    html_finix (bot, si);
-
-  return bot;
+	return bot;
 }
 
-
-
-
-
-
-
-
-html_info_t *
-html_get (bot_t * bot, html_info_t * si)
+html_info_t *html_get(bot_t * bot, html_info_t * si)
 {
-  char *url = NULL;
+	char *url = NULL;
 
-  debug (NULL, "html_get: Entered\n");
+	debug(NULL, "html_get: Entered\n");
 
-  if (si->curl)
-    {
-      curl_easy_cleanup (si->curl);
-    }
+	if (si->curl) {
+		curl_easy_cleanup(si->curl);
+	}
 
-  si->curl = curl_easy_init ();
+	si->curl = curl_easy_init();
 
-  url = si->url;
+	url = si->url;
 
-  curl_easy_setopt (si->curl, CURLOPT_URL, url);
-  curl_easy_setopt (si->curl, CURLOPT_NOPROGRESS, 1);
-  curl_easy_setopt (si->curl, CURLOPT_NOSIGNAL, 1);
-  curl_easy_setopt (si->curl, CURLOPT_COOKIEJAR, si->cookie_file);
-  curl_easy_setopt (si->curl, CURLOPT_COOKIEFILE, si->cookie_file);
-  curl_easy_setopt (si->curl, CURLOPT_HEADER, 1);
-  curl_easy_setopt (si->curl, CURLOPT_WRITEFUNCTION, html_curl_write);
-  curl_easy_setopt (si->curl, CURLOPT_WRITEDATA, si);
+	curl_easy_setopt(si->curl, CURLOPT_URL, url);
+	curl_easy_setopt(si->curl, CURLOPT_NOPROGRESS, 1);
+	curl_easy_setopt(si->curl, CURLOPT_NOSIGNAL, 1);
+	curl_easy_setopt(si->curl, CURLOPT_COOKIEJAR, si->cookie_file);
+	curl_easy_setopt(si->curl, CURLOPT_COOKIEFILE, si->cookie_file);
+	curl_easy_setopt(si->curl, CURLOPT_HEADER, 1);
+	curl_easy_setopt(si->curl, CURLOPT_WRITEFUNCTION, html_curl_write);
+	curl_easy_setopt(si->curl, CURLOPT_WRITEDATA, si);
 
-  curl_easy_setopt (si->curl, CURLOPT_READFUNCTION, html_curl_read);
+	curl_easy_setopt(si->curl, CURLOPT_READFUNCTION, html_curl_read);
 
+	if (si->opt_flags & MOD_HTML_OPT_VERBOSE)
+		curl_easy_setopt(si->curl, CURLOPT_VERBOSE, 1);
 
-  if (si->opt_flags & MOD_HTML_OPT_VERBOSE)
-    curl_easy_setopt (si->curl, CURLOPT_VERBOSE, 1);
+	if (si->opt_flags & MOD_HTML_OPT_FOLLOWLOCATION)
+		curl_easy_setopt(si->curl, CURLOPT_FOLLOWLOCATION, 1);
 
-  if (si->opt_flags & MOD_HTML_OPT_FOLLOWLOCATION)
-    curl_easy_setopt (si->curl, CURLOPT_FOLLOWLOCATION, 1);
+	if (si->opt_flags & MOD_HTML_OPT_REFERER)
+		curl_easy_setopt(si->curl, CURLOPT_REFERER, si->opt_referer);
+	else
+		curl_easy_setopt(si->curl, CURLOPT_AUTOREFERER, 1);
 
-  if (si->opt_flags & MOD_HTML_OPT_REFERER)
-    curl_easy_setopt (si->curl, CURLOPT_REFERER, si->opt_referer);
-  else
-    curl_easy_setopt (si->curl, CURLOPT_AUTOREFERER, 1);
+	if (si->opt_flags & MOD_HTML_OPT_USERAGENT)
+		curl_easy_setopt(si->curl, CURLOPT_USERAGENT,
+				 si->opt_useragent);
 
-  if (si->opt_flags & MOD_HTML_OPT_USERAGENT)
-    curl_easy_setopt (si->curl, CURLOPT_USERAGENT, si->opt_useragent);
+	if (si->opt_flags & MOD_HTML_OPT_COOKIE)
+		curl_easy_setopt(si->curl, CURLOPT_COOKIE, si->opt_cookie);
 
-  if (si->opt_flags & MOD_HTML_OPT_COOKIE)
-    curl_easy_setopt (si->curl, CURLOPT_COOKIE, si->opt_cookie);
+	if (si->opt_flags & MOD_HTML_OPT_PROXY)
+		curl_easy_setopt(si->curl, CURLOPT_PROXY, si->opt_proxy);
 
-  if (si->opt_flags & MOD_HTML_OPT_PROXY)
-    curl_easy_setopt (si->curl, CURLOPT_PROXY, si->opt_proxy);
+	if (si->opt_flags & MOD_HTML_OPT_SOCKS)
+		curl_easy_setopt(si->curl, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
 
-  if (si->opt_flags & MOD_HTML_OPT_SOCKS)
-    curl_easy_setopt (si->curl, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
+	if (si->opt_flags & MOD_HTML_OPT_POST) {
+		curl_easy_setopt(si->curl, CURLOPT_POST, 1);
+		curl_easy_setopt(si->curl, CURLOPT_POSTFIELDS,
+				 si->opt_postfields);
+	}
 
-  if (si->opt_flags & MOD_HTML_OPT_POST)
-    {
-      curl_easy_setopt (si->curl, CURLOPT_POST, 1);
-      curl_easy_setopt (si->curl, CURLOPT_POSTFIELDS, si->opt_postfields);
-    }
+	if (si->opt_flags & MOD_HTML_OPT_HEADER) {
+		curl_easy_setopt(si->curl, CURLOPT_HEADER, 1);
+	} else {
+		curl_easy_setopt(si->curl, CURLOPT_HEADER, 0);
+	}
 
-  if (si->opt_flags & MOD_HTML_OPT_HEADER)
-    {
-      curl_easy_setopt (si->curl, CURLOPT_HEADER, 1);
-    }
-  else
-    {
-      curl_easy_setopt (si->curl, CURLOPT_HEADER, 0);
-    }
+	si->curl_res = curl_easy_perform(si->curl);
+	curl_easy_cleanup(si->curl);
 
-  si->curl_res = curl_easy_perform (si->curl);
-  curl_easy_cleanup (si->curl);
+	si->curl = NULL;
 
-  si->curl = NULL;
-
-  return si;
+	return si;
 }
 
-
-
-
-
-char *
-html_change_string (bot_t * bot, html_info_t * si, char *string)
+char *html_change_string(bot_t * bot, html_info_t * si, char *string)
 {
-  char *str = NULL;
-  char *sep_ptr;
+	char *str = NULL;
+	char *sep_ptr;
 
-  debug (NULL, "html_change_string: Entered\n");
+	debug(NULL, "html_change_string: Entered\n");
 
-  if (!bot || !si || !string)
-    return NULL;
+	if (!bot || !si || !string)
+		return NULL;
 
-  sep_ptr = str_find_sep (string);
-  if (sep_ptr)
-    string = sep_ptr;
+	sep_ptr = str_find_sep(string);
+	if (sep_ptr)
+		string = sep_ptr;
 
-  si->url = strdup (string);
+	si->url = strdup(string);
 
-  if (si->opt_flags & MOD_HTML_OPT_HELP)
-    {
-      str = html_op_help (si);
-      return str;
-    }
+	if (si->opt_flags & MOD_HTML_OPT_HELP) {
+		str = html_op_help(si);
+		return str;
+	}
 
-  if (!html_get (bot, si))
-    {
-      bot_fork_clean_exit (bot);
-    }
+	if (!html_get(bot, si)) {
+		bot_fork_clean_exit(bot);
+	}
 
-  str = dlist_to_str (si->dl_text);
+	str = dlist_to_str(si->dl_text);
 
-  return str;
+	return str;
 }
 
-
-
-
-
-
-
-
-size_t
-html_curl_write (void *buf, size_t size, size_t nmemb, void *udata)
+size_t html_curl_write(void *buf, size_t size, size_t nmemb, void *udata)
 {
-  html_info_t *si;
+	html_info_t *si;
 
-  si = (html_info_t *) udata;
+	si = (html_info_t *) udata;
 
-  if (!si)
-    return size * nmemb;
+	if (!si)
+		return size * nmemb;
 
-  dl_str_unite (&si->dl_text, "%s", buf);
+	dl_str_unite(&si->dl_text, "%s", buf);
 
-  return size * nmemb;
+	return size * nmemb;
 }
 
-
-size_t
-html_curl_read (void *buf, size_t size, size_t nmemb, void *udata)
+size_t html_curl_read(void *buf, size_t size, size_t nmemb, void *udata)
 {
 
-
-  return size * nmemb;
+	return size * nmemb;
 }
 
-
-
-
-html_info_t *
-html_finix (bot_t * bot, html_info_t * si)
+html_info_t *html_finix(bot_t * bot, html_info_t * si)
 {
 
+	if (!si)
+		return NULL;
 
+	if (si->url)
+		free(si->url);
 
-  if (!si)
-    return NULL;
+	if (si->cookie_file)
+		free(si->cookie_file);
 
-  if (si->url)
-    free (si->url);
+	if (si->opt_proxy)
+		free(si->opt_proxy);
 
-  if (si->cookie_file)
-    free (si->cookie_file);
+	if (si->opt_referer)
+		free(si->opt_referer);
 
-  if (si->opt_proxy)
-    free (si->opt_proxy);
+	if (si->opt_postfields)
+		free(si->opt_postfields);
 
-  if (si->opt_referer)
-    free (si->opt_referer);
+	if (si->opt_useragent)
+		free(si->opt_useragent);
 
-  if (si->opt_postfields)
-    free (si->opt_postfields);
+	if (si->opt_cookie)
+		free(si->opt_cookie);
 
-  if (si->opt_useragent)
-    free (si->opt_useragent);
+	dl_str_destroy(&si->dl_text);
 
-  if (si->opt_cookie)
-    free (si->opt_cookie);
+	memset(si, 0, sizeof(si));
+	free(si);
 
-
-  dl_str_destroy (&si->dl_text);
-
-  memset (si, 0, sizeof (si));
-  free (si);
-
-  return NULL;
+	return NULL;
 }
 
-
-
-
-
-char *
-html_fix_url (char *s)
+char *html_fix_url(char *s)
 {
-  char *b = s;
-  if (!s)
-    return NULL;
+	char *b = s;
+	if (!s)
+		return NULL;
 
-  while (*s)
-    {
-      if (*s == ' ')
-	*s = '-';
-      s++;
-    }
+	while (*s) {
+		if (*s == ' ')
+			*s = '-';
+		s++;
+	}
 
-  return b;
+	return b;
 }
 
-
-
-
-
-
-html_info_t *
-html_initx (bot_t * bot)
+html_info_t *html_initx(bot_t * bot)
 {
-  html_info_t *si;
+	html_info_t *si;
 
-  si = (html_info_t *) calloc (1, sizeof (html_info_t));
-  if (!si)
-    return NULL;
+	si = (html_info_t *) calloc(1, sizeof(html_info_t));
+	if (!si)
+		return NULL;
 
-  si->curl = curl_easy_init ();
-  if (!si->curl)
-    return NULL;
+	si->curl = curl_easy_init();
+	if (!si->curl)
+		return NULL;
 
-  si->cookie_file = strdup (tmpnam (NULL));
+	si->cookie_file = strdup(tmpnam(NULL));
 
-  return si;
+	return si;
 }
 
-
-
-
-
-
-
-
-
-char *
-html_op_help (html_info_t * si)
+char *html_op_help(html_info_t * si)
 {
-  char *str = NULL;
-  debug (NULL, "html_op_help: Entered\n");
-  if (!si)
-    return NULL;
+	char *str = NULL;
+	debug(NULL, "html_op_help: Entered\n");
+	if (!si)
+		return NULL;
 
-  str = str_unite ("^html help: ^html(options) url\n"
-		   " (-P : <proxy_url>)\n"
-		   " (-r : <referer>)\n"
-		   " (-p : <postfields,post>)\n"
-		   " (-u : <useragent>)\n"
-		   " (-c : <cookie>)\n"
-		   " (-s : proxy uses socks)\n"
-		   " (-v : verbose)\n" " (-f : follow)\n" " (-h : help)\n");
+	str = str_unite("^html help: ^html(options) url\n"
+			" (-P : <proxy_url>)\n"
+			" (-r : <referer>)\n"
+			" (-p : <postfields,post>)\n"
+			" (-u : <useragent>)\n"
+			" (-c : <cookie>)\n"
+			" (-s : proxy uses socks)\n"
+			" (-v : verbose)\n" " (-f : follow)\n"
+			" (-h : help)\n");
 
-  return str;
+	return str;
 }

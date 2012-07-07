@@ -3,7 +3,7 @@ FLAGS= -Wall -O3 --std=c99 -D_GNU_SOURCE
 
 DEBUG_FLAGS = -fprofile-arcs -ftest-coverage
 
-SOURCES = bot.c misc.c conf.c dlist.c bot_network.c module.c mongodb.c stat.c global.c environ.c tokenize.c protocol.c randchar.c matchchar.c bot_unix.c safe.c debug.c pmodule.c gmodule.c xmodule.c zmodule.c fns.c console.c files.c xdb.c timer.c unix.c bit.c relink.c swap_inmem.c fd.c pid.c control.c unique.c avl.c swap_disk.c chunks.c sim.c
+SOURCES = bot.c misc.c conf.c dlist.c bot_network.c module.c mongodb.c stat.c global.c environ.c tokenize.c protocol.c randchar.c matchchar.c bot_unix.c safe.c debug.c pmodule.c gmodule.c xmodule.c zmodule.c fns.c console.c files.c xdb.c timer.c unix.c bit.c relink.c swap_inmem.c fd.c pid.c control.c unique.c avl.c swap_disk.c chunks.c sim.c fdpass.c
 
 HEADERS = -I ./include -I ../include/ -I./mongodb-c-driver/src/
 

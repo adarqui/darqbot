@@ -21,183 +21,154 @@
 */
 #include "bot.h"
 
-char *
-n_gethostbyname (char *host)
+char *n_gethostbyname(char *host)
 {
-  struct hostent *h;
-  char *x;
+	struct hostent *h;
+	char *x;
 
-  if (!sNULL (host))
-    return NULL;
+	if (!sNULL(host))
+		return NULL;
 
-  h = gethostbyname (host);
-  if (h)
-    {
-      x = inet_ntoa (*(struct in_addr *) *h->h_addr_list);
-      return strdup (x);
-    }
+	h = gethostbyname(host);
+	if (h) {
+		x = inet_ntoa(*(struct in_addr *)*h->h_addr_list);
+		return strdup(x);
+	}
 
-  return NULL;
+	return NULL;
 }
 
-
-
-int
-bot_set_evhooks (bot_t * bot, void (*fn) (int, short, void *))
+int bot_set_evhooks(bot_t * bot, void (*fn) (int, short, void *))
 {
 
-  if (!bot)
-    return -1;
+	if (!bot)
+		return -1;
 
-  return 0;
+	return 0;
 }
 
-
-
-int
-bot_unset_evhooks (bot_t * bot)
+int bot_unset_evhooks(bot_t * bot)
 {
-  dlist_t *dptr;
-  bot_t *bot_sub_ptr, *bot_parent;
+	dlist_t *dptr;
+	bot_t *bot_sub_ptr, *bot_parent;
 
-  if (!bot)
-    return -1;
+	if (!bot)
+		return -1;
 
-  if (bot->node_type == BOT_NODE_TYPE_SUB)
-    {
+	if (bot->node_type == BOT_NODE_TYPE_SUB) {
 
-      if (bot->dptr_self)
-	{
+		if (bot->dptr_self) {
 /* this is the paren'ts dptr_self */
-	  bot_parent = (bot_t *) dlist_data (bot->dptr_self);
+			bot_parent = (bot_t *) dlist_data(bot->dptr_self);
 
-	  dlist_fornext (bot_parent->dl_subs, dptr)
-	  {
-	    bot_sub_ptr = (bot_t *) dlist_data (dptr);
+			dlist_fornext(bot_parent->dl_subs, dptr) {
+				bot_sub_ptr = (bot_t *) dlist_data(dptr);
 
-	    if (bot_sub_ptr == bot)
-	      {
-		dlist_remove (&bot_parent->dl_subs, dptr);
+				if (bot_sub_ptr == bot) {
+					dlist_remove(&bot_parent->dl_subs,
+						     dptr);
+					return 0;
+				}
+
+			}
+
+		}
 		return 0;
-	      }
-
-	  }
 
 	}
-      return 0;
 
-    }
-
-
-  return 0;
+	return 0;
 }
 
-
-
-
-int
-bot_network_raw_connect (char *host, int port, int type, int alarm_val)
+int bot_network_raw_connect(char *host, int port, int type, int alarm_val)
 {
-  struct sockaddr_in sin;
-  char *str_tmp;
-  int fd, n;
-  if (!sNULL (host) || !port)
-    return -1;
+	struct sockaddr_in sin;
+	char *str_tmp;
+	int fd, n;
+	if (!sNULL(host) || !port)
+		return -1;
 
-  bz2 (sin);
-  sin.sin_family = AF_INET;
-  sin.sin_port = htons (port);
+	bz2(sin);
+	sin.sin_family = AF_INET;
+	sin.sin_port = htons(port);
 
-  str_tmp = n_gethostbyname (host);
-  if (!sNULL (str_tmp))
-    return -1;
+	str_tmp = n_gethostbyname(host);
+	if (!sNULL(str_tmp))
+		return -1;
 
-  sin.sin_addr.s_addr = inet_addr (str_tmp);
-  free (str_tmp);
+	sin.sin_addr.s_addr = inet_addr(str_tmp);
+	free(str_tmp);
 
-  fd = socket (AF_INET, SOCK_STREAM, 0);
-  if (fd < 0)
-    return -1;
+	fd = socket(AF_INET, SOCK_STREAM, 0);
+	if (fd < 0)
+		return -1;
 
-  if (alarm_val > 0)
-    {
-      alarm (alarm_val);
-    }
+	if (alarm_val > 0) {
+		alarm(alarm_val);
+	}
 
-  n = connect (fd, (struct sockaddr *) &sin, sizeof (sin));
-  if (alarm_val > 0)
-    {
-      alarm (0);
-    }
+	n = connect(fd, (struct sockaddr *)&sin, sizeof(sin));
+	if (alarm_val > 0) {
+		alarm(0);
+	}
 
-  if (n < 0)
-    {
-      safe_close (fd);
-      return -1;
-    }
+	if (n < 0) {
+		safe_close(fd);
+		return -1;
+	}
 
-  return fd;
+	return fd;
 }
 
-
-int
-bot_network_raw_listen (char *host, int port)
+int bot_network_raw_listen(char *host, int port)
 {
-  struct sockaddr_in sin;
-  int fd;
-  char *str_tmp = NULL;
+	struct sockaddr_in sin;
+	int fd;
+	char *str_tmp = NULL;
 
-  debug (NULL, "bot_network_raw_listen: Entered\n");
+	debug(NULL, "bot_network_raw_listen: Entered\n");
 
-  if (!sNULL (host) || port <= 0)
-    return -1;
+	if (!sNULL(host) || port <= 0)
+		return -1;
 
-  bz2 (sin);
-  str_tmp = n_gethostbyname (host);
-  if (!sNULL (str_tmp))
-    return -1;
+	bz2(sin);
+	str_tmp = n_gethostbyname(host);
+	if (!sNULL(str_tmp))
+		return -1;
 
-  sin.sin_family = AF_INET;
-  sin.sin_addr.s_addr = inet_addr (str_tmp);
-  sin.sin_port = htons (port);
+	sin.sin_family = AF_INET;
+	sin.sin_addr.s_addr = inet_addr(str_tmp);
+	sin.sin_port = htons(port);
 
-  free (str_tmp);
+	free(str_tmp);
 
-  fd = socket (AF_INET, SOCK_STREAM, 0);
-  if (fd <= 0)
-    {
-      goto cleanup;
-    }
+	fd = socket(AF_INET, SOCK_STREAM, 0);
+	if (fd <= 0) {
+		goto cleanup;
+	}
 
+	if (bind(fd, (struct sockaddr *)&sin, sizeof(sin)) < 0) {
+		goto cleanup;
+	}
 
-  if (bind (fd, (struct sockaddr *) &sin, sizeof (sin)) < 0)
-    {
-      goto cleanup;
-    }
+	if (listen(fd, 10) < 0) {
+		goto cleanup;
+	}
 
+	debug(NULL, "bot_network_raw_listen: SUCCESS %i\n", fd);
 
-  if (listen (fd, 10) < 0)
-    {
-      goto cleanup;
-    }
+	return fd;
 
-  debug (NULL, "bot_network_raw_listen: SUCCESS %i\n", fd);
+ cleanup:
 
-  return fd;
+	if (fd > 0)
+		safe_close(fd);
 
-
-cleanup:
-
-  if (fd > 0)
-    safe_close (fd);
-
-  return -1;
+	return -1;
 }
 
-
-int
-bot_network_raw_disconnect (int fd)
+int bot_network_raw_disconnect(int fd)
 {
-  safe_close (fd);
-  return 0;
+	safe_close(fd);
+	return 0;
 }

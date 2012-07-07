@@ -25,162 +25,144 @@
  */
 #include "mod_map.h"
 
-void
-__map_init__ (void)
+void __map_init__(void)
 {
 
-  strlcpy_buf (mod_map_info.name, "mod_map");
-  strlcpy_buf (mod_map_info.trigger, "^map");
+	strlcpy_buf(mod_map_info.name, "mod_map");
+	strlcpy_buf(mod_map_info.trigger, "^map");
 
-  mod_map_info.init = map_init;
-  mod_map_info.fini = map_fini;
-  mod_map_info.help = map_help;
-  mod_map_info.run = map_run;
+	mod_map_info.init = map_init;
+	mod_map_info.fini = map_fini;
+	mod_map_info.help = map_help;
+	mod_map_info.run = map_run;
 
+	mod_map_info.output = NULL;
+	mod_map_info.input = NULL;
 
-  mod_map_info.output = NULL;
-  mod_map_info.input = NULL;
+	debug(NULL, "__map_init__: Loaded mod_map\n");
 
-
-  debug (NULL, "__map_init__: Loaded mod_map\n");
-
-  return;
+	return;
 }
 
-
-
-bot_t *
-map_init (dlist_t * dlist_node, bot_t * bot)
+bot_t *map_init(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "map_init: Entered\n");
-  return NULL;
+	debug(bot, "map_init: Entered\n");
+	return NULL;
 }
 
-bot_t *
-map_fini (dlist_t * dlist_node, bot_t * bot)
+bot_t *map_fini(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "map_fini: Entered\n");
-  return NULL;
+	debug(bot, "map_fini: Entered\n");
+	return NULL;
 }
 
-bot_t *
-map_help (dlist_t * dlist_node, bot_t * bot)
+bot_t *map_help(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "map_help: Entered\n");
+	debug(bot, "map_help: Entered\n");
 
+	if (!bot)
+		return NULL;
 
-  if (!bot)
-    return NULL;
+	bot->dl_module_help = "^map || ^map(normal,stuff) ...";
 
-  bot->dl_module_help = "^map || ^map(normal,stuff) ...";
-
-  return NULL;
+	return NULL;
 }
 
-bot_t *
-map_run (dlist_t * dlist_node, bot_t * bot)
+bot_t *map_run(dlist_t * dlist_node, bot_t * bot)
 {
-  char *dl_module_arg_after_options, *dl_options_ptr;
-  int opt;
+	char *dl_module_arg_after_options, *dl_options_ptr;
+	int opt;
 
-  char *tok_1, *tok_2, *tok_3, *tok_4, *opt_str = NULL;
+	char *tok_1, *tok_2, *tok_3, *tok_4, *opt_str = NULL;
 
-  debug (bot, "map_run: Entered\n");
+	debug(bot, "map_run: Entered\n");
 
-  if (!dlist_node || !bot)
-    return NULL;
+	if (!dlist_node || !bot)
+		return NULL;
 
-  stat_inc (bot, bot->trig_called);
+	stat_inc(bot, bot->trig_called);
 
-  debug (bot,
-	 "map_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	debug(bot,
+	      "map_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
+	if (bot_shouldreturn(bot))
+		return NULL;
 
-  if (bot_shouldreturn (bot))
-    return NULL;
+	opt = MAP_OPT_NORMAL;
 
-  opt = MAP_OPT_NORMAL;
+	MOD_OPTIONS_TOP_HALF;
 
-  MOD_OPTIONS_TOP_HALF;
+	tok_1 = strtok(dl_options_ptr, ",");
+	if (!tok_1)
+		return NULL;
+	tok_2 = strtok(NULL, ",");
+	if (!tok_2)
+		return NULL;
+	tok_3 = strtok(NULL, ",");
+	if (!tok_3)
+		return NULL;
+	tok_4 = strtok(NULL, "");
+	if (!tok_4)
+		return NULL;
 
-  tok_1 = strtok (dl_options_ptr, ",");
-  if (!tok_1)
-    return NULL;
-  tok_2 = strtok (NULL, ",");
-  if (!tok_2)
-    return NULL;
-  tok_3 = strtok (NULL, ",");
-  if (!tok_3)
-    return NULL;
-  tok_4 = strtok (NULL, "");
-  if (!tok_4)
-    return NULL;
+	if (!strcasecmp(tok_2, "PIPE"))
+		tok_2 = "|";
 
-  if (!strcasecmp (tok_2, "PIPE"))
-    tok_2 = "|";
+	if (!strcasecmp(tok_3, "PIPE"))
+		tok_3 = "|";
 
-  if (!strcasecmp (tok_3, "PIPE"))
-    tok_3 = "|";
+	opt_str = eat_whitespace(tok_2);
 
-  opt_str = eat_whitespace (tok_2);
+	MOD_OPTIONS_BOTTOM_HALF;
 
-  MOD_OPTIONS_BOTTOM_HALF;
+	if (!opt_str)
+		return NULL;
 
-  if (!opt_str)
-    return NULL;
+	MOD_PARSE_TOP_HALF_NODL;
+	l_new_str =
+	    map_change_string(dlist_node, bot, l_str_ptr, opt, tok_2, tok_3,
+			      eat_whitespace(tok_4));
+	MOD_PARSE_BOTTOM_HALF_NODL;
 
-  MOD_PARSE_TOP_HALF_NODL;
-  l_new_str =
-    map_change_string (dlist_node, bot, l_str_ptr, opt, tok_2, tok_3,
-		       eat_whitespace (tok_4));
-  MOD_PARSE_BOTTOM_HALF_NODL;
-
-  return bot;
+	return bot;
 }
 
-
-
-char *
-map_change_string (dlist_t * dlist_node, bot_t * bot, char *string, int opt,
-		   char *opt_sep, char *opt_append, char *opt_str)
+char *map_change_string(dlist_t * dlist_node, bot_t * bot, char *string,
+			int opt, char *opt_sep, char *opt_append, char *opt_str)
 {
-  dlist_t *dl, *dptr;
-  char *str = NULL, *tok_ptr;
-  char buf[MAX_BUF_SZ];
-  char *sep_ptr;
+	dlist_t *dl, *dptr;
+	char *str = NULL, *tok_ptr;
+	char buf[MAX_BUF_SZ];
+	char *sep_ptr;
 
-  if (!string || !opt_str || !opt_sep || !opt_append)
-    return NULL;
+	if (!string || !opt_str || !opt_sep || !opt_append)
+		return NULL;
 
+	sep_ptr = str_find_sep(string);
+	if (sep_ptr)
+		string = sep_ptr;
 
-  sep_ptr = str_find_sep (string);
-  if (sep_ptr)
-    string = sep_ptr;
+	dl = tokenize(bot, string,
+		      TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES |
+		      TOKENIZE_LEAVESEP, opt_sep);
+	if (!dl)
+		return NULL;
 
+	memset(buf, 0, sizeof(buf));
 
-  dl =
-    tokenize (bot, string,
-	      TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES |
-	      TOKENIZE_LEAVESEP, opt_sep);
-  if (!dl)
-    return NULL;
+	dlist_fornext(dl, dptr) {
+		tok_ptr = (char *)dlist_data(dptr);
+		if (!tok_ptr)
+			continue;
 
-  memset (buf, 0, sizeof (buf));
+		strlcatfmt_buf(buf, "%s %s%s", opt_str, tok_ptr, opt_append);
+	}
 
-  dlist_fornext (dl, dptr)
-  {
-    tok_ptr = (char *) dlist_data (dptr);
-    if (!tok_ptr)
-      continue;
+	tokenize_destroy(bot, &dl);
 
-    strlcatfmt_buf (buf, "%s %s%s", opt_str, tok_ptr, opt_append);
-  }
+	if (buf[0] != '\0')
+		str = strdup(buf);
 
-  tokenize_destroy (bot, &dl);
-
-  if (buf[0] != '\0')
-    str = strdup (buf);
-
-  return str;
+	return str;
 }

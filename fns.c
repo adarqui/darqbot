@@ -21,15 +21,14 @@
 */
 #include "bot.h"
 
-void
-fns_load_defaults (void)
+void fns_load_defaults(void)
 {
 
-  fn_strlen = strlen;
-  fn_memset = memset;
-  fn_bzero = bzero;
-  fn_strcmp = strcmp;
-  fn_strncmp = strncmp;
+	fn_strlen = strlen;
+	fn_memset = memset;
+	fn_bzero = bzero;
+	fn_strcmp = strcmp;
+	fn_strncmp = strncmp;
 
-  return;
+	return;
 }

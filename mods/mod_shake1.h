@@ -28,45 +28,37 @@
 
 #include "bot.h"
 
-
-
 module_t mod_shake1_info;
 
-bot_t *shake1_init (dlist_t *, bot_t *);
-bot_t *shake1_fini (dlist_t *, bot_t *);
-bot_t *shake1_help (dlist_t *, bot_t *);
-bot_t *shake1_run (dlist_t *, bot_t *);
+bot_t *shake1_init(dlist_t *, bot_t *);
+bot_t *shake1_fini(dlist_t *, bot_t *);
+bot_t *shake1_help(dlist_t *, bot_t *);
+bot_t *shake1_run(dlist_t *, bot_t *);
 
+typedef struct shake1_info {
+	int initialized;
 
+	FILE *fp_1;
+	int fp_1_lines;
+	off_t *fp_1_offsets;
 
-typedef struct shake1_info
-{
-  int initialized;
+	FILE *fp_2;
+	int fp_2_lines;
+	off_t *fp_2_offsets;
 
-  FILE *fp_1;
-  int fp_1_lines;
-  off_t *fp_1_offsets;
-
-  FILE *fp_2;
-  int fp_2_lines;
-  off_t *fp_2_offsets;
-
-  FILE *fp_3;
-  int fp_3_lines;
-  off_t *fp_3_offsets;
+	FILE *fp_3;
+	int fp_3_lines;
+	off_t *fp_3_offsets;
 
 } shake1_info_t;
 
-
 shake1_info_t shake1_info;
 
-char *shake1_change_string (char *, int);
-int shake1_fill_toc_info (bot_t *, FILE *, int *, off_t **);
-void shake1_print_info (bot_t *);
-void shake1_fill_toc (bot_t *);
+char *shake1_change_string(char *, int);
+int shake1_fill_toc_info(bot_t *, FILE *, int *, off_t **);
+void shake1_print_info(bot_t *);
+void shake1_fill_toc(bot_t *);
 
-
-void __shake1_init__ (void) __attribute__ ((constructor));
-
+void __shake1_init__(void) __attribute__ ((constructor));
 
 #endif

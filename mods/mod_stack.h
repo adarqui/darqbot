@@ -28,28 +28,25 @@
 
 #include "bot.h"
 
-enum mod_stack_stuff
-{
-  MOD_STACK_PUSH = 1,
-  MOD_STACK_POP,
-  MOD_STACK_CLEAR,
-  MOD_STACK_SIZE,
-  MOD_STACK_LIST,
+enum mod_stack_stuff {
+	MOD_STACK_PUSH = 1,
+	MOD_STACK_POP,
+	MOD_STACK_CLEAR,
+	MOD_STACK_SIZE,
+	MOD_STACK_LIST,
 };
 
 dlist_t *dl_mod_stack_unique;
 
 module_t mod_stack_info;
 
-bot_t *stack_init (dlist_t *, bot_t *);
-bot_t *stack_fini (dlist_t *, bot_t *);
-bot_t *stack_help (dlist_t *, bot_t *);
-bot_t *stack_run (dlist_t *, bot_t *);
+bot_t *stack_init(dlist_t *, bot_t *);
+bot_t *stack_fini(dlist_t *, bot_t *);
+bot_t *stack_help(dlist_t *, bot_t *);
+bot_t *stack_run(dlist_t *, bot_t *);
 
+char *stack_change_string(bot_t *, char *, int);
 
-char *stack_change_string (bot_t *, char *, int);
-
-
-void __stack_init__ (void) __attribute__ ((constructor));
+void __stack_init__(void) __attribute__ ((constructor));
 
 #endif

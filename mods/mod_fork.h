@@ -30,19 +30,18 @@
 
 module_t mod_fork_info;
 
-bot_t *fork_init (dlist_t *, bot_t *);
-bot_t *fork_fini (dlist_t *, bot_t *);
-bot_t *fork_help (dlist_t *, bot_t *);
-bot_t *fork_run (dlist_t *, bot_t *);
+bot_t *fork_init(dlist_t *, bot_t *);
+bot_t *fork_fini(dlist_t *, bot_t *);
+bot_t *fork_help(dlist_t *, bot_t *);
+bot_t *fork_run(dlist_t *, bot_t *);
 
-void __fork_init__ (void) __attribute__ ((constructor));
+void __fork_init__(void) __attribute__ ((constructor));
 
-char *fork_change_string (bot_t *, char *, int);
+char *fork_change_string(bot_t *, char *, int);
 
-enum mod_fork_options
-{
-  MOD_FORK_OPT_VERBOSE = 0x01,
-  MOD_FORK_OPT_DAEMON = 0x02,
+enum mod_fork_options {
+	MOD_FORK_OPT_VERBOSE = 0x01,
+	MOD_FORK_OPT_DAEMON = 0x02,
 };
 
 #endif

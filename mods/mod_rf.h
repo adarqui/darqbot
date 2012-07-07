@@ -28,26 +28,20 @@
 
 #include "bot.h"
 
-
 module_t mod_rf_info;
 
-bot_t *rf_init (dlist_t *, bot_t *);
-bot_t *rf_fini (dlist_t *, bot_t *);
-bot_t *rf_help (dlist_t *, bot_t *);
-bot_t *rf_run (dlist_t *, bot_t *);
+bot_t *rf_init(dlist_t *, bot_t *);
+bot_t *rf_fini(dlist_t *, bot_t *);
+bot_t *rf_help(dlist_t *, bot_t *);
+bot_t *rf_run(dlist_t *, bot_t *);
 
+void __rf_init__(void) __attribute__ ((constructor));
 
-void __rf_init__ (void) __attribute__ ((constructor));
+char *rf_change_string(bot_t *, char *, char *);
 
-
-char *rf_change_string (bot_t *, char *, char *);
-
-
-typedef struct rf_info
-{
-  mongo conn[1];
+typedef struct rf_info {
+	mongo conn[1];
 } rf_info_t;
 rf_info_t rf_info;
-
 
 #endif

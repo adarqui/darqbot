@@ -30,15 +30,13 @@
 
 module_t mod_console_info;
 
-bot_t *console_init (dlist_t *, bot_t *);
-bot_t *console_fini (dlist_t *, bot_t *);
-bot_t *console_help (dlist_t *, bot_t *);
-bot_t *console_run (dlist_t *, bot_t *);
+bot_t *console_init(dlist_t *, bot_t *);
+bot_t *console_fini(dlist_t *, bot_t *);
+bot_t *console_help(dlist_t *, bot_t *);
+bot_t *console_run(dlist_t *, bot_t *);
 
+char *console_change_string(bot_t *, char *, int);
 
-char *console_change_string (bot_t *, char *, int);
-
-
-void __console_init__ (void) __attribute__ ((constructor));
+void __console_init__(void) __attribute__ ((constructor));
 
 #endif

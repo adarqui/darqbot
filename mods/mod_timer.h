@@ -30,47 +30,43 @@
 
 module_t mod_timer_info;
 
-bot_t *timer_init (dlist_t *, bot_t *);
-bot_t *timer_fini (dlist_t *, bot_t *);
-bot_t *timer_help (dlist_t *, bot_t *);
-bot_t *timer_run (dlist_t *, bot_t *);
-bot_t *timer_timer (dlist_t *, bot_t *);
+bot_t *timer_init(dlist_t *, bot_t *);
+bot_t *timer_fini(dlist_t *, bot_t *);
+bot_t *timer_help(dlist_t *, bot_t *);
+bot_t *timer_run(dlist_t *, bot_t *);
+bot_t *timer_timer(dlist_t *, bot_t *);
 
-void __timer_init__ (void) __attribute__ ((constructor));
+void __timer_init__(void) __attribute__ ((constructor));
 
-
-enum timer_opts
-{
-  TIMER_OPT_ADD = 1,
-  TIMER_OPT_GET,
-  TIMER_OPT_DEL,
-  TIMER_OPT_LIST,
-  TIMER_OPT_CLEAR,
+enum timer_opts {
+	TIMER_OPT_ADD = 1,
+	TIMER_OPT_GET,
+	TIMER_OPT_DEL,
+	TIMER_OPT_LIST,
+	TIMER_OPT_CLEAR,
 };
 
-typedef struct mod_timer_node
-{
-  int id;
-  int interval;
-  int count;
-  time_t last_run;
-  char *cmd;
-  char *chan;
-  bot_t *(*parser) (dlist_t *, bot_t *);
-  dlist_t *dlist_node;
-  bot_t *bot;
+typedef struct mod_timer_node {
+	int id;
+	int interval;
+	int count;
+	time_t last_run;
+	char *cmd;
+	char *chan;
+	bot_t *(*parser) (dlist_t *, bot_t *);
+	dlist_t *dlist_node;
+	bot_t *bot;
 } modtimer_t;
 
+void timer_free(void *);
+modtimer_t *timer_alloc(bot_t *, int, int, char *);
+char *timer_change_string(dlist_t *, bot_t *, char *, int);
 
-void timer_free (void *);
-modtimer_t *timer_alloc (bot_t *, int, int, char *);
-char *timer_change_string (dlist_t *, bot_t *, char *, int);
-
-char *timer_op_add (bot_t *, char *);
-char *timer_op_del (char *);
-char *timer_op_get (char *);
-char *timer_op_list (char *);
-char *timer_op_clear (char *);
+char *timer_op_add(bot_t *, char *);
+char *timer_op_del(char *);
+char *timer_op_get(char *);
+char *timer_op_list(char *);
+char *timer_op_clear(char *);
 
 dlist_t *dl_mod_timer;
 bit_vector_t *timer_bv;

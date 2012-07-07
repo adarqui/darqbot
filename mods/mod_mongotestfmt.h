@@ -28,30 +28,25 @@
 
 #include "bot.h"
 
-
-enum
-{
-  MONGOTESTFMT_ADD = 1,
-  MONGOTESTFMT_DEL = 2,
-  MONGOTESTFMT_GET = 3,
-  MONGOTESTFMT_UPDATE = 4,
-  MONGOTESTFMT_TEST = 5,
-  MONGOTESTFMT_ADDBSON = 6,
-  MONGOTESTFMT_GETBSON = 7,
-}
- ;
+enum {
+	MONGOTESTFMT_ADD = 1,
+	MONGOTESTFMT_DEL = 2,
+	MONGOTESTFMT_GET = 3,
+	MONGOTESTFMT_UPDATE = 4,
+	MONGOTESTFMT_TEST = 5,
+	MONGOTESTFMT_ADDBSON = 6,
+	MONGOTESTFMT_GETBSON = 7,
+};
 
 module_t mod_mongotestfmt_info;
 
-bot_t *mongotestfmt_init (dlist_t *, bot_t *);
-bot_t *mongotestfmt_fini (dlist_t *, bot_t *);
-bot_t *mongotestfmt_help (dlist_t *, bot_t *);
-bot_t *mongotestfmt_run (dlist_t *, bot_t *);
+bot_t *mongotestfmt_init(dlist_t *, bot_t *);
+bot_t *mongotestfmt_fini(dlist_t *, bot_t *);
+bot_t *mongotestfmt_help(dlist_t *, bot_t *);
+bot_t *mongotestfmt_run(dlist_t *, bot_t *);
 
+char *mongotestfmt_change_string(bot_t *, char *, int);
 
-char *mongotestfmt_change_string (bot_t *, char *, int);
-
-
-void __mongotestfmt_init__ (void) __attribute__ ((constructor));
+void __mongotestfmt_init__(void) __attribute__ ((constructor));
 
 #endif

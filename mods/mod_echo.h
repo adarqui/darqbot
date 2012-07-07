@@ -30,13 +30,13 @@
 
 module_t mod_echo_info;
 
-bot_t *echo_init (dlist_t *, bot_t *);
-bot_t *echo_fini (dlist_t *, bot_t *);
-bot_t *echo_help (dlist_t *, bot_t *);
-bot_t *echo_run (dlist_t *, bot_t *);
+bot_t *echo_init(dlist_t *, bot_t *);
+bot_t *echo_fini(dlist_t *, bot_t *);
+bot_t *echo_help(dlist_t *, bot_t *);
+bot_t *echo_run(dlist_t *, bot_t *);
 
-void __echo_init__ (void) __attribute__ ((constructor));
+void __echo_init__(void) __attribute__ ((constructor));
 
-char *echo_change_string (char *);
+char *echo_change_string(char *);
 
 #endif

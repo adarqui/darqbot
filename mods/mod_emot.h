@@ -30,32 +30,30 @@
 
 module_t mod_emot_info;
 
-bot_t *emot_init (dlist_t *, bot_t *);
-bot_t *emot_fini (dlist_t *, bot_t *);
-bot_t *emot_help (dlist_t *, bot_t *);
-bot_t *emot_run (dlist_t *, bot_t *);
+bot_t *emot_init(dlist_t *, bot_t *);
+bot_t *emot_fini(dlist_t *, bot_t *);
+bot_t *emot_help(dlist_t *, bot_t *);
+bot_t *emot_run(dlist_t *, bot_t *);
 
-typedef struct emot_toc
-{
-  char *emot;
-  char *desc;
+typedef struct emot_toc {
+	char *emot;
+	char *desc;
 } emot_toc_t;
 
-typedef struct emot_info
-{
-  int initialized;
-  FILE *fp;
-  emot_toc_t *toc;
-  int max_toc;
+typedef struct emot_info {
+	int initialized;
+	FILE *fp;
+	emot_toc_t *toc;
+	int max_toc;
 } emot_info_t;
 
 emot_info_t emot_info;
 
-char *emot_change_string (char *, int, char *);
-void emot_fill_toc (bot_t *);
-char *emot_get (char *);
-int emot_rand_compare (const void *, const void *);
+char *emot_change_string(char *, int, char *);
+void emot_fill_toc(bot_t *);
+char *emot_get(char *);
+int emot_rand_compare(const void *, const void *);
 
-void __emot_init__ (void) __attribute__ ((constructor));
+void __emot_init__(void) __attribute__ ((constructor));
 
 #endif

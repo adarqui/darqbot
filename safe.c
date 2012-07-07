@@ -21,48 +21,40 @@
 */
 #include "bot.h"
 
-int
-safe_close (int fd)
+int safe_close(int fd)
 {
 
-  debug (NULL, "safe_close: fd=%i\n", fd);
+	debug(NULL, "safe_close: fd=%i\n", fd);
 
-  if (!fd)
-    return 0;
+	if (!fd)
+		return 0;
 
-  return (close (fd));
+	return (close(fd));
 }
-
-
 
 void
-safe_event_set (struct event *ev, int fd, short event,
-		void (*fn) (int, short, void *), void *arg)
+safe_event_set(struct event *ev, int fd, short event,
+	       void (*fn) (int, short, void *), void *arg)
 {
 
-  debug (NULL, "safe_event_set: Entered: ev=%p, fd=%i, event=%i\n", ev, fd,
-	 event);
+	debug(NULL, "safe_event_set: Entered: ev=%p, fd=%i, event=%i\n", ev, fd,
+	      event);
 
-  return event_set (ev, fd, event, fn, arg);
+	return event_set(ev, fd, event, fn, arg);
 }
 
-
-
-int
-safe_event_add (struct event *ev, struct timeval *tv)
+int safe_event_add(struct event *ev, struct timeval *tv)
 {
 
-  debug (NULL, "safe_event_add: Entered: ev=%p\n", ev);
+	debug(NULL, "safe_event_add: Entered: ev=%p\n", ev);
 
-  return event_add (ev, tv);
+	return event_add(ev, tv);
 }
 
-
-int
-safe_event_del (struct event *ev)
+int safe_event_del(struct event *ev)
 {
 
-  debug (NULL, "safe_event_del: Entered: ev=%p\n", ev);
+	debug(NULL, "safe_event_del: Entered: ev=%p\n", ev);
 
-  return event_del (ev);
+	return event_del(ev);
 }

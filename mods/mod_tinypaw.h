@@ -33,19 +33,15 @@ char *tinypaw_url;
 
 module_t mod_tinypaw_info;
 
-bot_t *tinypaw_init (dlist_t *, bot_t *);
-bot_t *tinypaw_fini (dlist_t *, bot_t *);
-bot_t *tinypaw_help (dlist_t *, bot_t *);
-bot_t *tinypaw_run (dlist_t *, bot_t *);
+bot_t *tinypaw_init(dlist_t *, bot_t *);
+bot_t *tinypaw_fini(dlist_t *, bot_t *);
+bot_t *tinypaw_help(dlist_t *, bot_t *);
+bot_t *tinypaw_run(dlist_t *, bot_t *);
 
+char *tinypaw_change_string(bot_t *, char *, int);
 
-char *tinypaw_change_string (bot_t *, char *, int);
+size_t tinypaw_curl_write(void *, size_t, size_t, void *);
 
-
-size_t tinypaw_curl_write (void *, size_t, size_t, void *);
-
-
-void __tinypaw_init__ (void) __attribute__ ((constructor));
-
+void __tinypaw_init__(void) __attribute__ ((constructor));
 
 #endif

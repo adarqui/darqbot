@@ -33,45 +33,39 @@ char *howie_url;
 
 module_t mod_howie_info;
 
-bot_t *howie_init (dlist_t *, bot_t *);
-bot_t *howie_fini (dlist_t *, bot_t *);
-bot_t *howie_help (dlist_t *, bot_t *);
-bot_t *howie_run (dlist_t *, bot_t *);
+bot_t *howie_init(dlist_t *, bot_t *);
+bot_t *howie_fini(dlist_t *, bot_t *);
+bot_t *howie_help(dlist_t *, bot_t *);
+bot_t *howie_run(dlist_t *, bot_t *);
 
-void howie_fill_info (bot_t *);
-int howie_run_on (bot_t *);
-int howie_run_off (bot_t *);
+void howie_fill_info(bot_t *);
+int howie_run_on(bot_t *);
+int howie_run_off(bot_t *);
 
+typedef struct howie_info {
+	int initialized;
 
-typedef struct howie_info
-{
-  int initialized;
+	pid_t ison;
 
-  pid_t ison;
+	FILE *fp;
 
-  FILE *fp;
+	int argc;
+	char **argv;
+	char *dir;
 
-  int argc;
-  char **argv;
-  char *dir;
+	int pipefd[2];
+	int pipefd_b[2];
 
-  int pipefd[2];
-  int pipefd_b[2];
+	int should_on;
 
-  int should_on;
-
-}
-howie_info_t;
+} howie_info_t;
 
 howie_info_t howie_info;
 
+char *howie_change_string(bot_t *, char *, int);
 
-char *howie_change_string (bot_t *, char *, int);
+size_t howie_curl_write(void *, size_t, size_t, void *);
 
-
-size_t howie_curl_write (void *, size_t, size_t, void *);
-
-
-void __howie_init__ (void) __attribute__ ((constructor));
+void __howie_init__(void) __attribute__ ((constructor));
 
 #endif

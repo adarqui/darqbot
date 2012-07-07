@@ -21,169 +21,137 @@
 */
 #include "bot.h"
 
-
-
-void
-zmodule_lock_arg (char *arg)
+void zmodule_lock_arg(char *arg)
 {
 
-  debug (NULL, "zmodule_lock_arg: Entered\n");
+	debug(NULL, "zmodule_lock_arg: Entered\n");
 
-  xmodule_lock (XMODULE_TYPE_MODULE, arg);
-  xmodule_lock (XMODULE_TYPE_PMODULE, arg);
-  xmodule_lock (XMODULE_TYPE_GMODULE, arg);
-  return;
+	xmodule_lock(XMODULE_TYPE_MODULE, arg);
+	xmodule_lock(XMODULE_TYPE_PMODULE, arg);
+	xmodule_lock(XMODULE_TYPE_GMODULE, arg);
+	return;
 }
 
-
-void
-zmodule_unlock_arg (char *arg)
+void zmodule_unlock_arg(char *arg)
 {
 
-  debug (NULL, "zmodule_unlock_arg: Entered\n");
+	debug(NULL, "zmodule_unlock_arg: Entered\n");
 
-  xmodule_unlock (XMODULE_TYPE_MODULE, arg);
-  xmodule_unlock (XMODULE_TYPE_PMODULE, arg);
-  xmodule_unlock (XMODULE_TYPE_GMODULE, arg);
-  return;
+	xmodule_unlock(XMODULE_TYPE_MODULE, arg);
+	xmodule_unlock(XMODULE_TYPE_PMODULE, arg);
+	xmodule_unlock(XMODULE_TYPE_GMODULE, arg);
+	return;
 }
-
-
-
-
 
 /* console parsing stuff */
 
-void
-console_zmodload (char *arg)
+void console_zmodload(char *arg)
 {
 
-  xmodule_load_all (XMODULE_TYPE_MODULE);
-  xmodule_load_all (XMODULE_TYPE_PMODULE);
-  xmodule_load_all (XMODULE_TYPE_GMODULE);
+	xmodule_load_all(XMODULE_TYPE_MODULE);
+	xmodule_load_all(XMODULE_TYPE_PMODULE);
+	xmodule_load_all(XMODULE_TYPE_GMODULE);
 
-  return;
+	return;
 }
 
-
-void
-console_zmodunload (char *arg)
+void console_zmodunload(char *arg)
 {
 
-  xmodule_unload_all (XMODULE_TYPE_MODULE);
-  xmodule_unload_all (XMODULE_TYPE_PMODULE);
-  xmodule_unload_all (XMODULE_TYPE_GMODULE);
+	xmodule_unload_all(XMODULE_TYPE_MODULE);
+	xmodule_unload_all(XMODULE_TYPE_PMODULE);
+	xmodule_unload_all(XMODULE_TYPE_GMODULE);
 
-  return;
+	return;
 }
 
-void
-console_zmodreload (char *arg)
+void console_zmodreload(char *arg)
 {
 
-  console_xmodreload (XMODULE_TYPE_MODULE, "ALL");
-  console_xmodreload (XMODULE_TYPE_PMODULE, "ALL");
-  console_xmodreload (XMODULE_TYPE_GMODULE, "ALL");
+	console_xmodreload(XMODULE_TYPE_MODULE, "ALL");
+	console_xmodreload(XMODULE_TYPE_PMODULE, "ALL");
+	console_xmodreload(XMODULE_TYPE_GMODULE, "ALL");
 
-  return;
+	return;
 }
 
-
-
-
-void
-zmodule_iolist (void)
+void zmodule_iolist(void)
 {
-  xmodule_iolist (XMODULE_TYPE_MODULE);
-  xmodule_iolist (XMODULE_TYPE_PMODULE);
-  xmodule_iolist (XMODULE_TYPE_GMODULE);
-  return;
+	xmodule_iolist(XMODULE_TYPE_MODULE);
+	xmodule_iolist(XMODULE_TYPE_PMODULE);
+	xmodule_iolist(XMODULE_TYPE_GMODULE);
+	return;
 }
 
-void
-zmodule_timerlist (void)
+void zmodule_timerlist(void)
 {
-  xmodule_timerlist (XMODULE_TYPE_MODULE);
-  xmodule_timerlist (XMODULE_TYPE_PMODULE);
-  xmodule_timerlist (XMODULE_TYPE_GMODULE);
-  return;
+	xmodule_timerlist(XMODULE_TYPE_MODULE);
+	xmodule_timerlist(XMODULE_TYPE_PMODULE);
+	xmodule_timerlist(XMODULE_TYPE_GMODULE);
+	return;
 }
 
-void
-zmodule_list (void)
+void zmodule_list(void)
 {
-  xmodule_list (XMODULE_TYPE_MODULE);
-  xmodule_list (XMODULE_TYPE_PMODULE);
-  xmodule_list (XMODULE_TYPE_GMODULE);
-  return;
+	xmodule_list(XMODULE_TYPE_MODULE);
+	xmodule_list(XMODULE_TYPE_PMODULE);
+	xmodule_list(XMODULE_TYPE_GMODULE);
+	return;
 }
 
-
-void
-zmodule_lock (void)
+void zmodule_lock(void)
 {
-  module_t *mod;
-  dlist_t *dl_pointer, *dlist_pointers[4], *dptr;
-  int i;
+	module_t *mod;
+	dlist_t *dl_pointer, *dlist_pointers[4], *dptr;
+	int i;
 
-  debug (NULL, "zmodule_lock: Entered\n");
+	debug(NULL, "zmodule_lock: Entered\n");
 
+	dlist_pointers[0] = gi->dl_module;
+	dlist_pointers[1] = gi->dl_pmodule;
+	dlist_pointers[2] = gi->dl_gmodule;
+	dlist_pointers[3] = NULL;
 
-  dlist_pointers[0] = gi->dl_module;
-  dlist_pointers[1] = gi->dl_pmodule;
-  dlist_pointers[2] = gi->dl_gmodule;
-  dlist_pointers[3] = NULL;
+	for (i = 0; dlist_pointers[i] != NULL; i++) {
+		dl_pointer = dlist_pointers[i];
+		dlist_fornext(dl_pointer, dptr) {
+			mod = (module_t *) dlist_data(dptr);
+			if (!mod)
+				continue;
+			mod->locked = 1;
+		}
+	}
 
-  for (i = 0; dlist_pointers[i] != NULL; i++)
-    {
-      dl_pointer = dlist_pointers[i];
-      dlist_fornext (dl_pointer, dptr)
-      {
-	mod = (module_t *) dlist_data (dptr);
-	if (!mod)
-	  continue;
-	mod->locked = 1;
-      }
-    }
-
-  return;
+	return;
 }
 
-
-void
-zmodule_unlock (void)
+void zmodule_unlock(void)
 {
-  module_t *mod;
-  dlist_t *dl_pointer, *dlist_pointers[4], *dptr;
-  int i;
+	module_t *mod;
+	dlist_t *dl_pointer, *dlist_pointers[4], *dptr;
+	int i;
 
-  debug (NULL, "zmodule_unlock: Entered\n");
+	debug(NULL, "zmodule_unlock: Entered\n");
 
-  dlist_pointers[0] = gi->dl_module;
-  dlist_pointers[1] = gi->dl_pmodule;
-  dlist_pointers[2] = gi->dl_gmodule;
-  dlist_pointers[3] = NULL;
+	dlist_pointers[0] = gi->dl_module;
+	dlist_pointers[1] = gi->dl_pmodule;
+	dlist_pointers[2] = gi->dl_gmodule;
+	dlist_pointers[3] = NULL;
 
-  for (i = 0; dlist_pointers[i] != NULL; i++)
-    {
-      dl_pointer = dlist_pointers[i];
-      dlist_fornext (dl_pointer, dptr)
-      {
-	mod = (module_t *) dlist_data (dptr);
-	if (!mod)
-	  continue;
-	mod->locked = 0;
-      }
-    }
+	for (i = 0; dlist_pointers[i] != NULL; i++) {
+		dl_pointer = dlist_pointers[i];
+		dlist_fornext(dl_pointer, dptr) {
+			mod = (module_t *) dlist_data(dptr);
+			if (!mod)
+				continue;
+			mod->locked = 0;
+		}
+	}
 
-  return;
+	return;
 }
 
-
-
-
-void
-zmodule_prune (void)
+void zmodule_prune(void)
 {
 /* removes 'inactive modules' */
 
@@ -210,5 +178,5 @@ dlist_remove_and_free(&gi->dl_gmodule, &dptr, xmodule_free);
 }
 */
 
-  return;
+	return;
 }

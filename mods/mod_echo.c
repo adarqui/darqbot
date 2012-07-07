@@ -25,113 +25,96 @@
  */
 #include "mod_echo.h"
 
-void
-__echo_init__ (void)
+void __echo_init__(void)
 {
 
-  strlcpy_buf (mod_echo_info.name, "mod_echo");
-  strlcpy_buf (mod_echo_info.trigger, "^echo");
+	strlcpy_buf(mod_echo_info.name, "mod_echo");
+	strlcpy_buf(mod_echo_info.trigger, "^echo");
 
-  module_add_subtrigs (&mod_echo_info, "^e");
-  module_add_subtrigs (&mod_echo_info, "^say");
+	module_add_subtrigs(&mod_echo_info, "^e");
+	module_add_subtrigs(&mod_echo_info, "^say");
 
-  mod_echo_info.init = echo_init;
-  mod_echo_info.fini = echo_fini;
-  mod_echo_info.help = echo_help;
-  mod_echo_info.run = echo_run;
+	mod_echo_info.init = echo_init;
+	mod_echo_info.fini = echo_fini;
+	mod_echo_info.help = echo_help;
+	mod_echo_info.run = echo_run;
 
+	mod_echo_info.output = NULL;
+	mod_echo_info.input = NULL;
 
-  mod_echo_info.output = NULL;
-  mod_echo_info.input = NULL;
+	debug(NULL, "__echo_init__: Loaded mod_echo\n");
 
-
-  debug (NULL, "__echo_init__: Loaded mod_echo\n");
-
-  return;
+	return;
 }
 
-
-
-bot_t *
-echo_init (dlist_t * dlist_node, bot_t * bot)
+bot_t *echo_init(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "echo_init: Entered\n");
-  return NULL;
+	debug(bot, "echo_init: Entered\n");
+	return NULL;
 }
 
-bot_t *
-echo_fini (dlist_t * dlist_node, bot_t * bot)
+bot_t *echo_fini(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "echo_fini: Entered\n");
-  return NULL;
+	debug(bot, "echo_fini: Entered\n");
+	return NULL;
 }
 
-bot_t *
-echo_help (dlist_t * dlist_node, bot_t * bot)
+bot_t *echo_help(dlist_t * dlist_node, bot_t * bot)
 {
-  debug (bot, "echo_help: Entered\n");
+	debug(bot, "echo_help: Entered\n");
 
+	if (!bot)
+		return NULL;
 
-  if (!bot)
-    return NULL;
+	bot->dl_module_help = "^echo";
 
-  bot->dl_module_help = "^echo";
-
-  return NULL;
+	return NULL;
 }
 
-bot_t *
-echo_run (dlist_t * dlist_node, bot_t * bot)
+bot_t *echo_run(dlist_t * dlist_node, bot_t * bot)
 {
-  char *dl_module_arg_after_options, *dl_options_ptr;
+	char *dl_module_arg_after_options, *dl_options_ptr;
 
-  debug (bot, "echo_run: Entered\n");
+	debug(bot, "echo_run: Entered\n");
 
+	if (!dlist_node || !bot)
+		return NULL;
 
-  if (!dlist_node || !bot)
-    return NULL;
+	debug(bot,
+	      "echo_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
+	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-  debug (bot,
-	 "echo_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
-	 bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
+	stat_inc(bot, bot->trig_called);
 
-  stat_inc (bot, bot->trig_called);
+	if (bot_shouldreturn(bot))
+		return NULL;
 
+	MOD_OPTIONS_TOP_HALF;
+	MOD_OPTIONS_BOTTOM_HALF;
 
+	bot->shouldsend = 1;
 
-  if (bot_shouldreturn (bot))
-    return NULL;
+	MOD_PARSE_TOP_HALF;
+	l_new_str = echo_change_string(l_str_ptr);
+	MOD_PARSE_BOTTOM_HALF;
 
-  MOD_OPTIONS_TOP_HALF;
-  MOD_OPTIONS_BOTTOM_HALF;
-
-  bot->shouldsend = 1;
-
-  MOD_PARSE_TOP_HALF;
-  l_new_str = echo_change_string (l_str_ptr);
-  MOD_PARSE_BOTTOM_HALF;
-
-  return bot;
+	return bot;
 }
 
-
-
-char *
-echo_change_string (char *string)
+char *echo_change_string(char *string)
 {
-  char *sep_ptr;
+	char *sep_ptr;
 
-  char *str = NULL;
+	char *str = NULL;
 
+	if (!string)
+		return NULL;
 
-  if (!string)
-    return NULL;
+	sep_ptr = str_find_sep(string);
+	if (sep_ptr)
+		string = sep_ptr;
 
-  sep_ptr = str_find_sep (string);
-  if (sep_ptr)
-    string = sep_ptr;
+	str = strdup(string);
 
-  str = strdup (string);
-
-  return str;
+	return str;
 }

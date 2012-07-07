@@ -30,18 +30,15 @@
 
 #include <openssl/md5.h>
 
-
 module_t mod_md5_info;
 
-bot_t *md5_init (dlist_t *, bot_t *);
-bot_t *md5_fini (dlist_t *, bot_t *);
-bot_t *md5_help (dlist_t *, bot_t *);
-bot_t *md5_run (dlist_t *, bot_t *);
+bot_t *md5_init(dlist_t *, bot_t *);
+bot_t *md5_fini(dlist_t *, bot_t *);
+bot_t *md5_help(dlist_t *, bot_t *);
+bot_t *md5_run(dlist_t *, bot_t *);
 
+char *md5_change_string(char *, int);
 
-char *md5_change_string (char *, int);
-
-
-void __md5_init__ (void) __attribute__ ((constructor));
+void __md5_init__(void) __attribute__ ((constructor));
 
 #endif

@@ -28,28 +28,25 @@
 
 #include "bot.h"
 
-enum mod_queue_stuff
-{
-  MOD_QUEUE_ENQUEUE = 1,
-  MOD_QUEUE_DEQUEUE,
-  MOD_QUEUE_CLEAR,
-  MOD_QUEUE_SIZE,
-  MOD_QUEUE_LIST,
+enum mod_queue_stuff {
+	MOD_QUEUE_ENQUEUE = 1,
+	MOD_QUEUE_DEQUEUE,
+	MOD_QUEUE_CLEAR,
+	MOD_QUEUE_SIZE,
+	MOD_QUEUE_LIST,
 };
 
 dlist_t *dl_mod_queue_unique;
 
 module_t mod_queue_info;
 
-bot_t *queue_init (dlist_t *, bot_t *);
-bot_t *queue_fini (dlist_t *, bot_t *);
-bot_t *queue_help (dlist_t *, bot_t *);
-bot_t *queue_run (dlist_t *, bot_t *);
+bot_t *queue_init(dlist_t *, bot_t *);
+bot_t *queue_fini(dlist_t *, bot_t *);
+bot_t *queue_help(dlist_t *, bot_t *);
+bot_t *queue_run(dlist_t *, bot_t *);
 
+char *queue_change_string(bot_t *, char *, int);
 
-char *queue_change_string (bot_t *, char *, int);
-
-
-void __queue_init__ (void) __attribute__ ((constructor));
+void __queue_init__(void) __attribute__ ((constructor));
 
 #endif

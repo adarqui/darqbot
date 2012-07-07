@@ -21,221 +21,169 @@
 */
 #include "bot.h"
 
-
-void
-pmodule_sort (void)
+void pmodule_sort(void)
 {
-  xmodule_sort (XMODULE_TYPE_PMODULE);
-  return;
+	xmodule_sort(XMODULE_TYPE_PMODULE);
+	return;
 }
 
-
-
-
-void
-pmodule_update_stats (void)
+void pmodule_update_stats(void)
 {
-  xmodule_update_stats (XMODULE_TYPE_PMODULE);
-  return;
+	xmodule_update_stats(XMODULE_TYPE_PMODULE);
+	return;
 }
 
-
-void
-pmodule_lock (char *name)
+void pmodule_lock(char *name)
 {
-  xmodule_lock (XMODULE_TYPE_PMODULE, name);
-  return;
+	xmodule_lock(XMODULE_TYPE_PMODULE, name);
+	return;
 }
 
-void
-pmodule_unlock (char *name)
+void pmodule_unlock(char *name)
 {
-  xmodule_unlock (XMODULE_TYPE_PMODULE, name);
-  return;
+	xmodule_unlock(XMODULE_TYPE_PMODULE, name);
+	return;
 }
 
-
-dlist_t *
-pmodule_find_by_trig_dptr (char *name)
+dlist_t *pmodule_find_by_trig_dptr(char *name)
 {
-  return xmodule_find_by_trig_dptr (XMODULE_TYPE_PMODULE, name);
+	return xmodule_find_by_trig_dptr(XMODULE_TYPE_PMODULE, name);
 }
 
-
-module_t *
-pmodule_find_by_trig (char *name)
+module_t *pmodule_find_by_trig(char *name)
 {
-  return xmodule_find_by_trig (XMODULE_TYPE_PMODULE, name);
+	return xmodule_find_by_trig(XMODULE_TYPE_PMODULE, name);
 }
 
-
-
-module_t *
-pmodule_find_by_name (char *name)
+module_t *pmodule_find_by_name(char *name)
 {
-  return xmodule_find_by_name (XMODULE_TYPE_PMODULE, name);
+	return xmodule_find_by_name(XMODULE_TYPE_PMODULE, name);
 }
 
-
-
-void
-pmodule_update (module_t * mod_struct, char *name)
+void pmodule_update(module_t * mod_struct, char *name)
 {
-  xmodule_update (XMODULE_TYPE_PMODULE, mod_struct, name);
-  return;
+	xmodule_update(XMODULE_TYPE_PMODULE, mod_struct, name);
+	return;
 }
 
-
-
-char *
-pmodule_path (char *name)
+char *pmodule_path(char *name)
 {
 
-  return xmodule_path (XMODULE_TYPE_PMODULE, name);
+	return xmodule_path(XMODULE_TYPE_PMODULE, name);
 }
 
-module_t *
-pmodule_load (char *name)
+module_t *pmodule_load(char *name)
 {
-  return xmodule_load (XMODULE_TYPE_PMODULE, name);
+	return xmodule_load(XMODULE_TYPE_PMODULE, name);
 }
 
-
-module_t *
-pmodule_unload (module_t * mod)
+module_t *pmodule_unload(module_t * mod)
 {
-  return xmodule_unload (XMODULE_TYPE_PMODULE, mod, NULL);
+	return xmodule_unload(XMODULE_TYPE_PMODULE, mod, NULL);
 }
 
-
-
-void
-pmodule_iolist (void)
+void pmodule_iolist(void)
 {
-  xmodule_iolist (XMODULE_TYPE_PMODULE);
-  return;
+	xmodule_iolist(XMODULE_TYPE_PMODULE);
+	return;
 }
 
-
-void
-pmodule_timerlist (void)
+void pmodule_timerlist(void)
 {
-  xmodule_timerlist (XMODULE_TYPE_PMODULE);
-  return;
+	xmodule_timerlist(XMODULE_TYPE_PMODULE);
+	return;
 }
 
-void
-pmodule_list (void)
+void pmodule_list(void)
 {
-  xmodule_list (XMODULE_TYPE_PMODULE);
-  return;
+	xmodule_list(XMODULE_TYPE_PMODULE);
+	return;
 }
 
-
-void
-pmodule_load_all (void)
+void pmodule_load_all(void)
 {
 
-  xmodule_load_all (XMODULE_TYPE_PMODULE);
+	xmodule_load_all(XMODULE_TYPE_PMODULE);
 
-  return;
+	return;
 }
 
-
-
-bot_t *
-pmodule_unload_all (void)
+bot_t *pmodule_unload_all(void)
 {
-  return xmodule_unload_all (XMODULE_TYPE_PMODULE);
+	return xmodule_unload_all(XMODULE_TYPE_PMODULE);
 }
-
 
 /* console parsing stuff */
-void
-console_pmodload (char *arg)
+void console_pmodload(char *arg)
 {
 
-  console_xmodload (XMODULE_TYPE_PMODULE, arg);
+	console_xmodload(XMODULE_TYPE_PMODULE, arg);
 
-  return;
+	return;
 }
 
-
-void
-console_pmodunload (char *arg)
+void console_pmodunload(char *arg)
 {
 
-  console_xmodunload (XMODULE_TYPE_PMODULE, arg);
-  return;
+	console_xmodunload(XMODULE_TYPE_PMODULE, arg);
+	return;
 }
 
-void
-console_pmodreload (char *arg)
+void console_pmodreload(char *arg)
 {
 
-  console_xmodreload (XMODULE_TYPE_PMODULE, arg);
+	console_xmodreload(XMODULE_TYPE_PMODULE, arg);
 
-  return;
+	return;
 }
-
-
 
 void
-pmodule_cur_set (bot_t * (*fn) (dlist_t *, bot_t *), dlist_t * dlist_node,
-		 bot_t * bot)
+pmodule_cur_set(bot_t * (*fn) (dlist_t *, bot_t *), dlist_t * dlist_node,
+		bot_t * bot)
 {
 
+	debug(bot, "pmodule_cur_set: Entered\n");
+	if (!fn || !dlist_node || !bot)
+		return;
 
-  debug (bot, "pmodule_cur_set: Entered\n");
-  if (!fn || !dlist_node || !bot)
-    return;
+	gi->pmod_cur = fn;
+	gi->pmod_cur_dlist_node = dlist_node;
+	gi->pmod_cur_bot = bot;
 
-  gi->pmod_cur = fn;
-  gi->pmod_cur_dlist_node = dlist_node;
-  gi->pmod_cur_bot = bot;
-
-  return;
+	return;
 }
 
-
-void
-pmodule_cur_clear (void)
+void pmodule_cur_clear(void)
 {
-  debug (NULL, "pmodule_cur_clear: Entered\n");
+	debug(NULL, "pmodule_cur_clear: Entered\n");
 
-  gi->pmod_cur = NULL;
-  gi->pmod_cur_dlist_node = NULL;
-  gi->pmod_cur_bot = NULL;
+	gi->pmod_cur = NULL;
+	gi->pmod_cur_dlist_node = NULL;
+	gi->pmod_cur_bot = NULL;
 
-  return;
+	return;
 }
 
-
-bot_t *
-pmodule_cur_run (void)
+bot_t *pmodule_cur_run(void)
 {
 
-  debug (NULL, "pmodule_ur_run: Entered\n");
+	debug(NULL, "pmodule_ur_run: Entered\n");
 
-  if (gi->pmod_cur && gi->pmod_cur_dlist_node && gi->pmod_cur_bot)
-    {
-      return gi->pmod_cur (gi->pmod_cur_dlist_node, gi->pmod_cur_bot);
-    }
+	if (gi->pmod_cur && gi->pmod_cur_dlist_node && gi->pmod_cur_bot) {
+		return gi->pmod_cur(gi->pmod_cur_dlist_node, gi->pmod_cur_bot);
+	}
 
-  return NULL;
+	return NULL;
 }
 
-
-bot_t *
-pmodule_cur_run2 (bot_t * bot)
+bot_t *pmodule_cur_run2(bot_t * bot)
 {
 
-  debug (NULL, "pmodule_cur_run2: Entered\n");
+	debug(NULL, "pmodule_cur_run2: Entered\n");
 
-  if (gi->pmod_cur && gi->pmod_cur_dlist_node && bot)
-    {
-      return gi->pmod_cur (gi->pmod_cur_dlist_node, bot);
-    }
+	if (gi->pmod_cur && gi->pmod_cur_dlist_node && bot) {
+		return gi->pmod_cur(gi->pmod_cur_dlist_node, bot);
+	}
 
-  return NULL;
+	return NULL;
 }

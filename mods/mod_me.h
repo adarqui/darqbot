@@ -31,24 +31,23 @@
 
 module_t mod_me_info;
 
-bot_t *me_init (dlist_t *, bot_t *);
-bot_t *me_fini (dlist_t *, bot_t *);
-bot_t *me_help (dlist_t *, bot_t *);
-bot_t *me_run (dlist_t *, bot_t *);
+bot_t *me_init(dlist_t *, bot_t *);
+bot_t *me_fini(dlist_t *, bot_t *);
+bot_t *me_help(dlist_t *, bot_t *);
+bot_t *me_run(dlist_t *, bot_t *);
 
-void __me_init__ (void) __attribute__ ((constructor));
+void __me_init__(void) __attribute__ ((constructor));
 
-typedef struct me
-{
-  double x;
-  char x_set;
-  double y;
-  char y_set;
-  double z;
-  char z_set;
+typedef struct me {
+	double x;
+	char x_set;
+	double y;
+	char y_set;
+	double z;
+	char z_set;
 } me_t;
 
-char *me_change_string (char *, int, me_t *);
-void me_parse_options (char *, me_t *);
+char *me_change_string(char *, int, me_t *);
+void me_parse_options(char *, me_t *);
 
 #endif

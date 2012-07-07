@@ -30,21 +30,18 @@
 
 module_t mod_map_info;
 
-bot_t *map_init (dlist_t *, bot_t *);
-bot_t *map_fini (dlist_t *, bot_t *);
-bot_t *map_help (dlist_t *, bot_t *);
-bot_t *map_run (dlist_t *, bot_t *);
+bot_t *map_init(dlist_t *, bot_t *);
+bot_t *map_fini(dlist_t *, bot_t *);
+bot_t *map_help(dlist_t *, bot_t *);
+bot_t *map_run(dlist_t *, bot_t *);
 
-char *map_change_string (dlist_t *, bot_t *, char *, int, char *, char *,
-			 char *);
+char *map_change_string(dlist_t *, bot_t *, char *, int, char *, char *,
+			char *);
 
-void __map_init__ (void) __attribute__ ((constructor));
+void __map_init__(void) __attribute__ ((constructor));
 
-enum mod_map_opts
-{
-  MAP_OPT_NORMAL = 1,
+enum mod_map_opts {
+	MAP_OPT_NORMAL = 1,
 };
-
-
 
 #endif

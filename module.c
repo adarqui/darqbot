@@ -21,180 +21,142 @@
 */
 #include "bot.h"
 
-
-void
-module_sort (void)
+void module_sort(void)
 {
-  xmodule_sort (XMODULE_TYPE_MODULE);
-  return;
+	xmodule_sort(XMODULE_TYPE_MODULE);
+	return;
 }
 
-void
-module_update_stats (void)
+void module_update_stats(void)
 {
-  xmodule_update_stats (XMODULE_TYPE_MODULE);
-  return;
+	xmodule_update_stats(XMODULE_TYPE_MODULE);
+	return;
 }
 
-void
-module_lock (char *name)
+void module_lock(char *name)
 {
-  xmodule_lock (XMODULE_TYPE_MODULE, name);
-  return;
+	xmodule_lock(XMODULE_TYPE_MODULE, name);
+	return;
 }
 
-void
-module_unlock (char *name)
+void module_unlock(char *name)
 {
-  xmodule_unlock (XMODULE_TYPE_MODULE, name);
-  return;
+	xmodule_unlock(XMODULE_TYPE_MODULE, name);
+	return;
 }
 
-module_t *
-module_find_by_name (char *name)
+module_t *module_find_by_name(char *name)
 {
-  return xmodule_find_by_name (XMODULE_TYPE_MODULE, name);
+	return xmodule_find_by_name(XMODULE_TYPE_MODULE, name);
 }
 
-module_t *
-module_find_by_trig (char *name)
+module_t *module_find_by_trig(char *name)
 {
-  return xmodule_find_by_trig (XMODULE_TYPE_MODULE, name);
+	return xmodule_find_by_trig(XMODULE_TYPE_MODULE, name);
 }
 
-dlist_t *
-module_find_by_trig_dptr (char *name)
+dlist_t *module_find_by_trig_dptr(char *name)
 {
-  return xmodule_find_by_trig_dptr (XMODULE_TYPE_MODULE, name);
+	return xmodule_find_by_trig_dptr(XMODULE_TYPE_MODULE, name);
 }
 
-
-void
-module_update (module_t * mod_struct, char *name)
+void module_update(module_t * mod_struct, char *name)
 {
-  xmodule_update (XMODULE_TYPE_MODULE, mod_struct, name);
-  return;
+	xmodule_update(XMODULE_TYPE_MODULE, mod_struct, name);
+	return;
 }
 
-
-char *
-module_path (char *name)
+char *module_path(char *name)
 {
 
-  return xmodule_path (XMODULE_TYPE_MODULE, name);
+	return xmodule_path(XMODULE_TYPE_MODULE, name);
 }
 
-
-module_t *
-module_load (char *name)
+module_t *module_load(char *name)
 {
-  return xmodule_load (XMODULE_TYPE_MODULE, name);
+	return xmodule_load(XMODULE_TYPE_MODULE, name);
 }
 
-
-module_t *
-module_unload (module_t * mod)
+module_t *module_unload(module_t * mod)
 {
-  return xmodule_unload (XMODULE_TYPE_MODULE, mod, NULL);
+	return xmodule_unload(XMODULE_TYPE_MODULE, mod, NULL);
 }
 
-
-
-void
-module_iolist (void)
+void module_iolist(void)
 {
-  xmodule_iolist (XMODULE_TYPE_MODULE);
-  return;
+	xmodule_iolist(XMODULE_TYPE_MODULE);
+	return;
 }
 
-
-void
-module_timerlist (void)
+void module_timerlist(void)
 {
-  xmodule_timerlist (XMODULE_TYPE_MODULE);
-  return;
+	xmodule_timerlist(XMODULE_TYPE_MODULE);
+	return;
 }
 
-void
-module_list (void)
+void module_list(void)
 {
-  xmodule_list (XMODULE_TYPE_MODULE);
-  return;
+	xmodule_list(XMODULE_TYPE_MODULE);
+	return;
 }
 
-
-void
-module_load_all (void)
+void module_load_all(void)
 {
 
-  xmodule_load_all (XMODULE_TYPE_MODULE);
+	xmodule_load_all(XMODULE_TYPE_MODULE);
 
-  return;
+	return;
 }
 
-
-
-bot_t *
-module_unload_all (void)
+bot_t *module_unload_all(void)
 {
-  return xmodule_unload_all (XMODULE_TYPE_MODULE);
+	return xmodule_unload_all(XMODULE_TYPE_MODULE);
 }
-
 
 /* console parsing stuff */
-void
-console_modload (char *arg)
+void console_modload(char *arg)
 {
 
-  console_xmodload (XMODULE_TYPE_MODULE, arg);
+	console_xmodload(XMODULE_TYPE_MODULE, arg);
 
-  return;
+	return;
 }
 
-
-void
-console_modunload (char *arg)
+void console_modunload(char *arg)
 {
 
-  console_xmodunload (XMODULE_TYPE_MODULE, arg);
-  return;
+	console_xmodunload(XMODULE_TYPE_MODULE, arg);
+	return;
 }
 
-void
-console_modreload (char *arg)
+void console_modreload(char *arg)
 {
 
-  console_xmodreload (XMODULE_TYPE_MODULE, arg);
+	console_xmodreload(XMODULE_TYPE_MODULE, arg);
 
-  return;
+	return;
 }
 
-
-
-
-void
-modules_off (void)
+void modules_off(void)
 {
-  dlist_t *dptr = NULL;
-  module_t *mod = NULL;
+	dlist_t *dptr = NULL;
+	module_t *mod = NULL;
 
-  debug (NULL, "modules_off: Entered\n");
+	debug(NULL, "modules_off: Entered\n");
 
-  dlist_fornext (gi->dl_module, dptr)
-  {
+	dlist_fornext(gi->dl_module, dptr) {
 
-    if (!dptr)
-      continue;
+		if (!dptr)
+			continue;
 
-    mod = (module_t *) dlist_data (dptr);
+		mod = (module_t *) dlist_data(dptr);
 
-    if (!mod)
-      continue;
-    if (mod->off)
-      {
-	mod->off (NULL, NULL);
-      }
-  }
+		if (!mod)
+			continue;
+		if (mod->off) {
+			mod->off(NULL, NULL);
+		}
+	}
 
-  return;
+	return;
 }
