@@ -25,6 +25,8 @@
 void global_defaults(void)
 {
 
+	printf("global_defaults: Entered\n");
+
 	gi = &global_info;
 
 	global_info.pid = getpid();
@@ -43,12 +45,25 @@ void global_defaults(void)
 
 	timer_set();
 
+/*
 	safe_event_set(&global_info.ev_console, global_info.fd_console,
 		       EV_READ | EV_PERSIST, bot_evhook_console, NULL);
 	safe_event_add(&global_info.ev_console, NULL);
+*/
+	global_set_evhook_console();
+
+	printf("global_defaults: ev_console = %p\n", &global_info.ev_console);
 
 	global_info.var_xmod_style = XMODULE_STYLE_LIST;
 
+	return;
+}
+
+void global_set_evhook_console(void)
+{
+	safe_event_set(&global_info.ev_console, global_info.fd_console,
+		       EV_READ | EV_PERSIST, bot_evhook_console, NULL);
+	safe_event_add(&global_info.ev_console, NULL);
 	return;
 }
 

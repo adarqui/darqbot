@@ -172,5 +172,6 @@ void global_gcmd(void);
 
 void global_getopt(int , char **);
 
+void global_set_evhook_console(void);
 
 #endif

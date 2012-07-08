@@ -235,6 +235,7 @@ STRSTRIP_CHARS_DONTKEEP=0x02,
 STRSTRIP_CHARS_SHRINK=0x04,
 };
 
+int strstrip_chars_fmtv2(char *, int, ...);
 int strstrip_chars_fmt(char *, int, ...);
 
 enum seg_result_types {

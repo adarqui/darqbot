@@ -40,7 +40,7 @@ char *intel_change_string(bot_t *, char *, int, char *);
 void __intel_init__(void) __attribute__ ((constructor));
 
 enum mod_intel_ops {
-	MOD_INTEL_TRUE,
+	MOD_INTEL_TRUE = 1,
 	MOD_INTEL_FALSE,
 	MOD_INTEL_SELF,
 	MOD_INTEL_STRLEN,
@@ -48,12 +48,22 @@ enum mod_intel_ops {
 	MOD_INTEL_TOLOWER,
 	MOD_INTEL_BZERO,
 	MOD_INTEL_MEMSET,
+	MOD_INTEL_EFLAGS,
 	MOD_INTEL_STRCMP,
 	MOD_INTEL_STRNCMP,
 	MOD_INTEL_MUL,
 	MOD_INTEL_IMUL,
 	MOD_INTEL_SUB,
 	MOD_INTEL_ADD,
+	MOD_INTEL_DIV,
+	MOD_INTEL_IDIV,
+	MOD_INTEL_MOD,
+	MOD_INTEL_IMOD,
+	MOD_INTEL_NEG,
+	MOD_INTEL_AND,
+	MOD_INTEL_OR,
+	MOD_INTEL_XOR,
+	MOD_INTEL_NOT,
 };
 
 int intel_true(void);
@@ -74,5 +84,18 @@ int intel_imul(int, int);
 
 int intel_sub(int, int);
 int intel_add(int, int);
+
+int intel_div(int, int);
+int intel_idiv(int, int);
+int intel_mod(int, int);
+int intel_imod(int, int);
+
+int intel_neg(int);
+unsigned int intel_eflags(void);
+
+int intel_and(int, int);
+int intel_or(int, int);
+int intel_xor(int, int);
+int intel_not(int);
 
 #endif

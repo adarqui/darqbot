@@ -1188,13 +1188,11 @@ int dlist_make_circular(dlist_t ** head_or_tail)
 		return -1;
 
 	head =
-	    (*head_or_tail)->
-	    tail ? (*head_or_tail) : (*head_or_tail)->head ? (*head_or_tail)->
-	    head : NULL;
+	    (*head_or_tail)->tail ? (*head_or_tail) : (*head_or_tail)->
+	    head ? (*head_or_tail)->head : NULL;
 	tail =
-	    (*head_or_tail)->
-	    head ? (*head_or_tail) : (*head_or_tail)->tail ? (*head_or_tail)->
-	    tail : NULL;
+	    (*head_or_tail)->head ? (*head_or_tail) : (*head_or_tail)->
+	    tail ? (*head_or_tail)->tail : NULL;
 
 	if (head == NULL)
 		return -1;

@@ -438,8 +438,10 @@ char *rss_op_run(bot_t * bot, char *string, int opt, int opt_2)
 								       str_key_dup);
 						}
 						strlcatfmt_buf(buf, "%s (%s)\n",
-							       rssurl_ptr->title,
-							       rssurl_ptr->tinyurl);
+							       rssurl_ptr->
+							       title,
+							       rssurl_ptr->
+							       tinyurl);
 
 						i++;
 					}
@@ -492,8 +494,10 @@ char *rss_op_run(bot_t * bot, char *string, int opt, int opt_2)
 								       str_key_dup);
 						}
 						strlcatfmt_buf(buf, "%s (%s)\n",
-							       rssurl_ptr->title,
-							       rssurl_ptr->tinyurl);
+							       rssurl_ptr->
+							       title,
+							       rssurl_ptr->
+							       tinyurl);
 
 						i++;
 					}

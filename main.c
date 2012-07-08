@@ -23,7 +23,7 @@
 
 int main(int argc, char *argv[])
 {
-
+	int ret;
 /* fn pointers */
 	gi = &global_info;
 
@@ -77,7 +77,10 @@ global_gcmd();
 
 		gi->bot_current = NULL;
 		pmodule_cur_clear();
-		event_loop(EVLOOP_ONCE);
+		ret = event_loop(EVLOOP_ONCE);
+		if (ret) {
+			global_set_evhook_console();
+		}
 
 		timer_shouldwerun();
 

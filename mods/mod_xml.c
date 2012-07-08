@@ -170,8 +170,7 @@ xml_op_traverse(dlist_t ** dl_text, xmlNode * a_node,
 			if (dl_match_strings) {
 				str_ptr =
 				    (char *)dlist_traverse(dl_match_strings,
-							   xml_compare,
-							   (void *)
+							   xml_compare, (void *)
 							   cur_node->name);
 			}
 

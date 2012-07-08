@@ -1404,14 +1404,14 @@ int MAX_FMT(char *fmt, ...)
 	return max_val;
 }
 
-int strstrip_chars_fmt(char *str, int opt, ...)
+int strstrip_chars_fmtv2(char *str, int opt, ...)
 {
+
 /* strip out, or leave in, chars based on isalpha/blah type of funcs */
 	va_list ap;
 	int i, j, ret = 0;
-	void *ptr = NULL;
+	unsigned long *ptr = NULL;
 	int seg_ret = 0;
-	char *ptr_str = NULL;
 	int (*ptr_fn) (int) = NULL;
 	char bytebuf[strlen(str) + 1];
 	int str_orig_len;
@@ -1424,29 +1424,21 @@ int strstrip_chars_fmt(char *str, int opt, ...)
 	str_orig_len = strlen(str);
 
 	va_start(ap, opt);
+	seg_ret = SEG_TEXT;
 	while (1) {
 		ret = 0;
 		ptr = va_arg(ap, void *);
 		if (!ptr)
 			break;
-		seg_ret = seg(ptr);
 		for (i = 0; i < strlen(str); i++) {
 			ret = 0;
-			if ((int)ptr <= 255) {
+			if ((unsigned long)ptr <= 255) {
 /* char */
 				if (str[i] == (int)ptr) {
 					ret = 1;
 				}
-			} else if (seg_ret == SEG_DATA) {
-				ptr_str = (char *)ptr;
-				for (j = 0; j < strlen(ptr_str); j++) {
-					if (ptr_str[j] == str[i]) {
-						ret = 1;
-						break;
-					}
-				}
 			} else if (seg_ret == SEG_TEXT) {
-				ptr_fn = ptr;
+				ptr_fn = (void *)ptr;
 				ret = ptr_fn(str[i]);
 			}
 
@@ -1470,6 +1462,89 @@ int strstrip_chars_fmt(char *str, int opt, ...)
 			}
 		}
 
+		if (opt & STRSTRIP_CHARS_SHRINK) {
+			if (str[i] != '\0') {
+				str[j] = str[i];
+				j++;
+			}
+		}
+
+	}
+
+	if (opt & STRSTRIP_CHARS_SHRINK) {
+		str[j] = '\0';
+	}
+
+	va_end(ap);
+
+	return 0;
+}
+
+int strstrip_chars_fmt(char *str, int opt, ...)
+{
+/* strip out, or leave in, chars based on isalpha/blah type of funcs */
+	va_list ap;
+	int i, j, ret = 0;
+	unsigned long *ptr = NULL;
+	int seg_ret = 0;
+	char *ptr_str = NULL;
+	int (*ptr_fn) (int) = NULL;
+	char bytebuf[strlen(str) + 1];
+	int str_orig_len;
+
+	if (!sNULL(str) || opt < 0)
+		return -1;
+
+	bz(bytebuf);
+
+	str_orig_len = strlen(str);
+
+	va_start(ap, opt);
+	while (1) {
+		ret = 0;
+		ptr = va_arg(ap, void *);
+		if (!ptr)
+			break;
+		seg_ret = seg(ptr);
+		for (i = 0; i < strlen(str); i++) {
+			ret = 0;
+			if ((unsigned long)ptr <= 255) {
+/* char */
+				if (str[i] == (unsigned long)ptr) {
+					ret = 1;
+				}
+			} else if (seg_ret == SEG_DATA) {
+				ptr_str = (char *)ptr;
+				for (j = 0; j < strlen(ptr_str); j++) {
+					if (ptr_str[j] == str[i]) {
+						ret = 1;
+						break;
+					}
+				}
+			} else if (seg_ret == SEG_TEXT) {
+				ptr_fn = (void *)ptr;
+				ret = ptr_fn(str[i]);
+			}
+
+			if (ret) {
+				bytebuf[i] = 1;
+			}
+
+		}
+	}
+
+	j = 0;
+	str_orig_len = strlen(str);
+	for (i = 0; i < str_orig_len; i++) {
+		if (opt & STRSTRIP_CHARS_KEEP) {
+			if (bytebuf[i] == 0) {
+				str[i] = '\0';
+			}
+		} else if (opt & STRSTRIP_CHARS_DONTKEEP) {
+			if (bytebuf[i] == 1) {
+				str[i] = '\0';
+			}
+		}
 		if (opt & STRSTRIP_CHARS_SHRINK) {
 			if (str[i] != '\0') {
 				str[j] = str[i];

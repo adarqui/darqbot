@@ -162,8 +162,7 @@ bot_t *gdaemon_run(dlist_t * dlist_node, bot_t * bot)
 		char **mod_names = NULL;
 		bot_t *bots[2] = { bot, NULL };
 
-		mod_names =
-		    (char **)
+		mod_names = (char **)
 		    dlist_convert_dlist_to_array(gdaemon->dl_mod_names);
 
 		bot_daemon(gdaemon->flags, mod_names, bots, gdaemon->new_name,

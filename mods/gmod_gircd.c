@@ -394,6 +394,8 @@ bot_t *gircd_input(dlist_t * dlist_node, bot_t * bot)
 
 		dl_text = NULL;
 
+		debug(NULL, "gircd_input: line=%s\n", line);
+
 		if (gircd_user->status == GIRCD_USER_STATUS_UNREGISTERED) {
 /* unregistered user, attempt to register */
 			gircd_parse_line_unregistered(&dl_text, line,
@@ -696,7 +698,7 @@ int
 gircd_resp_nick_error(dlist_t ** dl_text, gircd_user_t * gircd_user, char *nick)
 {
 	gircd_t *gircd = NULL;
-	debug(NULL, "gircd_resp_nick_error: Entered\n");
+	debug(NULL, "gircd_resp_nick_error: Entered: nick=%s\n", nick);
 
 	if (!dl_text || !gircd_user || !sNULL(nick))
 		return -1;
@@ -1040,7 +1042,7 @@ gircd_parse_line_nick(dlist_t ** dl_text, char *nick, gircd_user_t * gircd_user)
 	gircd_t *gircd = NULL;
 	dlist_t *dptr = NULL;
 
-	debug(NULL, "gircd_parse_line_nick: Entered\n");
+	debug(NULL, "gircd_parse_line_nick: Entered: %s\n", nick);
 
 	if (!dl_text || !sNULL(nick) || !gircd_user) {
 		return -1;
@@ -1048,8 +1050,14 @@ gircd_parse_line_nick(dlist_t ** dl_text, char *nick, gircd_user_t * gircd_user)
 
 	gircd = gircd_user->gircd_ptr;
 
+/*
 	strstrip_chars_fmt(nick, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
 			   isalnum, "^_.-", NULL);
+*/
+	strstrip_chars_fmtv2(nick, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
+			     isalnum, '^', '_', '.', NULL);
+
+	debug(NULL, "gircd_parse_line_nick: nick=%s\n", nick);
 
 	if (!sNULL(nick)) {
 		gircd_resp_nick_error(dl_text, gircd_user, nick);
@@ -1100,6 +1108,7 @@ gircd_parse_line_user(dlist_t ** dl_text, char *user_info,
 	if (!sNULL(tok_realname))
 		return -1;
 
+/*
 	strstrip_chars_fmt(tok_username,
 			   STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK, isalnum,
 			   "^_.-", NULL);
@@ -1112,6 +1121,20 @@ gircd_parse_line_user(dlist_t ** dl_text, char *user_info,
 	strstrip_chars_fmt(tok_realname,
 			   STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK, isalnum,
 			   "^_.-", NULL);
+*/
+
+	strstrip_chars_fmtv2(tok_username,
+			     STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
+			     isalnum, '^', '_', '.', NULL);
+	strstrip_chars_fmtv2(tok_hostname,
+			     STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
+			     isalnum, '^', '_', '.', NULL);
+	strstrip_chars_fmtv2(tok_servername,
+			     STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
+			     isalnum, '^', '_', '.', NULL);
+	strstrip_chars_fmtv2(tok_realname,
+			     STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
+			     isalnum, '^', '_', '.', NULL);
 
 	gircd_user->username = strdup(tok_username);
 	gircd_user->hostname = strdup(tok_hostname);
@@ -1136,9 +1159,14 @@ gircd_parse_line_ping(dlist_t ** dl_text, char *ping_resp,
 		return -1;
 	}
 
+/*
 	strstrip_chars_fmt(ping_resp,
 			   STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK, isalnum,
 			   "^_.-", NULL);
+*/
+	strstrip_chars_fmtv2(ping_resp,
+			     STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
+			     isalnum, '^', '_', '.', NULL);
 
 	dl_str_unite(dl_text, "PONG %s\n", ping_resp);
 
@@ -1161,8 +1189,13 @@ gircd_parse_line_join(dlist_t ** dl_text, char *chan, gircd_user_t * gircd_user)
 
 	gircd = gircd_user->gircd_ptr;
 
+/*
 	strstrip_chars_fmt(chan, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
 			   '#', isalnum, ispunct, NULL);
+
+*/
+	strstrip_chars_fmtv2(chan, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
+			     isalnum, '#', NULL);
 
 	if (chan[0] != '#') {
 		gircd_resp_chan_illegal(dl_text, gircd_user, chan);
@@ -1219,8 +1252,12 @@ gircd_parse_line_part(dlist_t ** dl_text, char *chan, gircd_user_t * gircd_user)
 		return -1;
 	}
 
+/*
 	strstrip_chars_fmt(chan, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
 			   '#', isalnum, ispunct, NULL);
+*/
+	strstrip_chars_fmtv2(chan, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
+			     isalnum, '#', NULL);
 
 	gircd = gircd_user->gircd_ptr;
 

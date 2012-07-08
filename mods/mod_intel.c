@@ -63,7 +63,7 @@ bot_t *intel_help(dlist_t * dlist_node, bot_t * bot)
 		return NULL;
 
 	bot->dl_module_help =
-	    "^intel({true,false,self,strlen,strcmp,bzero,memset,mul,imul,sub,add},<optional args>) ...";
+	    "^intel({true,false,self,strlen,strcmp,bzero,memset,eflags,mul,imul,sub,add,div,idiv,mod,imod,neg,and,or,xor,not},<optional args>) ...";
 
 	return NULL;
 }
@@ -108,6 +108,8 @@ bot_t *intel_run(dlist_t * dlist_node, bot_t * bot)
 		opt = MOD_INTEL_BZERO;
 	} else if (!strncasecmp_len(dl_options_ptr, "memset")) {
 		opt = MOD_INTEL_MEMSET;
+	} else if (!strncasecmp_len(dl_options_ptr, "eflags")) {
+		opt = MOD_INTEL_EFLAGS;
 	} else if (!strncasecmp_len(dl_options_ptr, "mul")) {
 		opt = MOD_INTEL_MUL;
 	} else if (!strncasecmp_len(dl_options_ptr, "imul")) {
@@ -116,7 +118,28 @@ bot_t *intel_run(dlist_t * dlist_node, bot_t * bot)
 		opt = MOD_INTEL_SUB;
 	} else if (!strncasecmp_len(dl_options_ptr, "add")) {
 		opt = MOD_INTEL_ADD;
+	} else if (!strncasecmp_len(dl_options_ptr, "div")) {
+		opt = MOD_INTEL_DIV;
+	} else if (!strncasecmp_len(dl_options_ptr, "idiv")) {
+		opt = MOD_INTEL_IDIV;
+	} else if (!strncasecmp_len(dl_options_ptr, "mod")) {
+		opt = MOD_INTEL_MOD;
+	} else if (!strncasecmp_len(dl_options_ptr, "imod")) {
+		opt = MOD_INTEL_IMOD;
+	} else if (!strncasecmp_len(dl_options_ptr, "neg")) {
+		opt = MOD_INTEL_NEG;
+	} else if (!strncasecmp_len(dl_options_ptr, "and")) {
+		opt = MOD_INTEL_AND;
+	} else if (!strncasecmp_len(dl_options_ptr, "or")) {
+		opt = MOD_INTEL_OR;
+	} else if (!strncasecmp_len(dl_options_ptr, "xor")) {
+		opt = MOD_INTEL_XOR;
+	} else if (!strncasecmp_len(dl_options_ptr, "not")) {
+		opt = MOD_INTEL_NOT;
 	}
+
+	if (!opt)
+		return NULL;
 
 	opt_val = strchr(dl_options_ptr, ',');
 	if (opt_val)
@@ -192,8 +215,9 @@ char *intel_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 			res_int =
 			    intel_bzero(bot->txt_data_out,
 					opt_val_int >
-					strlen(bot->txt_data_out) ? strlen(bot->
-									   txt_data_out)
+					strlen(bot->
+					       txt_data_out) ?
+					strlen(bot->txt_data_out)
 					: opt_val_int);
 			return NULL;
 			break;
@@ -209,7 +233,15 @@ char *intel_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 			printf("res_str=%p, %s\n", res_str, res_str);
 			break;
 		}
+	case MOD_INTEL_EFLAGS:
+		{
+			res_uint = intel_eflags();
+			res_uint_set = 1;
+			break;
+		}
 	case MOD_INTEL_MUL:
+	case MOD_INTEL_DIV:
+	case MOD_INTEL_MOD:
 		{
 			char *sa, *sb;
 			unsigned int a, b;
@@ -226,8 +258,19 @@ char *intel_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 			a = atoi(sa);
 			b = atoi(sb);
 
-			if (opt == MOD_INTEL_MUL)
+			switch (opt) {
+			case MOD_INTEL_MUL:
 				res_uint = (unsigned int)intel_mul(a, b);
+				break;
+			case MOD_INTEL_DIV:
+				res_uint = (unsigned int)intel_div(a, b);
+				break;
+			case MOD_INTEL_MOD:
+				res_uint = (unsigned int)intel_mod(a, b);
+				break;
+			default:
+				break;
+			}
 
 			res_uint_set = 1;
 			break;
@@ -235,6 +278,13 @@ char *intel_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 	case MOD_INTEL_IMUL:
 	case MOD_INTEL_SUB:
 	case MOD_INTEL_ADD:
+	case MOD_INTEL_IDIV:
+	case MOD_INTEL_IMOD:
+	case MOD_INTEL_NEG:
+	case MOD_INTEL_AND:
+	case MOD_INTEL_OR:
+	case MOD_INTEL_XOR:
+	case MOD_INTEL_NOT:
 		{
 			char *sa, *sb;
 			int a, b;
@@ -244,6 +294,16 @@ char *intel_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 			sa = strtok(opt_val, " ");
 			if (!sNULL(sa))
 				return NULL;
+
+			if (opt == MOD_INTEL_NEG) {
+				res_int = intel_neg(atoi(sa));
+				res_int_set = 1;
+				break;
+			} else if (opt == MOD_INTEL_NOT) {
+				res_int = intel_not(atoi(sa));
+				res_int_set = 1;
+				break;
+			}
 			sb = strtok(NULL, "");
 			if (!sNULL(sb))
 				return NULL;
@@ -261,6 +321,22 @@ char *intel_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 			case MOD_INTEL_ADD:
 				res_int = intel_add(a, b);
 				break;
+			case MOD_INTEL_IDIV:
+				res_int = intel_idiv(a, b);
+				break;
+			case MOD_INTEL_IMOD:
+				res_int = intel_imod(a, b);
+				break;
+			case MOD_INTEL_AND:
+				res_int = intel_and(a, b);
+				break;
+			case MOD_INTEL_OR:
+				res_int = intel_or(a, b);
+				break;
+			case MOD_INTEL_XOR:
+				res_int = intel_xor(a, b);
+				break;
+
 			default:
 				break;
 			}
