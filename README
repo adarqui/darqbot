@@ -38,13 +38,13 @@ Join us in #jumping @ EFNet. Also special thanks to those in #jumping, #bothole,
 .,:::PREAMBLE:::,.
 ------------------
 
-PUSHAF.
+PUSHF.
 
 The goal of darqbot is to provide a "knowledge bot" with very unique & extremely versatile functionality, much of which is geared towards facilitating learning of a group of people on a social chat network. The overall design of this bot is inspired by my attempt to clone my brain into software. 
 
 Keep in mind this is version 0.1, which means this software is still in it's infantile stage. Surely there will be plenty of bug fixes, refactoring, and optimization to come. It is running pretty good in Valgrind, though I do not free the swap_inmem structures because those are to remain frozen in time until an absolute exit. That being said, I am finally happy with the overall core & structure of the bot. Due to the stackable communication layers and overall modularity of the bot, it has finally reached a stage where it can really start growing. I plan to keep this project going for years, adding important functionality as well as "test code" for api's and such as modules, for examples & general toying around.
 
-POPAF.
+POPF.
 
 
 
@@ -386,7 +386,7 @@ mod_guile.c       : embedded scheme-lisp interpreter, gnu guile.
 mod_help.c        : help system, returns general help or a help message of a specific module
 mod_howie.c       : embedded howie AIML bot
 mod_html.c        : uses curl to establish connections & retrieve html urls
-mod_intel.c       : contains intel ASM procedures in mod_intel.S
+mod_func.c        : contains intel ASM procedures in mod_func_intel.S, C proceures in mod_func_c.c, and regular stdc procedures
 mod_hun.c         : hunspell spell correction
 mod_identify.c    : identifies a user based on their hostname stored in mongodb
 mod_internals.c   : returns info/sizes/lengths of the current state of internal buffers
@@ -1248,22 +1248,29 @@ mod_internals.c: ^internals, ^internals(all,in_sz,out_sz,in_strlen,out_strlen,in
 
 
 
-mod_intel.c: ^intel, ^intel((true,false,self,strlen,strcmp,bzero,memset,mul,imul,sub,add,div,idiv,mod,imod,neg,and,or,xor,not,jmp,sar,shr,sal,shl,ror,rol,bswap},<optional args>) ...
+mod_func.c: ^intel, ^intel((true,false,self,strlen,strcmp,bzero,memset,mul,imul,sub,add,div,idiv,mod,imod,neg,and,or,xor,not,jmp,sar,shr,sal,shl,ror,rol,bswap,isupper,islower,toupper,tolower},<optional args>) ...
 -------------------------------------------------------------
-- intel ASM procedures
+- intel ASM procedures & C procedures, comparing ASM, custom C, and STD C
 
 
-14:30 <@kx> ^intel(sar,100 2)|^print(b/n)|^e
+14:30 <@kx> ^func(sar,100 2)|^print(b/n)|^e
 14:30 < uas> 10011000
-14:30 <@kx> ^intel(sar,100 3)|^print(b/n)|^e
+14:30 <@kx> ^func(sar,100 3)|^print(b/n)|^e
 14:30 < uas> 00110000
-14:30 <@kx> ^intel(sar,100 4)|^print(b/n)|^e
+14:30 <@kx> ^func(sar,100 4)|^print(b/n)|^e
 14:30 < uas> 01100000
-14:30 <@kx> ^intel(sar,100 5)|^print(b/n)|^e
+14:30 <@kx> ^func(sar,100 5)|^print(b/n)|^e
 14:30 < uas> 11000000
-14:30 <@kx> ^intel(sar,100 6)|^print(b/n)|^e
+14:30 <@kx> ^func(sar,100 6)|^print(b/n)|^e
 14:30 < uas> 10000000
  
+
+
+^func(switch,c) <- custom C
+^func(switch,intel) <- custom INTEL ASM
+^func(switch,stdc) <- standard C lib
+
+
 
 
 

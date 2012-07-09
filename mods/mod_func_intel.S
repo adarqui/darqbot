@@ -273,6 +273,8 @@ intel_strcmp:
         movl $1, %ebx
         cmpsb
         cmovne %ebx, %eax
+	
+	
 
         popl %ebx
         popl %edi
