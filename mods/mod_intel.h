@@ -44,8 +44,6 @@ enum mod_intel_ops {
 	MOD_INTEL_FALSE,
 	MOD_INTEL_SELF,
 	MOD_INTEL_STRLEN,
-	MOD_INTEL_TOUPPER,
-	MOD_INTEL_TOLOWER,
 	MOD_INTEL_BZERO,
 	MOD_INTEL_MEMSET,
 	MOD_INTEL_EFLAGS,
@@ -64,6 +62,18 @@ enum mod_intel_ops {
 	MOD_INTEL_OR,
 	MOD_INTEL_XOR,
 	MOD_INTEL_NOT,
+	MOD_INTEL_JMP,
+	MOD_INTEL_SAR,
+	MOD_INTEL_SHR,
+	MOD_INTEL_SAL,
+	MOD_INTEL_SHL,
+	MOD_INTEL_ROR,
+	MOD_INTEL_ROL,
+	MOD_INTEL_BSWAP,
+	MOD_INTEL_ISUPPER,
+	MOD_INTEL_ISLOWER,
+	MOD_INTEL_TOUPPER,
+	MOD_INTEL_TOLOWER,
 };
 
 int intel_true(void);
@@ -72,9 +82,6 @@ void *intel_self(void *);
 
 int intel_strlen(char *);
 int intel_strcmp(const char *, const char *);
-
-int intel_toupper(char *);
-int intel_tolower(char *);
 
 int intel_bzero(char *, int);
 void *intel_memset(void *, int, size_t);
@@ -97,5 +104,19 @@ int intel_and(int, int);
 int intel_or(int, int);
 int intel_xor(int, int);
 int intel_not(int);
+
+int intel_sar(int, int);
+int intel_shr(int, int);
+int intel_sal(int, int);
+int intel_shl(int, int);
+int intel_ror(int, int);
+int intel_rol(int, int);
+
+int intel_bswap(int);
+
+int intel_isupper(int);
+int intel_islower(int);
+int intel_toupper(int);
+int intel_tolower(int);
 
 #endif

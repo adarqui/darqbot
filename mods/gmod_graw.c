@@ -408,16 +408,16 @@ int graw_connect(graw_t * graw)
 				      ntohs(bfl->sin.sin_port));
 				link_fd =
 				    graw_network_raw_connect(inet_ntoa
-							     (bfl->sin.
-							      sin_addr),
-							     ntohs(bfl->sin.
-								   sin_port));
+							     (bfl->
+							      sin.sin_addr),
+							     ntohs(bfl->
+								   sin.sin_port));
 			} else if (bfl->type == AF_UNIX) {
 				debug(NULL, "graw_connect: af_unix: %s\n",
 				      bfl->sun.sun_path);
 				link_fd =
-				    graw_network_unix_connect(bfl->sun.
-							      sun_path);
+				    graw_network_unix_connect(bfl->
+							      sun.sun_path);
 			}
 
 			if (link_fd < 0) {

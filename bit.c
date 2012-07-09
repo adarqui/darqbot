@@ -331,12 +331,15 @@ void bit_vec_from_num(bit_vector_t * bv, unsigned long num)
 
 unsigned long bit_vec_base_next(unsigned long x)
 {
-	unsigned long z;
+	double z;
 	int y;
 
-	x = abs(x);
+	x = (unsigned long)labs(x);
 	for (y = 0;; y++) {
 		z = pow(2, y);
+
+		if (z < 0)
+			break;
 
 		if (z > x) {
 			return pow(2, y - 1);

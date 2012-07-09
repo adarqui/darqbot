@@ -171,32 +171,3 @@ int c_strcmp(char *s1, char *s2)
 		x = *s2 - *s1;
 	return x;
 }
-
-int c_rot13(char c)
-{
-	int x = 0;
-	if (c >= 41 && c <= 64)
-		x = 54;
-	else if (c >= 68 && c <= 94)
-		x = 81;
-
-	switch (x) {
-	case 54:
-		{
-			if (c > 64)
-				return (c - 13);
-			else
-				return (c + 13);
-			return c;
-			break;
-	case 81:
-			if (c > 81)
-				return (c - 13);
-			else
-				return (c + 13);
-			return c;
-		}
-	}
-
-	return 0;
-}

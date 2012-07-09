@@ -129,6 +129,7 @@ all:
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(PMOD_PARSE2) -o pmod_parse2.so
 
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_INTEL) mod_intel.S -o mod_intel.so
+	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_PRINT) -o mod_print.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_CMPH) -lcmph -o mod_cmph.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared -I /usr/include/libxml2 -lxml2 $(MOD_XML) -o mod_xml.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_BIN) -o mod_bin.so
@@ -168,7 +169,6 @@ all:
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_RELINKD) -o mod_relinkd.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_ALIAS) -o ./mod_alias.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_BITVEC) -o mod_bitvec.so
-	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_PRINT) -o mod_print.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_CHAN) -o mod_chan.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_SAVE) -o mod_save.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_FNSC) -o mod_fnsc.so
@@ -183,11 +183,9 @@ all:
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_ECHO) -o mod_echo.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_CAPS) -o mod_caps.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_ROT13) -o  mod_rot13.so
-	#gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_ATTRIB) -o mod_attrib.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_LEET) -o mod_leet.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_MOBY) -o mod_moby.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_SHAKE1) -o mod_shake1.so
-	#gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_QUOTE) -o mod_quote.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_REVERSE) -o mod_reverse.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -lbsd -lssl -shared $(MOD_MD5) -o mod_md5.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_EMOT) -o mod_emot.so

@@ -1248,10 +1248,22 @@ mod_internals.c: ^internals, ^internals(all,in_sz,out_sz,in_strlen,out_strlen,in
 
 
 
-mod_intel.c: ^intel, ^intel((true,false,self,strlen,strcmp,bzero,memset,mul,imul,sub,add},<optional args>) ...
+mod_intel.c: ^intel, ^intel((true,false,self,strlen,strcmp,bzero,memset,mul,imul,sub,add,div,idiv,mod,imod,neg,and,or,xor,not,jmp,sar,shr,sal,shl,ror,rol,bswap},<optional args>) ...
 -------------------------------------------------------------
 - intel ASM procedures
 
+
+14:30 <@kx> ^intel(sar,100 2)|^print(b/n)|^e
+14:30 < uas> 10011000
+14:30 <@kx> ^intel(sar,100 3)|^print(b/n)|^e
+14:30 < uas> 00110000
+14:30 <@kx> ^intel(sar,100 4)|^print(b/n)|^e
+14:30 < uas> 01100000
+14:30 <@kx> ^intel(sar,100 5)|^print(b/n)|^e
+14:30 < uas> 11000000
+14:30 <@kx> ^intel(sar,100 6)|^print(b/n)|^e
+14:30 < uas> 10000000
+ 
 
 
 

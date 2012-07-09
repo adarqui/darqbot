@@ -65,7 +65,8 @@ bot_t *print_help(dlist_t * dlist_node, bot_t * bot)
 	if (!bot)
 		return NULL;
 
-	bot->dl_module_help = "^print || ^p(b/c) || ^p(rb/c)";
+	bot->dl_module_help =
+	    "^print || ^p(b/c) ... ^p(rb/c) || ^p(b/n) ... ^p(rb/n)";
 
 	return NULL;
 }
@@ -208,13 +209,18 @@ char *print_op_binary_forward(int c_op, char *string)
 
 	debug(NULL, "print_op_binary_forward: Entered\n");
 
-	if (c_op < 0 || !string)
+	if (c_op < 0 || !sNULL(string))
 		return NULL;
 
 	switch (c_op) {
 	case 'c':
 		{
 			str = print_op_binary_forward_char(string);
+			break;
+		}
+	case 'n':
+		{
+			str = print_op_binary_forward_num(string);
 			break;
 		}
 	default:
@@ -250,6 +256,46 @@ char *print_op_binary_forward_char(char *string)
 	return str;
 }
 
+char *print_op_binary_forward_num(char *num)
+{
+	bit_vector_t *bv = NULL;
+	char *str = NULL, *b_index_ptr = NULL;
+	int b_index = 0, i;
+
+	debug(NULL, "print_op_binary_forward_num: Entered\n");
+
+	bv = bit_vec_init(8);
+	if (!bv)
+		return NULL;
+
+	bit_vec_from_str(bv, num);
+
+	str = bit_vec_to_str(bv);
+
+	bit_vec_fini(&bv);
+
+	if (str) {
+		b_index_ptr = strrchr(str, '1');
+		if (b_index_ptr) {
+			b_index = b_index_ptr - str;
+			for (i = b_index; str[i] != '\0'; i++) {
+
+				if (!((i + 1) % 8)) {
+					str[i + 1] = '\0';
+					break;
+				}
+
+			}
+
+		} else {
+			str[1] = '\0';
+		}
+
+	}
+
+	return str;
+}
+
 char *print_op_binary_reverse(int c_op, char *string)
 {
 	char *str = NULL;
@@ -265,11 +311,23 @@ char *print_op_binary_reverse(int c_op, char *string)
 			str = print_op_binary_reverse_char(string);
 			break;
 		}
+	case 'n':{
+			str = print_op_binary_reverse_num(string);
+			break;
+		}
 	default:
 		break;
 	}
 
 	return str;
+}
+
+char *print_op_binary_reverse_num(char *num)
+{
+
+	debug(NULL, "print_op_binary_reverse_num: Entered\n");
+
+	return NULL;
 }
 
 char *print_op_binary_reverse_char(char *string)

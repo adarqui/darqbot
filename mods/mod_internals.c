@@ -93,6 +93,8 @@ bot_t *internals_run(dlist_t * dlist_node, bot_t * bot)
 	MOD_OPTIONS_TOP_HALF;
 	if (strcasestr(dl_options_ptr, "all")) {
 		opt = ~opt;
+/* HAH: without removing trig_prefix bits, using ^internals(all) with input data will set a new trig */
+		opt &= ~MOD_INTERNALS_OPT_TRIG_PREFIX;
 	} else {
 		if (strcasestr(dl_options_ptr, "in_sz")) {
 			opt |= MOD_INTERNALS_OPT_IN_SZ;

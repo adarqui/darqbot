@@ -391,10 +391,10 @@ int grelinkc_op_hello(grelinkc_t * grelinkc, relink_control_pkt_t * rlpkt)
 					   grelinkc->id, grelinkc->line);
 
 	relink_packet_print("relinkc:\n",
-			    (relink_control_pkt_t *) grelinkc->bot->
-			    txt_data_out);
-	relink_packet_hton((relink_control_pkt_t *) grelinkc->bot->
-			   txt_data_out);
+			    (relink_control_pkt_t *) grelinkc->
+			    bot->txt_data_out);
+	relink_packet_hton((relink_control_pkt_t *) grelinkc->
+			   bot->txt_data_out);
 	grelinkc->bot->txt_data_out_sz = n;
 
 	return n;
@@ -418,8 +418,8 @@ int grelinkc_op_data_notify(grelinkc_t * grelinkc)
 	grelinkc->bot->txt_data_out_sz =
 	    relink_pack_buf_data(grelinkc->bot->txt_data_out, grelinkc->id, buf,
 				 buf_len);
-	relink_packet_hton((relink_control_pkt_t *) grelinkc->bot->
-			   txt_data_out);
+	relink_packet_hton((relink_control_pkt_t *) grelinkc->
+			   bot->txt_data_out);
 
 	n = grelinkc->bot->txt_data_out_sz;
 
@@ -459,8 +459,8 @@ int grelinkc_op_data(grelinkc_t * grelinkc, relink_control_pkt_t * rlpkt)
 			    relink_pack_buf_data(grelinkc->bot->txt_data_in,
 						 grelinkc->id,
 						 grelinkc->bot->txt_data_out,
-						 grelinkc->bot->
-						 txt_data_out_sz);
+						 grelinkc->
+						 bot->txt_data_out_sz);
 			memcpy(grelinkc->bot->txt_data_out,
 			       grelinkc->bot->txt_data_in,
 			       grelinkc->bot->txt_data_out_sz);

@@ -21,7 +21,18 @@
 .global intel_or
 .global intel_xor
 .global intel_not
-
+.global intel_jmp
+.global intel_sar
+.global intel_shr
+.global intel_sal
+.global intel_shl
+.global intel_ror
+.global intel_rol
+.global intel_bswap
+.global intel_isupper
+.global intel_islower
+.global intel_toupper
+.global intel_tolower
 	.type intel_true, @function
 	.type intel_false, @function
 	.type intel_self, @function
@@ -43,6 +54,19 @@
 	.type intel_or, @function
 	.type intel_xor, @function
 	.type intel_not, @function
+	.type intel_jmp, @function
+	.type intel_sar, @function
+	.type intel_shr, @function
+	.type intel_sal, @function
+	.type intel_shl, @function
+	.type intel_ror, @function
+	.type intel_rol, @function
+	.type intel_bswap, @function
+	.type intel_isupper,@function
+	.type intel_islower,@function
+	.type intel_toupper,@function
+	.type intel_tolower,@function
+
 
 intel_true:
 # int_true(void)
@@ -224,34 +248,38 @@ intel_add:
 
 intel_strcmp:
 # int strcmp(const char *, const char *)
-# this is bad, temporary solution
 	pushl %ebp
 	movl %esp, %ebp
+        pushl %esi
+        pushl %edi
+        pushl %ebx
 
-	pushl 12(%ebp)
-	call intel_strlen
-	addl $4, %esp
+        movl 8(%ebp), %edi
+        movl 12(%ebp), %esi
 
-	movl %eax, %edx
+        jmp .L2
+.L1:
+        movzbl (%edi), %eax
+        movzbl (%esi), %ebx
+        mul %ebx
+        cmpl $0, %eax
+        je .L3
 
-	pushl 8(%ebp)
-	call intel_strlen
-	addl $4, %esp
+.L2:
+        cmpsb
+        jne .L3
+        jmp .L1
+.L3:
+        movl $1, %ebx
+        cmpsb
+        cmovne %ebx, %eax
 
-	cmpl %eax, %edx
-	jnz out_strcmp
-	
-	movl %eax, %ecx
-	movl 8(%ebp), %edi
-	movl 12(%ebp), %esi
+        popl %ebx
+        popl %edi
+        popl %esi
 
-	xorl %eax,%eax
-	repe cmpsb
-	cmovne %ecx, %eax
-
-	out_strcmp:
-	popl %ebp
-	ret
+        popl %ebp
+        ret
 
 
 intel_div:
@@ -392,3 +420,208 @@ intel_not:
 
 	leave
 	ret
+
+
+
+intel_jmp:
+# int intel_jmp(void *)
+	pushl %ebp
+	movl %esp, %ebp
+
+	jmp *8(%ebp)
+
+	leave
+	ret
+
+
+intel_sar:
+# int intel_sar(int, int)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ecx
+
+	movl 8(%ebp), %eax
+	movl 12(%ebp), %ecx
+	sarl %cl, %eax
+
+	popl %ecx
+	leave
+	ret
+
+
+intel_shr:
+# int intel_shr(int, int)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ecx
+
+	movl 8(%ebp), %eax
+	movl 12(%ebp), %ecx
+
+	shrl $cl, %eax
+
+	popl %ecx
+	leave
+	ret
+
+
+intel_sal:
+# int intel_sal(int, int)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ecx
+
+	movl 8(%ebp), %eax
+	movl 12(%ebp), %ecx
+	sall %cl, %eax
+
+	popl %ecx
+	leave
+	ret
+
+
+intel_shl:
+# int intel_shl(int, int)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ecx
+
+	movl 8(%ebp), %eax
+	movl 12(%ebp), %ecx
+	shll %cl, %eax
+
+	popl %ecx
+	leave
+	ret
+
+intel_ror:
+# int intel_ror(int, int)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ecx
+
+	movl 8(%ebp), %eax
+	movl 12(%ebp), %ecx
+	rorl %cl, %eax
+
+	popl %ecx
+	leave
+	ret
+
+
+intel_rol:
+# int intel_rol(int, int)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ecx
+
+	movl 8(%ebp), %eax
+	movl 12(%ebp), %ecx
+	roll %cl, %eax
+
+	popl %ecx
+	leave
+	ret
+
+intel_bswap:
+# int intel_bswap(int)
+	pushl %ebp
+	movl %esp, %ebp
+
+	movl 8(%ebp), %eax
+	bswap %eax
+
+	leave
+	ret
+
+
+intel_isupper:
+# int intel_isupper(int)
+        pushl %ebp
+        movl %esp, %ebp
+        pushl %ebx
+
+        xorl %eax,%eax
+        movl 8(%ebp), %ebx
+        cmpl $65, %ebx
+        jae .L2_intel_isupper
+        movl $0, %eax
+        jmp .L3_intel_isupper
+
+.L2_intel_isupper:
+        cmpl $90, %ebx
+        setbe %bl
+        movl %ebx, %eax
+
+.L3_intel_isupper:
+        popl %ebx
+        leave
+        ret
+
+
+
+
+
+intel_islower:
+# int intel_islower(int)
+        pushl %ebp
+        movl %esp, %ebp
+        pushl %ebx
+
+        xorl %eax,%eax
+        movl 8(%ebp), %ebx
+        cmpl $97, %ebx
+        jae .L2_intel_islower
+        movl $0, %eax
+        jmp .L3_intel_islower
+
+.L2_intel_islower:
+        cmpl $122, %ebx
+        setbe %bl
+        movl %ebx, %eax
+
+.L3_intel_islower:
+        popl %ebx
+        leave
+        ret
+
+
+intel_toupper:
+# int intel_toupper(int)
+	pushl %ebp
+	movl %esp, %ebp
+
+	pushl 8(%ebp)
+	call intel_islower
+	add $4, %esp
+
+	cmp $0, %eax
+	movl 8(%ebp), %eax
+	jle out_toupper
+
+	subl $32, %eax
+	
+	out_toupper:
+	leave
+	ret
+
+
+intel_tolower:
+# int intel_tolower(int)
+        pushl %ebp
+        movl %esp, %ebp
+
+        pushl 8(%ebp)
+        call intel_isupper
+        add $4, %esp
+
+        cmp $0, %eax
+        movl 8(%ebp), %eax
+        jle out_tolower
+
+        addl $32, %eax
+
+        out_tolower:
+        leave
+        ret
+

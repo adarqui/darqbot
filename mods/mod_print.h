@@ -51,8 +51,10 @@ char *print_op_binary(int, int, char *);
 
 char *print_op_binary_forward(int, char *);
 char *print_op_binary_forward_char(char *);
+char *print_op_binary_forward_num(char *);
 
 char *print_op_binary_reverse(int, char *);
 char *print_op_binary_reverse_char(char *);
+char *print_op_binary_reverse_num(char *);
 
 #endif

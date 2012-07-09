@@ -63,7 +63,7 @@ bot_t *intel_help(dlist_t * dlist_node, bot_t * bot)
 		return NULL;
 
 	bot->dl_module_help =
-	    "^intel({true,false,self,strlen,strcmp,bzero,memset,eflags,mul,imul,sub,add,div,idiv,mod,imod,neg,and,or,xor,not},<optional args>) ...";
+	    "^intel({true,false,self,strlen,strcmp,bzero,memset,eflags,mul,imul,sub,add,div,idiv,mod,imod,neg,and,or,xor,not,jmp,sar,shr,sal,shl,ror,rol,bswap,isupper,islower,toupper,tolower},<optional args>) ...";
 
 	return NULL;
 }
@@ -102,8 +102,6 @@ bot_t *intel_run(dlist_t * dlist_node, bot_t * bot)
 		opt = MOD_INTEL_STRLEN;
 	} else if (!strncasecmp_len(dl_options_ptr, "strcmp")) {
 		opt = MOD_INTEL_STRCMP;
-	} else if (!strncasecmp_len(dl_options_ptr, "toupper")) {
-		opt = MOD_INTEL_TOUPPER;
 	} else if (!strncasecmp_len(dl_options_ptr, "bzero")) {
 		opt = MOD_INTEL_BZERO;
 	} else if (!strncasecmp_len(dl_options_ptr, "memset")) {
@@ -136,6 +134,30 @@ bot_t *intel_run(dlist_t * dlist_node, bot_t * bot)
 		opt = MOD_INTEL_XOR;
 	} else if (!strncasecmp_len(dl_options_ptr, "not")) {
 		opt = MOD_INTEL_NOT;
+	} else if (!strncasecmp_len(dl_options_ptr, "sar")) {
+		opt = MOD_INTEL_SAR;
+	} else if (!strncasecmp_len(dl_options_ptr, "shr")) {
+		opt = MOD_INTEL_SHR;
+	} else if (!strncasecmp_len(dl_options_ptr, "sal")) {
+		opt = MOD_INTEL_SAL;
+	} else if (!strncasecmp_len(dl_options_ptr, "shl")) {
+		opt = MOD_INTEL_SHL;
+	} else if (!strncasecmp_len(dl_options_ptr, "ror")) {
+		opt = MOD_INTEL_ROR;
+	} else if (!strncasecmp_len(dl_options_ptr, "rol")) {
+		opt = MOD_INTEL_ROL;
+	} else if (!strncasecmp_len(dl_options_ptr, "jmp")) {
+		opt = MOD_INTEL_JMP;
+	} else if (!strncasecmp_len(dl_options_ptr, "bswap")) {
+		opt = MOD_INTEL_BSWAP;
+	} else if (!strncasecmp_len(dl_options_ptr, "isupper")) {
+		opt = MOD_INTEL_ISUPPER;
+	} else if (!strncasecmp_len(dl_options_ptr, "islower")) {
+		opt = MOD_INTEL_ISLOWER;
+	} else if (!strncasecmp_len(dl_options_ptr, "toupper")) {
+		opt = MOD_INTEL_TOUPPER;
+	} else if (!strncasecmp_len(dl_options_ptr, "tolower")) {
+		opt = MOD_INTEL_TOLOWER;
 	}
 
 	if (!opt)
@@ -215,8 +237,7 @@ char *intel_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 			res_int =
 			    intel_bzero(bot->txt_data_out,
 					opt_val_int >
-					strlen(bot->
-					       txt_data_out) ?
+					strlen(bot->txt_data_out) ?
 					strlen(bot->txt_data_out)
 					: opt_val_int);
 			return NULL;
@@ -239,9 +260,18 @@ char *intel_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 			res_uint_set = 1;
 			break;
 		}
+	case MOD_INTEL_JMP:{
+
+			break;
+		}
+
 	case MOD_INTEL_MUL:
 	case MOD_INTEL_DIV:
 	case MOD_INTEL_MOD:
+	case MOD_INTEL_ISUPPER:
+	case MOD_INTEL_ISLOWER:
+	case MOD_INTEL_TOUPPER:
+	case MOD_INTEL_TOLOWER:
 		{
 			char *sa, *sb;
 			unsigned int a, b;
@@ -249,8 +279,28 @@ char *intel_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 			if (!sNULL(opt_val))
 				return NULL;
 			sa = strtok(opt_val, " ");
+
 			if (!sNULL(sa))
 				return NULL;
+
+			if (opt == MOD_INTEL_ISUPPER) {
+				res_uint = intel_isupper((int)*sa);
+				res_uint_set = 1;
+				break;
+			} else if (opt == MOD_INTEL_ISLOWER) {
+				res_uint = intel_islower((int)*sa);
+				res_uint_set = 1;
+				break;
+			} else if (opt == MOD_INTEL_TOUPPER) {
+				res_uint = intel_toupper((int)*sa);
+				res_str = str_unite("%c", res_uint);
+				break;
+			} else if (opt == MOD_INTEL_TOLOWER) {
+				res_uint = intel_tolower((int)*sa);
+				res_str = str_unite("%c", res_uint);
+				break;
+			}
+
 			sb = strtok(NULL, "");
 			if (!sNULL(sb))
 				return NULL;
@@ -285,6 +335,13 @@ char *intel_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 	case MOD_INTEL_OR:
 	case MOD_INTEL_XOR:
 	case MOD_INTEL_NOT:
+	case MOD_INTEL_SAR:
+	case MOD_INTEL_SHR:
+	case MOD_INTEL_SAL:
+	case MOD_INTEL_SHL:
+	case MOD_INTEL_ROR:
+	case MOD_INTEL_ROL:
+	case MOD_INTEL_BSWAP:
 		{
 			char *sa, *sb;
 			int a, b;
@@ -301,6 +358,10 @@ char *intel_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 				break;
 			} else if (opt == MOD_INTEL_NOT) {
 				res_int = intel_not(atoi(sa));
+				res_int_set = 1;
+				break;
+			} else if (opt == MOD_INTEL_BSWAP) {
+				res_int = intel_bswap(atoi(sa));
 				res_int_set = 1;
 				break;
 			}
@@ -336,7 +397,24 @@ char *intel_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 			case MOD_INTEL_XOR:
 				res_int = intel_xor(a, b);
 				break;
-
+			case MOD_INTEL_SAR:
+				res_int = intel_sar(a, b);
+				break;
+			case MOD_INTEL_SHR:
+				res_int = intel_shr(a, b);
+				break;
+			case MOD_INTEL_SAL:
+				res_int = intel_sal(a, b);
+				break;
+			case MOD_INTEL_SHL:
+				res_int = intel_shl(a, b);
+				break;
+			case MOD_INTEL_ROR:
+				res_int = intel_ror(a, b);
+				break;
+			case MOD_INTEL_ROL:
+				res_int = intel_rol(a, b);
+				break;
 			default:
 				break;
 			}
