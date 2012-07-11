@@ -1105,7 +1105,7 @@ dlist_t *xmodule_find_by_trig_dptr(int type, char *name)
 
 			return dptr;
 		}
-
+		dptr = NULL;
 	}
 
 	return NULL;
@@ -1600,7 +1600,8 @@ module_t *xmodule_load_subtrigs(module_t * mod)
 	module_t *mod_mir = NULL;
 	char *subtrig_ptr = NULL;
 
-	debug(NULL, "xmodule_load_subtrigs: Entered: mod=%p\n", mod);
+	debug(NULL, "xmodule_load_subtrigs: Entered: mod=%p[%s]\n", mod,
+	      mod->name);
 
 	if (!mod)
 		return NULL;
@@ -1625,13 +1626,15 @@ dptr_mod = xmodule_find_by_trig_dptr(mod->type, mod->subtrigs[i]);
 		dptr_mod = xmodule_find_by_trig_dptr(mod->type, subtrig_ptr);
 
 		if (dptr_mod) {
-			mod_mir = (module_t *) dlist_data(dptr_subtrig);
+			mod_mir = (module_t *) dlist_data(dptr_mod);
 			if (mod_mir) {
 
 				xmodule_transfer(mod_mir, mod);
 
-				if (mod_mir->active)
-					return NULL;
+				if (mod_mir->active) {
+					continue;
+				}
+
 				mod_mir->active = 1;
 			}
 			continue;

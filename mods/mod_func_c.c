@@ -30,7 +30,7 @@ size_t c_strlen(const char *s)
 
 int c_strcmp(const char *s1, const char *s2)
 {
-	size_t ret;
+	size_t ret = 0;
 
 	if (!sNULL((char *)s1) || !sNULL((char *)s2)) {
 		return -1;
@@ -41,13 +41,71 @@ int c_strcmp(const char *s1, const char *s2)
 		s2++;
 	}
 
-	ret = 0;
 	if (*s1 < *s2)
 		ret = -1;
 	else if (*s1 > *s2)
 		ret = 1;
 
 	return ret;
+}
+
+int c_strncmp(const char *s1, const char *s2, size_t n)
+{
+
+	if (!sNULL((char *)s1) || !sNULL((char *)s2) || n <= 0)
+		return -1;
+	int ret = 0;
+
+	while ((*s1 && *s2) && (*s1 == *s2) && ((int)--n > 0)) {
+		s1++;
+		s2++;
+	}
+
+	if (*s1 < *s2)
+		ret = -1;
+	else if (*s1 > *s2)
+		ret = 1;
+	return ret;
+}
+
+char *c_strchr(const char *s, int c)
+{
+
+	if (!s)
+		return NULL;
+
+	while (*s) {
+		if (*s == c)
+			return (char *)s;
+		s++;
+	}
+
+	return NULL;
+}
+
+char *c_strrchr(const char *s, int c)
+{
+	int len;
+
+	if (!s)
+		return NULL;
+
+	len = strlen(s) - 1;
+	for (s = s + strlen(s); len >= 0; len--) {
+		if (*(s - len) == c)
+			return ((char *)s - len);
+	}
+
+	return NULL;
+}
+
+char *c_strcpy(char *s1, const char *s2)
+{
+	int n = 0;
+
+	for (n = 0; s1[n] = s2[n], s2[n] != '\0'; n++) ;
+
+	return s1;
 }
 
 void c_bzero(void *v, size_t n)
@@ -171,11 +229,13 @@ unsigned c_shl(int x, int y)
 
 int c_ror(int x, int y)
 {
+/* fix */
 	return x >> y;
 }
 
 int c_rol(int x, int y)
 {
+/* fix */
 	return x << y;
 }
 
@@ -198,6 +258,92 @@ int c_islower(int x)
 
 	if (x >= 97 && x <= 122)
 		return 1;
+
+	return 0;
+}
+
+int c_isdigit(int x)
+{
+	if (x >= 48 && x <= 57)
+		return 1;
+
+	return 0;
+}
+
+int c_isbinary(int x)
+{
+	if (x == 48 || x == 49)
+		return 1;
+
+	return 0;
+}
+
+int c_isalpha(int x)
+{
+
+	if ((x >= 65 && x <= 90) || (x >= 97 && x <= 122))
+		return 1;
+
+	return 0;
+}
+
+int c_isalnum(int x)
+{
+
+	if ((x >= 48 && x <= 57) || (x >= 65 && x <= 90)
+	    || (x >= 97 && x <= 122))
+		return 1;
+
+	return 0;
+}
+
+int c_isascii(int x)
+{
+	return 0;
+}
+
+int c_ispunct(int x)
+{
+
+	return 0;
+}
+
+int c_isblank(int x)
+{
+
+	if (x == 9 || x == 32)
+		return 1;
+
+	return 0;
+}
+
+int c_isspace(int x)
+{
+
+	if (x >= 9 && x <= 13)
+		return 1;
+
+	return 0;
+}
+
+int c_isprint(int x)
+{
+
+	return 0;
+}
+
+int c_isxdigit(int x)
+{
+
+	if ((x >= 48 && x <= 57) || (x >= 65 && x <= 70)
+	    || (x >= 97 && x <= 102))
+		return 1;
+
+	return 0;
+}
+
+int c_isgraph(int x)
+{
 
 	return 0;
 }

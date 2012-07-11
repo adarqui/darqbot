@@ -274,8 +274,7 @@ int parse2_handle_text_pipes(dlist_t * dlist_node, bot_t * bot, void *arg_info)
 						    str_unite("^%s",
 							      trig_ptr +
 							      strlen
-							      (bot->
-							       trig_prefix));
+							      (bot->trig_prefix));
 						trig_ptr_dup = 1;
 					}
 //else continue;
@@ -512,8 +511,8 @@ parse2_build_text_list_run(dlist_t * dl_text, dlist_t * dl_node, bot_t * bot,
 /* right to left among the children */
 		if (tl_1->children) {
 			tail_or_head =
-			    dlist_tail(tl_1->children) ? dlist_tail(tl_1->
-								    children) :
+			    dlist_tail(tl_1->
+				       children) ? dlist_tail(tl_1->children) :
 			    tl_1->children;
 			dlist_forprev(tail_or_head, dptr_2) {
 				tl_2 = (text_list_t *) dlist_data(dptr_2);

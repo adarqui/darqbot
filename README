@@ -375,6 +375,7 @@ mod_console.c     : allows end users to control the bot console over irc
 mod_dumbgames.c   : include dumb games (many dumb games in the future), such as dice/roulette.
 mod_echo.c        : probably the most important module, needed to echo text that the bot generates. ^e = shorthand form.
 mod_emot.c        : returns an emoticon based on a keyword
+mod_env.c         : setenv, getenv, unsetenv, etc..
 mod_exec.c        : executes a pipeline of commands
 mod_festival.c    : currently broken: pipes data over speech to text (festival)
 mod_fnsintel.c    : fns fptr replacer, intel asm version. eventually will add hooks to mod_intel functions
@@ -964,6 +965,42 @@ mod_emot.c: ^emot, ^emot(keyword)
 < dbot> /\(oo)/\
 
 eh.
+
+
+
+
+mod_env.c: ^env, ^setenv, ^unsetenv, ^getenv, ^env(setenv,getenv,unsetenv,clear,size,list)
+------------------------------------------------------------------------------------------
+- environment variables, per chan
+
+weird example... nesting of env's is pretty difficult.. need ^[] to make it easier..
+
+for testing mod_func:
+
+  <@kx> ^setenv TF=\|^func(strlen)|^:\|
+  <@kx> ^setenv stdc=\|stdc=\|^:\|^func(switch,stdc)\|
+  <@kx> ^setenv c=\| ,c=\|^:\|^func(switch,c)\|
+  <@kx> ^setenv c2=\| ,c2=\|^:\|^func(switch,c2)\|
+  <@kx> ^setenv intel=\| ,intel=\|^:\|^func(switch,intel)\|
+  <@kx> ^setenv intel2=\| ,intel2=\|^:\|^func(switch,intel2)\|
+  <@kx> ^setenv S1=\|^:\|\|^getenv stdc\|^e\|hello\|^getenv TF\|^:\|\|^getenv c\|^e\|hello\|^getenv TF\|^:\|\|^:\|\|^getenv c2\|^e\|hello\|^getenv TF\|^:\|\|^:\|\|^getenv intel\|^e\|hello\|^getenv TF\|^:\|\|^:\|\|^getenv intel2\|^e\|hello\|^getenv TF\|^:\|\|
+  <@kx> ^getenv S1|^e|^exec|^exec
+  < uas> stdc=5 ,c=5 ,c2=5 ,intel=5 ,intel2=5
+
+now we want to test strchr..
+
+  <@kx> ^setenv TF=\|^func(strchr,l)\|^:\|
+  <@kx> ^getenv S1|^e|^exec|^exec
+  < uas> stdc=llo ,c=llo ,c=llo ,c2=llo ,intel=llo ,intel2=llo
+
+etc
+
+^setenv BLAH=blah......
+^getnev BLAH
+^unsetenv BLAH
+^env(clear)
+^env(list)|^e
+
 
 
 

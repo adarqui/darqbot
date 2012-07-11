@@ -47,7 +47,7 @@ bot_t *func_init(dlist_t * dlist_node, bot_t * bot)
 {
 	debug(bot, "func_init: Entered\n");
 
-	func_switch("c");
+	func_switch("stdc");
 
 	return NULL;
 }
@@ -66,7 +66,7 @@ bot_t *func_help(dlist_t * dlist_node, bot_t * bot)
 		return NULL;
 
 	bot->dl_module_help =
-	    "^func({switch,true,false,self,strlen,strcmp,bzero,memset,eflags,mul,imul,sub,add,div,idiv,mod,imod,neg,and,or,xor,not,jmp,sar,shr,sal,shl,ror,rol,bswap,isupper,islower,toupper,tolower},<optional args>) ... || ^func(switch,{c,stdc,intel})";
+	    "^func({switch,true,false,self,strlen,strcmp,strchr,strrchr,strcpy,strncpy,bzero,memset,eflags,mul,imul,sub,add,div,idiv,mod,imod,neg,and,or,xor,not,jmp,sar,shr,sal,shl,ror,rol,bswap,isupper,islower,toupper,tolower},<optional args>) ... || ^func(switch,{c,c2,stdc,intel,intel2})";
 
 	return NULL;
 }
@@ -107,6 +107,16 @@ bot_t *func_run(dlist_t * dlist_node, bot_t * bot)
 		opt = MOD_FUNC_STRLEN;
 	} else if (!strncasecmp_len(dl_options_ptr, "strcmp")) {
 		opt = MOD_FUNC_STRCMP;
+	} else if (!strncasecmp_len(dl_options_ptr, "strncmp")) {
+		opt = MOD_FUNC_STRNCMP;
+	} else if (!strncasecmp_len(dl_options_ptr, "strchr")) {
+		opt = MOD_FUNC_STRCHR;
+	} else if (!strncasecmp_len(dl_options_ptr, "strrchr")) {
+		opt = MOD_FUNC_STRRCHR;
+	} else if (!strncasecmp_len(dl_options_ptr, "strcpy")) {
+		opt = MOD_FUNC_STRCPY;
+	} else if (!strncasecmp_len(dl_options_ptr, "strncpy")) {
+		opt = MOD_FUNC_STRNCPY;
 	} else if (!strncasecmp_len(dl_options_ptr, "bzero")) {
 		opt = MOD_FUNC_BZERO;
 	} else if (!strncasecmp_len(dl_options_ptr, "memset")) {
@@ -163,6 +173,30 @@ bot_t *func_run(dlist_t * dlist_node, bot_t * bot)
 		opt = MOD_FUNC_TOUPPER;
 	} else if (!strncasecmp_len(dl_options_ptr, "tolower")) {
 		opt = MOD_FUNC_TOLOWER;
+	} else if (!strncasecmp_len(dl_options_ptr, "isdigit")) {
+		opt = MOD_FUNC_ISDIGIT;
+	}
+
+	else if (!strncasecmp_len(dl_options_ptr, "isbinary")) {
+		opt = MOD_FUNC_ISBINARY;
+	} else if (!strncasecmp_len(dl_options_ptr, "isalpha")) {
+		opt = MOD_FUNC_ISALPHA;
+	} else if (!strncasecmp_len(dl_options_ptr, "isalnum")) {
+		opt = MOD_FUNC_ISALNUM;
+	} else if (!strncasecmp_len(dl_options_ptr, "isascii")) {
+		opt = MOD_FUNC_ISASCII;
+	} else if (!strncasecmp_len(dl_options_ptr, "ispunct")) {
+		opt = MOD_FUNC_ISPUNCT;
+	} else if (!strncasecmp_len(dl_options_ptr, "isblank")) {
+		opt = MOD_FUNC_ISBLANK;
+	} else if (!strncasecmp_len(dl_options_ptr, "isspace")) {
+		opt = MOD_FUNC_ISSPACE;
+	} else if (!strncasecmp_len(dl_options_ptr, "isprint")) {
+		opt = MOD_FUNC_ISPRINT;
+	} else if (!strncasecmp_len(dl_options_ptr, "isxdigit")) {
+		opt = MOD_FUNC_ISXDIGIT;
+	} else if (!strncasecmp_len(dl_options_ptr, "isgraph")) {
+		opt = MOD_FUNC_ISGRAPH;
 	}
 
 	if (!opt)
@@ -189,6 +223,8 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 	char *sep_ptr;
 	int opt_val_int = 0;
 
+	char *txt_data_out_ptr = NULL;
+
 	if (!bot)
 		return NULL;
 
@@ -198,6 +234,10 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 
 	if (!string)
 		return NULL;
+
+	txt_data_out_ptr = str_find_sep(bot->txt_data_out);
+	if (!txt_data_out_ptr)
+		txt_data_out_ptr = bot->txt_data_out;
 
 	switch (opt) {
 	case MOD_FUNC_SWITCH:{
@@ -236,6 +276,11 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 
 			printf("string=%s, opt_val=%s\n", string, opt_val);
 
+			break;
+		}
+	case MOD_FUNC_STRCPY:
+		{
+			func_strcpy(txt_data_out_ptr, opt_val);
 			break;
 		}
 	case MOD_FUNC_BZERO:
@@ -281,6 +326,21 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 	case MOD_FUNC_ISLOWER:
 	case MOD_FUNC_TOUPPER:
 	case MOD_FUNC_TOLOWER:
+	case MOD_FUNC_ISDIGIT:
+	case MOD_FUNC_ISBINARY:
+	case MOD_FUNC_ISALPHA:
+	case MOD_FUNC_ISALNUM:
+	case MOD_FUNC_ISASCII:
+	case MOD_FUNC_ISPUNCT:
+	case MOD_FUNC_ISBLANK:
+	case MOD_FUNC_ISSPACE:
+	case MOD_FUNC_ISPRINT:
+	case MOD_FUNC_ISXDIGIT:
+	case MOD_FUNC_ISGRAPH:
+	case MOD_FUNC_STRCHR:
+	case MOD_FUNC_STRRCHR:
+	case MOD_FUNC_STRNCMP:
+	case MOD_FUNC_STRNCPY:
 		{
 			char *sa, *sb;
 			unsigned int a, b;
@@ -300,7 +360,55 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 				res_uint = func_islower((int)*sa);
 				res_uint_set = 1;
 				break;
-			} else if (opt == MOD_FUNC_TOUPPER) {
+			}
+
+			else if (opt == MOD_FUNC_ISDIGIT) {
+				res_uint = func_isdigit((int)*sa);
+				res_uint_set = 1;
+				break;
+			} else if (opt == MOD_FUNC_ISBINARY) {
+				res_uint = func_isbinary((int)*sa);
+				res_uint_set = 1;
+				break;
+			} else if (opt == MOD_FUNC_ISALPHA) {
+				res_uint = func_isalpha((int)*sa);
+				res_uint_set = 1;
+				break;
+			} else if (opt == MOD_FUNC_ISALNUM) {
+				res_uint = func_isalnum((int)*sa);
+				res_uint_set = 1;
+				break;
+			} else if (opt == MOD_FUNC_ISASCII) {
+				res_uint = func_isascii((int)*sa);
+				res_uint_set = 1;
+				break;
+			} else if (opt == MOD_FUNC_ISPUNCT) {
+				res_uint = func_ispunct((int)*sa);
+				res_uint_set = 1;
+				break;
+			} else if (opt == MOD_FUNC_ISBLANK) {
+				res_uint = func_isblank((int)*sa);
+				res_uint_set = 1;
+				break;
+			} else if (opt == MOD_FUNC_ISSPACE) {
+				res_uint = func_isspace((int)*sa);
+				res_uint_set = 1;
+				break;
+			} else if (opt == MOD_FUNC_ISPRINT) {
+				res_uint = func_isprint((int)*sa);
+				res_uint_set = 1;
+				break;
+			} else if (opt == MOD_FUNC_ISXDIGIT) {
+				res_uint = func_isxdigit((int)*sa);
+				res_uint_set = 1;
+				break;
+			} else if (opt == MOD_FUNC_ISGRAPH) {
+				res_uint = func_isgraph((int)*sa);
+				res_uint_set = 1;
+				break;
+			}
+
+			else if (opt == MOD_FUNC_TOUPPER) {
 				res_uint = func_toupper((int)*sa);
 				res_str = str_unite("%c", res_uint);
 				break;
@@ -308,11 +416,27 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 				res_uint = func_tolower((int)*sa);
 				res_str = str_unite("%c", res_uint);
 				break;
+			} else if (opt == MOD_FUNC_STRCHR) {
+				res_str = func_strchr(string, (int)*sa);
+				break;
+			} else if (opt == MOD_FUNC_STRRCHR) {
+				res_str = func_strrchr(string, (int)*sa);
+				break;
 			}
 
 			sb = strtok(NULL, "");
 			if (!sNULL(sb))
 				return NULL;
+
+			if (opt == MOD_FUNC_STRNCMP) {
+				res_int = func_strncmp(string, sb, atoi(sa));
+				res_int_set = 1;
+				break;
+			} else if (opt == MOD_FUNC_STRNCPY) {
+/* XXX CAN BE EXPLOITED */
+				func_strncpy(txt_data_out_ptr, sb, atoi(sa));
+				break;
+			}
 
 			a = atoi(sa);
 			b = atoi(sb);
@@ -449,9 +573,12 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 
 void func_switch(char *type)
 {
+	int rand_val = 0;
 
 	if (!sNULL(type))
 		return;
+
+	rand_val = rand();
 
 	if (!strcasecmp(type, "c")) {
 		func_true = c_true;
@@ -460,6 +587,10 @@ void func_switch(char *type)
 
 		func_strlen = c_strlen;
 		func_strcmp = c_strcmp;
+		func_strncmp = c_strncmp;
+		func_strchr = c_strchr;
+		func_strrchr = c_strrchr;
+		func_strcpy = c_strcpy;
 
 		func_bzero = c_bzero;
 		func_memset = c_memset;
@@ -496,13 +627,42 @@ void func_switch(char *type)
 		func_islower = c_islower;
 		func_toupper = c_toupper;
 		func_tolower = c_tolower;
+
+		func_isdigit = c_isdigit;
+		func_isbinary = c_isbinary;
+		func_isalpha = c_isalpha;
+		func_isalnum = c_isalnum;
+		func_isascii = c_isascii;
+		func_ispunct = c_ispunct;
+		func_isblank = c_isblank;
+		func_isspace = c_isspace;
+		func_isprint = c_isprint;
+		func_isxdigit = c_isxdigit;
+		func_isgraph = c_isgraph;
 	} else if (!strcasecmp(type, "intel")) {
 		func_true = intel_true;
 		func_false = intel_false;
 		func_self = intel_self;
 
+/*
+rand_val = rand_val % 2;
+if(rand_val >= 1)
+{
+*/
 		func_strlen = intel_strlen;
+/*
+}
+else
+{
+func_strlen = intel_strlen2;
+}
+*/
+
 		func_strcmp = intel_strcmp;
+		func_strncmp = intel_strncmp;
+		func_strchr = intel_strchr;
+		func_strrchr = intel_strrchr;
+		func_strcpy = intel_strcpy;
 
 		func_bzero = intel_bzero;
 		func_memset = intel_memset;
@@ -539,6 +699,94 @@ void func_switch(char *type)
 		func_islower = intel_islower;
 		func_toupper = intel_toupper;
 		func_tolower = intel_tolower;
+
+		func_isdigit = intel_isdigit;
+		func_isbinary = intel_isbinary;
+		func_isalpha = intel_isalpha;
+		func_isalnum = intel_isalnum;
+/*
+func_isascii = intel_isascii;
+func_ispunct = intel_ispunct;
+func_isblank = intel_isblank;
+func_isspace = intel_isspace;
+func_isprint = intel_isprint;
+func_isxdigit = intel_isxdigit;
+func_isgraph = intel_isgraph;
+*/
+	} else if (!strcasecmp(type, "intel2")) {
+		func_true = intel2_true;
+		func_false = intel2_false;
+		func_self = intel2_self;
+
+/*
+rand_val = rand_val % 2;
+if(rand_val >= 1)
+{
+*/
+		func_strlen = intel2_strlen;
+/*
+}
+else
+{
+func_strlen = intel2_strlen2;
+}
+*/
+
+		func_strcmp = intel2_strcmp;
+		func_strncmp = intel2_strncmp;
+		func_strchr = intel2_strchr;
+		func_strrchr = intel2_strrchr;
+		func_strcpy = intel2_strcpy;
+
+		func_bzero = intel2_bzero;
+		func_memset = intel2_memset;
+
+		func_mul = intel2_mul;
+		func_imul = intel2_imul;
+
+		func_sub = intel2_sub;
+		func_add = intel2_add;
+
+		func_div = intel2_div;
+		func_idiv = intel2_idiv;
+		func_mod = intel2_mod;
+		func_imod = intel2_imod;
+
+		func_neg = intel2_neg;
+		func_eflags = intel2_eflags;
+
+		func_and = intel2_and;
+		func_or = intel2_or;
+		func_xor = intel2_xor;
+		func_not = intel2_not;
+
+		func_sar = intel2_sar;
+		func_shr = intel2_shr;
+		func_sal = intel2_sal;
+		func_shl = intel2_shl;
+		func_ror = intel2_ror;
+		func_rol = intel2_rol;
+
+		func_bswap = intel2_bswap;
+
+		func_isupper = intel2_isupper;
+		func_islower = intel2_islower;
+		func_toupper = intel2_toupper;
+		func_tolower = intel2_tolower;
+
+		func_isdigit = intel2_isdigit;
+		func_isbinary = intel2_isbinary;
+		func_isalpha = intel2_isalpha;
+		func_isalnum = intel2_isalnum;
+/*
+func_isascii = intel2_isascii;
+func_ispunct = intel2_ispunct;
+func_isblank = intel2_isblank;
+func_isspace = intel2_isspace;
+func_isprint = intel2_isprint;
+func_isxdigit = intel2_isxdigit;
+func_isgraph = intel2_isgraph;
+*/
 	} else if (!strcasecmp(type, "stdc")) {
 		func_true = c_true;
 		func_false = c_false;
@@ -546,6 +794,11 @@ void func_switch(char *type)
 
 		func_strlen = strlen;
 		func_strcmp = strcmp;
+		func_strncmp = strncmp;
+		func_strchr = strchr;
+		func_strrchr = strrchr;
+		func_strcpy = strcpy;
+		func_strncpy = strncpy;
 
 		func_bzero = bzero;
 		func_memset = memset;
@@ -582,6 +835,23 @@ void func_switch(char *type)
 		func_islower = islower;
 		func_toupper = toupper;
 		func_tolower = tolower;
+
+		func_isdigit = isdigit;
+		func_isbinary = isbinary;
+		func_isalpha = isalpha;
+		func_isalnum = isalnum;
+		func_isascii = isascii;
+		func_ispunct = ispunct;
+		func_isblank = isblank;
+		func_isspace = isspace;
+		func_isprint = isprint;
+		func_isxdigit = isxdigit;
+		func_isgraph = isgraph;
+	} else if (!strcasecmp(type, "c2")) {
+		func_add = c2_add;
+		func_strlen = c2_strlen;
+		func_strcpy = c2_strcpy;
+		func_strncpy = c2_strncpy;
 	}
 
 	return;

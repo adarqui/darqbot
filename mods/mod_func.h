@@ -28,7 +28,9 @@
 
 #include "bot.h"
 #include "mod_func_c.h"
+#include "mod_func_c2.h"
 #include "mod_func_intel.h"
+#include "mod_func_intel2.h"
 
 module_t mod_func_info;
 
@@ -51,7 +53,11 @@ enum mod_func_ops {
 	MOD_FUNC_MEMSET,
 	MOD_FUNC_EFLAGS,
 	MOD_FUNC_STRCMP,
+	MOD_FUNC_STRCHR,
+	MOD_FUNC_STRRCHR,
 	MOD_FUNC_STRNCMP,
+	MOD_FUNC_STRCPY,
+	MOD_FUNC_STRNCPY,
 	MOD_FUNC_MUL,
 	MOD_FUNC_IMUL,
 	MOD_FUNC_SUB,
@@ -77,6 +83,17 @@ enum mod_func_ops {
 	MOD_FUNC_ISLOWER,
 	MOD_FUNC_TOUPPER,
 	MOD_FUNC_TOLOWER,
+	MOD_FUNC_ISDIGIT,
+	MOD_FUNC_ISBINARY,
+	MOD_FUNC_ISALNUM,
+	MOD_FUNC_ISALPHA,
+	MOD_FUNC_ISASCII,
+	MOD_FUNC_ISPUNCT,
+	MOD_FUNC_ISBLANK,
+	MOD_FUNC_ISSPACE,
+	MOD_FUNC_ISPRINT,
+	MOD_FUNC_ISXDIGIT,
+	MOD_FUNC_ISGRAPH,
 };
 
 void func_switch(char *);
@@ -87,6 +104,11 @@ void *(*func_self) (void *);
 
 size_t(*func_strlen) (const char *);
 int (*func_strcmp) (const char *, const char *);
+int (*func_strncmp) (const char *, const char *, size_t);
+char *(*func_strchr) (const char *, int);
+char *(*func_strrchr) (const char *, int);
+char *(*func_strcpy) (char *, const char *);
+char *(*func_strncpy) (char *, const char *, size_t);
 
 void (*func_bzero) (void *, size_t);
 void *(*func_memset) (void *, int, size_t);
@@ -123,5 +145,16 @@ int (*func_isupper) (int);
 int (*func_islower) (int);
 int (*func_toupper) (int);
 int (*func_tolower) (int);
+int (*func_isdigit) (int);
+int (*func_isbinary) (int);
+int (*func_isalpha) (int);
+int (*func_isalnum) (int);
+int (*func_isascii) (int);
+int (*func_ispunct) (int);
+int (*func_isblank) (int);
+int (*func_isspace) (int);
+int (*func_isprint) (int);
+int (*func_isxdigit) (int);
+int (*func_isgraph) (int);
 
 #endif

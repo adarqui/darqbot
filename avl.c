@@ -720,10 +720,9 @@ struct avl_table *avl_copy(const struct avl_table *org, avl_copy_func * copy,
 
 			if (x->avl_link[1] != NULL) {
 				y->avl_link[1] =
-				    new->avl_alloc->libavl_malloc(new->
-								  avl_alloc,
-								  sizeof *y->
-								  avl_link[1]);
+				    new->avl_alloc->
+				    libavl_malloc(new->avl_alloc,
+						  sizeof *y->avl_link[1]);
 				if (y->avl_link[1] == NULL) {
 					copy_error_recovery(stack, height, new,
 							    destroy);

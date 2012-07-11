@@ -83,6 +83,7 @@ MOD_AVL = mod_avl.c
 MOD_XML = mod_xml.c
 MOD_CMPH = mod_cmph.c
 MOD_FUNC = mod_func.c
+MOD_ENV = mod_env.c
 
 # pmods - parser modules, for handling how triggers are run/interpreted
 
@@ -128,7 +129,8 @@ all:
 
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(PMOD_PARSE2) -o pmod_parse2.so
 
-	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_FUNC) mod_func_intel.S mod_func_c.c -o mod_func.so
+	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_FUNC) mod_func_intel.S mod_func_intel2.S mod_func_c.c mod_func_c2.c -o mod_func.so
+	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_ENV) -o mod_env.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_PRINT) -o mod_print.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(MOD_CMPH) -lcmph -o mod_cmph.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared -I /usr/include/libxml2 -lxml2 $(MOD_XML) -o mod_xml.so

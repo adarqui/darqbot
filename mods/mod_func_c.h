@@ -6,6 +6,10 @@ int c_false(void);
 void *c_self(void *);
 size_t c_strlen(const char *);
 int c_strcmp(const char *, const char *);
+int c_strncmp(const char *, const char *, size_t);
+char *c_strchr(const char *, int);
+char *c_strrchr(const char *, int);
+char *c_strcpy(char *, const char *);
 void c_bzero(void *, size_t);
 void *c_memset(void *, int, size_t);
 unsigned int c_mul(unsigned int, unsigned int);
@@ -33,5 +37,16 @@ int c_isupper(int);
 int c_islower(int);
 int c_toupper(int);
 int c_tolower(int);
+int c_isdigit(int);
+int c_isbinary(int);
+int c_isalpha(int);
+int c_isalnum(int);
+int c_isascii(int);
+int c_ispunct(int);
+int c_isblank(int);
+int c_isspace(int);
+int c_isxdigit(int);
+int c_isgraph(int);
+int c_isprint(int);
 
 #endif

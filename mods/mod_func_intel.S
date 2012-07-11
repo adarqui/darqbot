@@ -1,10 +1,17 @@
-	.file "mod_intel.S"
+# .intel_syntax noprefix
+
+	.file "mod_func_intel.S"
 	.text
 .global intel_true
 .global intel_false
 .global intel_self
 .global intel_strlen
+.global intel_strlen2
 .global intel_strcmp
+.global intel_strncmp
+.global intel_strchr
+.global intel_strrchr
+.global intel_strcpy
 .global intel_bzero
 .global intel_memset
 .global intel_mul
@@ -29,6 +36,12 @@
 .global intel_ror
 .global intel_rol
 .global intel_bswap
+.global intel_isdigit
+.global intel_isbinary
+.global intel_isalpha
+.global intel_isalnum
+.global intel_isascii
+.global intel_ispunct
 .global intel_isupper
 .global intel_islower
 .global intel_toupper
@@ -37,7 +50,12 @@
 	.type intel_false, @function
 	.type intel_self, @function
 	.type intel_strlen, @function
+	.type intel_strlen2, @function
 	.type intel_strcmp, @function
+	.type intel_strncmp, @function
+	.type intel_strchr, @function
+	.type intel_strrchr, @function
+	.type intel_strpcy, @function
 	.type intel_bzero, @function
 	.type intel_memset @function
 	.type intel_mul, @function
@@ -62,6 +80,12 @@
 	.type intel_ror, @function
 	.type intel_rol, @function
 	.type intel_bswap, @function
+	.type intel_isdigit, @function
+	.type intel_isbinary, @function
+	.type intel_isalpha, @function
+	.type intel_isalnum, @function
+	.type intel_isascii, @function
+	.type intel_ispunct, @function
 	.type intel_isupper,@function
 	.type intel_islower,@function
 	.type intel_toupper,@function
@@ -119,6 +143,225 @@ intel_strlen:
 
 	popl %ebp
 	ret
+
+
+
+intel_strlen2:
+# repne/scasb variation
+        pushl %ebp
+        movl %esp, %ebp
+
+	pushl %ecx
+        pushl %edi
+
+        cld
+        movl 8(%ebp), %edi
+	xorl %eax, %eax
+	xorl %ecx, %ecx
+	not %ecx
+        repne scasb
+	not %ecx
+	movl %ecx, %eax
+
+        popl %edi
+	popl %ecx
+
+        leave
+        ret
+
+
+
+
+intel_strcmp:
+# int intel_strcmp(const char *, const char *)
+        pushl %ebp
+        movl %esp, %ebp
+
+	pushl %esi
+	pushl %edi
+	pushl %ecx
+
+        movl 8(%ebp), %edi
+        movl 12(%ebp), %esi
+
+        .Lintel_strcmp_strlen:
+                movl 8(%ebp), %eax
+                xorl %ecx, %ecx
+                jmp .Lintel_strcmp_strlen_end
+                .Lintel_strcmp_strlen_begin:
+                inc %eax
+                inc %ecx
+                .Lintel_strcmp_strlen_end:
+                cmpb $0, (%eax)
+                jne .Lintel_strcmp_strlen_begin
+
+        xorl %eax, %eax
+
+        cld
+        repe cmpsb
+        jne .Lintel_strcmp_noteq
+        jmp .Lintel_strcmp_eq
+
+        .Lintel_strcmp_noteq:
+
+        movl $-1, %eax
+        jg .Lintel_strcmp_eq
+        neg %eax
+
+        .Lintel_strcmp_eq:
+
+	popl %ecx
+	popl %edi
+	popl %esi
+
+        leave
+        ret
+
+
+
+
+intel_strncmp:
+# int intel_strncmp(const char *, const char *, size_t)
+        pushl %ebp
+        movl %esp, %ebp
+
+	pushl %esi
+	pushl %edi
+	pushl %ecx
+
+        movl 8(%ebp), %edi
+        movl 12(%ebp), %esi
+	movl 16(%ebp), %ecx
+
+        xorl %eax, %eax
+
+        cld
+        repe cmpsb
+        jne .Lintel_strncmp_noteq
+        jmp .Lintel_strncmp_eq
+
+        .Lintel_strncmp_noteq:
+
+        movl $-1, %eax
+        jg .Lintel_strncmp_eq
+        neg %eax
+
+        .Lintel_strncmp_eq:
+
+	popl %ecx
+	popl %edi
+	popl %esi
+
+        leave
+        ret
+
+
+
+
+intel_strchr:
+# char * intel_strchr(char *, int)
+        pushl %ebp
+        movl %esp, %ebp
+
+        pushl %edi
+
+        movl 12(%ebp), %eax
+        movl 8(%ebp), %edi
+
+        jmp .Lstrchr_loop_end
+        .Lstrchr_loop_begin:
+        inc %edi
+        .Lstrchr_loop_end:
+        cmpb $0, (%edi)
+        je .Lstrchr_zero
+        cmpb %al, (%edi)
+        je .Lstrchr_done
+        jmp .Lstrchr_loop_begin
+
+        .Lstrchr_zero:
+        xorl %edi, %edi
+
+        .Lstrchr_done:
+        movl %edi, %eax
+
+        popl %edi
+
+        leave
+        ret
+
+
+
+
+
+intel_strrchr:
+# char * intel_strrchr(char *, int)
+        pushl %ebp
+        movl %esp, %ebp
+
+        pushl %ebx
+	pushl %ecx
+        pushl %edi
+
+        movl 8(%ebp), %edi
+
+        pushl %edi
+        call intel_strlen2
+        addl $4, %esp
+
+        cmpl $0, %eax
+        jle .Lintel_strrchr_done
+
+        addl %eax, %edi
+        movl %eax, %ecx
+        movl 12(%ebp), %eax
+        std
+        repne scasb
+        je .Lintel_strrchr_match
+        xorl %eax, %eax
+        jmp .Lintel_strrchr_done
+
+        .Lintel_strrchr_match:
+	incl %edi
+        movl %edi, %eax
+
+        .Lintel_strrchr_done:
+
+        popl %edi
+	popl %ecx
+        popl %ebx
+        leave
+        ret
+
+
+
+intel_strcpy:
+        pushl %ebp
+	movl %esp, %ebp
+
+	pushl %esi
+	pushl %edi
+
+	movl 8(%ebp), %edi
+	movl 12(%ebp), %esi
+
+	.Lintel_strcpy_start:
+	movb (%esi), %al
+	movb %al, (%edi)
+	cmpb $0, %al
+	je .Lintel_strcpy_done
+	incl %esi
+	incl %edi
+	jmp .Lintel_strcpy_start
+
+	.Lintel_strcpy_done:
+	movl 8(%ebp), %eax
+
+	popl %edi
+	popl %esi
+	leave
+	ret
+
+
 
 intel_bzero:
 # void bzero(void *, int)
@@ -246,42 +489,6 @@ intel_add:
 	ret
 
 
-intel_strcmp:
-# int strcmp(const char *, const char *)
-	pushl %ebp
-	movl %esp, %ebp
-        pushl %esi
-        pushl %edi
-        pushl %ebx
-
-        movl 8(%ebp), %edi
-        movl 12(%ebp), %esi
-
-        jmp .L2
-.L1:
-        movzbl (%edi), %eax
-        movzbl (%esi), %ebx
-        mul %ebx
-        cmpl $0, %eax
-        je .L3
-
-.L2:
-        cmpsb
-        jne .L3
-        jmp .L1
-.L3:
-        movl $1, %ebx
-        cmpsb
-        cmovne %ebx, %eax
-	
-	
-
-        popl %ebx
-        popl %edi
-        popl %esi
-
-        popl %ebp
-        ret
 
 
 intel_div:
@@ -535,6 +742,108 @@ intel_bswap:
 
 	leave
 	ret
+
+
+intel_isdigit:
+# int intel_isdigit(int)
+	pushl %ebp
+	movl %esp, %ebp
+
+	movl 8(%ebp), %eax
+	cmpl $48, %eax
+	jl .Lisdigit_mismatch
+
+	cmpl $57, %eax
+	jg .Lisdigit_mismatch
+
+	movl $1, %eax
+	jmp .Lisdigit_success
+
+	.Lisdigit_mismatch:
+	xorl %eax, %eax
+
+	.Lisdigit_success:
+
+	leave
+	ret
+
+
+intel_isbinary:
+	pushl %ebp
+	movl %esp, %ebp
+
+	movl 8(%ebp), %eax
+	cmpl $48, %eax
+	je .Lintel_isbinary_success
+
+	cmpl $49, %eax
+	je .Lintel_isbinary_success
+
+	jmp .Lintel_isbinary_fail
+
+	.Lintel_isbinary_success:
+	movl $1, %eax
+	jmp .Lintel_isbinary_done
+
+	.Lintel_isbinary_fail:
+	xorl %eax, %eax
+
+	.Lintel_isbinary_done:
+	leave
+	ret
+
+
+intel_isalpha:
+# int intel_isalpha(int)
+	pushl %ebp
+	movl %esp, %ebp
+
+	movl 8(%ebp), %eax
+	cmpl $65, %eax
+	jl .Lintel_isalpha_fail
+
+	cmpl $90, %eax
+	jle .Lintel_isalpha_success
+
+	cmpl $97, %eax
+	jl .Lintel_isalpha_fail
+
+	cmpl $122, %eax
+	jle .Lintel_isalpha_success
+
+	.Lintel_isalpha_fail:
+	xorl %eax, %eax
+	jmp .Lintel_isalpha_done
+
+	.Lintel_isalpha_success:
+	movl $1, %eax
+
+	.Lintel_isalpha_done:
+	leave
+	ret
+
+
+
+intel_isalnum:
+# int intel_isalnum(int)
+	pushl %ebp
+	movl %esp, %ebp
+
+	pushl 8(%ebp)
+	call intel_isalpha
+	addl $4, %esp
+
+	cmpl $1, %eax
+	jge .Lintel_isalnum_done
+
+	pushl 8(%ebp)
+	call intel_isdigit
+	addl $4, %esp
+
+	.Lintel_isalnum_done:
+	leave
+	ret
+
 
 
 intel_isupper:
