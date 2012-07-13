@@ -11,6 +11,7 @@ int intel_strncmp(const char *, const char *, size_t);
 char *intel_strchr(const char *, int);
 char *intel_strrchr(const char *, int);
 char *intel_strcpy(char *, const char *);
+char *intel_strncpy(char *, const char *, size_t);
 void intel_bzero(void *, size_t);
 void *intel_memset(void *, int, size_t);
 unsigned int intel_mul(unsigned int, unsigned int);
@@ -49,5 +50,8 @@ int intel_isspace(int);
 int intel_isxdigit(int);
 int intel_isgraph(int);
 int intel_isprint(int);
+
+/* syscalls */
+void intel_linux_exit(int);
 
 #endif

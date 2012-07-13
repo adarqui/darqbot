@@ -52,3 +52,13 @@ char *c2_strncpy(char *s1, const char *s2, size_t n)
 	c2_strncpy(s1 + 1, s2 + 1, n - 1);
 	return s1;
 }
+
+void *c2_memset(void *dst, int c, size_t n)
+{
+	--n;
+	*(unsigned char *)(dst + n) = c;
+	if ((int)n <= 0)
+		return dst;
+
+	return c2_memset(dst, c, n);
+}

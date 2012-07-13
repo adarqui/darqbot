@@ -26,7 +26,23 @@
 #ifndef GMOD_GFDPASSD_H
 #define GMOD_GFDPASSD_H
 
+#define __USE_BSD
+#include <sys/socket.h>
+#include <netpacket/packet.h>
+#include <net/ethernet.h>
+#include <linux/tcp.h>
+#define __USE_BSD
+#ifndef u_short
+#define u_short unsigned short
+#endif
+#include <netinet/ip.h>
+#undef __USE_BSD
+#include <netinet/ip_icmp.h>
+#include <net/if_arp.h>
+
 #include "bot.h"
+
+#include <linux/if_ether.h>
 
 typedef struct gmod_gfdpassd {
 	bot_t *bot;
@@ -72,5 +88,8 @@ bot_t *gfdpassd_destroy_down_gfdpassd(gfdpassd_t *);
 void gfdpassd_gmod_init(bot_t *, bot_gmod_elm_t *, dlist_t *);
 
 void gfdpassd_free(void *);
+
+bot_t *gfdpassd_input_resp_nop(gfdpassd_t *);
+bot_t *gfdpassd_input_resp_get(gfdpassd_t *, fdpass_control_op_t *);
 
 #endif

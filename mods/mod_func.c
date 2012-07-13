@@ -197,6 +197,8 @@ bot_t *func_run(dlist_t * dlist_node, bot_t * bot)
 		opt = MOD_FUNC_ISXDIGIT;
 	} else if (!strncasecmp_len(dl_options_ptr, "isgraph")) {
 		opt = MOD_FUNC_ISGRAPH;
+	} else if (!strncasecmp_len(dl_options_ptr, "exit")) {
+		opt = MOD_FUNC_EXIT;
 	}
 
 	if (!opt)
@@ -297,17 +299,6 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 			return NULL;
 			break;
 		}
-	case MOD_FUNC_MEMSET:
-		{
-			if (!opt_val)
-				break;
-			opt_val_int = *opt_val;
-			printf("opt_val=%c\n", opt_val_int);
-			res_str =
-			    func_memset(string, opt_val_int, strlen(string));
-			printf("res_str=%p, %s\n", res_str, res_str);
-			break;
-		}
 	case MOD_FUNC_EFLAGS:
 		{
 			res_uint = func_eflags();
@@ -341,6 +332,7 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 	case MOD_FUNC_STRRCHR:
 	case MOD_FUNC_STRNCMP:
 	case MOD_FUNC_STRNCPY:
+	case MOD_FUNC_MEMSET:
 		{
 			char *sa, *sb;
 			unsigned int a, b;
@@ -435,6 +427,9 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 			} else if (opt == MOD_FUNC_STRNCPY) {
 /* XXX CAN BE EXPLOITED */
 				func_strncpy(txt_data_out_ptr, sb, atoi(sa));
+				break;
+			} else if (opt == MOD_FUNC_MEMSET) {
+				res_str = func_memset(string, *sb, atoi(sa));
 				break;
 			}
 
@@ -556,6 +551,12 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 			res_int_set = 1;
 			break;
 		}
+	case MOD_FUNC_EXIT:
+		{
+			func_exit(atoi(opt_val));
+			break;
+		}
+
 	default:
 		break;
 	}
@@ -591,6 +592,7 @@ void func_switch(char *type)
 		func_strchr = c_strchr;
 		func_strrchr = c_strrchr;
 		func_strcpy = c_strcpy;
+		func_strncpy = c_strncpy;
 
 		func_bzero = c_bzero;
 		func_memset = c_memset;
@@ -644,25 +646,19 @@ void func_switch(char *type)
 		func_false = intel_false;
 		func_self = intel_self;
 
-/*
-rand_val = rand_val % 2;
-if(rand_val >= 1)
-{
-*/
-		func_strlen = intel_strlen;
-/*
-}
-else
-{
-func_strlen = intel_strlen2;
-}
-*/
+		rand_val = rand_val % 2;
+		if (rand_val >= 1) {
+			func_strlen = intel_strlen;
+		} else {
+			func_strlen = intel_strlen2;
+		}
 
 		func_strcmp = intel_strcmp;
 		func_strncmp = intel_strncmp;
 		func_strchr = intel_strchr;
 		func_strrchr = intel_strrchr;
 		func_strcpy = intel_strcpy;
+		func_strncpy = intel_strncpy;
 
 		func_bzero = intel_bzero;
 		func_memset = intel_memset;
@@ -713,30 +709,26 @@ func_isprint = intel_isprint;
 func_isxdigit = intel_isxdigit;
 func_isgraph = intel_isgraph;
 */
+
+		func_exit = intel_linux_exit;
 	} else if (!strcasecmp(type, "intel2")) {
 		func_true = intel2_true;
 		func_false = intel2_false;
 		func_self = intel2_self;
 
-/*
-rand_val = rand_val % 2;
-if(rand_val >= 1)
-{
-*/
-		func_strlen = intel2_strlen;
-/*
-}
-else
-{
-func_strlen = intel2_strlen2;
-}
-*/
+		rand_val = rand_val % 2;
+		if (rand_val >= 1) {
+			func_strlen = intel2_strlen;
+		} else {
+			func_strlen = intel2_strlen2;
+		}
 
 		func_strcmp = intel2_strcmp;
 		func_strncmp = intel2_strncmp;
 		func_strchr = intel2_strchr;
 		func_strrchr = intel2_strrchr;
 		func_strcpy = intel2_strcpy;
+		func_strncpy = intel2_strncpy;
 
 		func_bzero = intel2_bzero;
 		func_memset = intel2_memset;
@@ -787,6 +779,9 @@ func_isprint = intel2_isprint;
 func_isxdigit = intel2_isxdigit;
 func_isgraph = intel2_isgraph;
 */
+
+		func_exit = intel2_linux_exit;
+
 	} else if (!strcasecmp(type, "stdc")) {
 		func_true = c_true;
 		func_false = c_false;
@@ -847,11 +842,14 @@ func_isgraph = intel2_isgraph;
 		func_isprint = isprint;
 		func_isxdigit = isxdigit;
 		func_isgraph = isgraph;
+
+		func_exit = exit;
 	} else if (!strcasecmp(type, "c2")) {
 		func_add = c2_add;
 		func_strlen = c2_strlen;
 		func_strcpy = c2_strcpy;
 		func_strncpy = c2_strncpy;
+		func_memset = c2_memset;
 	}
 
 	return;

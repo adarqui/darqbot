@@ -105,6 +105,7 @@ GMOD_GPTY = gmod_gpty.c
 GMOD_GEXEC = gmod_gexec.c
 GMOD_GFDPASSD = gmod_gfdpassd.c
 GMOD_GFDPASSC = gmod_gfdpassc.c
+GMOD_GSNIFF = gmod_gsniff.c
 
 all:
 
@@ -112,7 +113,9 @@ all:
 	mkdir /darqbot/.darqbot/pmods &
 	mkdir /darqbot/.darqbot/gmods &
 
+	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(GMOD_GSNIFF) -o gmod_gsniff.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(GMOD_GFDPASSD) -o gmod_gfdpassd.so
+	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(GMOD_GFDPASSC) -o gmod_gfdpassc.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(GMOD_GEXEC) -o gmod_gexec.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(GMOD_GPTY) -o gmod_gpty.so
 	gcc $(HEADERS) $(FLAGS) $(LINKER) -shared $(GMOD_GSSL) -o gmod_gssl.so

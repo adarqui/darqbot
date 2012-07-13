@@ -50,10 +50,10 @@ void bot_fini_subs(void *bot_arg)
 	dlist_t *dptr_sub = NULL, *dptr_sub_tmp = NULL;
 	bot_t *bot = (bot_t *) bot_arg;
 
-	debug(NULL, "bot_fini_subs: Entered\n");
-
 	if (!bot)
 		return;
+
+	debug(NULL, "bot_fini_subs: Entered: tag=%s\n", bot->tag);
 
 	if (bot->node_type != BOT_NODE_TYPE_ROOT)
 		return;
@@ -70,13 +70,12 @@ void bot_fini_subs(void *bot_arg)
 
 void bot_fini(void *bot_arg)
 {
-	dlist_t *dptr_sub = NULL, *dptr_sub_tmp = NULL;
-	bot_t *bot = (bot_t *) bot_arg, *bot_orig = NULL;
-
-	debug(bot, "bot_fini: Entered\n");
+	bot_t *bot = (bot_t *) bot_arg;
 
 	if (!bot)
 		return;
+
+	debug(bot, "bot_fini: Entered: tag=%s\n", bot->tag);
 
 	if (bot->isforked)
 		bot_fork_clean_exit(bot);
@@ -108,26 +107,9 @@ void bot_fini(void *bot_arg)
 
 		gmodule_off(bot);
 
-/* free the damn bot */
+/* free the damn bots */
 
-		bot_orig = bot;
-
-		dlist_fornext_retarded(bot->dl_subs, dptr_sub, dptr_sub_tmp) {
-			if (!dptr_sub)
-				break;
-			bot = (bot_t *) dlist_data(dptr_sub);
-			if (bot->parent) {
-				bot_fini(bot);
-			}
-		}
-
-/*
-      dlist_remove_and_free (&bot_orig->parent->dl_subs, &bot_orig->dptr_self,
-			     free);
-*/
-		dlist_remove_and_free(&bot_orig->parent->dl_subs,
-				      &bot_orig->dptr_self, NULL);
-		free(bot_orig);
+		dlist_fini(&bot->dl_subs, bot_fini);
 
 	}
 
@@ -587,16 +569,28 @@ bot_t *bot_dup_sub(bot_t * bot)
 	bot_sub = (bot_t *) calloc(1, sizeof(bot_t));
 	if (!bot_sub)
 		return NULL;
+
 	memcpy(bot_sub, bot, sizeof(bot_t));
 
+	bot_sub->dptr_self = NULL;
 	bot_sub->parent = bot;
 	bot_sub->dl_subs = NULL;
 	bot_sub->node_type = BOT_NODE_TYPE_SUB;
+
+	bot_sub->dl_module_arg = NULL;
+	bot_sub->dl_module_help = NULL;
+	bot_sub->dl_environ = NULL;
+
+	bot_sub->dl_pmodules = NULL;
+	bot_sub->dl_pmodules_cur = NULL;
+	bot_sub->dl_control = NULL;
 
 	bot_sub->ID = rand();
 
 /* this needs to be independent of the sub */
 	bot_sub->dl_gmodules = bot_gmodule_dup_bot_gmodules(bot);
+
+	bot_sub->dl_gmodules_cur = NULL;
 
 	return (bot_sub);
 }

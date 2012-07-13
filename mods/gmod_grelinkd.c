@@ -384,8 +384,8 @@ bot_t *grelinkd_input_uninitialized(grelinkd_t * grelinkd)
 		return NULL;
 
 	n = relink_req_pack_buf_hello((char *)&grelinkd->bot->txt_data_out, 0);
-	relink_packet_hton((relink_control_pkt_t *) & grelinkd->
-			   bot->txt_data_out);
+	relink_packet_hton((relink_control_pkt_t *) & grelinkd->bot->
+			   txt_data_out);
 	grelinkd->bot->txt_data_out_sz = n;
 
 	gmodule_fix_data_down(grelinkd->bot);
@@ -419,8 +419,8 @@ int grelinkd_op_data_notify(grelinkd_t * grelinkd)
 	grelinkd->bot->txt_data_out_sz =
 	    relink_pack_buf_data(grelinkd->bot->txt_data_out, grelinkd->id, buf,
 				 buf_len);
-	relink_packet_hton((relink_control_pkt_t *) grelinkd->
-			   bot->txt_data_out);
+	relink_packet_hton((relink_control_pkt_t *) grelinkd->bot->
+			   txt_data_out);
 
 	n = grelinkd->bot->txt_data_out_sz;
 
@@ -508,8 +508,8 @@ int grelinkd_op_relink_notify(grelinkd_t * grelinkd)
 /* FAILURE, notify relinkc */
 			puts("GRELINKD_LINK_INIT: RESULT: FAILED");
 			grelinkd->bot->txt_data_out_sz =
-			    relink_res_pack_buf_error(grelinkd->
-						      bot->txt_data_out,
+			    relink_res_pack_buf_error(grelinkd->bot->
+						      txt_data_out,
 						      grelinkd->id);
 			relink_packet_hton((relink_control_pkt_t *)
 					   grelinkd->bot->txt_data_out);

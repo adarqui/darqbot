@@ -177,4 +177,7 @@ int gmodule_down_force(dlist_t *, bot_t *);
 
 void gxmodule_free(void *) ;
 
+
+int gmodule_control_up_fd(dlist_t * , bot_t * , int , char * , char * ) ;
+
 #endif

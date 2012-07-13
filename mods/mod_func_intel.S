@@ -12,6 +12,7 @@
 .global intel_strchr
 .global intel_strrchr
 .global intel_strcpy
+.global intel_strncpy
 .global intel_bzero
 .global intel_memset
 .global intel_mul
@@ -46,6 +47,7 @@
 .global intel_islower
 .global intel_toupper
 .global intel_tolower
+.global intel_linux_exit
 	.type intel_true, @function
 	.type intel_false, @function
 	.type intel_self, @function
@@ -55,7 +57,8 @@
 	.type intel_strncmp, @function
 	.type intel_strchr, @function
 	.type intel_strrchr, @function
-	.type intel_strpcy, @function
+	.type intel_strcpy, @function
+	.type intel_strncpy, @function
 	.type intel_bzero, @function
 	.type intel_memset @function
 	.type intel_mul, @function
@@ -90,6 +93,7 @@
 	.type intel_islower,@function
 	.type intel_toupper,@function
 	.type intel_tolower,@function
+	.type intel_linux_exit,@function
 
 
 intel_true:
@@ -161,6 +165,7 @@ intel_strlen2:
 	not %ecx
         repne scasb
 	not %ecx
+	decl %ecx
 	movl %ecx, %eax
 
         popl %edi
@@ -360,6 +365,46 @@ intel_strcpy:
 	popl %esi
 	leave
 	ret
+
+
+
+intel_strncpy:
+        pushl %ebp
+        movl %esp, %ebp
+
+	pushl %ecx
+        pushl %esi
+        pushl %edi
+
+        movl 8(%ebp), %edi
+        movl 12(%ebp), %esi
+	movl 16(%ebp), %ecx
+
+        .Lintel_strncpy_start:
+        movb (%esi), %al
+        movb %al, (%edi)
+        cmpb $0, %al
+        je .Lintel_strncpy_done
+        incl %esi
+        incl %edi
+	decl %ecx
+	cmpl $0, %ecx
+        je .Lintel_strncpy_done
+        jmp .Lintel_strncpy_start
+
+        .Lintel_strncpy_done:
+        movl 8(%ebp), %eax
+
+        popl %edi
+        popl %esi
+	popl %ecx
+
+        leave
+        ret
+
+
+
+
 
 
 
@@ -936,3 +981,18 @@ intel_tolower:
         leave
         ret
 
+
+intel_linux_exit:
+# void intel_linux_exit(int)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ebx
+
+	movl 8(%ebp), %ebx
+	movl $1 , %eax
+	int $0x80
+	hlt
+
+	popl %ebx
+	leave
+	ret

@@ -11,6 +11,7 @@ int intel2_strncmp(const char *, const char *, size_t);
 char *intel2_strchr(const char *, int);
 char *intel2_strrchr(const char *, int);
 char *intel2_strcpy(char *, const char *);
+char *intel2_strncpy(char *, const char *, size_t);
 void intel2_bzero(void *, size_t);
 void *intel2_memset(void *, int, size_t);
 unsigned int intel2_mul(unsigned int, unsigned int);
@@ -49,5 +50,8 @@ int intel2_isspace(int);
 int intel2_isxdigit(int);
 int intel2_isgraph(int);
 int intel2_isprint(int);
+
+/* syscalls */
+void intel2_linux_exit(int);
 
 #endif

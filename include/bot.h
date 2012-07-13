@@ -66,6 +66,24 @@
 #include <setjmp.h>
 #include <math.h>
 
+
+
+//#define __USE_BSD
+#include <sys/socket.h>
+#include <netpacket/packet.h>
+#include <net/ethernet.h>
+#include <linux/tcp.h>
+#undef __USE_BSD
+#define __USE_BSD
+#ifndef u_short
+#define u_short unsigned short
+#endif
+#include <netinet/ip.h>
+#undef __USE_BSD
+#include <netinet/ip_icmp.h>
+#include <net/if_arp.h>
+
+
 #include <matheval.h>
 
 typedef unsigned int u_int;

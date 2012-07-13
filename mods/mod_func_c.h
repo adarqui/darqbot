@@ -10,6 +10,7 @@ int c_strncmp(const char *, const char *, size_t);
 char *c_strchr(const char *, int);
 char *c_strrchr(const char *, int);
 char *c_strcpy(char *, const char *);
+char *c_strncpy(char *, const char *, size_t);
 void c_bzero(void *, size_t);
 void *c_memset(void *, int, size_t);
 unsigned int c_mul(unsigned int, unsigned int);

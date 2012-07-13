@@ -1335,3 +1335,37 @@ int gmodule_down_force(dlist_t * dlist_node, bot_t * bot)
 
 	return gmodule_down(dlist_node, bot);
 }
+
+int gmodule_control_up_fd(dlist_t * dlist_node, bot_t * bot, int fd, char *tag,
+			  char *tag_ext)
+{
+	dlist_t *dptr_control = NULL;
+	control_t *control = NULL;
+	dlist_t *dptr_gmod = NULL;
+
+	debug(NULL, "gmodule_control_up_fd: Entered\n");
+
+	if (!dlist_node || !bot || fd < 0)
+		return -1;
+
+	control = control_init();
+	control_add_fdpass(control, fd);
+	dptr_control = control_bot_add(bot, control);
+
+	if (sNULL(tag_ext)) {
+		dptr_gmod = gmodule_find_gmod_dptr(bot, NULL, tag_ext);
+		if (dptr_gmod) {
+			if (dlist_prev(dptr_gmod))
+				dptr_gmod = dlist_prev(dptr_gmod);
+		}
+	}
+
+	if (!dptr_gmod)
+		dptr_gmod = dlist_node;
+
+	gmodule_control_up(dptr_gmod, bot);
+
+	control_bot_del(bot, dptr_control);
+
+	return 0;
+}

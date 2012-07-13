@@ -324,6 +324,9 @@ void graw_process_options_parse_path(graw_t * graw, char *string)
 
 	dlist_Dinsert_after(&graw->dl_server, server);
 
+	graw->send_link = graw_sendmsg_link;
+	graw->recv_link = graw_recvmsg_link;
+
 	return;
 }
 
@@ -389,6 +392,7 @@ int graw_connect(graw_t * graw)
 				    fd_link_add(&graw->dl_fd_link, 0,
 						graw->link.ev, NULL,
 						&server->sun);
+
 			} else {
 				continue;
 			}
@@ -408,16 +412,16 @@ int graw_connect(graw_t * graw)
 				      ntohs(bfl->sin.sin_port));
 				link_fd =
 				    graw_network_raw_connect(inet_ntoa
-							     (bfl->
-							      sin.sin_addr),
-							     ntohs(bfl->
-								   sin.sin_port));
+							     (bfl->sin.
+							      sin_addr),
+							     ntohs(bfl->sin.
+								   sin_port));
 			} else if (bfl->type == AF_UNIX) {
 				debug(NULL, "graw_connect: af_unix: %s\n",
 				      bfl->sun.sun_path);
 				link_fd =
-				    graw_network_unix_connect(bfl->
-							      sun.sun_path);
+				    graw_network_unix_connect(bfl->sun.
+							      sun_path);
 			}
 
 			if (link_fd < 0) {
@@ -445,6 +449,36 @@ int graw_connect(graw_t * graw)
 	}
 
 	return 0;
+}
+
+int graw_sendmsg_link(graw_t * graw, char *buf, int len)
+{
+	struct msghdr msg;
+	struct iovec iov[1];
+	int n;
+
+	debug(NULL, "graw_sendmsg_link: Entered: %p %s %i\n", graw, buf, len);
+
+	if (!graw || !sNULL(buf) || len <= 0)
+		return -1;
+
+/* need to clean separators */
+	bz2(msg);
+	msg.msg_iov = (struct iovec *)&iov;
+	msg.msg_iovlen = 1;
+
+	iov[0].iov_base = buf;
+	iov[0].iov_len = len;
+
+	debug(NULL, "graw_sendmsg_link: fd=%i, len=%i, buf=[%s]\n",
+	      graw->link.fd, len, buf);
+
+	n = sendmsg(graw->link.fd, &msg, 0);
+	if (n <= 0) {
+		perror("graw_sendmsg_link: WTF ");
+	}
+
+	return n;
 }
 
 int graw_send_link(graw_t * graw, char *buf, int len)
@@ -488,6 +522,62 @@ int graw_recv_link(graw_t * graw, char *buf, int len)
 	}
 
 	debug(NULL, "graw_recv_link: n=%i, buf=[%s]\n", n, buf);
+	return n;
+}
+
+int graw_recvmsg_link(graw_t * graw, char *buf, int len)
+{
+	struct cmsghdr *cmsg = NULL;
+	struct msghdr msg;
+	struct iovec iov[1];
+	fdpass_control_op_t *fcop = NULL;
+	char cmsg_buf[sizeof(struct cmsghdr) + sizeof(long)];
+	int n, fd;
+
+	debug(NULL, "graw_recvmsg_link: Entered\n");
+
+	if (!graw || !buf || len <= 0)
+		return -1;
+
+	debug(NULL, "graw_recvmsg_link: fd=%i\n", graw->link.fd);
+
+	debug(NULL, "graw_recvmsg_link: USING RECVMSG!\n");
+
+	bz2(msg);
+	iov[0].iov_base = buf;
+	iov[0].iov_len = len;
+	msg.msg_iov = (struct iovec *)&iov;
+	msg.msg_iovlen = 1;
+
+	msg.msg_control = cmsg_buf;
+	msg.msg_controllen = sizeof(cmsg_buf);
+	cmsg = (struct cmsghdr *)cmsg_buf;
+
+	n = recvmsg(graw->link.fd, &msg, 0);
+
+	if (n > 0) {
+		if (msg.msg_iovlen) {
+			memcopy(buf, msg.msg_iov[0].iov_base, len,
+				msg.msg_iov[0].iov_len);
+		}
+	}
+
+	if (n <= 0) {
+		debug(NULL,
+		      "graw_recvmsg_link: recv<=0, unsetting hooks, bot=%p, fd=%i, err=%s\n",
+		      graw, graw->link.fd, strerror(errno));
+	}
+
+	fdpass_print(&msg);
+	fcop = (fdpass_control_op_t *) msg.msg_iov[0].iov_base;
+	if (msg.msg_controllen) {
+		puts("................... msg_control");
+		fd = *(int *)((void *)cmsg + sizeof(struct cmsghdr));
+		gmodule_control_up_fd(graw->dptr_gmod, graw->bot, fd, fcop->tag,
+				      fcop->tag_ext);
+	}
+
+	debug(NULL, "graw_recvmsg_link: n=%i, buf=[%s]\n", n, buf);
 	return n;
 }
 
@@ -871,6 +961,10 @@ int graw_network_unix_listen(char *path)
 		goto cleanup;
 	}
 
+	chmod(sun.sun_path,
+	      S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP |
+	      S_IROTH | S_IWOTH | S_IXOTH);
+
 	if (listen(fd, 10) < 0) {
 		goto cleanup;
 	}
@@ -1012,8 +1106,12 @@ int graw_recv(graw_t * graw)
 	if (!graw)
 		return -1;
 
+/*
 	n = graw_recv_link(graw, graw->bot->txt_data_in,
 			   sizeof(graw->bot->txt_data_in) - 1);
+*/
+	n = graw->recv_link(graw, graw->bot->txt_data_in,
+			    sizeof(graw->bot->txt_data_in) - 1);
 	graw->bot->txt_data_in_sz = n;
 
 	return n;
@@ -1026,8 +1124,13 @@ int graw_send(graw_t * graw)
 	if (!graw)
 		return -1;
 
+/*
 	n = graw_send_link(graw, graw->bot->txt_data_out,
 			   graw->bot->txt_data_out_sz);
+*/
+	n = graw->send_link(graw, graw->bot->txt_data_out,
+			    graw->bot->txt_data_out_sz);
+
 	return n;
 }
 
@@ -1070,6 +1173,11 @@ void graw_evhook_accept(int fd, short event, void *arg)
 		      "graw_evhook_accept: GIRCD ACCEPT GMOD->DATA = NULL, ALLOCATING");
 		graw_gmod_init(bot_sub, gmod_sub, dptr_gmod_sub);
 		graw_sub = gmod_sub->data;
+
+/* need to reset these to the parent's recv/send */
+		graw_sub->recv_link = graw->recv_link;
+		graw_sub->send_link = graw->send_link;
+
 	}
 
 	if (!graw_sub)
@@ -1303,6 +1411,10 @@ void graw_gmod_init(bot_t * bot, bot_gmod_elm_t * gmod, dlist_t * dptr_gmod)
 	graw->destroy_down = 0;
 	graw->destroy_up = 1;
 
+/* send/recv */
+	graw->send_link = graw_send_link;
+	graw->recv_link = graw_recv_link;
+
 	return;
 }
 
@@ -1347,8 +1459,27 @@ bot_t *graw_control_up(dlist_t * dlist_node, bot_t * bot)
 
 bot_t *graw_control_down(dlist_t * dlist_node, bot_t * bot)
 {
+	fdpass_control_t *fc = NULL;
+	int n;
+	graw_t *graw = NULL;
+	bot_gmod_elm_t *gmod = NULL;
+
 	debug(NULL, "graw_control_down: Entered\n");
 
+	gmod = (bot_gmod_elm_t *) dlist_data(dlist_node);
+	graw = (graw_t *) gmod->data;
+	if (graw) {
+
+		fc = control_get_sendmsg(&bot->dl_control);
+		if (fc) {
+			fdpass_print(&fc->msg);
+//n = sendmsg(graw->link.fd, &fc->msg, sizeof(struct msghdr));
+			n = sendmsg(graw->link.fd, &fc->msg, 0);
+			debug(NULL,
+			      "graw_control_down: fd=%i, n=%i, errno=%s\n",
+			      graw->link.fd, n, strerror(errno));
+		}
+	}
 	gmodule_control_down(dlist_node, bot);
 
 	return bot;

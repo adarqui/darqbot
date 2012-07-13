@@ -31,7 +31,8 @@
 enum {
 	RAND_WORD = 0,
 	RAND_NUM,
-	RAND_DATA
+	RAND_DATA,
+	RAND_LINE
 };
 
 module_t mod_rand_info;
@@ -47,5 +48,6 @@ char *rand_change_string(char *, int);
 char *rand_op_data(char *);
 char *rand_op_num(char *);
 char *rand_op_word(char *);
+void rand_op_line(bot_t *);
 
 #endif

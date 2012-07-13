@@ -30,7 +30,9 @@ int main(int argc, char *argv[])
 	fns_load_defaults();
 
 	debug_trace_init_mandatory();
+/*
 	debug_trace_init();
+*/
 
 	srand(getpid());
 	SSL_library_init();

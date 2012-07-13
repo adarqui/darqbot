@@ -59,6 +59,9 @@ typedef struct gmod_graw {
 
 	dlist_t *dl_fd_link;
 
+	int (*send_link) (struct gmod_graw *, char *, int);
+	int (*recv_link) (struct gmod_graw *, char *, int);
+
 } graw_t;
 
 module_t gmod_graw_info;
@@ -91,7 +94,9 @@ int graw_connect(graw_t *);
 int graw_listen(graw_t *);
 int graw_accept(graw_t *);
 int graw_send_link(graw_t *, char *, int);
+int graw_sendmsg_link(graw_t *, char *, int);
 int graw_recv_link(graw_t *, char *, int);
+int graw_recvmsg_link(graw_t *, char *, int);
 int graw_send(graw_t *);
 int graw_recv(graw_t *);
 pid_t graw_spawner(graw_t *);

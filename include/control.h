@@ -22,8 +22,12 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
+#include "bot.h"
+#include "fdpass.h"
+
 enum control_sub_types {
 CONTROL_SUB_FDPASS=1,
+CONTROL_SUB_SENDMSG
 };
 
 typedef struct bot_control {
@@ -41,10 +45,12 @@ control_t * control_init(void);
 control_sub_t *control_sub_init(void);
 
 dlist_t * control_add_fdpass(control_t *, int);
+dlist_t * control_add_sendmsg(control_t *, struct msghdr *);
 
 int control_get_fdpass(dlist_t **);
-
 int control_get_fdpass_find(dlist_t **);
+
+fdpass_control_t * control_get_sendmsg(dlist_t **);
 
 dlist_t * control_bot_add(bot_t *, control_t *);
 

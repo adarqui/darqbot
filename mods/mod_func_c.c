@@ -101,9 +101,19 @@ char *c_strrchr(const char *s, int c)
 
 char *c_strcpy(char *s1, const char *s2)
 {
-	int n = 0;
+	int n;
 
 	for (n = 0; s1[n] = s2[n], s2[n] != '\0'; n++) ;
+
+	return s1;
+}
+
+char *c_strncpy(char *s1, const char *s2, size_t n)
+{
+
+	while ((int)--n >= 0) {
+		s1[n] = s2[n];
+	}
 
 	return s1;
 }
@@ -125,6 +135,7 @@ void c_bzero(void *v, size_t n)
 void *c_memset(void *v, int c, size_t n)
 {
 
+	n = n - 1;
 	if (!v || n <= 0)
 		return v;
 

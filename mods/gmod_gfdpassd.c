@@ -274,6 +274,7 @@ bot_t *gfdpassd_input(dlist_t * dlist_node, bot_t * bot)
 {
 	bot_gmod_elm_t *gmod = NULL;
 	gfdpassd_t *gfdpassd = NULL;
+	fdpass_control_op_t *fcop = NULL;
 
 	debug(bot, "gfdpassd_input: Entered\n");
 
@@ -287,13 +288,136 @@ bot_t *gfdpassd_input(dlist_t * dlist_node, bot_t * bot)
 		return NULL;
 	}
 
+/*
 	gmodule_fix_data_down(bot);
 	gmodule_up(dlist_node, bot);
+*/
+	if (!gfdpassd->initialized) {
+
+		return gfdpassd_input_resp_nop(gfdpassd);
+	}
 
 	debug(NULL, "gfdpassd_input: in=[%s], out=[%s]\n", bot->txt_data_in,
 	      bot->txt_data_out);
 
+	fcop = (fdpass_control_op_t *) bot->txt_data_in;
+	if (!fcop)
+		return NULL;
+
+	if (fcop->type != FDPASS_CONTROL_TYPE_REQUEST) {
+/* REPLY ERROR */
+		return NULL;
+	}
+
+	switch (fcop->subtype) {
+	case FDPASS_CONTROL_SUBTYPE_GET:
+		{
+			bot = gfdpassd_input_resp_get(gfdpassd, fcop);
+			break;
+		}
+	case FDPASS_CONTROL_SUBTYPE_PUT:
+		{
+			break;
+		}
+	case FDPASS_CONTROL_SUBTYPE_LIST:
+		{
+			break;
+		}
+	default:
+/* REPLY ERROR */
+		break;
+	}
+
 	return bot;
+}
+
+bot_t *gfdpassd_input_resp_get(gfdpassd_t * gfdpassd,
+			       fdpass_control_op_t * fcop)
+{
+	dlist_t *dptr_control = NULL;
+	control_t *control = NULL;
+	fdpass_control_t *fc = NULL;
+	int fd = 0;
+
+	debug(NULL, "gfdpassd_input_resp_get: Entered\n");
+
+	if (!gfdpassd || !fcop)
+		return NULL;
+
+	switch (fcop->subtype_op) {
+	case FDPASS_CONTROL_GET_RAW:{
+			struct sockaddr_ll ll;
+			socklen_t ll_len;
+			fd = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
+			ll.sll_protocol = htons(ETH_P_ALL);
+			ll_len = sizeof(struct sockaddr);
+			bind(fd, (struct sockaddr *)&ll, ll_len);
+
+			debug(NULL, "gfdpassd_input_resp_get: RAW! fd=%i, %i\n",
+			      fd, getuid());
+			break;
+		}
+	default:
+		break;
+	}
+
+	if (fd < 0)
+		return NULL;
+
+	fc = fdpass_init(fcop->tag, fcop->tag_ext);
+	if (!fc)
+		return NULL;
+
+	fdpass_resp_get_raw(fc, fd);
+
+	fdpass_print(&fc->msg);
+
+	control = control_init();
+	control_add_sendmsg(control, &fc->msg);
+	dptr_control = control_bot_add(gfdpassd->bot, control);
+
+	gmodule_control_down(gfdpassd->dptr_gmod, gfdpassd->bot);
+
+	control_bot_del(gfdpassd->bot, dptr_control);
+
+	fdpass_fini(&fc);
+
+/* free up the fd */
+	close(fd);
+
+	return NULL;
+}
+
+bot_t *gfdpassd_input_resp_nop(gfdpassd_t * gfdpassd)
+{
+	dlist_t *dptr_control = NULL;
+	control_t *control = NULL;
+	fdpass_control_t *fc = NULL;
+
+	debug(NULL, "gfdpassd_input_resp_nop: Entered\n");
+
+	if (!gfdpassd)
+		return NULL;
+
+	fc = fdpass_init(gfdpassd->gmod->trigger, gfdpassd->gmod->trigger_ext);
+	if (!fc)
+		return NULL;
+
+	fdpass_resp_nop(fc);
+
+	fdpass_print(&fc->msg);
+
+	control = control_init();
+	control_add_sendmsg(control, &fc->msg);
+	dptr_control = control_bot_add(gfdpassd->bot, control);
+
+	gmodule_control_down(gfdpassd->dptr_gmod, gfdpassd->bot);
+
+	control_bot_del(gfdpassd->bot, dptr_control);
+
+	gfdpassd->initialized = 1;
+
+	return gfdpassd->bot;
 }
 
 bot_t *gfdpassd_destroy_up_gfdpassd(gfdpassd_t * gfdpassd)

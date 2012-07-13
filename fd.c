@@ -129,6 +129,7 @@ void fd_link_destroy(dlist_t ** dl_fd_link, void (*cleanup) (fd_link_t *))
 		dlist_remove_and_free(dl_fd_link, &dptr_bfl, free);
 	}
 
+	debug(NULL, "fd_link_destroy: Finished\n");
 	return;
 }
 

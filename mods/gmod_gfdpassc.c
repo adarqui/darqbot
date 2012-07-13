@@ -152,8 +152,10 @@ bot_t *gfdpassc_run(dlist_t * dlist_node, bot_t * bot)
 
 	MOD_OPTIONS_BOTTOM_HALF;
 
+/*
 	gmodule_set_can_pass_up(gmod);
 	gmodule_set_can_pass_down(gmod);
+*/
 
 	gfdpassc_input(dptr_gmod, bot);
 
@@ -287,13 +289,54 @@ bot_t *gfdpassc_input(dlist_t * dlist_node, bot_t * bot)
 		return NULL;
 	}
 
+/*
 	gmodule_fix_data_down(bot);
 	gmodule_up(dlist_node, bot);
+*/
+	if (!gfdpassc->initialized) {
+		return gfdpassc_input_get(gfdpassc);
+	}
 
 	debug(NULL, "gfdpassc_input: in=[%s], out=[%s]\n", bot->txt_data_in,
 	      bot->txt_data_out);
 
 	return bot;
+}
+
+bot_t *gfdpassc_input_get(gfdpassc_t * gfdpassc)
+{
+	dlist_t *dptr_control = NULL;
+	control_t *control = NULL;
+	fdpass_control_t *fc = NULL;
+
+	debug(NULL, "gfdpassc_input_get: Entered\n");
+
+	if (!gfdpassc)
+		return NULL;
+
+	fc = fdpass_init(gfdpassc->gmod->trigger, gfdpassc->gmod->trigger_ext);
+	if (!fc)
+		return NULL;
+
+	fdpass_req_get_raw(fc);
+
+	fdpass_print(&fc->msg);
+
+	control = control_init();
+	control_add_sendmsg(control, &fc->msg);
+	dptr_control = control_bot_add(gfdpassc->bot, control);
+
+	gmodule_control_down(gfdpassc->dptr_gmod, gfdpassc->bot);
+
+	control_bot_del(gfdpassc->bot, dptr_control);
+
+	fdpass_fini(&fc);
+
+	gfdpassc->initialized = 1;
+
+	gmodule_up(gfdpassc->dptr_gmod, gfdpassc->bot);
+
+	return gfdpassc->bot;
 }
 
 bot_t *gfdpassc_destroy_up_gfdpassc(gfdpassc_t * gfdpassc)
@@ -394,6 +437,7 @@ bot_t *gfdpassc_control_up(dlist_t * dlist_node, bot_t * bot)
 {
 	gfdpassc_t *gfdpassc = NULL;
 	bot_gmod_elm_t *gmod = NULL;
+	int fd;
 
 	debug(NULL, "gfdpassc_control_up: Entered\n");
 
@@ -404,7 +448,29 @@ bot_t *gfdpassc_control_up(dlist_t * dlist_node, bot_t * bot)
 	gmod = (bot_gmod_elm_t *) dlist_data(dlist_node);
 	gfdpassc = (gfdpassc_t *) gmod->data;
 
+	if (gfdpassc) {
+
+		fd = control_get_fdpass(&bot->dl_control);
+		if (fd >= 0) {
+
+			gfdpassc->initialized = 1;
+			gfdpassc->fd = fd;
+
+			gmodule_set_can_pass_up(gmod);
+			gmodule_set_can_pass_down(gmod);
+
+			debug(NULL,
+			      "gfdpassc_control_up: GFDPASSC_CONTROL_UP!!! fd found=%i\n",
+			      fd);
+		}
+	} else {
+		debug(NULL, "gfdpassc_control_up: GRAW = NULL\n");
+	}
+
 	gmodule_control_up(dlist_node, bot);
+
+/* special: run the next gmod */
+	gmodule_up(dlist_node, bot);
 
 	return bot;
 }

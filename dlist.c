@@ -1188,13 +1188,11 @@ int dlist_make_circular(dlist_t ** head_or_tail)
 		return -1;
 
 	head =
-	    (*head_or_tail)->
-	    tail ? (*head_or_tail) : (*head_or_tail)->head ? (*head_or_tail)->
-	    head : NULL;
+	    (*head_or_tail)->tail ? (*head_or_tail) : (*head_or_tail)->
+	    head ? (*head_or_tail)->head : NULL;
 	tail =
-	    (*head_or_tail)->
-	    head ? (*head_or_tail) : (*head_or_tail)->tail ? (*head_or_tail)->
-	    tail : NULL;
+	    (*head_or_tail)->head ? (*head_or_tail) : (*head_or_tail)->
+	    tail ? (*head_or_tail)->tail : NULL;
 
 	if (head == NULL)
 		return -1;
@@ -1445,8 +1443,6 @@ char *dlist_to_str(dlist_t * dl)
 /* assumes dl is made up of strings */
 	dlist_t *dptr = NULL;
 	char *str = NULL, *tmp_str = NULL, *tmp_str_2 = NULL;
-
-	debug(NULL, "dlist_to_str: Entered\n");
 
 	if (!dl)
 		return NULL;

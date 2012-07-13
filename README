@@ -40,7 +40,7 @@ Join us in #jumping @ EFNet. Also special thanks to those in #jumping, #bothole,
 
 PUSHF.
 
-The goal of darqbot is to provide a "knowledge bot" with very unique & extremely versatile functionality, much of which is geared towards facilitating learning of a group of people on a social chat network. The overall design of this bot is inspired by my attempt to clone my brain into software. 
+The goal of darqbot is to provide a "knowledge bot" with very unique & extremely versatile functionality, much of which is geared towards facilitating learning of a group of people on a social chat network. The overall design of this bot is inspired by my attempt to clone my brain into software. For darqbot to be considered a success, it would need to become a very effective learning tool, aimed at improving ones understanding of machine code, algorithms/data structures & other programming constructs, various *nix/GNU tools & software, raw network protocols, politics, science, linguistics, mathematics, artificial intelligence and/or genetic algorithms; with an emphasis on fun & operating in collaboritive social networks.
 
 Keep in mind this is version 0.1, which means this software is still in it's infantile stage. Surely there will be plenty of bug fixes, refactoring, and optimization to come. It is running pretty good in Valgrind, though I do not free the swap_inmem structures because those are to remain frozen in time until an absolute exit. That being said, I am finally happy with the overall core & structure of the bot. Due to the stackable communication layers and overall modularity of the bot, it has finally reached a stage where it can really start growing. I plan to keep this project going for years, adding important functionality as well as "test code" for api's and such as modules, for examples & general toying around.
 
@@ -117,7 +117,7 @@ Version 1.0 Checklist:
 [-] Perfect hash system for organizing triggers, embedded within dlist_t.
 [-] On-disk swapping of data structures for re-loading after possible crashes or restarts
     - In-mem swapping already exists
-[-] gmod_gfdpass: FD Passing daemon, which is able to pass raw sockets over a unix domain socket with credentials
+[x] gmod_gfdpass: FD Passing daemon, which is able to pass raw sockets over a unix domain socket with credentials
 [-] Raw tcp/ip/udp/icmp communication, ability to create/destroy rfc-compliant TCP connections using raw sockets.
 [-] TCP connection resuming via gmod_gfdpass AND on-disk swapping of TCB/tcp-ip state info
     - Must be able to resume tcp connections after reboot based on saved state in on-disk swapped state structs.
@@ -356,6 +356,9 @@ gmod_grelay.c     : relay module, used to pass control to a parser (parse2) or a
 gmod_grelinkc.c   : relink client
 gmod_grelinkd.c   : relink daemon
 gmod_gssl.c       : forces SSL communication
+gmod_gfdpassc.c   : fd passing client
+gmod_gfdpassd.c   : fd passing daemon (should run out of bot_rootd
+gmod_gsniff.c     : utilizes gfdpassc to request a raw socket, then sniffs & logs traffic
 mod_alias.c       : creates, deletes, or runs aliases. Used to save long expressions into short triggers, such as ^a ls /etc
 mod_attrib.c      : performs attributes on "irc text". bold, underline, multi (force multi line output), 
 mod_auto_rejoin.c : monitors lowest level i/o, rejoins if kicked
@@ -474,6 +477,8 @@ local.conf - connect to local ircd
 localssl.conf - connect to local ircd over ssl
 pipe-tcptounix.conf - listen on a tcp socket and then connect to local ircd via unix domain, tcp <-pipe-> unix
 
+fdpassc.conf - example fd passing client (requests an fd from fdpassd)
+fdpassd.conf - example fd passing daemon (responds to an fd request from fdpassc)
 
 
 
@@ -713,6 +718,29 @@ rm -f /tmp/$FILE
 13:13 < uas>     ;@@@;       ;:..
 13:13 < uas>   .   .   .   .
 
+
+  <@kx> ^bin(pic2ascii,http://d2v75xn1eqsd0m.cloudfront.net/uploads/images/scaled_full_4e63cdc484a322b13cc6.jpg -W 30)|^e|^multi
+  < uas>
+  < uas>
+  < uas>        ..:..
+  < uas>      .;%888%;:.
+  < uas>      :S:@t@;@t..
+  < uas>      :%8;%8S8tttt;;::...
+  < uas>      .;X8%S88888:88888Xt:.
+  < uas>      .:;8.%   S;  88@888t.
+  < uas>       .;S8X  88: @S@@8@@t..
+  < uas>       .::.%8@::.tSX888@%;.
+  < uas>       .:;S888.X:@X:.;;;:.
+  < uas>       .;@tX@;S88@%.. ..
+  < uas>       .t88 .@%X%t..
+  < uas>       :;@t8;%St;:..
+  <@cantelope> wow neat
+  <@cantelope> :)
+  <@cantelope> your bot generated an ascii art from my art basted on an ascii art
+  <@cantelope> lol
+  <@cantelope> the cosmic ballet continues
+ 
+nice colors :)
 
 
 
@@ -1717,8 +1745,8 @@ fgdef = normal foreground rainbow colors
 
 
 
-mod_rand.c: ^rand, ^rand(num,word,data)
----------------------------------------
+mod_rand.c: ^rand, ^rand(num,word,data,line)
+---------------------------------------------
 - randomize stuff
 
 
@@ -1759,6 +1787,30 @@ you have to use the ^! crush trigger in order to crush possible random generated
 < dbot> ;êT ¿«ÚKÖá
 
 notice ^!..
+
+
+
+
+^rand(line) examples:
+
+  <@kx> ^var(maxflooding) 20
+  <@kx> ^cat(<) urls|^rand(line)|^push|^e
+  <@kx> ^pop|^e
+  <@kx> ^bin(googimg,fark)|^cat(>) urls
+  <@kx> ^bin(googimg,kitten)|^cat(>>) urls
+  <@kx> ^bin(googimg,dog)|^cat(>>) urls
+  <@kx> ^cat(<) urls|^rand(line)|^push|^e
+  < uas> http://picturesforcoloring.com/wp-content/uploads/2012/03/kitten-picture-cute.jpg
+  <@kx> ^cat(<) urls|^rand(line)|^push|^e
+  < uas> http://static.neatoshop.com/images/product/67/1967/Its-Not-News-Its-FARK_7944-l.jpg
+  <@kx> ^bin(pic2ascii,^(^pop) )|^e|^multi
+ 
+
+
+  <@kx> ^bin(googimg,bolt)|^rand(line)|^e
+  < uas> http://www.imagesu.net/data/media/774/bolt_02.jpg
+
+
 
 
 

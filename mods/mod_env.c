@@ -204,7 +204,6 @@ char *env_change_string(bot_t * bot, char *string, int opt)
 char *env_op_setenv(struct avl_table **tree, char *string)
 {
 	env_t *e = NULL, *e2 = NULL;
-	void *v = NULL;
 	char *tok_name = NULL, *tok_value = NULL;
 
 	debug(NULL, "env_op_setenv: Entered: tree=%p\n", tree);

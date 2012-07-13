@@ -97,9 +97,16 @@ bot_t *rand_run(dlist_t * dlist_node, bot_t * bot)
 		opt = RAND_NUM;
 	} else if (!strncasecmp_len(dl_options_ptr, "data")) {
 		opt = RAND_DATA;
+	} else if (!strncasecmp_len(dl_options_ptr, "line")) {
+		opt = RAND_LINE;
 	}
 
 	MOD_OPTIONS_BOTTOM_HALF;
+
+	if (opt == RAND_LINE) {
+		rand_op_line(bot);
+		return bot;
+	}
 
 	MOD_PARSE_TOP_HALF_NODL;
 	l_new_str = rand_change_string(l_str_ptr, opt);
@@ -221,4 +228,40 @@ char *rand_op_data(char *string)
 	}
 
 	return data;
+}
+
+void rand_op_line(bot_t * bot)
+{
+	int array_sz = 0, rand_index = 0;
+	char **array = NULL;
+	char *sep_ptr = NULL, *string = NULL;
+
+	debug(NULL, "rand_op_line: Entered\n");
+
+	if (!bot)
+		return;
+
+	string = bot->txt_data_out;
+
+	sep_ptr = str_find_sep(string);
+	if (sep_ptr)
+		string = sep_ptr;
+
+	array =
+	    tokenize_array(NULL, string,
+			   TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE |
+			   TOKENIZE_MATCHANY, "\r\n", &array_sz);
+	if (!array)
+		return;
+
+	rand_index = rand() % array_sz;
+	if (rand_index < 0 || rand_index > array_sz)
+		return;
+
+	strzero_bot(bot->txt_data_out);
+	strlcat_bot(bot->txt_data_out, array[rand_index]);
+
+	tokenize_destroy_array(NULL, array);
+
+	return;
 }

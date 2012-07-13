@@ -94,6 +94,9 @@ enum mod_func_ops {
 	MOD_FUNC_ISPRINT,
 	MOD_FUNC_ISXDIGIT,
 	MOD_FUNC_ISGRAPH,
+
+/* syscalls */
+	MOD_FUNC_EXIT,
 };
 
 void func_switch(char *);
@@ -156,5 +159,8 @@ int (*func_isspace) (int);
 int (*func_isprint) (int);
 int (*func_isxdigit) (int);
 int (*func_isgraph) (int);
+
+/* syscalls */
+void (*func_exit) (int);
 
 #endif

@@ -37,6 +37,8 @@ typedef struct gmod_gfdpassc {
 
 	int null;
 
+	int fd;
+
 } gfdpassc_t;
 
 module_t gmod_gfdpassc_info;
@@ -72,5 +74,7 @@ bot_t *gfdpassc_destroy_down_gfdpassc(gfdpassc_t *);
 void gfdpassc_gmod_init(bot_t *, bot_gmod_elm_t *, dlist_t *);
 
 void gfdpassc_free(void *);
+
+bot_t *gfdpassc_input_get(gfdpassc_t *);
 
 #endif

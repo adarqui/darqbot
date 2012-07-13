@@ -64,6 +64,27 @@ dlist_t *control_add_fdpass(control_t * control, int fd)
 	return dptr;
 }
 
+dlist_t *control_add_sendmsg(control_t * control, struct msghdr * msg)
+{
+	dlist_t *dptr = NULL;
+	control_sub_t *control_sub;
+
+	debug(NULL, "control_add_sendmsg: Entered\n");
+
+	if (!control)
+		return NULL;
+
+	control_sub = control_sub_init();
+	if (!control_sub)
+		return NULL;
+
+	control_sub->type = CONTROL_SUB_SENDMSG;
+	control_sub->val_data = msg;
+
+	dptr = dlist_Dinsert_after(&control->dl_subs, control_sub);
+	return dptr;
+}
+
 dlist_t *control_bot_add(bot_t * bot, control_t * control)
 {
 	dlist_t *dptr = NULL;
@@ -135,6 +156,44 @@ int control_get_fdpass(dlist_t ** dl_control)
 	}
 
 	return -1;
+}
+
+fdpass_control_t *control_get_sendmsg(dlist_t ** dl_control)
+{
+	control_t *control;
+	control_sub_t *control_sub;
+	dlist_t *dptr_control, *dptr_control_sub, *dptr_tmp_1, *dptr_tmp_2;
+	fdpass_control_t *fc = NULL;
+
+	debug(NULL, "control_get_sendmsg: Entered\n");
+
+	if (!dl_control)
+		return NULL;
+
+	dlist_fornext_retarded(*dl_control, dptr_control, dptr_tmp_1) {
+		if (!dptr_control)
+			break;
+		control = (control_t *) dlist_data(dptr_control);
+		dlist_fornext_retarded(control->dl_subs, dptr_control_sub,
+				       dptr_tmp_2) {
+			if (!dptr_control_sub)
+				break;
+			control_sub =
+			    (control_sub_t *) dlist_data(dptr_control_sub);
+			if (control_sub->type == CONTROL_SUB_SENDMSG) {
+				fc = control_sub->val_data;
+				debug(NULL,
+				      "control_get_sendmsg; FOUND %p\n",
+				      control_sub->val_data);
+				dlist_remove_and_free(&control->dl_subs,
+						      &dptr_control_sub,
+						      control_sub_fini);
+				return fc;
+			}
+		}
+	}
+
+	return NULL;
 }
 
 int control_get_fdpass_find(dlist_t ** dl_control)

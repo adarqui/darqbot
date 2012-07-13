@@ -13,6 +13,7 @@
 .global intel2_strchr
 .global intel2_strrchr
 .global intel2_strcpy
+.global intel2_strncpy
 .global intel2_bzero
 .global intel2_memset
 .global intel2_mul
@@ -47,6 +48,7 @@
 .global intel2_islower
 .global intel2_toupper
 .global intel2_tolower
+.global intel2_linux_exit
 	.type intel2_true, @function
 	.type intel2_false, @function
 	.type intel2_self, @function
@@ -57,6 +59,7 @@
 	.type intel2_strchr, @function
 	.type intel2_strrchr, @function
 	.type intel2_strcpy, @function
+	.type intel2_strncpy, @function
 	.type intel2_bzero, @function
 	.type intel2_memset @function
 	.type intel2_mul, @function
@@ -91,6 +94,7 @@
 	.type intel2_islower,@function
 	.type intel2_toupper,@function
 	.type intel2_tolower,@function
+	.type intel2_linux_exit,@function
 
 
 intel2_true:
@@ -162,6 +166,7 @@ intel2_strlen2:
 	not %ecx
         repne scasb
 	not %ecx
+	dec %ecx
 	mov %eax, %ecx
 
         pop %edi
@@ -361,6 +366,44 @@ intel2_strcpy:
 	pop %esi
 	leave
 	ret
+
+
+
+intel2_strncpy:
+        push %ebp
+        mov %ebp, %esp
+
+	push %ecx
+        push %esi
+        push %edi
+
+        mov %edi, 8[%ebp]
+        mov %esi, 12[%ebp]
+	mov %ecx, 16[%ebp]
+
+        .Lintel2_strncpy_start:
+        movb %al, [%esi]
+        movb [%edi], %al
+        cmp %al, 0
+        je .Lintel2_strncpy_done
+        inc %edi
+        inc %esi
+	dec %ecx
+	cmp %ecx, 0
+        je .Lintel2_strncpy_done
+        jmp .Lintel2_strncpy_start
+
+        .Lintel2_strncpy_done:
+        mov %eax, 8[%ebp]
+
+        pop %edi
+        pop %esi
+	pop %ecx
+
+        leave
+        ret
+
+
 
 
 intel2_bzero:
@@ -934,4 +977,22 @@ intel2_tolower:
         out_tolower:
         leave
         ret
+
+
+
+
+intel2_linux_exit:
+# void intel2_linux_exit(int)
+	push %ebp
+	mov %ebp, %esp
+	push %ebx
+
+	mov %ebx, 8[%ebp]
+	mov %eax, 1
+	int 0x80
+	hlt
+
+	pop %ebx
+	leave
+	ret
 

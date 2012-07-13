@@ -155,7 +155,6 @@ pmodule_cur_set(bot_t * (*fn) (dlist_t *, bot_t *), dlist_t * dlist_node,
 
 void pmodule_cur_clear(void)
 {
-	debug(NULL, "pmodule_cur_clear: Entered\n");
 
 	gi->pmod_cur = NULL;
 	gi->pmod_cur_dlist_node = NULL;
@@ -167,7 +166,7 @@ void pmodule_cur_clear(void)
 bot_t *pmodule_cur_run(void)
 {
 
-	debug(NULL, "pmodule_ur_run: Entered\n");
+	debug(NULL, "pmodule_cur_run: Entered\n");
 
 	if (gi->pmod_cur && gi->pmod_cur_dlist_node && gi->pmod_cur_bot) {
 		return gi->pmod_cur(gi->pmod_cur_dlist_node, gi->pmod_cur_bot);
