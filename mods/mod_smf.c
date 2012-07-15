@@ -92,7 +92,7 @@ bot_t *smf_run(dlist_t * dlist_node, bot_t * bot)
 	      "smf_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	subforum = "the-hole";
@@ -130,7 +130,7 @@ bot_t *smf_run(dlist_t * dlist_node, bot_t * bot)
 		array_size = 5;
 		array =
 		    tokenize_array(bot,
-				   eat_whitespace(dl_module_arg_after_options),
+				   _eat_whitespace(dl_module_arg_after_options),
 				   TOKENIZE_NORMAL, " ", &array_size);
 		for (i = 0; array[i] != NULL; i++) {
 			printf("OMG %s\n", array[i]);
@@ -431,7 +431,7 @@ smf_info_t *smf_parse_cookies(bot_t * bot, smf_info_t * si)
 			return NULL;
 
 		while (1) {
-			memset(buf, 0, sizeof(buf));
+			_memset(buf, 0, sizeof(buf));
 			if (fgets(buf, sizeof(buf) - 1, fp) == NULL)
 				break;
 
@@ -444,7 +444,7 @@ smf_info_t *smf_parse_cookies(bot_t * bot, smf_info_t * si)
 				if (!s)
 					continue;
 				si->smf_phpsessid = strdup(s);
-				strstrip_nl(si->smf_phpsessid);
+				_strstrip_nl(si->smf_phpsessid);
 				printf("Cookie PHPSESSID=%s\n",
 				       si->smf_phpsessid);
 			}
@@ -458,7 +458,7 @@ smf_info_t *smf_parse_cookies(bot_t * bot, smf_info_t * si)
 				if (!s)
 					continue;
 				si->smf_cookie = strdup(s);
-				strstrip_nl(si->smf_cookie);
+				_strstrip_nl(si->smf_cookie);
 				printf("Cookie SMFCookie60=%s\n",
 				       si->smf_cookie);
 			}
@@ -625,21 +625,21 @@ int curl_sc_seqnum_acttopic(smf_info_t * si, char *buf)
 			val = strstr(op, "value=\"");
 			val = &val[strlen("value=\"")];
 			si->smf_post_sc = strdup(val);
-			val = strchr(si->smf_post_sc, '\"');
+			val = _strchr(si->smf_post_sc, '\"');
 			if (val)
 				*val = '\0';
 		} else if (!strncasecmp(op, "seqnum\"", strlen("seqnum\""))) {
 			val = strstr(op, "value=\"");
 			val = &val[strlen("value=\"")];
 			si->smf_post_seqnum = strdup(val);
-			val = strchr(si->smf_post_seqnum, '\"');
+			val = _strchr(si->smf_post_seqnum, '\"');
 			if (val)
 				*val = '\0';
 		} else if (!strncasecmp(op, "acttopic\"", strlen("acttopic\""))) {
 			val = strstr(op, "value=\"");
 			val = &val[strlen("value=\"")];
 			si->smf_post_acttopic = strdup(val);
-			val = strchr(si->smf_post_acttopic, '\"');
+			val = _strchr(si->smf_post_acttopic, '\"');
 			if (val)
 				*val = '\0';
 		}
@@ -688,7 +688,7 @@ smf_info_t *smf_finix(bot_t * bot, smf_info_t * si)
 
 //  struct curl_slist *cookies;
 
-	memset(si, 0, sizeof(smf_info_t));
+	_memset(si, 0, sizeof(smf_info_t));
 	free(si);
 
 	return NULL;

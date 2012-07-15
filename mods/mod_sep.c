@@ -80,7 +80,8 @@ bot_t *sep_help(dlist_t * dlist_node, bot_t * bot)
 		(bot->trig_called, STR_MATCH_STRCASECMP, 0, "^#", NULL)) {
 		bot->dl_module_help =
 		    "^# ::: initializes or ends a comment, text in between comment triggers is not processed";
-	} else {
+}
+	 else {
 		bot->dl_module_help = "^sep ::: ^: || ^!";
 	}
 
@@ -104,7 +105,7 @@ bot_t *sep_run(dlist_t * dlist_node, bot_t * bot)
 
 /*
   NEED THIS DISABLED SO ^# will work after it's set
-  if (bot_shouldreturn (bot))
+  if (_bot_shouldreturn (bot))
     return NULL;
 */
 
@@ -123,13 +124,13 @@ bot_t *sep_run(dlist_t * dlist_node, bot_t * bot)
 		charcat_bot(bot->txt_data_out, 0x01);
 		strlcat_bot(bot->txt_data_out, bot->txt_data_in);
 		strlcat_bot(bot->txt_data_out,
-			    eat_whitespace(bot->dl_module_arg));
+			    _eat_whitespace(bot->dl_module_arg));
 	} else if (sub == MOD_SEP_CRUSH) {
 		str_clean_sep_shrink(bot->txt_data_out,
 				     strlen(bot->txt_data_out) + 1);
 		strlcat_bot(bot->txt_data_out, bot->txt_data_in);
 		strlcat_bot(bot->txt_data_out,
-			    eat_whitespace(bot->dl_module_arg));
+			    _eat_whitespace(bot->dl_module_arg));
 	} else if (sub == MOD_SEP_COMMENT) {
 		if (bot->iscomment)
 			bot->iscomment = 0;

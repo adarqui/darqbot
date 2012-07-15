@@ -125,7 +125,7 @@ bot_t *grelay_run(dlist_t * dlist_node, bot_t * bot)
 	     "grelay_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
 	     bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-  if (bot_shouldreturn (bot))
+  if (_bot_shouldreturn (bot))
     return NULL;
 
 gmod = gmodule_find_gmod(bot, gmod_grelay_info.trigger, gmod_grelay_info.trigger_ext);
@@ -155,7 +155,7 @@ return NULL;
   if (!tok_1)
     return NULL;
 
-  str_ptr = strchr (tok_2, '(');
+  str_ptr = _strchr (tok_2, '(');
   if (str_ptr)
     {
       tok_3 = strdup_len (tok_2, (str_ptr - tok_2));
@@ -190,10 +190,10 @@ return NULL;
   if (!module->run)
     goto cleanup;
 
-  memset (bot->trig_called, 0, sizeof (bot->trig_called));
+  _memset (bot->trig_called, 0, sizeof (bot->trig_called));
   strlcpy_buf (bot->trig_called, tok_2, sizeof (bot->trig_called) - 1);
 
-  bot->dl_module_arg = bot->trig_called + fn_strlen (tok_3);
+  bot->dl_module_arg = bot->trig_called + _strlen (tok_3);
 
   bot->isprivmsg = 1;
 
@@ -229,7 +229,7 @@ char *grelay_change_string(bot_t * bot, char *string, int opt)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	return str;
 }
@@ -265,8 +265,10 @@ bot_t *grelay_input(dlist_t * dlist_node, bot_t * bot)
 	      "grelay_input: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+/*
+	if (_bot_shouldreturn(bot))
 		return NULL;
+*/
 
 	gmod = (bot_gmod_elm_t *) dlist_data(dlist_node);
 	if (!gmod)
@@ -317,7 +319,7 @@ bot_t *grelay_input(dlist_t * dlist_node, bot_t * bot)
 
 		tok_2 = strdup(tok_2);
 
-		str_ptr = strchr(tok_2, '(');
+		str_ptr = _strchr(tok_2, '(');
 
 		if (str_ptr) {
 			tok_3 = strdup_len(tok_2, (str_ptr - tok_2));
@@ -349,11 +351,11 @@ bot_t *grelay_input(dlist_t * dlist_node, bot_t * bot)
 			goto cleanup;
 
 /*
-      memset (&bot->trig_called, 0, sizeof (bot->trig_called));
+      _memset (&bot->trig_called, 0, sizeof (bot->trig_called));
 */
 		bz(bot->trig_called);
 		strlcpy_buf(bot->trig_called, tok_2);
-		bot->dl_module_arg = bot->trig_called + fn_strlen(tok_3);
+		bot->dl_module_arg = bot->trig_called + _strlen(tok_3);
 		printf("trig_called=%s, tok_2=%s, tok_3=%s\n", bot->trig_called,
 		       tok_2, tok_3);
 

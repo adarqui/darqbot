@@ -61,7 +61,7 @@ char *environ_get(bot_t * bot, char *key)
 	dlist_fornext(bot->dl_environ, dptr) {
 		str = dlist_data(dptr);
 
-		tok_1 = strchr(str, '=');
+		tok_1 = _strchr(str, '=');
 		if (!tok_1)
 			continue;
 
@@ -84,7 +84,7 @@ bot_t *environ_unset(bot_t * bot, char *key)
 	dlist_fornext(bot->dl_environ, dptr) {
 		str = dlist_data(dptr);
 
-		tok_1 = strchr(str, '=');
+		tok_1 = _strchr(str, '=');
 		if (!tok_1)
 			continue;
 
@@ -255,7 +255,7 @@ char *environ_sub_envs(bot_t * bot, char *str)
 		tok = tok_2 + 3;
 	}
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		new_str = strdup(buf);
 	return new_str;
 }

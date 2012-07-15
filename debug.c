@@ -316,7 +316,7 @@ void debug_print_backtrace(void)
 
 	int i;
 
-	memset(bt_array, 0, 20 * sizeof(void *));
+	_memset(bt_array, 0, 20 * sizeof(void *));
 	bt_size = backtrace(bt_array, 20);
 
 	bt_strings = backtrace_symbols(bt_array, bt_size);
@@ -423,7 +423,7 @@ void bot_dl_print_change_strings(bot_t * bot, char *s1, char *s2)
 	if (!s1 || !s2)
 		return;
 
-	if (!strcmp(s1, s2))
+	if (!_strcmp(s1, s2))
 		return;
 
 	if (strlen(s1) != strlen(s2))

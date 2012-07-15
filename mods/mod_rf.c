@@ -99,7 +99,7 @@ bot_t *rf_run(dlist_t * dlist_node, bot_t * bot)
 	      "rf_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	MOD_OPTIONS_TOP_HALF;
@@ -120,7 +120,7 @@ bot_t *rf_run(dlist_t * dlist_node, bot_t * bot)
 
 	strlcpy_safe(&trig_tmp[1], ret_trig(&array[rand_val][1]),
 		     sizeof(trig_tmp) - 2);
-	if (!sNULL(&trig_tmp[1]))
+	if (!_sNULL(&trig_tmp[1]))
 		return NULL;
 
 	trig_tmp[0] = '^';

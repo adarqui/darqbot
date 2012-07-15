@@ -84,7 +84,7 @@ bot_t *rand_run(dlist_t * dlist_node, bot_t * bot)
 	      "rand_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = RAND_WORD;
@@ -152,10 +152,10 @@ char *rand_op_word(char *string)
 	int i, word_array[500], word_cnt, rand_val;
 	char *str = NULL, *str_ptr = NULL;
 
-	if (!sNULL(string))
+	if (!_sNULL(string))
 		return NULL;
 
-	memset(word_array, 0, sizeof(word_array));
+	_memset(word_array, 0, sizeof(word_array));
 
 /* return a random word */
 	word_cnt = 0;

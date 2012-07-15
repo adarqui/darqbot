@@ -241,7 +241,7 @@ int parse2_handle_text_pipes(dlist_t * dlist_node, bot_t * bot, void *arg_info)
 			str_ptr = NULL;
 		}
 
-		memset(bot->txt_data_in, 0, sizeof(bot->txt_data_in));
+		_memset(bot->txt_data_in, 0, sizeof(bot->txt_data_in));
 
 		if (text_list) {
 			dlist_fornext(text_list, dptr) {
@@ -261,13 +261,13 @@ int parse2_handle_text_pipes(dlist_t * dlist_node, bot_t * bot, void *arg_info)
 
 				trig_ptr = NULL;
 
-				trig_ptr = eat_whitespace(str_ptr);
+				trig_ptr = _eat_whitespace(str_ptr);
 
 				debug(NULL,
 				      "parse2_handle_text_pipes: trig_prefix=%s, trig_ptr=%s\n",
 				      bot->trig_prefix, trig_ptr);
 
-				if (sNULL(bot->trig_prefix)) {
+				if (_sNULL(bot->trig_prefix)) {
 					if (!strncasecmp_len
 					    (trig_ptr, bot->trig_prefix)) {
 						trig_ptr =
@@ -287,9 +287,9 @@ int parse2_handle_text_pipes(dlist_t * dlist_node, bot_t * bot, void *arg_info)
 				bz(bot->trig_called);
 				strlcpy_buf(bot->trig_called, trig_ptr);
 
-				if (!strncmp(bot->trig_called, "^:", 2)
-				    || !strncmp(bot->trig_called, "^!", 2)
-				    || !strncmp(bot->trig_called, "^#", 2)) {
+				if (!_strncmp(bot->trig_called, "^:", 2)
+				    || !_strncmp(bot->trig_called, "^!", 2)
+				    || !_strncmp(bot->trig_called, "^#", 2)) {
 					bot->trig_called[2] = '\0';
 				} else {
 					for (i = 1;
@@ -316,7 +316,7 @@ int parse2_handle_text_pipes(dlist_t * dlist_node, bot_t * bot, void *arg_info)
 				trigfound_ptr = module->trigger;
 
 				trig_called_proper_len =
-				    fn_strlen(bot->trig_called);
+				    _strlen(bot->trig_called);
 
 				subtrig_found = 1;
 
@@ -364,7 +364,7 @@ int parse2_handle_text_pipes(dlist_t * dlist_node, bot_t * bot, void *arg_info)
 			      "parse2_handle_text_pipes: text_list=NULL\n");
 	}
 
-	if (!sNULL(bot->txt_data_out)) {
+	if (!_sNULL(bot->txt_data_out)) {
 	}
 
  cleanup:
@@ -373,7 +373,7 @@ int parse2_handle_text_pipes(dlist_t * dlist_node, bot_t * bot, void *arg_info)
 	str_clean_sep_shrink(bot->txt_data_out, strlen(bot->txt_data_out));
 
 /* cleaning up bot data */
-	memset(&bot->trig_called, 0, sizeof(bot->trig_called));
+	_memset(&bot->trig_called, 0, sizeof(bot->trig_called));
 
 	return 0;
 }
@@ -399,6 +399,15 @@ void parse2_build_text_list(dlist_t ** dl, char *input, int len, int type)
 
 		trig = strstr(input, "^(");
 		if (!trig) {
+
+/*
+
+*/
+trig = strstr(input, "^[");
+if(trig) {
+trig[1] = '(';
+}
+
 			if (type == 0 && strlen(input)) {
 				tl = (text_list_t *) calloc(1,
 							    sizeof
@@ -498,7 +507,7 @@ parse2_build_text_list_run(dlist_t * dl_text, dlist_t * dl_node, bot_t * bot,
 	if (!dl_text || !bot)
 		return;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	dlist_fornext(dl_text, dptr_1) {
 /* left to right among the root nodes */
@@ -524,9 +533,9 @@ parse2_build_text_list_run(dlist_t * dl_text, dlist_t * dl_node, bot_t * bot,
 					debug(NULL,
 					      "parse2_build_text_list_run: -> %s\n",
 					      tl_2->string);
-					memset(bot->txt_data_in, 0,
+					_memset(bot->txt_data_in, 0,
 					       sizeof(bot->txt_data_in));
-					memset(bot->txt_data_out, 0,
+					_memset(bot->txt_data_out, 0,
 					       sizeof(bot->txt_data_out));
 					if (tl_2->string_new)
 						snprintf_buf(bot->txt_data_in,
@@ -575,8 +584,8 @@ parse2_build_text_list_run(dlist_t * dl_text, dlist_t * dl_node, bot_t * bot,
 
 	}
 
-	memset(bot->txt_data_in, 0, sizeof(bot->txt_data_in));
-	memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
+	_memset(bot->txt_data_in, 0, sizeof(bot->txt_data_in));
+	_memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
 	strlcat_bot(bot->txt_data_in, buf);
 	parse2_handle_text_pipes(NULL, bot, arg_info);
 
@@ -597,7 +606,7 @@ parse2_build_text_list_replace_last(dlist_t * dl_text_list, text_list_t * tl)
 	if (!dl_text_list || !tl)
 		return -1;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	tail_or_head =
 	    dlist_tail(dl_text_list) ? dlist_tail(dl_text_list) : dl_text_list;
@@ -687,10 +696,10 @@ parse2_process_options(dlist_t * dlist_node, bot_t * bot, char *string,
 
 	debug(bot, "parse2_process_options: Entered\n");
 
-	if (!bot || !sNULL(string) || !p2data)
+	if (!bot || !_sNULL(string) || !p2data)
 		return;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	dl = tokenize(bot, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES,
 		      "...");
@@ -712,7 +721,7 @@ parse2_process_options_parse(void *future, bot_t * bot, char *string,
 			     parse2_data_t * p2data)
 {
 
-	if (!bot || !sNULL(string) || !p2data)
+	if (!bot || !_sNULL(string) || !p2data)
 		return;
 
 	debug(bot, "parse2_process_options_parse: Entered\n");
@@ -768,7 +777,7 @@ parse2_process_options_parse_deny(void *future, bot_t * bot, char *string,
 	dlist_t *dl, *dptr;
 	char *trigger;
 
-	if (!bot || !sNULL(string) || !p2data)
+	if (!bot || !_sNULL(string) || !p2data)
 		return;
 
 	dl = tokenize(bot, string,
@@ -791,7 +800,7 @@ parse2_process_options_parse_deny(void *future, bot_t * bot, char *string,
 
 void parse2_allow_add(parse2_data_t * p2data, char *trigger)
 {
-	if (!p2data || !sNULL(trigger))
+	if (!p2data || !_sNULL(trigger))
 		return;
 
 	if (parse2_allow_find(p2data, trigger))
@@ -821,7 +830,7 @@ int parse2_allow_find(parse2_data_t * p2data, char *trigger)
 	char *allow_ptr;
 	int ret;
 
-	if (!p2data || !sNULL(trigger))
+	if (!p2data || !_sNULL(trigger))
 		return 0;
 
 	if (!p2data->allow)
@@ -843,7 +852,7 @@ int parse2_allow_find(parse2_data_t * p2data, char *trigger)
 
 void parse2_deny_add(parse2_data_t * p2data, char *trigger)
 {
-	if (!p2data || !sNULL(trigger))
+	if (!p2data || !_sNULL(trigger))
 		return;
 
 	if (parse2_deny_find(p2data, trigger))
@@ -873,7 +882,7 @@ int parse2_deny_find(parse2_data_t * p2data, char *trigger)
 	char *deny_ptr;
 	int ret;
 
-	if (!p2data || !sNULL(trigger))
+	if (!p2data || !_sNULL(trigger))
 		return 0;
 
 	if (!p2data->deny)

@@ -125,7 +125,7 @@ bot_t *gexec_run(dlist_t * dlist_node, bot_t * bot)
 	      "gexec_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	dptr_gmod =
@@ -187,7 +187,7 @@ char *gexec_process_options(gexec_t * gexec, char *string)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	dl = tokenize(NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES,
 		      "...");
@@ -248,7 +248,7 @@ char *gexec_change_string(bot_t * bot, char *string, int opt)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	return str;
 }
@@ -512,7 +512,8 @@ int gexec_exec(gexec_t * gexec)
 
 		execve(argv[0], argv, environ);
 		puts("ERROR");
-		exit(0);
+/* exit(0) */
+		bot_fork_clean_exit(NULL);
 		return 0;
 	} else {
 		close(gexec->pipe[0]);

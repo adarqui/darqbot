@@ -38,7 +38,7 @@ clean_quote (char *str)
   char buf[QUOTE_BUF_SZ];
 
   i = 0;
-  memset (buf, 0, sizeof (buf));
+  _memset (buf, 0, sizeof (buf));
   while (*str)
     {
       if (*str == ' ' || *str == '\t')
@@ -181,7 +181,7 @@ while(*buf_ptr!=' ') buf_ptr++;
 		    fprintf (fp_out, "%i %s %s\n", quote_word_count, filename,
 			     quote_ptr);
 //clean_
-		  memset (quote, 0, sizeof (quote));
+		  _memset (quote, 0, sizeof (quote));
 		  quote_begin = 0;
 		  quote_index = 0;
 		  buf_ptr++;
@@ -190,7 +190,7 @@ while(*buf_ptr!=' ') buf_ptr++;
 
 	      if (quote_index > sizeof (quote))
 		{
-		  memset (quote, 0, sizeof (quote));
+		  _memset (quote, 0, sizeof (quote));
 		  quote_begin = 0;
 		  buf_ptr++;
 		  continue;
@@ -203,7 +203,7 @@ while(*buf_ptr!=' ') buf_ptr++;
 		{
 		  puts ("FOUND QUOTE");
 		  quote_begin = 1;
-		  memset (quote, 0, sizeof (quote));
+		  _memset (quote, 0, sizeof (quote));
 		  quote_index = 0;
 		  quote[quote_index] = *buf_ptr;
 		  quote_index++;
@@ -256,7 +256,7 @@ while(*buf_ptr!=' ') buf_ptr++;
 	      if (*buf_ptr == '\"')
 		{
 		  quote_begin = 1;
-		  memset (quote, 0, sizeof (quote));
+		  _memset (quote, 0, sizeof (quote));
 		  buf_ptr++;
 		  break;
 		}

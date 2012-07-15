@@ -83,7 +83,7 @@ bot_t *md5_run(dlist_t * dlist_node, bot_t * bot)
 	      "md5_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -109,7 +109,7 @@ char *md5_change_string(char *string, int opt)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	if (!sNULL(string))
+	if (!_sNULL(string))
 		return NULL;
 
 	m = (MD5_CTX *) malloc(sizeof(MD5_CTX));

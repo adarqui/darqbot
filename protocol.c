@@ -65,7 +65,7 @@ void nick_free(void *arg)
 	if (nick_ptr->realname)
 		free(nick_ptr->realname);
 
-	memset(nick_ptr, 0, sizeof(nick_t));
+	_memset(nick_ptr, 0, sizeof(nick_t));
 
 	free(nick_ptr);
 
@@ -84,7 +84,7 @@ void server_free(void *arg)
 	if (server_ptr->host)
 		free(server_ptr->host);
 
-	memset(server_ptr, 0, sizeof(server_t));
+	_memset(server_ptr, 0, sizeof(server_t));
 
 	free(server_ptr);
 
@@ -114,7 +114,7 @@ void channel_free(void *arg)
 
 	dlist_fini(&channel_ptr->dl_users, free);
 
-	memset(channel_ptr, 0, sizeof(channel_t));
+	_memset(channel_ptr, 0, sizeof(channel_t));
 
 	free(channel_ptr);
 

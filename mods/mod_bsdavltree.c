@@ -97,7 +97,7 @@ bot_t *bsdavltree_run(dlist_t * dlist_node, bot_t * bot)
 	      "bsdavltree_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt_type = BSDAVLTREE_TYPE_STR;
@@ -146,7 +146,7 @@ bot_t *bsdavltree_run(dlist_t * dlist_node, bot_t * bot)
 		opt_op = BSDAVLTREE_OP_POSTORDER;
 	}
 
-	tok_op = eat_whitespace(tok_op);
+	tok_op = _eat_whitespace(tok_op);
 
 	MOD_OPTIONS_BOTTOM_HALF;
 
@@ -266,7 +266,7 @@ char *bsdavltree_op_find(bsdavl_trees_t * bt, char *string, int opt_type)
 	if (!tok)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 	switch (opt_type) {
 	case BSDAVLTREE_TYPE_NUM:
 		{
@@ -392,7 +392,7 @@ char *bsdavltree_op_info(bsdavl_trees_t * bt, char *string, int opt_type)
 		return NULL;
 	}
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 	if (bavlt_traverse == BSDAVLTREE_TRAVERSE_REVERSE) {
 		TREE_REVERSE_APPLY((Tree *) tree_ptr, bsdavl_node, tree,
 				   bsdavl_node_fillbuf, buf);
@@ -401,7 +401,7 @@ char *bsdavltree_op_info(bsdavl_trees_t * bt, char *string, int opt_type)
 				   bsdavl_node_fillbuf, buf);
 	}
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;
@@ -437,7 +437,7 @@ char *bsdavltree_op_traverse(bsdavl_trees_t * bt, char *string, int opt_op,
 		return NULL;
 	}
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	switch (opt_op) {
 	case BSDAVLTREE_OP_PREORDER:
@@ -468,7 +468,7 @@ char *bsdavltree_op_traverse(bsdavl_trees_t * bt, char *string, int opt_op,
 		break;
 	}
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;
@@ -503,13 +503,13 @@ char *bsdavltree_op_tree(bsdavl_trees_t * bt, char *string, int opt_type)
 		return NULL;
 	}
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 	if (bavlt_traverse == BSDAVLTREE_TRAVERSE_REVERSE) {
 		TREE_DEPTH_REVERSE_APPLY(x, y, (Tree *) tree_ptr, bsdavl_node,
 					 tree, bsdavl_node_depth_fillbuf, buf);
 	}
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;
@@ -537,7 +537,7 @@ char *bsdavltree_op_add(bsdavl_trees_t * bt, char *string, int opt_type)
 	if (!dl_toks)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	dlist_fornext(dl_toks, dptr_tok) {
 
@@ -591,7 +591,7 @@ char *bsdavltree_op_add(bsdavl_trees_t * bt, char *string, int opt_type)
 				   bsdavl_node_fillbuf, buf);
 	}
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;
@@ -614,7 +614,7 @@ char *bsdavltree_op_del(bsdavl_trees_t * bt, char *string, int opt_type)
 	if (!bt || !string)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 	switch (opt_type) {
 	case BSDAVLTREE_TYPE_NUM:
 		{
@@ -659,7 +659,7 @@ char *bsdavltree_op_del(bsdavl_trees_t * bt, char *string, int opt_type)
 		}
 	}
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;

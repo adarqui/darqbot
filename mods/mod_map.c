@@ -86,7 +86,7 @@ bot_t *map_run(dlist_t * dlist_node, bot_t * bot)
 	      "map_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = MAP_OPT_NORMAL;
@@ -112,7 +112,7 @@ bot_t *map_run(dlist_t * dlist_node, bot_t * bot)
 	if (!strcasecmp(tok_3, "PIPE"))
 		tok_3 = "|";
 
-	opt_str = eat_whitespace(tok_2);
+	opt_str = _eat_whitespace(tok_2);
 
 	MOD_OPTIONS_BOTTOM_HALF;
 
@@ -122,7 +122,7 @@ bot_t *map_run(dlist_t * dlist_node, bot_t * bot)
 	MOD_PARSE_TOP_HALF_NODL;
 	l_new_str =
 	    map_change_string(dlist_node, bot, l_str_ptr, opt, tok_2, tok_3,
-			      eat_whitespace(tok_4));
+			      _eat_whitespace(tok_4));
 	MOD_PARSE_BOTTOM_HALF_NODL;
 
 	return bot;
@@ -149,7 +149,7 @@ char *map_change_string(dlist_t * dlist_node, bot_t * bot, char *string,
 	if (!dl)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	dlist_fornext(dl, dptr) {
 		tok_ptr = (char *)dlist_data(dptr);

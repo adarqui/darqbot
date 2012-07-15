@@ -29,11 +29,11 @@ void console_info(bot_t * bot, char *arg)
 	if (!bot || !arg)
 		return;
 
-	strstrip_nl(arg);
+	_strstrip_nl(arg);
 
 	debug(bot, "console_info: Entered, arg=[%s]\n", arg);
 
-	if (fn_strlen(arg))
+	if (_strlen(arg))
 		all = 0;
 
 	bot_ptr = bot_find_tag(arg);
@@ -100,7 +100,7 @@ void console_tag_parse(bot_t * bot, char *arg)
 	if (!bot || !arg)
 		return;
 
-	strstrip_nl(arg);
+	_strstrip_nl(arg);
 
 	debug(bot, "console_tag_parse: Entered, arg=[%s]\n", arg);
 
@@ -125,13 +125,13 @@ void console_tag_parse(bot_t * bot, char *arg)
 	}
 
 	else if (!strncasecmp_len(arg, "trace")) {
-		bot_parse_trace(bot, &arg[fn_strlen("trace") + 1], 1);
+		bot_parse_trace(bot, &arg[_strlen("trace") + 1], 1);
 	} else if (!strncasecmp_len(arg, "debug")) {
-		bot_parse_debug(bot, &arg[fn_strlen("debug") + 1], 1);
+		bot_parse_debug(bot, &arg[_strlen("debug") + 1], 1);
 	} else if (!strncasecmp_len(arg, "pid")) {
 		xpid_console_print(bot, bot->tag);
 	} else if (!strncasecmp_len(arg, "brake")) {
-		char *l = &arg[fn_strlen("brake") + 1];
+		char *l = &arg[_strlen("brake") + 1];
 		if (!strcasecmp(l, "on")) {
 			bot->brake = 1;
 		} else if (!strcasecmp(l, "off")) {
@@ -234,47 +234,47 @@ void console_parse(bot_t * bot, char *buf)
 
 	if (!strncasecmp_len(buf, "modload ")) {
 
-		console_modload(&buf[fn_strlen("modload ")]);
+		console_modload(&buf[_strlen("modload ")]);
 	} else if (!strncasecmp_len(buf, "modunload ")) {
-		console_modunload(&buf[fn_strlen("modunload ")]);
+		console_modunload(&buf[_strlen("modunload ")]);
 	} else if (!strncasecmp_len(buf, "modreload ")) {
-		console_modreload(&buf[fn_strlen("modreload ")]);
+		console_modreload(&buf[_strlen("modreload ")]);
 	} else if (!strncasecmp_len(buf, "modlock ")) {
-		module_lock(&buf[fn_strlen("modlock ")]);
+		module_lock(&buf[_strlen("modlock ")]);
 	} else if (!strncasecmp_len(buf, "modunlock ")) {
-		module_unlock(&buf[fn_strlen("modunlock ")]);
+		module_unlock(&buf[_strlen("modunlock ")]);
 	} else if (!strncasecmp_len(buf, "modlist")) {
 		module_list();
 	} else if (!strncasecmp_len(buf, "pmodload ")) {
-		console_pmodload(&buf[fn_strlen("pmodload ")]);
+		console_pmodload(&buf[_strlen("pmodload ")]);
 	} else if (!strncasecmp_len(buf, "pmodunload ")) {
-		console_pmodunload(&buf[fn_strlen("pmodunload ")]);
+		console_pmodunload(&buf[_strlen("pmodunload ")]);
 	} else if (!strncasecmp_len(buf, "pmodreload ")) {
-		console_pmodreload(&buf[fn_strlen("pmodreload ")]);
+		console_pmodreload(&buf[_strlen("pmodreload ")]);
 	} else if (!strncasecmp_len(buf, "pmodlock ")) {
-		pmodule_lock(&buf[fn_strlen("pmodlock ")]);
+		pmodule_lock(&buf[_strlen("pmodlock ")]);
 	} else if (!strncasecmp_len(buf, "pmodunlock ")) {
-		pmodule_unlock(&buf[fn_strlen("pmodunlock ")]);
+		pmodule_unlock(&buf[_strlen("pmodunlock ")]);
 	} else if (!strncasecmp_len(buf, "pmodlist")) {
 		pmodule_list();
 	} else if (!strncasecmp_len(buf, "gmodload ")) {
-		console_gmodload(&buf[fn_strlen("gmodload ")]);
+		console_gmodload(&buf[_strlen("gmodload ")]);
 	} else if (!strncasecmp_len(buf, "gmodunload ")) {
-		console_gmodunload(&buf[fn_strlen("gmodunload ")]);
+		console_gmodunload(&buf[_strlen("gmodunload ")]);
 	} else if (!strncasecmp_len(buf, "gmodreload ")) {
-		console_gmodreload(&buf[fn_strlen("gmodreload ")]);
+		console_gmodreload(&buf[_strlen("gmodreload ")]);
 	} else if (!strncasecmp_len(buf, "gmodlock ")) {
-		gmodule_lock(&buf[fn_strlen("gmodlock ")]);
+		gmodule_lock(&buf[_strlen("gmodlock ")]);
 	} else if (!strncasecmp_len(buf, "gmodunlock ")) {
-		gmodule_unlock(&buf[fn_strlen("gmodunlock ")]);
+		gmodule_unlock(&buf[_strlen("gmodunlock ")]);
 	} else if (!strncasecmp_len(buf, "gmodlist")) {
 		gmodule_list();
 	} else if (!strncasecmp_len(buf, "zmodload")) {
-		console_zmodload(&buf[fn_strlen("zmodload")]);
+		console_zmodload(&buf[_strlen("zmodload")]);
 	} else if (!strncasecmp_len(buf, "zmodunload")) {
-		console_zmodunload(&buf[fn_strlen("zmodunload")]);
+		console_zmodunload(&buf[_strlen("zmodunload")]);
 	} else if (!strncasecmp_len(buf, "zmodreload")) {
-		console_zmodreload(&buf[fn_strlen("zmodreload")]);
+		console_zmodreload(&buf[_strlen("zmodreload")]);
 	} else if (!strncasecmp_len(buf, "zmodlock")) {
 		zmodule_lock();
 	} else if (!strncasecmp_len(buf, "zmodunlock")) {
@@ -346,19 +346,19 @@ void console_parse(bot_t * bot, char *buf)
 	else if (!strncasecmp_len(buf, "close")) {
 		int fd_to_close = 0;
 
-		fd_to_close = atoi(&buf[fn_strlen("close") + 1]);
+		fd_to_close = atoi(&buf[_strlen("close") + 1]);
 		debug(bot, "console_parse: Closing fd=%i\n", fd_to_close);
 		safe_close(fd_to_close);
 	} else if (!strncasecmp_len(buf, "trace")) {
-		global_parse_trace(&buf[fn_strlen("trace") + 1], 1);
+		global_parse_trace(&buf[_strlen("trace") + 1], 1);
 	} else if (!strncasecmp_len(buf, "debug")) {
-		global_parse_debug(&buf[fn_strlen("debug") + 1], 1);
+		global_parse_debug(&buf[_strlen("debug") + 1], 1);
 	} else if (!strncasecmp_len(buf, "pid")) {
 		xpid_console_print(bot, NULL);
 	} else if (!strncasecmp_len(buf, "print_all")) {
 		console_print_all(0);
 	} else if (!strncasecmp_len(buf, "info")) {
-		console_info(bot, &buf[fn_strlen("info") + 1]);
+		console_info(bot, &buf[_strlen("info") + 1]);
 	} else if (!strncasecmp_len(buf, "exit")) {
 /* purge children etc.. */
 		gi->atexit_code = 254;
@@ -378,7 +378,7 @@ void console_parse(bot_t * bot, char *buf)
 		bot_t *bot_tmp;
 
 		char *tag = NULL, *rest = NULL;
-		tok = strchr(buf, ' ');
+		tok = _strchr(buf, ' ');
 		if (!tok)
 			goto cleanup;
 
@@ -386,11 +386,11 @@ void console_parse(bot_t * bot, char *buf)
 		bot_tmp = bot_find_tag(tag);
 
 		if (bot_tmp) {
-			console_tag_parse(bot_tmp, &buf[fn_strlen(tag) + 1]);
+			console_tag_parse(bot_tmp, &buf[_strlen(tag) + 1]);
 		} else {
 /* not found, but if second argument is "on", we need to create & load it */
 			rest = tok + 1;
-			if (sNULL(rest)) {
+			if (_sNULL(rest)) {
 				if (!strncasecmp_len(rest, "on")) {
 					debug(NULL,
 					      "console_parse: Attempting to load %s\n",

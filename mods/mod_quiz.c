@@ -145,7 +145,7 @@ bot_t *quiz_run(dlist_t * dlist_node, bot_t * bot)
 	      "quiz_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = QUIZ_OPT_ANSWER;
@@ -253,7 +253,7 @@ char *quiz_change_string(bot_t * bot, char *string, int opt)
 	if (!qa) {
 	}
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	if (strlen(string)) {
 		dl = tokenize(bot, string,
@@ -389,7 +389,7 @@ char *quiz_op_get(bot_t * bot, char *name, int recnum)
 	if (!dl_quiz_pairs)
 		return NULL;
 
-	if (!strcmp(name, "*")) {
+	if (!_strcmp(name, "*")) {
 		dptr = dlist_node_rand(dl_quiz_pairs);
 		if (!dptr)
 			goto cleanup;
@@ -476,7 +476,7 @@ void quiz_add_files_to_db(void)
 		if (!str)
 			continue;
 
-		suffix = strrchr(str, '.');
+		suffix = _strrchr(str, '.');
 
 		if (suffix) {
 			if (!strcasecmp(suffix, ".qdb")) {
@@ -485,7 +485,7 @@ void quiz_add_files_to_db(void)
 			}
 		}
 
-		suffix = strrchr(str, '/');
+		suffix = _strrchr(str, '/');
 		if (!suffix)
 			continue;
 		suffix++;
@@ -534,7 +534,7 @@ void quiz_add_files_to_db_file(char *name)
 	if (!name)
 		return;
 
-	name_db = strrchr(name, '/');
+	name_db = _strrchr(name, '/');
 	if (!name_db)
 		return;
 
@@ -554,14 +554,14 @@ void quiz_add_files_to_db_file(char *name)
 		goto cleanup;
 
 	while (1) {
-		memset(buf, 0, sizeof(buf));
+		_memset(buf, 0, sizeof(buf));
 
 		if (!inside)
-			memset(buf_inside, 0, sizeof(buf_inside));
+			_memset(buf_inside, 0, sizeof(buf_inside));
 
 		if (fgets(buf, sizeof(buf) - 1, fp) == NULL)
 			break;
-		strstrip_nl(buf);
+		_strstrip_nl(buf);
 
 		if (buf[0] == '#')
 			continue;
@@ -570,7 +570,7 @@ void quiz_add_files_to_db_file(char *name)
 			continue;
 
 		if (!strstr(buf, "+++") && !inside) {
-			tok_1 = eat_whitespace(buf);
+			tok_1 = _eat_whitespace(buf);
 
 			tok_2 = strstr(tok_1, ":::");
 			if (!tok_2)
@@ -578,7 +578,7 @@ void quiz_add_files_to_db_file(char *name)
 
 			tok_1_len = (tok_2 - tok_1);
 			tok_2 = tok_2 + 3;
-			tok_2 = eat_whitespace(tok_2);
+			tok_2 = _eat_whitespace(tok_2);
 			tok_1 = strdup_len(tok_1, tok_1_len);
 			xdb_write(db, tok_1, tok_2);
 
@@ -599,12 +599,12 @@ void quiz_add_files_to_db_file(char *name)
 				free(tok_1);
 				tok_1 = NULL;
 				count++;
-				memset(buf_inside, 0, sizeof(buf_inside));
+				_memset(buf_inside, 0, sizeof(buf_inside));
 
 			} else {
 /* beginning */
 
-				tok_1 = eat_whitespace(buf);
+				tok_1 = _eat_whitespace(buf);
 
 				tok_2 = strstr(tok_1, ":::");
 				if (!tok_2) {
@@ -654,7 +654,7 @@ char *quiz_op_list(bot_t * bot)
 	if (!bot)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	dlist_fornext(dl_quiz_pairs, dptr) {
 		pair = (xdb_pair_t *) dlist_data(dptr);
@@ -665,7 +665,7 @@ char *quiz_op_list(bot_t * bot)
 		strlcatfmt_buf(buf, "%s ", pair->key);
 	}
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;
@@ -698,7 +698,7 @@ char *quiz_op_info(bot_t * bot, quiz_active_t * qa)
 	if (!bot || !qa)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 	strlcatfmt_buf(buf,
 		       "quiz id: %i\n channel: %s , timeout: %i , size: %i\n",
 		       qa->ID, bot->txt_to, qa->timeout, qa->size);
@@ -731,7 +731,7 @@ char *quiz_op_info(bot_t * bot, quiz_active_t * qa)
 		charcat_bot(buf, '\n');
 	}
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;
@@ -934,7 +934,7 @@ char *quiz_op_winners(bot_t * bot, quiz_active_t * qa)
 		return NULL;
 
 	found = 0;
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	strlcatfmt_buf(buf,
 		       "correct answers: %i , incorrect answers: %i , questions asked: %i\n",
@@ -953,7 +953,7 @@ char *quiz_op_winners(bot_t * bot, quiz_active_t * qa)
 		charcat_buf(buf, '\n');
 	}
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;
@@ -1232,7 +1232,7 @@ void quiz_active_free(void *arg)
 	if (qa->question)
 		xdb_pair_destroy(qa->question);
 
-	memset(qa, 0, sizeof(quiz_active_t));
+	_memset(qa, 0, sizeof(quiz_active_t));
 
 	free(qa);
 

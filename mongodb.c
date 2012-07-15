@@ -47,7 +47,7 @@ bot_t *mongodb_fini(bot_t * bot)
 */
 
 	mongo_destroy(&gi->mongo_conn);
-	memset(&gi->mongo_conn, 0, sizeof(gi->mongo_conn));
+	_memset(&gi->mongo_conn, 0, sizeof(gi->mongo_conn));
 
 	debug(bot, "mongodb_fini: Destroying mongo connection\n");
 
@@ -424,8 +424,8 @@ mongo_argument_t **mongodb_fmt_build_fmt(bot_t * bot, char *fmt, ...)
 			break;
 
 		str_arg_key = str_fmt + 2;
-		str_arg_key = eat_whitespace(str_arg_key);
-		strstrip_chars(str_arg_key, " ");
+		str_arg_key = _eat_whitespace(str_arg_key);
+		_strstrip_chars(str_arg_key, " ");
 
 		debug(bot, "mongodb_fmt_build_fmt: adding key=%s\n",
 		      str_arg_key);
@@ -524,8 +524,8 @@ mongo_argument_t **mongodb_fmt_build_strings(bot_t * bot, char *string)
 
 		str_arg_key = str_fmt + 2;
 
-		str_arg_key = eat_whitespace(str_arg_key);
-		strstrip_chars(str_arg_key, " ");
+		str_arg_key = _eat_whitespace(str_arg_key);
+		_strstrip_chars(str_arg_key, " ");
 
 		str_arg_val = str_arg;
 
@@ -793,7 +793,7 @@ void mongodb_arg_free(void *ptr)
 	if (arg_ptr->arg_str)
 		free(arg_ptr->arg_str);
 
-	memset(arg_ptr, 0, sizeof(mongo_argument_t));
+	_memset(arg_ptr, 0, sizeof(mongo_argument_t));
 
 	free(arg_ptr);
 
@@ -877,8 +877,8 @@ bson *mongodb_bson_build(bot_t * bot, char *fmt, ...)
 
 		str_arg_key = str_fmt + 2;
 
-		str_arg_key = eat_whitespace(str_arg_key);
-		strstrip_chars(str_arg_key, " ");
+		str_arg_key = _eat_whitespace(str_arg_key);
+		_strstrip_chars(str_arg_key, " ");
 
 		switch (*str_fmt) {
 		case 's':
@@ -1018,11 +1018,11 @@ char *mongodb_bson_print_init(const bson * b)
 	if (!b)
 		return NULL;
 
-	memset(mpbuf, 0, sizeof(mpbuf));
+	_memset(mpbuf, 0, sizeof(mpbuf));
 
 	mongodb_bson_print(b);
 
-	if (sNULL(mpbuf) != NULL)
+	if (_sNULL(mpbuf) != NULL)
 		str = strdup(mpbuf);
 
 	return str;

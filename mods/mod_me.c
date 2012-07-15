@@ -107,10 +107,10 @@ bot_t *me_run(dlist_t * dlist_node, bot_t * bot)
 
 	stat_inc(bot, bot->trig_called);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
-	memset(&me, 0, sizeof(me));
+	_memset(&me, 0, sizeof(me));
 
 	MOD_OPTIONS_TOP_HALF;
 	me_parse_options(dl_options_ptr, &me);

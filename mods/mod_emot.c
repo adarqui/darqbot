@@ -40,7 +40,7 @@ void __emot_init__(void)
 
 	debug(NULL, "__emot_init__: Loaded mod_emot\n");
 
-	memset(&emot_info, 0, sizeof(emot_info));
+	_memset(&emot_info, 0, sizeof(emot_info));
 
 	return;
 }
@@ -81,7 +81,7 @@ void emot_fill_toc(bot_t * bot)
 
 	emot_info.toc =
 	    (emot_toc_t *) malloc(sizeof(emot_toc_t) * emot_info.max_toc);
-	memset(emot_info.toc, 0, sizeof(emot_toc_t) * emot_info.max_toc);
+	_memset(emot_info.toc, 0, sizeof(emot_toc_t) * emot_info.max_toc);
 
 	line_cur = 0;
 /* second pass, fill toc */
@@ -97,7 +97,7 @@ void emot_fill_toc(bot_t * bot)
 		if (!str2)
 			continue;
 
-		strstrip_nl(buf);
+		_strstrip_nl(buf);
 
 		emot_info.toc[line_cur].emot = strtokdup_str(buf, ":::::");
 		if (!emot_info.toc[line_cur].emot)
@@ -165,12 +165,12 @@ bot_t *emot_fini(dlist_t * dlist_node, bot_t * bot)
 			free(emot_info.toc[i].desc);
 	}
 
-	memset(emot_info.toc, 0, emot_info.max_toc * sizeof(emot_toc_t));
+	_memset(emot_info.toc, 0, emot_info.max_toc * sizeof(emot_toc_t));
 
 	if (emot_info.toc)
 		free(emot_info.toc);
 
-	memset(&emot_info, 0, sizeof(emot_info));
+	_memset(&emot_info, 0, sizeof(emot_info));
 
 	return NULL;
 }
@@ -205,7 +205,7 @@ bot_t *emot_run(dlist_t * dlist_node, bot_t * bot)
 	      "emot_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt_1 = 0;
@@ -298,7 +298,7 @@ char *emot_change_string(char *string, int opt_1, char *opt_3)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	if (opt_1 == 1) {
 	}

@@ -75,15 +75,15 @@ void global_conf_parse(void)
 
 	debug(NULL, "global_conf_parse: Entered\n");
 
-	if (!sNULL(global_info.conf_dir)) {
+	if (!_sNULL(global_info.conf_dir)) {
 		strlcpy_buf(global_info.conf_dir, global_conf_dir());
 	}
 
-	if (!sNULL(global_info.conf_dir)) {
+	if (!_sNULL(global_info.conf_dir)) {
 		debug_err(NULL, "global_conf_parse: conf_dir=NULL\n");
 	}
 
-	if (!sNULL(global_info.conf_file)) {
+	if (!_sNULL(global_info.conf_file)) {
 		strlcat_buf(global_info.conf_file,
 			    str_unite_static("%s/%s", global_info.conf_dir,
 					     BOT_DEF_CONFFILE));
@@ -105,7 +105,7 @@ void global_conf_parse(void)
 
 		debug(NULL, "%s", buf);
 
-		strstrip_nl(buf);
+		_strstrip_nl(buf);
 		if (buf[0] == '+')
 			add = 1;
 		else if (buf[0] == '-')
@@ -117,61 +117,61 @@ void global_conf_parse(void)
 
 		if (!strncasecmp_len(buf_ptr, "chroot_uid")) {
 			global_info.chroot_uid =
-			    atoi(&buf_ptr[fn_strlen("chroot_uid") + 1]);
+			    atoi(&buf_ptr[_strlen("chroot_uid") + 1]);
 			debug(NULL, "global_conf_parse: chroot_uid=%i\n",
 			      global_info.chroot_uid);
 		} else if (!strncasecmp_len(buf_ptr, "chroot_gid")) {
 			global_info.chroot_gid =
-			    atoi(&buf_ptr[fn_strlen("chroot_gid") + 1]);
+			    atoi(&buf_ptr[_strlen("chroot_gid") + 1]);
 			debug(NULL, "global_conf_parse: chroot_gid=%i\n",
 			      global_info.chroot_gid);
 		} else if (!strncasecmp_len(buf_ptr, "chroot_dir")) {
 
 			strlcat_buf(global_info.chroot_dir,
-				    &buf_ptr[fn_strlen("chroot_dir") + 1]);
+				    &buf_ptr[_strlen("chroot_dir") + 1]);
 			debug(NULL, "global_conf_parse: chroot_dir=%s\n",
 			      global_info.chroot_dir);
 		} else if (!strncasecmp_len(buf_ptr, "chroot")) {
-			global_parse_chroot(&buf_ptr[fn_strlen("chroot") + 1],
+			global_parse_chroot(&buf_ptr[_strlen("chroot") + 1],
 					    1);
 		} else if (!strncasecmp_len(buf_ptr, "confdir")) {
 
 			strlcat_buf(global_info.confdir,
-				    &buf_ptr[fn_strlen("confdir") + 1]);
+				    &buf_ptr[_strlen("confdir") + 1]);
 			debug(NULL, "global_conf_parse: confdir=%s\n",
 			      global_info.confdir);
 		} else if (!strncasecmp_len(buf_ptr, "modules")) {
-			global_parse_modules(&buf_ptr[fn_strlen("modules") + 1],
+			global_parse_modules(&buf_ptr[_strlen("modules") + 1],
 					     1);
 		} else if (!strncasecmp_len(buf_ptr, "pmodules")) {
 			global_parse_pmodules(&buf_ptr
-					      [fn_strlen("pmodules") + 1], 1);
+					      [_strlen("pmodules") + 1], 1);
 		} else if (!strncasecmp_len(buf_ptr, "gmodules")) {
 			global_parse_gmodules(&buf_ptr
-					      [fn_strlen("gmodules") + 1], 1);
+					      [_strlen("gmodules") + 1], 1);
 		} else if (!strncasecmp_len(buf_ptr, "trace")) {
-			global_parse_trace(&buf_ptr[fn_strlen("trace") + 1], 1);
+			global_parse_trace(&buf_ptr[_strlen("trace") + 1], 1);
 		} else if (!strncasecmp_len(buf_ptr, "debug")) {
-			global_parse_debug(&buf_ptr[fn_strlen("debug") + 1], 1);
+			global_parse_debug(&buf_ptr[_strlen("debug") + 1], 1);
 		} else if (!strncasecmp_len(buf_ptr, "sigprotect")) {
 			global_parse_sigprotect(&buf_ptr
-						[fn_strlen("sigprotect") + 1],
+						[_strlen("sigprotect") + 1],
 						1);
 		} else if (!strncasecmp_len(buf_ptr, "timer_sleep")) {
 			global_parse_timer_sleep(&buf_ptr
-						 [fn_strlen("timer_sleep") + 1],
+						 [_strlen("timer_sleep") + 1],
 						 1);
 		} else if (!strncasecmp_len(buf_ptr, "timer_sort")) {
 			global_parse_timer_sort(&buf_ptr
-						[fn_strlen("timer_sort") + 1],
+						[_strlen("timer_sort") + 1],
 						1);
 		} else if (!strncasecmp_len(buf_ptr, "fd_unix_path")) {
 			global_parse_fd_unix_path(&buf_ptr
-						  [fn_strlen("fd_unix_path") +
+						  [_strlen("fd_unix_path") +
 						   1], 1);
 		} else if (!strncasecmp_len(buf_ptr, "xmod_style")) {
 			xmodule_parse_style(&buf_ptr
-					    [fn_strlen("xmod_style") + 1]);
+					    [_strlen("xmod_style") + 1]);
 		}
 
 	}
@@ -423,7 +423,7 @@ void global_on(void)
 	struct dirent *de_ptr;
 	bot_t *bot;
 
-	if (!sNULL(gi->conf_dir))
+	if (!_sNULL(gi->conf_dir))
 		global_conf_parse();
 
 	mongodb_init(NULL);
@@ -483,7 +483,7 @@ int global_parse_chroot(char *str, int add)
 {
 	char *ptr_1;
 
-	if (!sNULL(str))
+	if (!_sNULL(str))
 		return -1;
 
 	if (add == 0) {		/*remove entry; */
@@ -506,7 +506,7 @@ int global_parse_modules(char *str, int add)
 
 	debug(NULL, "global_parse_modules: Entered\n");
 
-	if (!sNULL(str))
+	if (!_sNULL(str))
 		return -1;
 
 	if (add == 0) {		/*remove entry; */
@@ -526,7 +526,7 @@ int global_parse_pmodules(char *str, int add)
 
 	debug(NULL, "global_parse_pmodules: Entered\n");
 
-	if (!sNULL(str))
+	if (!_sNULL(str))
 		return -1;
 
 	if (add == 0) {		/*remove entry; */
@@ -546,7 +546,7 @@ int global_parse_gmodules(char *str, int add)
 
 	debug(NULL, "global_parse_gmodules: Entered\n");
 
-	if (!sNULL(str))
+	if (!_sNULL(str))
 		return -1;
 
 	if (add == 0) {		/*remove entry; */
@@ -565,7 +565,7 @@ int global_parse_trace(char *str, int add)
 {
 	char *ptr_1;
 
-	if (!sNULL(str))
+	if (!_sNULL(str))
 		return -1;
 
 	if (add == 0) {		/*remove entry; */
@@ -589,7 +589,7 @@ int global_parse_debug(char *str, int add)
 {
 	char *ptr_1;
 
-	if (!sNULL(str))
+	if (!_sNULL(str))
 		return -1;
 
 	if (add == 0) {		/*remove entry; */
@@ -613,7 +613,7 @@ int global_parse_sigprotect(char *str, int add)
 {
 	char *ptr_1;
 
-	if (!sNULL(str))
+	if (!_sNULL(str))
 		return -1;
 
 	if (add == 0) {		/*remove entry; */
@@ -635,7 +635,7 @@ int global_parse_timer_sleep(char *str, int add)
 {
 	char *ptr_1;
 
-	if (!sNULL(str))
+	if (!_sNULL(str))
 		return -1;
 
 	if (add == 0) {		/*remove entry; */
@@ -655,7 +655,7 @@ int global_parse_timer_sort(char *str, int add)
 {
 	char *ptr_1;
 
-	if (!sNULL(str))
+	if (!_sNULL(str))
 		return -1;
 
 	if (add == 0) {		/*remove entry; */
@@ -675,7 +675,7 @@ int global_parse_fd_unix_path(char *str, int add)
 {
 	char *ptr_1;
 
-	if (!sNULL(str))
+	if (!_sNULL(str))
 		return -1;
 
 	if (add == 0) {		/*remove entry; */

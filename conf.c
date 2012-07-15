@@ -35,7 +35,7 @@ char *bot_find_confdir(bot_t * bot)
 
 	str = str_unite_static("%s/%s", gi->confdir, BOT_DEF_CONFDIR);
 
-	if (!sNULL(str))
+	if (!_sNULL(str))
 		return NULL;
 
 	debug(bot, "bot_find_confdir: trying str=%s\n", str);
@@ -60,12 +60,12 @@ int conf_parse(bot_t * bot)
 		return -1;
 	}
 
-	if (!sNULL(bot->confdir)) {
+	if (!_sNULL(bot->confdir)) {
 		debug(bot, "conf_parse: BOT->confdir=NULL\n");
 		return -1;
 	}
 
-	if (!sNULL(bot->conffile))
+	if (!_sNULL(bot->conffile))
 		snprintf_buf(bot->conffile, "%s/%s", bot->confdir,
 			     BOT_DEF_CONFFILE);
 
@@ -82,7 +82,7 @@ int conf_parse(bot_t * bot)
 		if (fgets(buf, sizeof(buf) - 1, fp) == NULL)
 			break;
 
-		strstrip_nl(buf);
+		_strstrip_nl(buf);
 
 		if (buf[0] == '+')
 			add = 1;
@@ -98,12 +98,12 @@ int conf_parse(bot_t * bot)
 		} else if (!strncasecmp_len(buf_ptr, "off")) {
 			bot->on = 0;
 		} else if (!strncasecmp_len(buf_ptr, "tag")) {
-			bot_parse_tag(bot, &buf_ptr[fn_strlen("tag") + 1], add);
+			bot_parse_tag(bot, &buf_ptr[_strlen("tag") + 1], add);
 		} else if (!strncasecmp_len(buf_ptr, "trace")) {
-			bot_parse_trace(bot, &buf_ptr[fn_strlen("trace") + 1],
+			bot_parse_trace(bot, &buf_ptr[_strlen("trace") + 1],
 					add);
 		} else if (!strncasecmp_len(buf_ptr, "debug")) {
-			bot_parse_debug(bot, &buf_ptr[fn_strlen("debug") + 1],
+			bot_parse_debug(bot, &buf_ptr[_strlen("debug") + 1],
 					add);
 		}
 
@@ -111,41 +111,41 @@ int conf_parse(bot_t * bot)
 			bot->mute = 1;
 		} else if (!strncasecmp_len(buf_ptr, "logfile")) {
 			bot_parse_logfile(bot,
-					  &buf_ptr[fn_strlen("logfile") + 1],
+					  &buf_ptr[_strlen("logfile") + 1],
 					  add);
 		} else if (!strncasecmp_len(buf_ptr, "var_usleep")) {
 			bot->var_usleep =
-			    atoi(&buf_ptr[fn_strlen("var_usleep") + 1]);
+			    atoi(&buf_ptr[_strlen("var_usleep") + 1]);
 		}
 
 		else if (!strncasecmp_len(buf_ptr, "var_maxbufsz")) {
 			bot->var_maxbufsz =
-			    atoi(&buf_ptr[fn_strlen("var_maxbufsz") + 1]);
+			    atoi(&buf_ptr[_strlen("var_maxbufsz") + 1]);
 			bot->var_bufsz = bot->var_maxbufsz;
 		}
 
 		else if (!strncasecmp_len(buf_ptr, "var_maxflood")) {
 			bot->var_maxflood =
-			    atoi(&buf_ptr[fn_strlen("var_maxflood") + 1]);
+			    atoi(&buf_ptr[_strlen("var_maxflood") + 1]);
 
 		} else if (!strncasecmp_len(buf_ptr, "var_maxnesting")) {
 			bot->var_maxnesting =
-			    atoi(&buf_ptr[fn_strlen("var_maxnesting") + 1]);
+			    atoi(&buf_ptr[_strlen("var_maxnesting") + 1]);
 		} else if (!strncasecmp_len(buf_ptr, "var_nesting")) {
 			bot->var_nesting =
-			    atoi(&buf_ptr[fn_strlen("var_nesting") + 1]);
+			    atoi(&buf_ptr[_strlen("var_nesting") + 1]);
 		} else if (!strncasecmp_len(buf_ptr, "allowpm")) {
 			if (xstrcasestr
-			    (&buf_ptr[fn_strlen("allowpm") + 1], "yes"))
+			    (&buf_ptr[_strlen("allowpm") + 1], "yes"))
 				bot->var_allowpm = 1;
 			else
 				bot->var_allowpm = 0;
 		} else if (!strncasecmp_len(buf_ptr, "gmodules")) {
-			bot_parse_gmodules(bot, &buf[fn_strlen("gmodules") + 1],
+			bot_parse_gmodules(bot, &buf[_strlen("gmodules") + 1],
 					   1, ":::");
 		} else if (!strncasecmp_len(buf_ptr, "trig_prefix")) {
 			strlcpy_buf(bot->trig_prefix,
-				    &buf[fn_strlen("trig_prefix") + 2]);
+				    &buf[_strlen("trig_prefix") + 2]);
 		}
 
 	}
@@ -165,21 +165,21 @@ int bot_parse_logfile(bot_t * bot, char *str, int add)
 
 	debug(bot, "bot_parse_logfile: Entered\n");
 
-	if (!bot || !sNULL(str))
+	if (!bot || !_sNULL(str))
 		return -1;
 
 	if (add == 0) {		/*remove entry; */
 		return 0;
 	}
 
-	ptr_1 = eat_whitespace(str);
+	ptr_1 = _eat_whitespace(str);
 
 	bz(bot->logfile);
 
-	if (sNULL(ptr_1))
+	if (_sNULL(ptr_1))
 		strlcpy_buf(bot->logfile, ptr_1);
 
-	strstrip_chars(bot->logfile, " :,");
+	_strstrip_chars(bot->logfile, " :,");
 
 	return 0;
 }
@@ -190,17 +190,17 @@ int bot_parse_tag(bot_t * bot, char *str, int add)
 
 	debug(bot, "bot_parse_tag: Entered\n");
 
-	if (!bot || !sNULL(str))
+	if (!bot || !_sNULL(str))
 		return -1;
 
 	if (add == 0) {
 		return 0;
 	}
 
-	ptr_1 = eat_whitespace(str);
+	ptr_1 = _eat_whitespace(str);
 
-	if (sNULL(ptr_1)) {
-		strstrip_chars(ptr_1, " :,!@#$%^&*()=+;':\",./<>?~`\\|");
+	if (_sNULL(ptr_1)) {
+		_strstrip_chars(ptr_1, " :,!@#$%^&*()=+;':\",./<>?~`\\|");
 	}
 
 	strlcpy_buf(bot->tag, ptr_1);
@@ -212,14 +212,14 @@ int bot_parse_trace(bot_t * bot, char *str, int add)
 {
 	char *ptr_1;
 
-	if (!bot || !sNULL(str))
+	if (!bot || !_sNULL(str))
 		return -1;
 
 	if (add == 0) {
 		return 0;
 	}
 
-	ptr_1 = eat_whitespace(str);
+	ptr_1 = _eat_whitespace(str);
 
 	if (!strcasecmp(ptr_1, "on")) {
 		bot->trace = 1;
@@ -234,14 +234,14 @@ int bot_parse_debug(bot_t * bot, char *str, int add)
 {
 	char *ptr_1;
 
-	if (!bot || !sNULL(str))
+	if (!bot || !_sNULL(str))
 		return -1;
 
 	if (add == 0) {
 		return 0;
 	}
 
-	ptr_1 = eat_whitespace(str);
+	ptr_1 = _eat_whitespace(str);
 
 	if (!strcasecmp(ptr_1, "on")) {
 		bot->debug = 1;
@@ -260,13 +260,13 @@ int bot_parse_gmodules(bot_t * bot, char *str, int add, char *delim)
 
 	char *str_tmp = NULL;
 
-	if (!bot || !sNULL(str))
+	if (!bot || !_sNULL(str))
 		return -1;
 
-	if (!sNULL(delim))
+	if (!_sNULL(delim))
 		delim = ":::";
 
-	ptr_1 = eat_whitespace(str);
+	ptr_1 = _eat_whitespace(str);
 
 	if (add != 0) {
 /* this is for relinkd, which adds gmodules on the fly... we just want to append if we are grelinkd */
@@ -284,7 +284,7 @@ int bot_parse_gmodules(bot_t * bot, char *str, int add, char *delim)
 		gmod->syntax = (char *)strdup(str_tmp);
 		dlist_Dinsert_after(&bot->dl_gmodules, gmod);
 
-		ptr_2 = strchr(gmod->syntax, '(');
+		ptr_2 = _strchr(gmod->syntax, '(');
 		if (!ptr_2) {
 			ptr_2 = gmod->syntax + strlen(gmod->syntax);
 		}
@@ -307,12 +307,12 @@ int bot_parse_gmodules(bot_t * bot, char *str, int add, char *delim)
 			    str_unite_static("%.*s", (ptr_2 - gmod->syntax),
 					     gmod->syntax));
 
-		if (sNULL(gmod->trigger_ext)) {
+		if (_sNULL(gmod->trigger_ext)) {
 			char *save, *tok;
 
 			save = gmod->syntax;
-			tok = strchr(gmod->syntax, '(');
-			if (sNULL(tok)) {
+			tok = _strchr(gmod->syntax, '(');
+			if (_sNULL(tok)) {
 				gmod->syntax =
 				    str_unite("%s%s", gmod->trigger, tok);
 			}

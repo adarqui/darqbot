@@ -90,11 +90,11 @@ void to_parse(bot_t * bot)
 	puts("dd2");
 
 	while (1) {
-		memset(buf, 0, sizeof(buf));
+		_memset(buf, 0, sizeof(buf));
 		if (fgets(buf, sizeof(buf) - 1, to_info.fp_conf) == NULL)
 			break;
 
-		strstrip_nl(buf);
+		_strstrip_nl(buf);
 
 		if (buf[0] == '+')
 			add = 1;
@@ -151,7 +151,7 @@ int to_parse_controlchans(bot_t * bot, char *str, int add)
 		if (!ptr_2)
 			return 0;
 
-		ptr_3 = eat_whitespace(ptr_2);
+		ptr_3 = _eat_whitespace(ptr_2);
 
 		puts("ee3");
 
@@ -190,7 +190,7 @@ int to_parse_ignore(bot_t * bot, char *str, int add)
 		if (!ptr_2)
 			return 0;
 
-		ptr_3 = eat_whitespace(ptr_2);
+		ptr_3 = _eat_whitespace(ptr_2);
 
 		host = strdup(ptr_3);
 
@@ -296,7 +296,7 @@ bot_t *to_fini(dlist_t * dlist_node, bot_t * bot)
 
 	to_info.allowpms = 0;
 
-	memset(&to_info, 0, sizeof(to_info));
+	_memset(&to_info, 0, sizeof(to_info));
 
 	return NULL;
 }
@@ -334,7 +334,7 @@ bot_t *to_run(dlist_t * dlist_node, bot_t * bot)
 	      "to_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	to_print(bot);
@@ -349,7 +349,7 @@ bot_t *to_run(dlist_t * dlist_node, bot_t * bot)
 	if (tag)
 		debug(bot, "to_run: tag=%s\n", tag);
 
-	if (!strlen(eat_whitespace(dl_module_arg_after_options))) {
+	if (!strlen(_eat_whitespace(dl_module_arg_after_options))) {
 		return NULL;
 	}
 
@@ -358,7 +358,7 @@ bot_t *to_run(dlist_t * dlist_node, bot_t * bot)
 	dlist_fornext(to_info.dl_ignore, dptr) {
 		val = dlist_data(dptr);
 		if (xstrcasestr2(bot->txt_host, val)) {
-			memset(bot->txt_to, 0, sizeof(bot->txt_to));
+			_memset(bot->txt_to, 0, sizeof(bot->txt_to));
 			return NULL;
 		}
 	}
@@ -377,7 +377,7 @@ URGENT FIXME : the conf isnt being parsed because module_load is not passing a b
 	puts("3");
 
 	if (!found) {
-		memset(bot->txt_to, 0, sizeof(bot->txt_to));
+		_memset(bot->txt_to, 0, sizeof(bot->txt_to));
 		return NULL;
 	}
 
@@ -407,10 +407,10 @@ XXX
 
 	}
 
-	str_ptr = eat_whitespace(dl_module_arg_after_options);
+	str_ptr = _eat_whitespace(dl_module_arg_after_options);
 
 	if (str_ptr[0] != '\0') {
-		memset(bot->txt_to, 0, sizeof(bot->txt_to));
+		_memset(bot->txt_to, 0, sizeof(bot->txt_to));
 		strlcat_bot(bot->txt_to, str_ptr);
 
 		if (bot->txt_to[0] != '#' && to_info.fp_pms) {

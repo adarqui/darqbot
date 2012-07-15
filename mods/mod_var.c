@@ -87,7 +87,7 @@ bot_t *var_run(dlist_t * dlist_node, bot_t * bot)
 	      "var_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	optfn = NULL;
@@ -123,8 +123,8 @@ bot_t *var_run(dlist_t * dlist_node, bot_t * bot)
 
 	MOD_OPTIONS_BOTTOM_HALF;
 
-	l_str_ptr = eat_whitespace(dl_module_arg_after_options);
-	if (!sNULL(l_str_ptr))
+	l_str_ptr = _eat_whitespace(dl_module_arg_after_options);
+	if (!_sNULL(l_str_ptr))
 		l_str_ptr = NULL;
 
 	if (optfn) {

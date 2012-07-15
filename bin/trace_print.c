@@ -11,7 +11,7 @@
 
 
 int
-strstrip_nl (char *s)
+_strstrip_nl (char *s)
 {
   while (*s)
     {
@@ -39,10 +39,10 @@ if(!fp) errx(0, "main: fopen ");
 }
 
 while(1) {
-memset(buf,0,sizeof(buf));
+_memset(buf,0,sizeof(buf));
 if(fgets(buf,sizeof(buf)-1,fp)==NULL)break;
 
-strstrip_nl(buf);
+_strstrip_nl(buf);
 
 tok = strtok(buf, ":");
 if(!tok) continue;

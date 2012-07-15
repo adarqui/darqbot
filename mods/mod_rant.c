@@ -91,7 +91,7 @@ bot_t *rant_run(dlist_t * dlist_node, bot_t * bot)
 	      "rant_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -143,7 +143,7 @@ char *rant_change_string(bot_t * bot, char *string, int opt)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	bu = unique_find(bot, &dl_mod_rant_unique);
 	if (bu)
@@ -163,7 +163,7 @@ char *rant_change_string(bot_t * bot, char *string, int opt)
 		str = rant_op_list(bot, dl_mod_rant);
 	}
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;

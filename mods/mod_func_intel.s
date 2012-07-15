@@ -37,6 +37,12 @@
 .global intel_ror
 .global intel_rol
 .global intel_bswap
+.global intel_bsf
+.global intel_bsr
+.global intel_bt
+.global intel_btc
+.global intel_btr
+.global intel_bts
 .global intel_isdigit
 .global intel_isbinary
 .global intel_isalpha
@@ -83,6 +89,12 @@
 	.type intel_ror, @function
 	.type intel_rol, @function
 	.type intel_bswap, @function
+	.type intel_bsf, @function
+	.type intel_bsr, @function
+	.type intel_bt, @function
+	.type intel_btc, @function
+	.type intel_btr, @function
+	.type intel_bts, @function
 	.type intel_isdigit, @function
 	.type intel_isbinary, @function
 	.type intel_isalpha, @function
@@ -96,11 +108,22 @@
 	.type intel_linux_exit,@function
 
 
+.macro IE
+pushfl
+pushl %ebx
+movl 4(%esp), %ebx
+movl %ebx, i_eflags
+popl %ebx
+popfl
+.endm
+
+
 intel_true:
 # int_true(void)
 	pushl %ebp
 	movl %esp, %ebp
 	movl $1, %eax
+	IE
 	popl %ebp
 	ret
 
@@ -109,6 +132,7 @@ intel_false:
 	pushl %ebp
 	movl %esp, %ebp
 	movl $0, %eax
+	IE
 	popl %ebp
 	ret
 
@@ -117,6 +141,7 @@ intel_self:
 	pushl %ebp
 	movl %esp, %ebp
 	movl 8(%ebp), %eax
+	IE
 	popl %ebp
 	ret
 
@@ -124,7 +149,6 @@ intel_strlen:
 # size_t strlen(const char *)
 	pushl %ebp
 	movl %esp, %ebp
-
 	pushl %ecx
 	pushl %edx
 
@@ -142,9 +166,9 @@ intel_strlen:
 	out_strlen:
 	movl %ecx, %eax
 
+	IE
 	popl %edx
 	popl %ecx
-
 	popl %ebp
 	ret
 
@@ -154,7 +178,6 @@ intel_strlen2:
 # repne/scasb variation
         pushl %ebp
         movl %esp, %ebp
-
 	pushl %ecx
         pushl %edi
 
@@ -168,9 +191,9 @@ intel_strlen2:
 	decl %ecx
 	movl %ecx, %eax
 
+	IE
         popl %edi
 	popl %ecx
-
         leave
         ret
 
@@ -181,7 +204,6 @@ intel_strcmp:
 # int intel_strcmp(const char *, const char *)
         pushl %ebp
         movl %esp, %ebp
-
 	pushl %esi
 	pushl %edi
 	pushl %ecx
@@ -215,10 +237,10 @@ intel_strcmp:
 
         .Lintel_strcmp_eq:
 
+	IE
 	popl %ecx
 	popl %edi
 	popl %esi
-
         leave
         ret
 
@@ -229,7 +251,6 @@ intel_strncmp:
 # int intel_strncmp(const char *, const char *, size_t)
         pushl %ebp
         movl %esp, %ebp
-
 	pushl %esi
 	pushl %edi
 	pushl %ecx
@@ -253,10 +274,10 @@ intel_strncmp:
 
         .Lintel_strncmp_eq:
 
+	IE
 	popl %ecx
 	popl %edi
 	popl %esi
-
         leave
         ret
 
@@ -267,7 +288,6 @@ intel_strchr:
 # char * intel_strchr(char *, int)
         pushl %ebp
         movl %esp, %ebp
-
         pushl %edi
 
         movl 12(%ebp), %eax
@@ -289,8 +309,8 @@ intel_strchr:
         .Lstrchr_done:
         movl %edi, %eax
 
+	IE
         popl %edi
-
         leave
         ret
 
@@ -302,7 +322,6 @@ intel_strrchr:
 # char * intel_strrchr(char *, int)
         pushl %ebp
         movl %esp, %ebp
-
         pushl %ebx
 	pushl %ecx
         pushl %edi
@@ -331,6 +350,7 @@ intel_strrchr:
 
         .Lintel_strrchr_done:
 
+	IE
         popl %edi
 	popl %ecx
         popl %ebx
@@ -342,7 +362,6 @@ intel_strrchr:
 intel_strcpy:
         pushl %ebp
 	movl %esp, %ebp
-
 	pushl %esi
 	pushl %edi
 
@@ -361,6 +380,7 @@ intel_strcpy:
 	.Lintel_strcpy_done:
 	movl 8(%ebp), %eax
 
+	IE
 	popl %edi
 	popl %esi
 	leave
@@ -371,7 +391,6 @@ intel_strcpy:
 intel_strncpy:
         pushl %ebp
         movl %esp, %ebp
-
 	pushl %ecx
         pushl %esi
         pushl %edi
@@ -395,10 +414,10 @@ intel_strncpy:
         .Lintel_strncpy_done:
         movl 8(%ebp), %eax
 
+	IE
         popl %edi
         popl %esi
 	popl %ecx
-
         leave
         ret
 
@@ -412,7 +431,6 @@ intel_bzero:
 # void bzero(void *, int)
 	pushl %ebp
 	movl %esp, %ebp
-
 	pushl %ecx
 	pushl %edx
 
@@ -432,9 +450,9 @@ intel_bzero:
 	out_bzero:
 	xorl %eax, %eax
 
+	IE
 	popl %edx
 	popl %ecx
-
 	popl %ebp
 	ret	
 
@@ -443,7 +461,6 @@ intel_memset:
 # void * memset(void *, int, size_t)
 	pushl %ebp
 	movl %esp, %ebp
-
 	pushl %ecx
 	pushl %edx
 	
@@ -465,9 +482,9 @@ intel_memset:
 	out_memset:
 	movl 8(%ebp), %eax
 
+	IE
 	popl %edx
 	popl %ecx
-
 	popl %ebp
 	ret
 
@@ -482,6 +499,7 @@ intel_mul:
 	movl 12(%ebp), %ebx
 	mul %ebx
 
+	IE
 	popl %ebx
 	popl %ebp
 	ret
@@ -496,6 +514,7 @@ intel_imul:
 	movl 12(%ebp), %ebx
 	imul %ebx
 
+	IE
 	popl %ebx
 	leave
 	ret
@@ -504,15 +523,14 @@ intel_sub:
 # int sub(int, int)
 	pushl %ebp
 	movl %esp, %ebp
-
 	pushl %edx
 
 	movl 8(%ebp), %eax
 	movl 12(%ebp), %edx
 	subl %edx, %eax
 
+	IE
 	popl %edx
-
 	leave
 	ret	
 
@@ -521,15 +539,14 @@ intel_add:
 # int add(int, int)
 	pushl %ebp
 	movl %esp, %ebp
-
 	pushl %edx
 
 	movl 8(%ebp), %eax
 	movl 12(%ebp), %edx
 	addl %edx, %eax
 
+	IE
 	popl %edx
-
 	leave
 	ret
 
@@ -540,15 +557,14 @@ intel_div:
 # int intel_div(int, int)
 	pushl %ebp
 	movl %esp, %ebp
-
 	pushl %edx
 
 	movl 8(%ebp), %eax
 	xorl %edx, %edx
 	divl 12(%ebp)
 
+	IE
 	popl %edx
-
 	leave
 	ret
 
@@ -557,15 +573,14 @@ intel_idiv:
 # int intel_idiv(int, int)
 	pushl %ebp
 	movl %esp, %ebp
-
 	pushl %edx
 
 	movl 8(%ebp), %eax
 	xorl %edx, %edx
 	idivl 12(%ebp)
-	
-	popl %edx
 
+	IE
+	popl %edx
 	leave
 	ret
 
@@ -574,7 +589,6 @@ intel_mod:
 # int intel_mod(int, int)
 	pushl %ebp
 	movl %esp, %ebp
-
 	pushl %edx
 
 	movl 8(%ebp), %eax
@@ -582,8 +596,8 @@ intel_mod:
 	divl 12(%ebp)
 	movl %edx, %eax
 	
+	IE
 	popl %edx
-
 	leave
 	ret
 
@@ -592,7 +606,6 @@ intel_imod:
 # int intel_imod(int, int)
 	pushl %ebp
 	movl %esp, %ebp
-
 	pushl %edx
 	
 	movl 8(%ebp), %eax
@@ -600,6 +613,8 @@ intel_imod:
 	idivl 12(%ebp)
 	movl %edx, %eax
 	
+	IE
+	popl %edx
 	leave
 	ret
 
@@ -611,6 +626,7 @@ intel_neg:
 	movl 8(%ebp), %eax
 	neg %eax
 
+	IE
 	popl %ebp
 	ret	
 
@@ -620,7 +636,7 @@ intel_eflags:
 	movl %esp, %ebp
 
 	pushfl
-	movl 0(%ebp), %eax
+	movl 0(%esp), %eax
 	popfl
 
 	leave
@@ -636,6 +652,7 @@ intel_and:
 	movl 8(%ebp), %eax
 	andl 12(%ebp), %eax
 
+	IE
 	leave
 	ret
 
@@ -648,6 +665,7 @@ intel_or:
 	movl 8(%ebp), %eax
 	orl 12(%ebp), %eax
 
+	IE
 	leave
 	ret
 
@@ -660,6 +678,7 @@ intel_xor:
 	movl 8(%ebp), %eax
 	xorl 12(%ebp), %eax
 
+	IE
 	leave
 	ret
 
@@ -672,6 +691,7 @@ intel_not:
 	notl 8(%ebp)
 	movl 8(%ebp) , %eax
 
+	IE
 	leave
 	ret
 
@@ -698,6 +718,7 @@ intel_sar:
 	movl 12(%ebp), %ecx
 	sarl %cl, %eax
 
+	IE
 	popl %ecx
 	leave
 	ret
@@ -714,6 +735,7 @@ intel_shr:
 
 	shrl $cl, %eax
 
+	IE
 	popl %ecx
 	leave
 	ret
@@ -729,6 +751,7 @@ intel_sal:
 	movl 12(%ebp), %ecx
 	sall %cl, %eax
 
+	IE
 	popl %ecx
 	leave
 	ret
@@ -744,6 +767,7 @@ intel_shl:
 	movl 12(%ebp), %ecx
 	shll %cl, %eax
 
+	IE
 	popl %ecx
 	leave
 	ret
@@ -758,6 +782,7 @@ intel_ror:
 	movl 12(%ebp), %ecx
 	rorl %cl, %eax
 
+	IE
 	popl %ecx
 	leave
 	ret
@@ -773,6 +798,7 @@ intel_rol:
 	movl 12(%ebp), %ecx
 	roll %cl, %eax
 
+	IE
 	popl %ecx
 	leave
 	ret
@@ -785,8 +811,122 @@ intel_bswap:
 	movl 8(%ebp), %eax
 	bswap %eax
 
+	IE
 	leave
 	ret
+
+
+intel_bsf:
+# int intel_bsf(int)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ebx
+
+	movl 8(%ebp), %ebx
+	bsf %ebx, %eax
+
+	IE
+	popl %ebx
+	leave
+	ret
+
+
+
+intel_bsr:
+# int intel_bsr(int)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ebx
+
+	movl 8(%ebp), %ebx
+	bsr %ebx, %eax
+
+	IE
+	popl %ebx
+	leave
+	ret
+
+
+intel_bt:
+# int intel_bt(int, int)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ebx
+
+	movl 8(%ebp), %eax
+	movl 12(%ebp), %ebx
+	bt %ebx, %eax
+	jc .Lintel_bt_set
+
+	xorl %eax, %eax
+	jmp .Lintel_bt_done
+
+	.Lintel_bt_set:
+	movl $1, %eax
+
+	.Lintel_bt_done:
+
+	IE
+	popl %ebx
+	leave
+	ret
+
+
+
+
+intel_btc:
+# int intel_btc(int, int)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ebx
+
+	movl 8(%ebp), %eax
+	movl 12(%ebp), %ebx
+	btc %ebx, %eax
+
+	IE
+	popl %ebx
+	leave
+	ret
+
+
+
+intel_btr:
+# int intel_btr(int, int)
+        pushl %ebp
+        movl %esp, %ebp
+        pushl %ebx
+
+        movl 8(%ebp), %eax
+        movl 12(%ebp), %ebx
+        btr %ebx, %eax
+
+	IE
+        popl %ebx
+        leave
+        ret
+
+
+
+
+intel_bts:
+# int intel_bts(int, int)
+        pushl %ebp
+        movl %esp, %ebp
+        pushl %ebx
+
+        movl 8(%ebp), %eax
+        movl 12(%ebp), %ebx
+        bts %ebx, %eax
+
+	IE
+        popl %ebx
+        leave
+        ret
+
+
+
+
 
 
 intel_isdigit:
@@ -808,7 +948,7 @@ intel_isdigit:
 	xorl %eax, %eax
 
 	.Lisdigit_success:
-
+	IE
 	leave
 	ret
 
@@ -834,6 +974,7 @@ intel_isbinary:
 	xorl %eax, %eax
 
 	.Lintel_isbinary_done:
+	IE
 	leave
 	ret
 
@@ -864,6 +1005,7 @@ intel_isalpha:
 	movl $1, %eax
 
 	.Lintel_isalpha_done:
+	IE
 	leave
 	ret
 
@@ -886,6 +1028,7 @@ intel_isalnum:
 	addl $4, %esp
 
 	.Lintel_isalnum_done:
+	IE
 	leave
 	ret
 
@@ -910,6 +1053,7 @@ intel_isupper:
         movl %ebx, %eax
 
 .L3_intel_isupper:
+	IE
         popl %ebx
         leave
         ret
@@ -937,6 +1081,7 @@ intel_islower:
         movl %ebx, %eax
 
 .L3_intel_islower:
+	IE
         popl %ebx
         leave
         ret
@@ -958,6 +1103,7 @@ intel_toupper:
 	subl $32, %eax
 	
 	out_toupper:
+	IE
 	leave
 	ret
 
@@ -978,6 +1124,7 @@ intel_tolower:
         addl $32, %eax
 
         out_tolower:
+	IE
         leave
         ret
 

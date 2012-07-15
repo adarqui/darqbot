@@ -84,7 +84,7 @@ bot_t *exec_run(dlist_t * dlist_node, bot_t * bot)
 	      "exec_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = EXEC_OPT_NORMAL;
@@ -114,7 +114,7 @@ char *exec_change_string(dlist_t * dlist_node, bot_t * bot, char *string,
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	switch (opt) {
 	case EXEC_OPT_NORMAL:
@@ -144,11 +144,11 @@ char *exec_op_normal(dlist_t * dlist_node, bot_t * bot, char *string)
 	bot->txt_data_in_sz = strlen(bot->txt_data_out);
 
 	memcpy(bot->txt_data_in, bot->txt_data_out, bot->txt_data_in_sz);
-	memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
+	_memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
 	pmodule_cur_run2(bot);
 
 /* added 04/12/2012 */
-	if (sNULL(bot->txt_data_out) != NULL)
+	if (_sNULL(bot->txt_data_out) != NULL)
 		str = strdup(bot->txt_data_out);
 
 	return str;
@@ -163,13 +163,13 @@ char *exec_op_fork(dlist_t * dlist_node, bot_t * bot, char *string)
 
 	bot->txt_data_in_sz = strlen(bot->txt_data_out);
 	memcpy(bot->txt_data_in, bot->txt_data_out, bot->txt_data_in_sz);
-	memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
+	_memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
 
 	if (!bot_fork_clean(bot)) {
 		pmodule_cur_run2(bot);
 
 /* added 04/12/2012 */
-		if (sNULL(bot->txt_data_out) != NULL)
+		if (_sNULL(bot->txt_data_out) != NULL)
 			str = strdup(bot->txt_data_out);
 	}
 

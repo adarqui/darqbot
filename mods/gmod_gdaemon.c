@@ -125,7 +125,7 @@ bot_t *gdaemon_run(dlist_t * dlist_node, bot_t * bot)
 	      "gdaemon_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	dptr_gmod =
@@ -196,7 +196,7 @@ char *gdaemon_process_options(gdaemon_t * gdaemon, char *string)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	dl = tokenize(NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES,
 		      "...");
@@ -284,7 +284,7 @@ char *gdaemon_change_string(bot_t * bot, char *string, int opt)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	return str;
 }

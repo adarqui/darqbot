@@ -244,7 +244,7 @@ relink_req_pack_buf_relink(char *buf, int id, char *host, int port, int type,
 	rlpkt_relink =
 	    (relink_control_pkt_relink_t *) (buf +
 					     sizeof(relink_control_pkt_t));
-	memset(rlpkt_relink, 0, sizeof(relink_control_pkt_relink_t));
+	_memset(rlpkt_relink, 0, sizeof(relink_control_pkt_relink_t));
 	strlcpy_buf(rlpkt_relink->host, host);
 	rlpkt_relink->port = port;
 	return sizeof(relink_control_pkt_t) +
@@ -262,7 +262,7 @@ int relink_req_pack_buf_relink_new(char *buf, int id, char *line)
 	rlpkt_relink =
 	    (relink_control_pkt_relink_t *) (buf +
 					     sizeof(relink_control_pkt_t));
-	memset(rlpkt_relink, 0, sizeof(relink_control_pkt_relink_t));
+	_memset(rlpkt_relink, 0, sizeof(relink_control_pkt_relink_t));
 	strlcpy_buf(rlpkt_relink->host, line);
 	rlpkt_relink->port = 0;
 	return sizeof(relink_control_pkt_t) +

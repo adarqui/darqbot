@@ -208,11 +208,11 @@ void bot_gmodule_run_stack_once(bot_t * bot)
 	trigger = gmod->syntax;
 
 	trig_len = 0;
-	trig_p_ptr = strchr(trigger, '(');
+	trig_p_ptr = _strchr(trigger, '(');
 	if (trig_p_ptr) {
 		trig_len = trig_p_ptr - trigger;
 	} else
-		trig_len = fn_strlen(trigger);
+		trig_len = _strlen(trigger);
 
 	trig_clean_ptr = strdup_len(trigger, trig_len);
 	if (!trig_clean_ptr)
@@ -234,7 +234,7 @@ void bot_gmodule_run_stack_once(bot_t * bot)
 
 	bot->dl_gmodules_cur = dptr_gmodules;
 
-	trig_called_proper_len = fn_strlen(module->trigger);
+	trig_called_proper_len = _strlen(module->trigger);
 
 	if (module->run) {
 
@@ -356,7 +356,7 @@ int gmodule_destroy_up(dlist_t * dlist_node, bot_t * bot)
 	bz(bot->trig_called);
 	strlcpy_buf(bot->trig_called, gmod->syntax);
 
-	bot->dl_module_arg = bot->trig_called + fn_strlen(gmod->trigger);
+	bot->dl_module_arg = bot->trig_called + _strlen(gmod->trigger);
 
 /*
   module->self->trigger_ext = gmod->trigger_ext;
@@ -420,7 +420,7 @@ int gmodule_destroy_down(dlist_t * dlist_node, bot_t * bot)
 	bz(bot->trig_called);
 	strlcpy_buf(bot->trig_called, gmod->syntax);
 
-	bot->dl_module_arg = bot->trig_called + fn_strlen(gmod->trigger);
+	bot->dl_module_arg = bot->trig_called + _strlen(gmod->trigger);
 
 /*
   module->self->trigger_ext = gmod->trigger_ext;
@@ -482,7 +482,7 @@ int gmodule_control_up(dlist_t * dlist_node, bot_t * bot)
 	bz(bot->trig_called);
 	strlcpy_buf(bot->trig_called, gmod->syntax);
 
-	bot->dl_module_arg = bot->trig_called + fn_strlen(gmod->trigger);
+	bot->dl_module_arg = bot->trig_called + _strlen(gmod->trigger);
 
 	strlcpy_buf(module->self->trigger_ext, gmod->trigger_ext);
 
@@ -536,14 +536,14 @@ int gmodule_control_down(dlist_t * dlist_node, bot_t * bot)
 	if (!module->control_down)
 		return -1;
 /*
-  memset (bot->trig_called, 0, sizeof (bot->trig_called));
+  _memset (bot->trig_called, 0, sizeof (bot->trig_called));
 */
 /*
   strlcpy_buf (bot->trig_called, gmod->syntax, sizeof (bot->trig_called) - 1);
 */
 	strlcpy_buf(bot->trig_called, gmod->syntax);
 
-	bot->dl_module_arg = bot->trig_called + fn_strlen(gmod->trigger);
+	bot->dl_module_arg = bot->trig_called + _strlen(gmod->trigger);
 
 /*
   module->self->trigger_ext = gmod->trigger_ext;
@@ -609,7 +609,7 @@ int gmodule_up(dlist_t * dlist_node, bot_t * bot)
 
 	strlcpy_buf(bot->trig_called, gmod->syntax);
 
-	bot->dl_module_arg = bot->trig_called + fn_strlen(gmod->trigger);
+	bot->dl_module_arg = bot->trig_called + _strlen(gmod->trigger);
 
 	gmodule_fix_data_up(bot);
 
@@ -695,7 +695,7 @@ int gmodule_down(dlist_t * dlist_node, bot_t * bot)
 	bz(bot->trig_called);
 	strlcpy_buf(bot->trig_called, gmod->syntax);
 
-	bot->dl_module_arg = bot->trig_called + fn_strlen(gmod->trigger);
+	bot->dl_module_arg = bot->trig_called + _strlen(gmod->trigger);
 
 	gmodule_fix_data_down(bot);
 
@@ -841,21 +841,21 @@ bot_gmod_elm_t *gmodule_find_gmod(bot_t * bot, char *trigger, char *trigger_ext)
 		gmod = (bot_gmod_elm_t *) dlist_data(dptr);
 		if (!gmod)
 			continue;
-		if (!sNULL(gmod->trigger))
+		if (!_sNULL(gmod->trigger))
 			continue;
 
-		if (sNULL(trigger_ext)) {
+		if (_sNULL(trigger_ext)) {
 /* match the extension first */
-			if (!sNULL(gmod->trigger_ext))
+			if (!_sNULL(gmod->trigger_ext))
 				continue;
 			if (strcasecmp(gmod->trigger_ext, trigger_ext))
 				continue;
 /* allow us to find a gmod based entirely on trigger_ext */
-			if (!sNULL(trigger))
+			if (!_sNULL(trigger))
 				return gmod;
 		}
 
-		if (sNULL(trigger)) {
+		if (_sNULL(trigger)) {
 			if (!strcasecmp(gmod->trigger, trigger))
 				return gmod;
 		}
@@ -878,12 +878,12 @@ dlist_t *gmodule_find_gmod_dptr(bot_t * bot, char *trigger, char *trigger_ext)
 		gmod = (bot_gmod_elm_t *) dlist_data(dptr);
 		if (!gmod)
 			continue;
-		if (!sNULL(gmod->trigger))
+		if (!_sNULL(gmod->trigger))
 			continue;
 
-		if (sNULL(trigger_ext)) {
+		if (_sNULL(trigger_ext)) {
 /* match the extension first */
-			if (!sNULL(gmod->trigger_ext))
+			if (!_sNULL(gmod->trigger_ext))
 				continue;
 			if (strcasecmp(gmod->trigger_ext, trigger_ext))
 				continue;
@@ -891,7 +891,7 @@ dlist_t *gmodule_find_gmod_dptr(bot_t * bot, char *trigger, char *trigger_ext)
 				return dptr;
 		}
 
-		if (sNULL(trigger)) {
+		if (_sNULL(trigger)) {
 			if (!strcasecmp(gmod->trigger, trigger))
 				return dptr;
 		}
@@ -916,12 +916,12 @@ bot_gmod_elm_t *gmodule_find_latest_gmod(bot_t * bot, char *trigger,
 		gmod = (bot_gmod_elm_t *) dlist_data(dptr);
 		if (!gmod)
 			continue;
-		if (!sNULL(gmod->trigger))
+		if (!_sNULL(gmod->trigger))
 			continue;
 
 		if (trigger_ext) {
 /* match the extension first */
-			if (!sNULL(gmod->trigger_ext))
+			if (!_sNULL(gmod->trigger_ext))
 				continue;
 			if (strcasecmp(gmod->trigger_ext, trigger_ext))
 				continue;
@@ -930,7 +930,7 @@ bot_gmod_elm_t *gmodule_find_latest_gmod(bot_t * bot, char *trigger,
 				return gmod;
 		}
 
-		if (sNULL(trigger)) {
+		if (_sNULL(trigger)) {
 			if (!strcasecmp(gmod->trigger, trigger))
 				return gmod;
 		}
@@ -954,20 +954,20 @@ dlist_t *gmodule_find_latest_gmod_dptr(bot_t * bot, char *trigger,
 		gmod = (bot_gmod_elm_t *) dlist_data(dptr);
 		if (!gmod)
 			continue;
-		if (!sNULL(gmod->trigger))
+		if (!_sNULL(gmod->trigger))
 			continue;
 
-		if (sNULL(trigger_ext)) {
+		if (_sNULL(trigger_ext)) {
 /* match the extension first */
-			if (!sNULL(gmod->trigger_ext))
+			if (!_sNULL(gmod->trigger_ext))
 				continue;
 			if (strcasecmp(gmod->trigger_ext, trigger_ext))
 				continue;
-			if (!sNULL(trigger))
+			if (!_sNULL(trigger))
 				return dptr;
 		}
 
-		if (sNULL(trigger)) {
+		if (_sNULL(trigger)) {
 			if (!strcasecmp(gmod->trigger, trigger))
 				return dptr;
 		}
@@ -1011,7 +1011,7 @@ dlist_t *bot_gmodule_dup_bot_gmodules(bot_t * bot)
 if(gmod->trigger)
     gmod_new->trigger = strdup (gmod->trigger);
 */
-		if (sNULL(gmod->trigger))
+		if (_sNULL(gmod->trigger))
 			strlcpy_buf(gmod_new->trigger, gmod->trigger);
 
 /*
@@ -1019,7 +1019,7 @@ if(gmod->trigger_ext)
     gmod_new->trigger_ext = strdup (gmod->trigger_ext);
 */
 
-		if (sNULL(gmod->trigger_ext))
+		if (_sNULL(gmod->trigger_ext))
 			strlcpy_buf(gmod_new->trigger_ext, gmod->trigger_ext);
 
 		gmod_new->data = NULL;
@@ -1028,7 +1028,7 @@ if(gmod->trigger_ext)
 		gmod_new->has_run = 0;
 		gmod_new->can_pass_up = 0;
 		gmod_new->can_pass_down = 0;
-		memset(&gmod_new->link, 0, sizeof(fd_link_t));
+		_memset(&gmod_new->link, 0, sizeof(fd_link_t));
 
 		gmod_new->dl_cache = NULL;
 
@@ -1352,7 +1352,7 @@ int gmodule_control_up_fd(dlist_t * dlist_node, bot_t * bot, int fd, char *tag,
 	control_add_fdpass(control, fd);
 	dptr_control = control_bot_add(bot, control);
 
-	if (sNULL(tag_ext)) {
+	if (_sNULL(tag_ext)) {
 		dptr_gmod = gmodule_find_gmod_dptr(bot, NULL, tag_ext);
 		if (dptr_gmod) {
 			if (dlist_prev(dptr_gmod))

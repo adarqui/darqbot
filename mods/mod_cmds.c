@@ -87,7 +87,7 @@ bot_t *cmds_run(dlist_t * dlist_node, bot_t * bot)
 	      "cmds_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = MOD_CMDS_GET;
@@ -125,7 +125,7 @@ char *cmds_change_string(bot_t * bot, char *string, int opt)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	if (opt == MOD_CMDS_SIZE) {
 		str = str_unite("%i", dlist_size(bot->stack_cmds));
@@ -156,7 +156,7 @@ void cmds_clean_str(char *s)
 		if (!p)
 			break;
 
-		q = strchr(p, '|');
+		q = _strchr(p, '|');
 		if (!q)
 			*p = '\0';
 		else {

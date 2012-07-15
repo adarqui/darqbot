@@ -84,7 +84,7 @@ bot_t *help_run(dlist_t * dlist_node, bot_t * bot)
 	      "help_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -114,7 +114,7 @@ char *help_change_string(bot_t * bot, char *string, int opt)
 	if (!bot || !string)
 		return NULL;
 
-	if (sNULL(tok)) {
+	if (_sNULL(tok)) {
 		help_get(bot, &dl_text, tok);
 	} else {
 		dlist_traverse(&gi->dl_module, help_traverse, &dl_text);
@@ -163,7 +163,7 @@ void help_get(bot_t * bot, dlist_t ** dl_text, char *trigger)
 	module_t *mod = NULL;
 	char trigger_orig[32];
 
-	if (!bot || !dl_text || !sNULL(trigger))
+	if (!bot || !dl_text || !_sNULL(trigger))
 		return;
 
 	mod = xmodule_find_by_trig(XMODULE_TYPE_MODULE, trigger);

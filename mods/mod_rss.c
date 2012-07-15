@@ -88,7 +88,7 @@ bot_t *rss_run(dlist_t * dlist_node, bot_t * bot)
 	      "rss_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot)) {
+	if (_bot_shouldreturn(bot)) {
 		return NULL;
 	}
 
@@ -257,8 +257,8 @@ char *rss_op_info(bot_t * bot, char *string)
 
 	bz(buf);
 
-	string_ptr = eat_whitespace(string);
-	if (!sNULL(string_ptr)) {
+	string_ptr = _eat_whitespace(string);
+	if (!_sNULL(string_ptr)) {
 /* return all keys */
 		count = xdb_count(db);
 		if (count <= 0)
@@ -274,7 +274,7 @@ char *rss_op_info(bot_t * bot, char *string)
 		}
 	} else {
 /* return one key */
-		strstrip_chars(string, " \r\n\t");
+		_strstrip_chars(string, " \r\n\t");
 		pair = xdb_get(db, string);
 		if (pair) {
 			strlcatfmt_buf(buf, "%s %s", pair->key, pair->value);
@@ -286,7 +286,7 @@ char *rss_op_info(bot_t * bot, char *string)
 	if (db)
 		xdb_fini(db);
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;
@@ -317,7 +317,7 @@ char *rss_op_run(bot_t * bot, char *string, int opt, int opt_2)
 
 	bz(buf);
 
-	strstrip_chars(string, " \r\n\t");
+	_strstrip_chars(string, " \r\n\t");
 
 	ptr = strstr(string, "://");
 	if (!ptr) {
@@ -339,7 +339,7 @@ char *rss_op_run(bot_t * bot, char *string, int opt, int opt_2)
 		if (!str_url)
 			return NULL;
 
-		str_key_dup = strrchr(str_url, '/');
+		str_key_dup = _strrchr(str_url, '/');
 		if (str_key_dup) {
 			str_key_dup = strdup(str_key_dup + 1);
 		}
@@ -352,7 +352,7 @@ char *rss_op_run(bot_t * bot, char *string, int opt, int opt_2)
 
 		str =
 		    str_unite_static("/tmp/mod_rss-%i%i.xml", getpid(), rand());
-		if (!sNULL(str))
+		if (!_sNULL(str))
 			goto cleanup;
 
 		rss_fp = fopen(str, "w");
@@ -506,7 +506,7 @@ char *rss_op_run(bot_t * bot, char *string, int opt, int opt_2)
 
 			}
 
-			if (sNULL(buf) != NULL)
+			if (_sNULL(buf) != NULL)
 				str = strdup(buf);
 
 		}
@@ -550,7 +550,7 @@ rss_curl_write_tinyurls_tinyurl(void *buf, size_t size, size_t nmemb,
 	rss_url = NULL;
 	if ((url = strstr(buf, "http://"))) {
 		rss_url = strdup(url);
-		strstrip_chars(rss_url, "\r\n ");
+		_strstrip_chars(rss_url, "\r\n ");
 	}
 
 	return size * nmemb;
@@ -792,7 +792,7 @@ void rss_update(bot_t * bot, dlist_t ** dl, int opt)
 		return;
 
 	channel_ptr = bot->txt_to;
-	strstrip_chars(channel_ptr, "/\\ \"'`");
+	_strstrip_chars(channel_ptr, "/\\ \"'`");
 	db_name =
 	    str_unite("%s/mods/mod_rss_files/%s.%s.rssdb", gi->confdir,
 		      bot->tag, channel_ptr);
@@ -844,7 +844,7 @@ char *rss_ret_url_from_key(char *key)
 	char *db_name = NULL;
 	char *str = NULL;
 
-	strstrip_chars(key, " \r\n\t");
+	_strstrip_chars(key, " \r\n\t");
 
 	db_name = rss_ret_urldb_str();
 	if (!db_name)

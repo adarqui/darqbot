@@ -125,7 +125,7 @@ bot_t *grelinkd_run(dlist_t * dlist_node, bot_t * bot)
 	      "grelinkd_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	printf("dl_module_arg=%s\n", bot->dl_module_arg);
@@ -175,14 +175,14 @@ char *grelinkd_process_options(grelinkd_t * grelinkd, char *string)
 
 	debug(NULL, "grelinkd_process_options: Entered\n");
 
-	if (!grelinkd || !sNULL(string))
+	if (!grelinkd || !_sNULL(string))
 		return NULL;
 
 	sep_ptr = str_find_sep(string);
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	dl = tokenize(NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES,
 		      "...");
@@ -202,7 +202,7 @@ char *grelinkd_process_options(grelinkd_t * grelinkd, char *string)
 void grelinkd_process_options_parse(grelinkd_t * grelinkd, char *string)
 {
 
-	if (!grelinkd || !sNULL(string))
+	if (!grelinkd || !_sNULL(string))
 		return;
 
 	debug(NULL, "grelinkd_process_options_parse: Entered\n");
@@ -220,7 +220,7 @@ void grelinkd_process_options_parse(grelinkd_t * grelinkd, char *string)
 void grelinkd_process_options_parse_null(grelinkd_t * grelinkd, char *string)
 {
 
-	if (!grelinkd || !sNULL(string))
+	if (!grelinkd || !_sNULL(string))
 		return;
 
 	return;
@@ -412,7 +412,7 @@ int grelinkd_op_data_notify(grelinkd_t * grelinkd)
 	if (!grelinkd)
 		return -1;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 	buf_len = grelinkd->bot->txt_data_out_sz;
 	memcpy(buf, grelinkd->bot->txt_data_out, buf_len);
 
@@ -746,7 +746,7 @@ void grelinkd_free(void *arg)
 	if (grelinkd->gmod)
 		grelinkd->gmod->data = NULL;
 
-	memset(grelinkd, 0, sizeof(grelinkd_t));
+	_memset(grelinkd, 0, sizeof(grelinkd_t));
 	free(grelinkd);
 
 	return;

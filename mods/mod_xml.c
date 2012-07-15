@@ -83,7 +83,7 @@ bot_t *xml_run(dlist_t * dlist_node, bot_t * bot)
 	      "xml_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -113,7 +113,7 @@ char *xml_change_string(char *string, char *opt_str, int opt)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	if (!sNULL(string))
+	if (!_sNULL(string))
 		return NULL;
 
 	doc = xmlReadMemory(string, strlen(string), NULL, NULL, 0);
@@ -125,7 +125,7 @@ char *xml_change_string(char *string, char *opt_str, int opt)
 	/*Get the root element node */
 	root_element = xmlDocGetRootElement(doc);
 
-	if (sNULL(opt_str)) {
+	if (_sNULL(opt_str)) {
 		dl_match_strings =
 		    tokenize(NULL, opt_str,
 			     TOKENIZE_NORMAL | TOKENIZE_EATWHITESPACE, ",");

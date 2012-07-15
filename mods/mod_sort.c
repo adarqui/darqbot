@@ -90,7 +90,7 @@ bot_t *sort_run(dlist_t * dlist_node, bot_t * bot)
 	      "sort_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = SORT_FORW;
@@ -123,7 +123,7 @@ bot_t *sort_run(dlist_t * dlist_node, bot_t * bot)
 		opt = SORT_UNIQW;
 	}
 
-	opt_delim = strchr(dl_options_ptr, ',');
+	opt_delim = _strchr(dl_options_ptr, ',');
 	if (opt_delim)
 		opt_delim = opt_delim + 1;
 
@@ -159,7 +159,7 @@ char *sort_change_string(char *string, int string_size, int opt, char *delim)
 	word = 0;
 /* find words */
 
-	if (!sNULL(delim))
+	if (!_sNULL(delim))
 		delim = " ";
 
 	if (opt == SORT_FORC || opt == SORT_BACKC || opt == SORT_RANDC

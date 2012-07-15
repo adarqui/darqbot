@@ -98,7 +98,7 @@ bot_t *timer_run(dlist_t * dlist_node, bot_t * bot)
 	      "timer_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -357,7 +357,7 @@ char *timer_op_list(char *string)
 	if (!string)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	dlist_fornext(dl_mod_timer, dptr) {
 		t = (modtimer_t *) dlist_data(dptr);
@@ -369,7 +369,7 @@ char *timer_op_list(char *string)
 			       t->id, t->interval, t->count, t->chan, t->cmd);
 	}
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;

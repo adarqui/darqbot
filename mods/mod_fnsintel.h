@@ -27,7 +27,7 @@
 #define MOD_FNSINTEL_H
 
 #include "bot.h"
-
+#include "mod_func_intel2.h"
 enum {
 	MOD_FNSINTEL_TEST = 1,
 	MOD_FNSINTEL_ON,

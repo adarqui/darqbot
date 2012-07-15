@@ -144,7 +144,7 @@ void fd_link_cleanup(fd_link_t * bfl)
 
 		event_del(&bfl->ev);
 
-		memset(bfl, 0, sizeof(fd_link_t));
+		_memset(bfl, 0, sizeof(fd_link_t));
 	}
 
 	return;
@@ -219,7 +219,7 @@ char *fd_link_get_latest_host(bot_t * bot, char *trigger, char *trigger_ext)
 			}
 		case AF_UNIX:
 			{
-				if (sNULL(bfl->sun.sun_path) != NULL)
+				if (_sNULL(bfl->sun.sun_path) != NULL)
 					str = strdup(bfl->sun.sun_path);
 				return str;
 			}

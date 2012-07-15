@@ -29,7 +29,7 @@ DB *xdb_open(char *filename)
 
 	debug(NULL, "xdb_open: Entered: %s\n", filename);
 
-	if (!sNULL(filename))
+	if (!_sNULL(filename))
 		return NULL;
 
 	ret = db_create(&db, NULL, 0);
@@ -57,7 +57,7 @@ int xdb_write(DB * db, char *key, char *value)
 	DBT db_key, db_value;
 	int ret = 0;
 
-	if (!db || !sNULL(key) || !sNULL(value))
+	if (!db || !_sNULL(key) || !_sNULL(value))
 		return -1;
 
 	bz2(db_key);
@@ -82,7 +82,7 @@ xdb_pair_t *xdb_get(DB * db, char *key)
 
 	int ret;
 
-	if (!db || !sNULL(key))
+	if (!db || !_sNULL(key))
 		return NULL;
 
 	bz2(db_key);
@@ -162,7 +162,7 @@ int xdb_count(DB * db)
 	if (!db)
 		return 0;
 
-	//memset (&bts, 0, sizeof (bts));
+	//_memset (&bts, 0, sizeof (bts));
 
 	db->stat(db, NULL, &bts, DB_FAST_STAT);
 
@@ -180,7 +180,7 @@ xdb_pair_t *xdb_pair_create(char *s1, int s1_len, char *s2, int s2_len)
 
 	xdb_pair_t *pair = NULL;
 
-	if (!sNULL(s1) || s1_len <= 0 || !sNULL(s2) || s2_len <= 0)
+	if (!_sNULL(s1) || s1_len <= 0 || !_sNULL(s2) || s2_len <= 0)
 		return NULL;
 
 	pair = (xdb_pair_t *) calloc(1, sizeof(xdb_pair_t));
@@ -228,7 +228,7 @@ xdb_pair_t *xdb_pair_find_by_key(dlist_t * dl, char *key)
 
 	xdb_pair_t *pair = NULL;
 
-	if (!dl || !sNULL(key))
+	if (!dl || !_sNULL(key))
 		return NULL;
 
 	dlist_fornext(dl, dptr) {

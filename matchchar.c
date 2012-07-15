@@ -98,27 +98,27 @@ int matchchar_str(char *str)
     }
 */
 
-	if (!strncasecmp(str, "MASCII", fn_strlen("MASCII"))) {
+	if (!strncasecmp(str, "MASCII", _strlen("MASCII"))) {
 		x = MATCHCHAR_ASCII;
-	} else if (!strncasecmp(str, "MALPHA", fn_strlen("MALPHA"))) {
+	} else if (!strncasecmp(str, "MALPHA", _strlen("MALPHA"))) {
 		x = MATCHCHAR_ALPHA;
-	} else if (!strncasecmp(str, "MALNUM", fn_strlen("MALNUM"))) {
+	} else if (!strncasecmp(str, "MALNUM", _strlen("MALNUM"))) {
 		x = MATCHCHAR_ALNUM;
-	} else if (!strncasecmp(str, "MDIGIT", fn_strlen("MDIGIT"))) {
+	} else if (!strncasecmp(str, "MDIGIT", _strlen("MDIGIT"))) {
 		x = MATCHCHAR_DIGIT;
-	} else if (!strncasecmp(str, "MLOWER", fn_strlen("MLOWER"))) {
+	} else if (!strncasecmp(str, "MLOWER", _strlen("MLOWER"))) {
 		x = MATCHCHAR_LOWER;
-	} else if (!strncasecmp(str, "MUPPER", fn_strlen("MUPPER"))) {
+	} else if (!strncasecmp(str, "MUPPER", _strlen("MUPPER"))) {
 		x = MATCHCHAR_UPPER;
-	} else if (!strncasecmp(str, "MPUNCT", fn_strlen("MPUNCT"))) {
+	} else if (!strncasecmp(str, "MPUNCT", _strlen("MPUNCT"))) {
 		x = MATCHCHAR_PUNCT;
-	} else if (!strncasecmp(str, "MBINARY", fn_strlen("MBINARY"))) {
+	} else if (!strncasecmp(str, "MBINARY", _strlen("MBINARY"))) {
 		x = MATCHCHAR_BINARY;
-	} else if (!strncasecmp(str, "MSPACE", fn_strlen("MSPACE"))) {
+	} else if (!strncasecmp(str, "MSPACE", _strlen("MSPACE"))) {
 		x = MATCHCHAR_SPACE;
-	} else if (!strncasecmp(str, "MSAME", fn_strlen("MSAME"))) {
+	} else if (!strncasecmp(str, "MSAME", _strlen("MSAME"))) {
 		x = MATCHCHAR_SAME;
-	} else if (!strncasecmp(str, "MINVERT", fn_strlen("MINVERT"))) {
+	} else if (!strncasecmp(str, "MINVERT", _strlen("MINVERT"))) {
 		x = MATCHCHAR_INVERT;
 	}
 

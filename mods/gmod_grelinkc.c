@@ -125,7 +125,7 @@ bot_t *grelinkc_run(dlist_t * dlist_node, bot_t * bot)
 	      "grelinkc_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	printf("dl_module_arg=%s\n", bot->dl_module_arg);
@@ -175,14 +175,14 @@ char *grelinkc_process_options(grelinkc_t * grelinkc, char *string)
 
 	debug(NULL, "grelinkc_process_options: Entered\n");
 
-	if (!grelinkc || !sNULL(string))
+	if (!grelinkc || !_sNULL(string))
 		return NULL;
 
 	sep_ptr = str_find_sep(string);
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	dl = tokenize(NULL, string, TOKENIZE_NORMAL, "...");
 	if (!dl)
@@ -201,7 +201,7 @@ char *grelinkc_process_options(grelinkc_t * grelinkc, char *string)
 void grelinkc_process_options_parse(grelinkc_t * grelinkc, char *string)
 {
 
-	if (!grelinkc || !sNULL(string))
+	if (!grelinkc || !_sNULL(string))
 		return;
 
 	debug(NULL, "grelinkc_process_options_parse: Entered\n");
@@ -222,7 +222,7 @@ void grelinkc_process_options_parse(grelinkc_t * grelinkc, char *string)
 void grelinkc_process_options_parse_id(grelinkc_t * grelinkc, char *string)
 {
 
-	if (!grelinkc || !sNULL(string))
+	if (!grelinkc || !_sNULL(string))
 		return;
 
 	grelinkc->id = atoi(string);
@@ -233,7 +233,7 @@ void grelinkc_process_options_parse_id(grelinkc_t * grelinkc, char *string)
 void grelinkc_process_options_parse_line(grelinkc_t * grelinkc, char *string)
 {
 
-	if (!grelinkc || !sNULL(string))
+	if (!grelinkc || !_sNULL(string))
 		return;
 
 	if (grelinkc->line)
@@ -251,14 +251,14 @@ char *grelinkc_change_string(bot_t * bot, char *string, int opt)
 
 	char *sep_ptr;
 
-	if (!bot || !sNULL(string))
+	if (!bot || !_sNULL(string))
 		return NULL;
 
 	sep_ptr = str_find_sep(string);
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	return str;
 }
@@ -411,7 +411,7 @@ int grelinkc_op_data_notify(grelinkc_t * grelinkc)
 	if (!grelinkc)
 		return -1;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 	buf_len = grelinkc->bot->txt_data_out_sz;
 	memcpy(buf, grelinkc->bot->txt_data_out, buf_len);
 

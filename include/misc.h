@@ -61,6 +61,9 @@ WORKS:
 #define strprepend_bot(a,b) strprepend_bot_safe((a), (b), sizeof((a))-1)
 */
 
+int true(void);
+int false(void);
+
      size_t strlcpy_safe(char *, const char *, size_t);
 
      size_t strlcat_safe(char *, const char *, size_t);

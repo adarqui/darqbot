@@ -122,7 +122,7 @@ bot_t *girc_run(dlist_t * dlist_node, bot_t * bot)
 	      "irc_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	dptr_gmod =
@@ -193,14 +193,14 @@ char *girc_process_options(girc_t * girc, char *string)
 
 	debug(NULL, "girc_process_options: Entered\n");
 
-	if (!girc || !sNULL(string))
+	if (!girc || !_sNULL(string))
 		return NULL;
 
 	sep_ptr = str_find_sep(string);
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	dl = tokenize(NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES,
 		      "...");
@@ -219,7 +219,7 @@ char *girc_process_options(girc_t * girc, char *string)
 void girc_process_options_parse(girc_t * girc, char *string)
 {
 
-	if (!girc || !sNULL(string))
+	if (!girc || !_sNULL(string))
 		return;
 
 	debug(NULL, "girc_process_options_parse: Entered\n");
@@ -241,7 +241,7 @@ void girc_process_options_parse_nick(girc_t * girc, char *string)
 	nick_t *nick;
 	char *tok_1, *tok_2, *tok_3, *tok_4, *tok_5;
 
-	if (!girc || !sNULL(string))
+	if (!girc || !_sNULL(string))
 		return;
 
 	tok_1 = strtok(string, ":");
@@ -282,7 +282,7 @@ void girc_process_options_parse_channel(girc_t * girc, char *string)
 	dlist_t *dl, *dptr;
 	char *tok_1, *tok_2;
 
-	if (!girc || !sNULL(string))
+	if (!girc || !_sNULL(string))
 		return;
 
 	dl = tokenize(NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES,
@@ -296,7 +296,7 @@ void girc_process_options_parse_channel(girc_t * girc, char *string)
 		if (!tok_1)
 			continue;
 
-		tok_2 = strchr(tok_1, ':');
+		tok_2 = _strchr(tok_1, ':');
 
 		channel = (channel_t *) calloc(1, sizeof(channel_t));
 
@@ -378,7 +378,7 @@ bot_t *girc_input(dlist_t * dlist_node, bot_t * bot)
 		return NULL;
 	}
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 	memcopy(buf, bot->txt_data_in, sizeof(buf) - 1, bot->txt_data_in_sz);
 
 	n = bot->txt_data_in_sz;
@@ -403,7 +403,7 @@ bot_t *girc_input(dlist_t * dlist_node, bot_t * bot)
 		}
 
 /* hook raw input module processing */
-		strstrip_nl(bot->txt_data_in);
+		_strstrip_nl(bot->txt_data_in);
 		dlist_traverse(&gi->dl_mod_iohooks, girc_input_iohooks, bot);
 
 		if (bot->isprivmsg) {
@@ -422,7 +422,7 @@ bot_t *girc_input(dlist_t * dlist_node, bot_t * bot)
 
 		else if (!strncasecmp_len(buf_ptr, "ping ") && !bot->isprivmsg) {
 			char *str;
-			char *pong_reply = &buf_ptr[fn_strlen("ping :")];
+			char *pong_reply = &buf_ptr[_strlen("ping :")];
 
 			str = str_unite_static("PONG %s\n", pong_reply);
 
@@ -453,7 +453,7 @@ bot_t *girc_input(dlist_t * dlist_node, bot_t * bot)
 
 		if (bot->isline) {
 
-			strstrip_nl(bot->txt_data_in);
+			_strstrip_nl(bot->txt_data_in);
 
 /* hooks: input module processing */
 
@@ -461,8 +461,8 @@ bot_t *girc_input(dlist_t * dlist_node, bot_t * bot)
 
 			gmodule_up(dlist_node, bot);
 
-			if (sNULL(bot->txt_data_out) != NULL && bot->shouldsend
-			    && sNULL(bot->txt_to) != NULL) {
+			if (_sNULL(bot->txt_data_out) != NULL && bot->shouldsend
+			    && _sNULL(bot->txt_to) != NULL) {
 
 				girc_send(girc);
 
@@ -584,7 +584,7 @@ int girc_line_info(girc_t * girc, char *line, int len)
 
 	line_dup = strdup(line);
 
-	if (!girc || !sNULL(line) || len <= 0)
+	if (!girc || !_sNULL(line) || len <= 0)
 		return -1;
 
 	bot = girc->bot_root;
@@ -593,10 +593,10 @@ int girc_line_info(girc_t * girc, char *line, int len)
 
 /* nick or server */
 	tok_1 = strtok(line_dup_ptr, " ");
-	if (!sNULL(tok_1))
+	if (!_sNULL(tok_1))
 		goto cleanup;
 
-	tok_rest = tok_1 + fn_strlen(tok_1) + 1;
+	tok_rest = tok_1 + _strlen(tok_1) + 1;
 
 	if (strstr(tok_1, "!")) {
 /* line */
@@ -610,21 +610,21 @@ int girc_line_info(girc_t * girc, char *line, int len)
 
 /* ident */
 		tok_2 = strtok(NULL, "@");
-		if (!sNULL(tok_2))
+		if (!_sNULL(tok_2))
 			goto cleanup;
 
 		debug(bot, "2=%s\n", tok_2);
 
 /* host */
 		tok_3 = strtok(NULL, " ");
-		if (!sNULL(tok_3))
+		if (!_sNULL(tok_3))
 			goto cleanup;
 
 		debug(bot, "3=%s\n", tok_3);
 
 /* command */
 		tok_4 = strtok(tok_rest, " ");
-		if (!sNULL(tok_4))
+		if (!_sNULL(tok_4))
 			goto cleanup;
 
 		debug(bot, "4=%s\n", tok_4);
@@ -662,7 +662,7 @@ int girc_line_info(girc_t * girc, char *line, int len)
 
 /* to */
 		tok_5 = strtok(NULL, " ");
-		if (!sNULL(tok_5)) {
+		if (!_sNULL(tok_5)) {
 			goto cleanup;
 		}
 
@@ -707,15 +707,15 @@ int girc_line_info(girc_t * girc, char *line, int len)
 			tok_1++;
 
 		tok_2 = strtok(NULL, " ");
-		if (!sNULL(tok_2))
+		if (!_sNULL(tok_2))
 			goto cleanup;
 
 		tok_3 = strtok(NULL, " ");
-		if (!sNULL(tok_3))
+		if (!_sNULL(tok_3))
 			goto cleanup;
 
 		tok_4 = strtok(NULL, "");
-		if (!sNULL(tok_4))
+		if (!_sNULL(tok_4))
 			goto cleanup;
 
 		strlcpy_buf(bot->txt_server, tok_1);
@@ -783,9 +783,9 @@ int girc_send(girc_t * girc)
 	debug(NULL, "girc_send: RAW DATA=[%s]\n", bot->txt_data_out);
 
 	if (!bot->var_multi) {
-		str_clean_nl(bot->txt_data_out, fn_strlen(bot->txt_data_out));
+		str_clean_nl(bot->txt_data_out, _strlen(bot->txt_data_out));
 
-		if (fn_strlen(bot->txt_data_out) > bot->var_bufsz) {
+		if (_strlen(bot->txt_data_out) > bot->var_bufsz) {
 			bot->txt_data_out[bot->var_bufsz - 1] = '\n';
 			bot->txt_data_out[bot->var_bufsz] = '\0';
 		}
@@ -829,11 +829,11 @@ int girc_send(girc_t * girc)
 			n = 1;
 			str_ptr_new = NULL;
 
-			if (fn_strlen(str_ptr) > bot->var_bufsz) {
+			if (_strlen(str_ptr) > bot->var_bufsz) {
 				str_ptr[bot->var_bufsz] = '\0';
 			}
 
-			if (fn_strlen(str_ptr) > 1) {
+			if (_strlen(str_ptr) > 1) {
 				if (bot->isprivmsg) {
 					str_ptr_new =
 					    str_unite_static("PRIVMSG %s :%s\n",

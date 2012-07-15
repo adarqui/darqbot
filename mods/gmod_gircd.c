@@ -113,7 +113,7 @@ bot_t *gircd_run(dlist_t * dlist_node, bot_t * bot)
 	      "gircd_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	dptr_gmod =
@@ -179,14 +179,14 @@ char *gircd_process_options(gircd_t * gircd, char *string)
 
 	debug(NULL, "gircd_process_options: Entered\n");
 
-	if (!gircd || !sNULL(string))
+	if (!gircd || !_sNULL(string))
 		return NULL;
 
 	sep_ptr = str_find_sep(string);
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	dl = tokenize(NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES,
 		      "...");
@@ -205,7 +205,7 @@ char *gircd_process_options(gircd_t * gircd, char *string)
 void gircd_process_options_parse(gircd_t * gircd, char *string)
 {
 
-	if (!gircd || !sNULL(string))
+	if (!gircd || !_sNULL(string))
 		return;
 
 	debug(NULL, "gircd_process_options_parse: Entered\n");
@@ -226,10 +226,10 @@ void gircd_process_options_parse(gircd_t * gircd, char *string)
 void gircd_process_options_parse_name(gircd_t * gircd, char *string)
 {
 
-	if (!gircd || !sNULL(string))
+	if (!gircd || !_sNULL(string))
 		return;
 
-	strstrip_chars(string, " \r\n\t");
+	_strstrip_chars(string, " \r\n\t");
 
 	if (gircd->name)
 		free(gircd->name);
@@ -242,10 +242,10 @@ void gircd_process_options_parse_name(gircd_t * gircd, char *string)
 void gircd_process_options_parse_ronick(gircd_t * gircd, char *string)
 {
 
-	if (!gircd || !sNULL(string))
+	if (!gircd || !_sNULL(string))
 		return;
 
-	strstrip_chars(string, " \r\n\t");
+	_strstrip_chars(string, " \r\n\t");
 
 	if (gircd->user_ronick)
 		free(gircd->user_ronick);
@@ -260,7 +260,7 @@ char *gircd_change_string(bot_t * bot, char *string, int opt)
 	char *str = NULL;
 	char *sep_ptr;
 
-	if (!bot || !sNULL(string))
+	if (!bot || !_sNULL(string))
 		return NULL;
 
 	sep_ptr = str_find_sep(string);
@@ -295,7 +295,7 @@ int gircd_link_down_dl(gircd_user_t * gircd_user, dlist_t ** dl_text)
 		gmodule_down(gircd_user->dptr_gmod, gircd_user->bot_sub);
 	}
 
-	memset(gircd_user->bot_sub->txt_data_out, 0,
+	_memset(gircd_user->bot_sub->txt_data_out, 0,
 	       sizeof(gircd_user->bot_sub->txt_data_out));
 	gircd_user->bot_sub->txt_data_out_sz = 0;
 
@@ -377,7 +377,7 @@ bot_t *gircd_input(dlist_t * dlist_node, bot_t * bot)
 	debug(NULL, "gircd_input: gmod=%p, dptr_gircd_user=%p, gircd_user=%p\n",
 	      gmod, dptr_gircd_user, gircd_user);
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 	memcopy(buf, bot->txt_data_in, sizeof(buf) - 1, bot->txt_data_in_sz);
 
 	n = bot->txt_data_in_sz;
@@ -529,7 +529,7 @@ gircd_user_t *gircd_user_init(gircd_t * gircd, bot_t * bot, bot_t * bot_sub)
 				    gmod_gircd_info.trigger,
 				    gmod_gircd_info.trigger_ext);
 
-	if (!sNULL(gircd_user->host_name))
+	if (!_sNULL(gircd_user->host_name))
 		gircd_user->host_name = strdup("unknown.com");
 
 	dptr_user = dlist_Dinsert_after(&gircd->users_unregistered, gircd_user);
@@ -551,7 +551,7 @@ dlist_t *gircd_chan_init(gircd_user_t * gircd_user, char *name)
 
 	debug(NULL, "gircd_chan_init: Entered: %p %s\n", gircd_user, name);
 
-	if (!gircd_user || !sNULL(name))
+	if (!gircd_user || !_sNULL(name))
 		return NULL;
 
 	gircd = gircd_user->gircd_ptr;
@@ -574,10 +574,10 @@ void gircd_defaults_post(gircd_t * gircd)
 	if (!gircd)
 		return;
 
-	if (!sNULL(gircd->name))
+	if (!_sNULL(gircd->name))
 		gircd->name = strdup("dircd");
 
-	if (!sNULL(gircd->user_ronick))
+	if (!_sNULL(gircd->user_ronick))
 		gircd->user_ronick = strdup("darqbot");
 
 	return;
@@ -682,7 +682,7 @@ gircd_resp_nick_inuse(dlist_t ** dl_text, gircd_user_t * gircd_user, char *nick)
 
 	debug(NULL, "gircd_resp_nick_inuse: Entered\n");
 
-	if (!gircd_user || !sNULL(nick))
+	if (!gircd_user || !_sNULL(nick))
 		return -1;
 
 	gircd = gircd_user->gircd_ptr;
@@ -700,7 +700,7 @@ gircd_resp_nick_error(dlist_t ** dl_text, gircd_user_t * gircd_user, char *nick)
 	gircd_t *gircd = NULL;
 	debug(NULL, "gircd_resp_nick_error: Entered: nick=%s\n", nick);
 
-	if (!dl_text || !gircd_user || !sNULL(nick))
+	if (!dl_text || !gircd_user || !_sNULL(nick))
 		return -1;
 
 	gircd = gircd_user->gircd_ptr;
@@ -720,7 +720,7 @@ gircd_resp_nick_changed(dlist_t ** dl_text, gircd_user_t * gircd_user,
 	gircd_t *gircd = NULL;
 	debug(NULL, "gircd_resp_nick_changed: Entered\n");
 
-	if (!dl_text || !gircd_user || !sNULL(new_nick))
+	if (!dl_text || !gircd_user || !_sNULL(new_nick))
 		return -1;
 
 	gircd = gircd_user->gircd_ptr;
@@ -742,7 +742,7 @@ gircd_resp_chan_illegal(dlist_t ** dl_text, gircd_user_t * gircd_user,
 	gircd_t *gircd = NULL;
 	debug(NULL, "gircd_resp_chan_illegal: Entered\n");
 
-	if (!dl_text || !gircd_user || !sNULL(chan))
+	if (!dl_text || !gircd_user || !_sNULL(chan))
 		return -1;
 	gircd = gircd_user->gircd_ptr;
 
@@ -762,7 +762,7 @@ gircd_resp_chan_noexist(dlist_t ** dl_text, gircd_user_t * gircd_user,
 
 	debug(NULL, "gircd_resp_chan_noexist: Entered\n");
 
-	if (!dl_text || !gircd_user || !sNULL(chan))
+	if (!dl_text || !gircd_user || !_sNULL(chan))
 		return -1;
 
 	gircd = gircd_user->gircd_ptr;
@@ -789,7 +789,7 @@ gircd_resp_chan_join_initial(dlist_t ** dl_text, gircd_user_t * gircd_user,
 	gircd = gircd_user->gircd_ptr;
 
 	str_users = gircd_chan_get_users(gircd_chan);
-	if (!sNULL(str_users))
+	if (!_sNULL(str_users))
 		return -1;
 
 	dl_str_unite(dl_text, ":%s %i %s = %s :%s\r\n", gircd->name,
@@ -821,7 +821,7 @@ gircd_resp_chan_join(dlist_t ** dl_text, gircd_user_t * gircd_user,
 	gircd = gircd_user->gircd_ptr;
 
 	str_users = gircd_chan_get_users(gircd_chan);
-	if (!sNULL(str_users))
+	if (!_sNULL(str_users))
 		return -1;
 
 	dl_str_unite(&dl_text_new, ":%s!~%s@%s JOIN :%s\r\n", gircd_user->nick,
@@ -861,7 +861,7 @@ int gircd_resp_quit(dlist_t ** dl_text, gircd_user_t * gircd_user, char *msg)
 	int n;
 
 	debug(NULL, "gircd_resp_chan_part: Entered\n");
-	if (!dl_text || !gircd_user || !sNULL(msg))
+	if (!dl_text || !gircd_user || !_sNULL(msg))
 		return -1;
 
 	gircd = gircd_user->gircd_ptr;
@@ -883,7 +883,7 @@ int gircd_parse_line(dlist_t ** dl_text, char *line, gircd_user_t * gircd_user)
 	char *str_rest;
 	debug(NULL, "gircd_parse_line: Entered\n");
 
-	if (!dl_text || !sNULL(line) || !gircd_user) {
+	if (!dl_text || !_sNULL(line) || !gircd_user) {
 		return -1;
 	}
 // FIXFIX fix these to, get rid of bad chars, check to see if nicks/chans exist, etc.. tuff like that */
@@ -923,7 +923,7 @@ gircd_parse_line_unregistered(dlist_t ** dl_text, char *line,
 	char *str_rest;
 	debug(NULL, "gircd_parse_line_unregistered: Entered\n");
 
-	if (!dl_text || !sNULL(line) || !gircd_user) {
+	if (!dl_text || !_sNULL(line) || !gircd_user) {
 		return -1;
 	}
 // FIXFIX fix these to, get rid of bad chars, check to see if nicks/chans exist, etc.. tuff like that */
@@ -952,7 +952,7 @@ gircd_parse_line_verb(dlist_t ** dl_text, char *string,
 
 	debug(NULL, "gircd_parse_line_verb: Entered\n");
 
-	if (!dl_text || !sNULL(string) || !gircd_user) {
+	if (!dl_text || !_sNULL(string) || !gircd_user) {
 		return -1;
 	}
 
@@ -1044,22 +1044,22 @@ gircd_parse_line_nick(dlist_t ** dl_text, char *nick, gircd_user_t * gircd_user)
 
 	debug(NULL, "gircd_parse_line_nick: Entered: %s\n", nick);
 
-	if (!dl_text || !sNULL(nick) || !gircd_user) {
+	if (!dl_text || !_sNULL(nick) || !gircd_user) {
 		return -1;
 	}
 
 	gircd = gircd_user->gircd_ptr;
 
 /*
-	strstrip_chars_fmt(nick, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
+	_strstrip_chars_fmt(nick, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
 			   isalnum, "^_.-", NULL);
 */
-	strstrip_chars_fmtv2(nick, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
+	_strstrip_chars_fmtv2(nick, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
 			     isalnum, '^', '_', '.', NULL);
 
 	debug(NULL, "gircd_parse_line_nick: nick=%s\n", nick);
 
-	if (!sNULL(nick)) {
+	if (!_sNULL(nick)) {
 		gircd_resp_nick_error(dl_text, gircd_user, nick);
 		return -1;
 	}
@@ -1088,51 +1088,51 @@ gircd_parse_line_user(dlist_t ** dl_text, char *user_info,
 
 	debug(NULL, "gircd_parse_line_nick: Entered\n");
 
-	if (!dl_text || !sNULL(user_info) || !gircd_user) {
+	if (!dl_text || !_sNULL(user_info) || !gircd_user) {
 		return -1;
 	}
 
 	tok_username = strtok(user_info, " ");
-	if (!sNULL(tok_username))
+	if (!_sNULL(tok_username))
 		return -1;
 
 	tok_hostname = strtok(NULL, " ");
-	if (!sNULL(tok_hostname))
+	if (!_sNULL(tok_hostname))
 		return -1;
 
 	tok_servername = strtok(NULL, " ");
-	if (!sNULL(tok_servername))
+	if (!_sNULL(tok_servername))
 		return -1;
 
 	tok_realname = strtok(NULL, "");
-	if (!sNULL(tok_realname))
+	if (!_sNULL(tok_realname))
 		return -1;
 
 /*
-	strstrip_chars_fmt(tok_username,
+	_strstrip_chars_fmt(tok_username,
 			   STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK, isalnum,
 			   "^_.-", NULL);
-	strstrip_chars_fmt(tok_hostname,
+	_strstrip_chars_fmt(tok_hostname,
 			   STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK, isalnum,
 			   "^_.-", NULL);
-	strstrip_chars_fmt(tok_servername,
+	_strstrip_chars_fmt(tok_servername,
 			   STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK, isalnum,
 			   "^_.-", NULL);
-	strstrip_chars_fmt(tok_realname,
+	_strstrip_chars_fmt(tok_realname,
 			   STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK, isalnum,
 			   "^_.-", NULL);
 */
 
-	strstrip_chars_fmtv2(tok_username,
+	_strstrip_chars_fmtv2(tok_username,
 			     STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
 			     isalnum, '^', '_', '.', NULL);
-	strstrip_chars_fmtv2(tok_hostname,
+	_strstrip_chars_fmtv2(tok_hostname,
 			     STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
 			     isalnum, '^', '_', '.', NULL);
-	strstrip_chars_fmtv2(tok_servername,
+	_strstrip_chars_fmtv2(tok_servername,
 			     STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
 			     isalnum, '^', '_', '.', NULL);
-	strstrip_chars_fmtv2(tok_realname,
+	_strstrip_chars_fmtv2(tok_realname,
 			     STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
 			     isalnum, '^', '_', '.', NULL);
 
@@ -1155,16 +1155,16 @@ gircd_parse_line_ping(dlist_t ** dl_text, char *ping_resp,
 
 	debug(NULL, "gircd_parse_line_ping: Entered\n");
 
-	if (!dl_text || !sNULL(ping_resp) || !gircd_user) {
+	if (!dl_text || !_sNULL(ping_resp) || !gircd_user) {
 		return -1;
 	}
 
 /*
-	strstrip_chars_fmt(ping_resp,
+	_strstrip_chars_fmt(ping_resp,
 			   STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK, isalnum,
 			   "^_.-", NULL);
 */
-	strstrip_chars_fmtv2(ping_resp,
+	_strstrip_chars_fmtv2(ping_resp,
 			     STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
 			     isalnum, '^', '_', '.', NULL);
 
@@ -1183,18 +1183,18 @@ gircd_parse_line_join(dlist_t ** dl_text, char *chan, gircd_user_t * gircd_user)
 
 	debug(NULL, "gircd_parse_line_join: Entered\n");
 
-	if (!dl_text || !sNULL(chan) || !gircd_user) {
+	if (!dl_text || !_sNULL(chan) || !gircd_user) {
 		return -1;
 	}
 
 	gircd = gircd_user->gircd_ptr;
 
 /*
-	strstrip_chars_fmt(chan, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
+	_strstrip_chars_fmt(chan, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
 			   '#', isalnum, ispunct, NULL);
 
 */
-	strstrip_chars_fmtv2(chan, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
+	_strstrip_chars_fmtv2(chan, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
 			     isalnum, '#', NULL);
 
 	if (chan[0] != '#') {
@@ -1248,15 +1248,15 @@ gircd_parse_line_part(dlist_t ** dl_text, char *chan, gircd_user_t * gircd_user)
 
 	debug(NULL, "gircd_parse_line_part: Entered\n");
 
-	if (!dl_text || !sNULL(chan) || !gircd_user) {
+	if (!dl_text || !_sNULL(chan) || !gircd_user) {
 		return -1;
 	}
 
 /*
-	strstrip_chars_fmt(chan, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
+	_strstrip_chars_fmt(chan, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
 			   '#', isalnum, ispunct, NULL);
 */
-	strstrip_chars_fmtv2(chan, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
+	_strstrip_chars_fmtv2(chan, STRSTRIP_CHARS_KEEP | STRSTRIP_CHARS_SHRINK,
 			     isalnum, '#', NULL);
 
 	gircd = gircd_user->gircd_ptr;
@@ -1294,7 +1294,7 @@ gircd_parse_line_quit(dlist_t ** dl_text, char *msg, gircd_user_t * gircd_user)
 
 	debug(NULL, "gircd_parse_line_quit: Entered\n");
 
-	if (!dl_text || !sNULL(msg) || !gircd_user) {
+	if (!dl_text || !_sNULL(msg) || !gircd_user) {
 		return -1;
 	}
 
@@ -1319,7 +1319,7 @@ gircd_parse_line_privmsg(dlist_t ** dl_text, char *chan,
 
 	debug(NULL, "gircd_parse_line_privmsg: Entered\n");
 
-	if (!dl_text || !sNULL(chan) || !gircd_user) {
+	if (!dl_text || !_sNULL(chan) || !gircd_user) {
 		return -1;
 	}
 
@@ -1361,14 +1361,14 @@ gircd_parse_line_privmsg_channel(dlist_t ** dl_text, char *chan_and_text,
 	debug(NULL, "gircd_parse_line_privmsg_channel: Entered: [%s]\n",
 	      chan_and_text);
 
-	if (!dl_text || !sNULL(chan_and_text) || !gircd_user) {
+	if (!dl_text || !_sNULL(chan_and_text) || !gircd_user) {
 		return -1;
 	}
 
 	gircd = gircd_user->gircd_ptr;
 
 	tok_chan = strtok(chan_and_text, " ");
-	if (!sNULL(tok_chan)) {
+	if (!_sNULL(tok_chan)) {
 /* illegal */
 		gircd_resp_chan_illegal(dl_text, gircd_user, "NULL");
 		return -1;
@@ -1387,7 +1387,7 @@ gircd_parse_line_privmsg_channel(dlist_t ** dl_text, char *chan_and_text,
 	}
 
 	tok_text = strtok(NULL, "");
-	if (!sNULL(tok_text)) {
+	if (!_sNULL(tok_text)) {
 /* illegal */
 		gircd_resp_chan_illegal(dl_text, gircd_user, tok_chan);
 	}
@@ -1426,14 +1426,14 @@ gircd_parse_line_privmsg_personal(dlist_t ** dl_text, char *nick_and_text,
 
 	debug(NULL, "gircd_parse_line_privmsg_personal: Entered\n");
 
-	if (!dl_text || !sNULL(nick_and_text) || !gircd_user) {
+	if (!dl_text || !_sNULL(nick_and_text) || !gircd_user) {
 		return -1;
 	}
 
 	gircd = gircd_user->gircd_ptr;
 
 	tok_nick = strtok(nick_and_text, " ");
-	if (!sNULL(tok_nick)) {
+	if (!_sNULL(tok_nick)) {
 /* illegal */
 		gircd_resp_chan_illegal(dl_text, gircd_user, "NULL");
 		return -1;
@@ -1452,7 +1452,7 @@ gircd_parse_line_privmsg_personal(dlist_t ** dl_text, char *nick_and_text,
 	}
 
 	tok_text = strtok(NULL, "");
-	if (!sNULL(tok_text)) {
+	if (!_sNULL(tok_text)) {
 /* illegal */
 		gircd_resp_chan_illegal(dl_text, gircd_user, tok_nick);
 	}
@@ -1484,7 +1484,7 @@ dlist_t *gircd_find_user(gircd_t * gircd, char *nick)
 
 	debug(NULL, "gircd_find_user: Entered\n");
 
-	if (!gircd || !sNULL(nick))
+	if (!gircd || !_sNULL(nick))
 /* wont happen */
 		return NULL;
 
@@ -1509,7 +1509,7 @@ dlist_t *gircd_find_chan(gircd_t * gircd, char *chan)
 	debug(NULL, "gircd_find_chan: Entered: %p %p, chan=%s\n", gircd, chan,
 	      chan);
 
-	if (!gircd || !sNULL(chan)) {
+	if (!gircd || !_sNULL(chan)) {
 /* wont happen */
 		printf("happening: %p %p\n", gircd, chan);
 /* hah ^ */
@@ -1726,7 +1726,7 @@ char *gircd_chan_get_users(gircd_chan_t * gircd_chan)
 	if (!gircd_chan)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 	dlist_fornext(gircd_chan->users, dptr) {
 		dptr_user_ptr = (dlist_t *) dlist_data(dptr);
 		gircd_user_ptr = (gircd_user_t *) dlist_data(dptr_user_ptr);
@@ -1737,7 +1737,7 @@ char *gircd_chan_get_users(gircd_chan_t * gircd_chan)
 				gircd_user_ptr->nick);
 	}
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;
@@ -1890,7 +1890,7 @@ bot_t *gircd_destroy_gmod_ircd(gircd_t * gircd)
 
 	gircd->gmod->data = NULL;
 
-	memset(gircd, 0, sizeof(gircd_t));
+	_memset(gircd, 0, sizeof(gircd_t));
 
 	free(gircd);
 
@@ -1930,24 +1930,32 @@ bot_t *gircd_destroy_gmod_user(gircd_user_t * gircd_user)
 	if (gircd_user->realname)
 		free(gircd_user->realname);
 
+debug(NULL, "gircd_destroy_gmod_user: 2\n");
+
 	if (gircd_user->status == GIRCD_USER_STATUS_UNREGISTERED) {
+debug(NULL, "gircd_destroy_gmod_user: 3\n");
 		dlist_remove(&gircd_user->gircd_ptr->users_unregistered,
 			     gircd_user->dptr_gircd_user);
 	} else {
+debug(NULL, "gircd_destroy_gmod_user: 4\n");
 		dlist_remove(&gircd_user->gircd_ptr->users,
 			     gircd_user->dptr_gircd_user);
 	}
 
 	if (gircd_user->dptr_gircd_user) {
-		memset(gircd_user->dptr_gircd_user, 0, sizeof(dlist_t));
+debug(NULL, "gircd_destroy_gmod_user: 5\n");
+		_memset(gircd_user->dptr_gircd_user, 0, sizeof(dlist_t));
 		free(gircd_user->dptr_gircd_user);
 	}
 
 	if (gircd_user->gmod) {
+debug(NULL, "gircd_destroy_gmod_user: 6\n");
 		gircd_user->gmod->data = NULL;
 	}
 
-	memset(gircd_user, 0, sizeof(gircd_user_t));
+debug(NULL, "gircd_destroy_gmod_user: 7\n");
+
+	_memset(gircd_user, 0, sizeof(gircd_user_t));
 
 	free(gircd_user);
 
@@ -2020,23 +2028,23 @@ gircd_special_chan_pm_console(dlist_t ** dl_text, char *chan_and_text,
 
 	debug(NULL, "gircd_special_chan_pm_console: Entered\n");
 
-	if (!dl_text || !sNULL(chan_and_text) || !gircd_user)
+	if (!dl_text || !_sNULL(chan_and_text) || !gircd_user)
 		return -1;
 
-	if (!sNULL(gircd_user->gircd_ptr->user_robot))
+	if (!_sNULL(gircd_user->gircd_ptr->user_robot))
 		return -1;
 
 	gircd_user_robot = (gircd_user_t *) gircd_user->gircd_ptr->user_robot;
 
 	tok_chan = strtok(chan_and_text, " ");
-	if (!sNULL(tok_chan)) {
+	if (!_sNULL(tok_chan)) {
 /* illegal */
 		gircd_resp_chan_illegal(dl_text, gircd_user, "NULL");
 		return -1;
 	}
 
 	tok_text = strtok(NULL, "");
-	if (!sNULL(tok_text)) {
+	if (!_sNULL(tok_text)) {
 /* illegal */
 		gircd_resp_chan_illegal(dl_text, gircd_user, "NULL");
 		return -1;
@@ -2087,7 +2095,7 @@ gircd_user_t *gircd_special_user_init(gircd_t * gircd, char *name)
 	gircd_user_t *gircd_user = NULL;
 	bot_gmod_elm_t *gmod_sub = NULL;
 	debug(NULL, "gircd_special_user_init: Entered\n");
-	if (!gircd || !sNULL(name))
+	if (!gircd || !_sNULL(name))
 		return NULL;
 
 	gircd_user = (gircd_user_t *) calloc(1, sizeof(gircd_user_t));

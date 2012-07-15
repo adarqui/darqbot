@@ -84,7 +84,7 @@ bot_t *geoip_run(dlist_t * dlist_node, bot_t * bot)
 	      "geoip_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -123,7 +123,7 @@ char *geoip_change_string(char *string, int opt)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	strstrip_chars(string, " !@#$%^&*()_+=';\"[]{}<>,?");
+	_strstrip_chars(string, " !@#$%^&*()_+=';\"[]{}<>,?");
 
 	gi = GeoIP_open("/custom_builds/share/GeoIP/GeoLiteCity.dat",
 			GEOIP_STANDARD);

@@ -90,7 +90,7 @@ bot_t *quote_run(dlist_t * dlist_node, bot_t * bot)
 	      "quote_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt_1 = 0;
@@ -123,7 +123,7 @@ char *quote_change_string(char *string, char *opt_title)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	if (!opt_title) {
 		dptr_pair = (dlist_t *) dlist_node_rand(dl_quote_pairs);
@@ -201,7 +201,7 @@ void quote_add_files_to_db(void)
 		if (!str)
 			continue;
 
-		suffix = strrchr(str, '.');
+		suffix = _strrchr(str, '.');
 
 		if (suffix) {
 			if (!strcasecmp(suffix, ".quot")) {
@@ -210,7 +210,7 @@ void quote_add_files_to_db(void)
 			}
 		}
 
-		suffix = strrchr(str, '/');
+		suffix = _strrchr(str, '/');
 		if (!suffix)
 			continue;
 		suffix++;
@@ -254,7 +254,7 @@ void quote_add_files_to_db_file(char *name)
 	if (!name)
 		return;
 
-	name_db = strrchr(name, '/');
+	name_db = _strrchr(name, '/');
 	if (!name_db)
 		return;
 
@@ -270,30 +270,30 @@ void quote_add_files_to_db_file(char *name)
 		goto cleanup;
 
 	while (1) {
-		memset(buf, 0, sizeof(buf));
+		_memset(buf, 0, sizeof(buf));
 
 		if (fgets(buf, sizeof(buf) - 1, fp) == NULL)
 			break;
 
-		strstrip_nl(buf);
+		_strstrip_nl(buf);
 
-		tok_2 = eat_whitespace(buf);
-		if (!sNULL(tok_2))
+		tok_2 = _eat_whitespace(buf);
+		if (!_sNULL(tok_2))
 			continue;
 
 		str_shrink_quotes(tok_2);
-		if (!sNULL(tok_2))
+		if (!_sNULL(tok_2))
 			continue;
 
 		if (buf[0] == '#')
 			continue;
 
-		if (!sNULL(buf))
+		if (!_sNULL(buf))
 			continue;
 
 		tok_1 = itocstr(count);
 
-		if (!sNULL(tok_1))
+		if (!_sNULL(tok_1))
 			continue;
 
 		xdb_write(db, tok_1, tok_2);

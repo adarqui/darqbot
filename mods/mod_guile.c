@@ -94,7 +94,7 @@ bot_t *guile_run(dlist_t * dlist_node, bot_t * bot)
 	      "guile_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -151,7 +151,7 @@ char *guile_change_string(bot_t * bot, char *string, int opt)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	argc = 1;
 	argv[0] = string;
@@ -184,8 +184,8 @@ static void guile_inner_main(void *closure, int argc, char **argv)
 
 	global_signal_exit_hooks();
 
-	memset(buf, 0, sizeof(buf));
-	memset(guile_info.bot->txt_data_in, 0,
+	_memset(buf, 0, sizeof(buf));
+	_memset(guile_info.bot->txt_data_in, 0,
 	       sizeof(guile_info.bot->txt_data_in));
 
 	if (guile_info.data_opt == DATA_OPT_ARG)
@@ -220,7 +220,7 @@ static void guile_inner_main(void *closure, int argc, char **argv)
 
 	value = scm_c_eval_string(argv[0]);
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 	val = read(guile_info.pipefds[0], buf, sizeof(buf) - 1);
 
 	dup2(old_stdout, 1);
@@ -259,9 +259,9 @@ static void guile_inner_main(void *closure, int argc, char **argv)
 	pmodule_cur_run2(bot);
 
 /* added 04/12/2012 */
-	if (sNULL(guile_info.bot->txt_data_out) != NULL
+	if (_sNULL(guile_info.bot->txt_data_out) != NULL
 	    && guile_info.bot->shouldsend
-	    && sNULL(guile_info.bot->txt_to) != NULL) {
+	    && _sNULL(guile_info.bot->txt_to) != NULL) {
 /* XXX
       gmodule_down (gi->pmod_cur_dlist_node, gi->pmod_cur_bot);
 */

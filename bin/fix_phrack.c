@@ -26,7 +26,7 @@ return;
 }
 
 int
-strstrip_chars (char *str, char *chars)
+_strstrip_chars (char *str, char *chars)
 {
 /* strip supplied chars from a string, fill them with nulls */
   int i;
@@ -49,7 +49,7 @@ strstrip_chars (char *str, char *chars)
 
 
 int
-strstrip_nl (char *s)
+_strstrip_nl (char *s)
 {
   while (*s)
     {
@@ -89,7 +89,7 @@ x = 1;
 
 
 char *
-eat_whitespace (char *s)
+_eat_whitespace (char *s)
 {
   if (!s)
     return NULL;
@@ -287,10 +287,10 @@ fp = fopen(argv[1], "r");
 
   while (1)
     {
-      memset (buf, 0, sizeof (buf));
+      _memset (buf, 0, sizeof (buf));
       if (fgets (buf, sizeof (buf) - 10, fp) == NULL)
         break;
-      strstrip_nl (buf);
+      _strstrip_nl (buf);
 
 if(buf[0]== '#') {
 /* issue # & date */
@@ -300,7 +300,7 @@ continue;
 
 unhtml_buf(buf);
 
-field_1 = eat_whitespace(buf);
+field_1 = _eat_whitespace(buf);
 
 field_2 = strtok(field_1, " ");
 if(!field_2) continue;
@@ -308,7 +308,7 @@ if(!field_2) continue;
 field_2 = strtok(NULL, " ");
 if(!field_2) continue;
 
-field_2 = eat_whitespace(field_2);
+field_2 = _eat_whitespace(field_2);
 
 
 a = article_create(field_2, field_1);
@@ -347,8 +347,8 @@ char * str_ptr=NULL;
 
 if(!buf) return;
 
-memset(g_issue, 0, sizeof(g_issue));
-memset(g_date, 0, sizeof(g_date));
+_memset(g_issue, 0, sizeof(g_issue));
+_memset(g_date, 0, sizeof(g_date));
 
 //printf("buf=%s\n", buf);
 
@@ -359,23 +359,23 @@ str_2 = strcasestr(buf, "Release date : ");
 if(!str_2) return;
 
 str_1 = str_1 + strlen("Current issue : ");
-str_ptr = strchr(str_1, ' ');
+str_ptr = _strchr(str_1, ' ');
 if(!str_ptr) return;
 
 snprintf_buf(g_issue, sizeof(g_issue)-1, "%s", str_1);
 
-strstrip_chars(g_issue, " \t\xc2");
+_strstrip_chars(g_issue, " \t\xc2");
 
 //hexd(g_issue);
 
 
 str_2 = str_2 + strlen("Release Date : ");
-str_ptr = strchr(str_2, ' ');
+str_ptr = _strchr(str_2, ' ');
 if(!str_ptr) return;
 
 snprintf_buf(g_date, sizeof(g_date)-1, "%s",str_2);
 
-strstrip_chars(g_date, " \t\xc2");
+_strstrip_chars(g_date, " \t\xc2");
 
 
 return;
@@ -396,7 +396,7 @@ if(!a) return NULL;
 a->author = article_clean_str(author);
 a->title = article_clean_str(title);
 a->issue = strdup(g_issue);
-a->date = strdup(strrchr(g_date, '/')+1);
+a->date = strdup(_strrchr(g_date, '/')+1);
 
 return a;
 }

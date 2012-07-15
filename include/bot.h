@@ -122,19 +122,19 @@ unsigned int ID;
 struct bot * parent;
 dlist_t * dptr_self;
 dlist_t * dl_subs;
-int node_type;
+unsigned char node_type;
 
-int on;
+unsigned char on;
 char tag[32];
 char master[32];
 
-int mute;
-int type;
+unsigned char mute;
+unsigned char type;
 
 /* tracing/debugging stuff */
-int debug;
-int trace;
-int brake;
+unsigned char debug;
+unsigned char trace;
+unsigned char brake;
 
 /* a protective mechanism in the case of some kind of looping pipe/read error */
 int error_count;
@@ -158,12 +158,12 @@ char trig_called[1024];
 /* request/response stuff */
 char irc_command[32];
 
-int isforked_stop;
-int isforked;
-int isline;
-int isprivmsg;
-int ispm;
-int iscomment;
+unsigned char isforked_stop;
+unsigned char isforked;
+unsigned char isline;
+unsigned char isprivmsg;
+unsigned char ispm;
+unsigned char iscomment;
 
 /* vars: when adding vars, set them in bot_defaults (bot.c) and in the bot_parse_conf func (conf.c)
  * multi = allow multi line printing if set
@@ -175,7 +175,7 @@ int iscomment;
  * nesting = settable nesting val, from 0 to maxnesting
  * nesting_cur <- cant set through var, this is the current nesting level
  */
-int var_multi;
+unsigned char var_multi;
 int var_usleep;
 int var_maxbufsz;
 int var_bufsz;
@@ -183,7 +183,7 @@ int var_maxflood;
 int var_maxnesting;
 int var_nesting;
 int var_nesting_cur;
-int var_allowpm;
+unsigned char var_allowpm;
 
 /* server message, if server message, isprivmsg=0, isline=0 */
 char txt_server[32];
@@ -199,7 +199,7 @@ char txt_data_in[MAX_BUF_SZ+1];
 int txt_data_in_sz;
 char txt_data_out[MAX_BUF_SZ+1];
 int txt_data_out_sz;
-int shouldsend;
+char shouldsend;
 
 /* console printing stuff */
   int console_opts;
@@ -267,7 +267,6 @@ char trig_prefix[16];
 #include "my_unix.h"
 #include "fn_all.h"
 #include "fdpass.h"
-
 
 
 enum console_opts

@@ -3,6 +3,9 @@
 
 	.file "mod_func_intel2.S"
 	.text
+
+.include "mod_func_intel2x.h"
+
 .global intel2_true
 .global intel2_false
 .global intel2_self
@@ -38,6 +41,12 @@
 .global intel2_ror
 .global intel2_rol
 .global intel2_bswap
+.global intel2_bsf
+.global intel2_bsr
+.global intel2_bt
+.global intel2_btc
+.global intel2_btr
+.global intel2_bts
 .global intel2_isdigit
 .global intel2_isbinary
 .global intel2_isalpha
@@ -48,6 +57,14 @@
 .global intel2_islower
 .global intel2_toupper
 .global intel2_tolower
+# misc.c routines
+.global intel2_sNULL
+.global intel2_strstrip_nl
+.global intel2_strstrip_chars
+.global intel2_eat_whitespace
+# bot.c routines
+.global intel2_bot_shouldreturn
+# syscalls
 .global intel2_linux_exit
 	.type intel2_true, @function
 	.type intel2_false, @function
@@ -84,6 +101,12 @@
 	.type intel2_ror, @function
 	.type intel2_rol, @function
 	.type intel2_bswap, @function
+	.type intel2_bsf, @function
+	.type intel2_bsr, @function
+	.type intel2_bt, @function
+	.type intel2_btc, @function
+	.type intel2_btr, @function
+	.type intel2_bts, @function
 	.type intel2_isdigit, @function
 	.type intel2_isbinary, @function
 	.type intel2_isalpha, @function
@@ -94,14 +117,31 @@
 	.type intel2_islower,@function
 	.type intel2_toupper,@function
 	.type intel2_tolower,@function
+	# misc.c
+	.type intel2_sNULL, @function
+	.type intel2_strstrip_nl, @function
+	.type intel2_strstrip_chars, @function
+	.type intel2_eat_whitespace, @function
+	# bot.c
+	.type intel2_bot_shouldreturn, @function
+	# syscalls
 	.type intel2_linux_exit,@function
 
+.macro IE2
+#pushf
+#push ebx
+#mov ebx, 4[esp]
+#mov i_eflags, ebx
+#pop ebx
+#popf
+.endm
 
 intel2_true:
 # int_true(void)
 	push %ebp
 	mov  %ebp, %esp
 	mov %eax, 1
+	IE2
 	pop %ebp
 	ret
 
@@ -110,6 +150,7 @@ intel2_false:
 	push %ebp
 	mov %ebp, %esp
 	mov %eax, 0
+	IE2
 	pop %ebp
 	ret
 
@@ -118,6 +159,7 @@ intel2_self:
 	push %ebp
 	mov %ebp, %esp
 	mov %eax, 8[%ebp]
+	IE2
 	pop %ebp
 	ret
 
@@ -125,7 +167,6 @@ intel2_strlen:
 # size_t strlen(const char *)
 	push %ebp
 	mov %ebp, %esp
-
 	push %ecx
 	push %edx
 
@@ -143,9 +184,9 @@ intel2_strlen:
 	out_strlen:
 	mov %eax, %ecx
 
+	IE2
 	pop %edx
 	pop %ecx
-
 	pop %ebp
 	ret
 
@@ -155,7 +196,6 @@ intel2_strlen2:
 # repne/scasb variation
         push %ebp
         mov %ebp, %esp
-
 	push %ecx
         push %edi
 
@@ -169,9 +209,9 @@ intel2_strlen2:
 	dec %ecx
 	mov %eax, %ecx
 
+	IE2
         pop %edi
 	pop %ecx
-
         leave
         ret
 
@@ -182,7 +222,6 @@ intel2_strcmp:
 # int intel2_strcmp(const char *, const char *)
         push %ebp
         mov %ebp, %esp
-
 	push %esi
 	push %edi
 	push %ecx
@@ -216,10 +255,10 @@ intel2_strcmp:
 
         .Lintel2_strcmp_eq:
 
+	IE2
 	pop %ecx
 	pop %edi
 	pop %esi
-
         leave
         ret
 
@@ -230,7 +269,6 @@ intel2_strncmp:
 # int intel2_strncmp(const char *, const char *, size_t)
         push %ebp
         mov %ebp, %esp
-
 	push %esi
 	push %edi
 	push %ecx
@@ -254,10 +292,10 @@ intel2_strncmp:
 
         .Lintel2_strncmp_eq:
 
+	IE2
 	pop %ecx
 	pop %edi
 	pop %esi
-
         leave
         ret
 
@@ -268,7 +306,6 @@ intel2_strchr:
 # char * intel2_strchr(char *, int)
         push %ebp
         mov %ebp, %esp
-
         push %edi
 
         mov %eax, 12[%ebp]
@@ -290,8 +327,8 @@ intel2_strchr:
         .Lstrchr_done:
         mov %eax, %edi
 
+	IE2
         pop %edi
-
         leave
         ret
 
@@ -303,7 +340,6 @@ intel2_strrchr:
 # char * intel2_strrchr(char *, int)
         push %ebp
         mov %ebp, %esp
-
         push %ebx
 	push %ecx
         push %edi
@@ -332,6 +368,7 @@ intel2_strrchr:
 
         .Lintel2_strrchr_done:
 
+	IE2
         pop %edi
 	pop %ecx
         pop %ebx
@@ -343,7 +380,6 @@ intel2_strrchr:
 intel2_strcpy:
 	push %ebp
 	mov %ebp, %esp
-
 	push %esi
 	push %edi
 
@@ -362,6 +398,7 @@ intel2_strcpy:
 	.Lintel2_strcpy_done:
 	mov %eax, 8[%ebp]
 
+	IE2
 	pop %edi
 	pop %esi
 	leave
@@ -372,7 +409,6 @@ intel2_strcpy:
 intel2_strncpy:
         push %ebp
         mov %ebp, %esp
-
 	push %ecx
         push %esi
         push %edi
@@ -396,10 +432,10 @@ intel2_strncpy:
         .Lintel2_strncpy_done:
         mov %eax, 8[%ebp]
 
+	IE2
         pop %edi
         pop %esi
 	pop %ecx
-
         leave
         ret
 
@@ -410,7 +446,6 @@ intel2_bzero:
 # void bzero(void *, int)
 	push %ebp
 	mov %ebp, %esp
-
 	push %ecx
 	push %edx
 
@@ -430,9 +465,9 @@ intel2_bzero:
 	out_bzero:
 	xor %eax, %eax
 
+	IE2
 	pop %edx
 	pop %ecx
-
 	pop %ebp
 	ret	
 
@@ -441,7 +476,6 @@ intel2_memset:
 # void * memset(void *, int, size_t)
 	push %ebp
 	mov %ebp, %esp
-
 	push %ecx
 	push %edx
 	
@@ -463,9 +497,9 @@ intel2_memset:
 	out_memset:
 	mov %eax, 8[ebp]
 
+	IE2
 	pop %edx
 	pop %ecx
-
 	pop %ebp
 	ret
 
@@ -480,6 +514,7 @@ intel2_mul:
 	mov %ebx, 12[%ebp]
 	mul %ebx
 
+	IE2
 	pop %ebx
 	pop %ebp
 	ret
@@ -494,6 +529,7 @@ intel2_imul:
 	mov %ebx, 12[%ebp]
 	imul %ebx
 
+	IE2
 	pop %ebx
 	leave
 	ret
@@ -502,15 +538,14 @@ intel2_sub:
 # int sub(int, int)
 	push %ebp
 	mov %ebp, %esp
-
 	push %edx
 
 	mov %eax, 8[%ebp]
 	mov %edx, 12[%ebp]
 	sub %eax, %edx
 
+	IE2
 	pop %edx
-
 	leave
 	ret	
 
@@ -519,15 +554,14 @@ intel2_add:
 # int add(int, int)
 	push %ebp
 	mov %ebp, %esp
-
 	push %edx
 
 	mov %eax, 8[%ebp]
 	mov %edx, 12[%ebp]
 	add %eax, %edx
 
+	IE2
 	pop %edx
-
 	leave
 	ret
 
@@ -538,15 +572,14 @@ intel2_div:
 # int intel2_div(int, int)
 	push %ebp
 	mov %ebp, %esp
-
 	push %edx
 
 	mov %eax, 8[%ebp]
 	xor %edx, %edx
 	divd 12[%ebp]
 
+	IE2
 	pop %edx
-
 	leave
 	ret
 
@@ -555,15 +588,14 @@ intel2_idiv:
 # int intel2_idiv(int, int)
 	push %ebp
 	mov %ebp, %esp
-
 	push %edx
 
 	mov %eax, 8[%ebp]
 	xor %edx, %edx
 	idivd 12[%ebp]
 	
+	IE2
 	pop %edx
-
 	leave
 	ret
 
@@ -572,7 +604,6 @@ intel2_mod:
 # int intel2_mod(int, int)
 	push %ebp
 	mov %ebp, %esp
-
 	push %edx
 
 	mov %eax, 8[%ebp]
@@ -580,8 +611,8 @@ intel2_mod:
 	divd 12[%ebp]
 	mov %edx, %edx
 	
+	IE2
 	pop %edx
-
 	leave
 	ret
 
@@ -590,7 +621,6 @@ intel2_imod:
 # int intel2_imod(int, int)
 	push %ebp
 	mov %ebp, %esp
-
 	push %edx
 	
 	mov %eax, 8[%ebp]
@@ -598,6 +628,7 @@ intel2_imod:
 	idivd 12[%ebp]
 	mov %eax, %edx
 	
+	IE2
 	leave
 	ret
 
@@ -609,6 +640,7 @@ intel2_neg:
 	mov %eax, 8[%ebp]
 	neg %eax
 
+	IE2
 	pop %ebp
 	ret	
 
@@ -618,7 +650,7 @@ intel2_eflags:
 	mov %ebp, %esp
 
 	pushf
-	mov %eax, 0[%ebp]
+	mov %eax, 0[%esp]
 	popf
 
 	leave
@@ -634,6 +666,7 @@ intel2_and:
 	mov %eax, 8[%ebp]
 	and %eax, 12[%ebp]
 
+	IE2
 	leave
 	ret
 
@@ -646,6 +679,7 @@ intel2_or:
 	mov %eax, 8[%ebp]
 	or %eax, 12[%ebp]
 
+	IE2
 	leave
 	ret
 
@@ -658,6 +692,7 @@ intel2_xor:
 	mov %eax, 8[%ebp]
 	xor %eax, 12[%ebp]
 
+	IE2
 	leave
 	ret
 
@@ -670,6 +705,7 @@ intel2_not:
 	notd 8[%ebp]
 	mov %eax, 8[%ebp]
 
+	IE2
 	leave
 	ret
 
@@ -696,6 +732,7 @@ intel2_sar:
 	mov %ecx, 12[%ebp]
 	sar %eax, %cl
 
+	IE2
 	pop %ecx
 	leave
 	ret
@@ -712,6 +749,7 @@ intel2_shr:
 
 	shr %eax, %cl
 
+	IE2
 	pop %ecx
 	leave
 	ret
@@ -727,6 +765,7 @@ intel2_sal:
 	mov %ecx, 12[%ebp]
 	sal %eax, %cl
 
+	IE2
 	pop %ecx
 	leave
 	ret
@@ -742,6 +781,7 @@ intel2_shl:
 	mov %ecx, 12[%ebp]
 	shl %eax, %cl
 
+	IE2
 	pop %ecx
 	leave
 	ret
@@ -756,6 +796,7 @@ intel2_ror:
 	mov %ecx, 12[%ebp]
 	ror %eax, %cl
 
+	IE2
 	pop %ecx
 	leave
 	ret
@@ -771,6 +812,7 @@ intel2_rol:
 	mov %ecx, 12[%ebp]
 	rol %eax, %cl
 
+	IE2
 	pop %ecx
 	leave
 	ret
@@ -783,6 +825,114 @@ intel2_bswap:
 	mov %eax, 8[%ebp]
 	bswap %eax
 
+	IE2
+	leave
+	ret
+
+
+intel2_bt:
+# int intel2_bt(int, int)
+	push ebp
+	mov ebp, esp
+	push ebx
+
+	mov eax, 8[ebp]
+	mov ebx, 12[ebp]
+	bt eax, ebx
+	jc .Lintel2_bt_set
+
+	xor eax, eax
+	jmp .Lintel2_bt_done
+
+	.Lintel2_bt_set:
+	mov eax, 1
+
+	.Lintel2_bt_done:
+	IE2
+	pop ebx
+	leave
+	ret
+
+
+intel2_btc:
+# int intel2_btc(int, int)
+	push ebp
+	mov ebp, esp
+	push ebx
+
+	mov eax, 8[ebp]
+	mov ebx, 12[ebp]
+	btc eax, ebx
+	
+	IE2
+	pop ebx
+	leave
+	ret
+
+
+
+intel2_btr:
+# int intel2_btr(int, int)
+        push ebp
+        mov ebp, esp
+        push ebx
+
+        mov eax, 8[ebp]
+        mov ebx, 12[ebp]
+        btr eax, ebx
+
+	IE2
+        pop ebx
+        leave
+        ret
+
+
+
+
+intel2_bts:
+# int intel2_bts(int, int)
+        push ebp
+        mov ebp, esp
+        push ebx
+
+        mov eax, 8[ebp]
+        mov ebx, 12[ebp]
+        bts eax, ebx
+
+	IE2
+        pop ebx
+        leave
+        ret
+
+
+
+
+intel2_bsf:
+# int intel2_bsf(int)
+	push ebp
+	mov ebp, esp
+	push ebx
+
+	mov ebx, 8[ebp]
+	bsf eax, ebx
+
+	IE2
+	pop ebx
+	leave
+	ret
+
+
+intel2_bsr:
+# int intel2_bsr(int)
+	push ebp
+	mov ebp, esp
+	push ebx
+
+	mov ebx, 8[%ebp]
+	bsr eax, ebx
+
+	IE2
+	pop ebx
 	leave
 	ret
 
@@ -806,7 +956,7 @@ intel2_isdigit:
 	xor %eax, %eax
 
 	.Lisdigit_success:
-
+	IE2
 	leave
 	ret
 
@@ -830,7 +980,7 @@ intel2_isbinary:
 	mov %eax, 1
 
 	.Lintel2_isdigit_done:
-
+	IE2
 	leave
 	ret
 
@@ -862,6 +1012,7 @@ intel2_isalpha:
 	xor %eax, %eax
 
 	.Lintel2_isalpha_done:
+	IE2
 	leave
 	ret
 
@@ -883,6 +1034,7 @@ intel2_isalnum:
 	add %esp, 4
 
 	.Lintel2_isalnum_done:
+	IE2
 	leave
 	ret
 
@@ -907,6 +1059,7 @@ intel2_isupper:
         mov %eax, %ebx
 
 .L3_intel2_isupper:
+	IE2
         pop %ebx
         leave
         ret
@@ -934,6 +1087,7 @@ intel2_islower:
         mov %eax, %ebx
 
 .L3_intel2_islower:
+	IE2
         pop %ebx
         leave
         ret
@@ -955,6 +1109,7 @@ intel2_toupper:
 	sub %eax, 32
 	
 	out_toupper:
+	IE2
 	leave
 	ret
 
@@ -975,11 +1130,241 @@ intel2_tolower:
         add %eax, 32
 
         out_tolower:
+	IE2
         leave
         ret
 
 
 
+
+intel2_sNULL:
+# char * intel2_sNULL(char *)
+	push ebp
+	mov ebp, esp
+	push ebx
+	
+	xor ebx, ebx
+	xor eax, eax
+	mov ebx, 8[ebp]
+	cmpd ebx, 0
+	je .Lintel2_sNULL_done
+
+	movb al, 0[ebx]
+	cmpd eax, 0
+	je .Lintel2_sNULL_done
+
+	# found!
+	mov eax, 8[ebp] 
+
+	.Lintel2_sNULL_done:
+	IE2
+	pop ebx
+	leave
+	ret
+
+
+intel2_strstrip_nl:
+# int intel2_strstrip_nl(char *)
+	push ebp
+	mov ebp, esp
+	push ebx
+	push ecx
+	push edx
+
+	xor edx, edx
+	xor ecx, ecx
+	mov eax, 8[ebp]
+
+	.Lintel2_strstrip_nl_start:
+	movb bl, 0[eax]
+	cmpb bl, 0
+	je .Lintel2_strstrip_nl_done
+	
+	# '\r'
+	cmpb bl, 13
+	je .Lintel2_strstrip_nl_done	
+
+	# '\n'
+	cmpb bl, 10
+	je .Lintel2_strstrip_nl_done
+	
+	.Lintel2_strstrip_nl_end:
+	inc eax
+	inc ecx
+	jmp .Lintel2_strstrip_nl_start
+	
+	.Lintel2_strstrip_nl_done:
+	movb 0[eax], 0
+	mov eax, ecx
+
+	IE2
+	pop edx
+	pop ecx
+	pop ebx
+	leave
+	ret
+
+
+intel2_eat_whitespace:
+# char * intel2_eat_whitespace(char *)
+	push ebp
+	mov ebp, esp
+	push ebx
+	push edx
+
+	xor ebx, ebx
+	xor edx, edx
+
+	# check if null first
+	push 8[ebp]
+	call intel2_sNULL
+	add esp, 4
+
+	cmp eax, 0
+	je .Lintel2_eat_whitespace_done
+
+
+	mov ebx, 8[ebp]
+	.Lintel2_eat_whitespace_start:
+	movb al, 0[ebx]
+
+	# '\0'
+	cmpb al, 0
+	#cmove ebx, edx
+	je .Lintel2_eat_whitespace_done
+
+	# ' '
+	cmpb al, 32
+	je .Lintel2_eat_whitespace_end
+
+	# '\t'
+	cmpb al, 9
+	je .Lintel2_eat_whitespace_end
+
+	# non whitespace, we are done
+	jmp .Lintel2_eat_whitespace_done
+
+	.Lintel2_eat_whitespace_end:
+	inc ebx
+	jmp .Lintel2_eat_whitespace_start
+	
+
+	.Lintel2_eat_whitespace_done:
+	mov eax, ebx
+
+	IE2
+	pop edx
+	pop ebx
+	leave
+	ret
+
+
+
+
+intel2_strstrip_chars:
+# int intel2_strstrip_chars(char *, char *)
+	push ebp
+	mov ebp, esp
+	push ebx
+	push ecx
+	push edx
+	push esi
+	push edi
+
+	xor edx, edx
+	xor eax, eax
+
+	mov edi, 8[ebp]
+	push edi
+	mov esi, 12[ebp]
+	mov ecx, esi	
+
+	.Lintel2_strstrip_chars_start:
+
+	movb al, [edi]
+	cmpb al, 0
+	je .Lintel2_strstrip_chars_done
+
+		.Lintel2_strstrip_chars_L1:
+		movb bl, 0[esi]
+		cmpb bl, 0
+		je .Lintel2_strstrip_chars_end
+
+		cmpb bl, al
+		jne .Lintel2_strstrip_chars_L2
+
+		movb 0[edi], dl
+
+		.Lintel2_strstrip_chars_L2:
+		inc esi
+		jmp .Lintel2_strstrip_chars_L1
+		
+
+	.Lintel2_strstrip_chars_end:
+	# always restore esi (subchars)
+	mov esi, ecx
+	inc edi	
+	jmp .Lintel2_strstrip_chars_start
+
+	.Lintel2_strstrip_chars_done:
+	mov eax, edi
+	pop edi
+	sub eax, edi
+
+	IE2
+	pop edi
+	pop esi
+	pop edx
+	pop ecx
+	pop ebx
+	leave
+	ret
+
+
+
+#
+#
+#
+# bot.c routines
+#
+#
+#
+
+
+intel2_bot_shouldreturn:
+# int intel2_bot_shouldreturn(bot_t *)
+	push ebp
+	mov ebp, esp
+	
+	xor eax, eax
+	mov eax, 8[ebp]
+	cmp eax, 0
+	je .Lintel2_bot_shouldreturn_yes
+
+	cmpb i2s_bot_iscomment[eax], 0
+	jne .Lintel2_bot_shouldreturn_yes
+	
+	xor eax, eax
+	jmp .Lintel2_bot_shouldreturn_done
+
+	.Lintel2_bot_shouldreturn_yes:
+	mov eax, 1
+
+	.Lintel2_bot_shouldreturn_done:
+
+	leave
+	ret
+
+
+
+#
+#
+#
+#
+# syscalls
+#
+#
+#
 
 intel2_linux_exit:
 # void intel2_linux_exit(int)

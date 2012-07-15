@@ -31,18 +31,18 @@ dlist_t *tokenize(bot_t * bot, char *string, int opt, char *sep)
 
 	int sep_len, sep_prefix_len;
 
-	if (!sNULL(string) || !opt || !sNULL(sep))
+	if (!_sNULL(string) || !opt || !_sNULL(sep))
 		return NULL;
 
 	sep_len = strlen(sep);
 
 	debug(bot, "tokenize: Entered, [\n[%s]\n]\n", string);
 
-	str_len = fn_strlen(string);
+	str_len = _strlen(string);
 	sep_orig = sep;
 
 	if (opt & TOKENIZE_EATWHITESPACE)
-		str_a = eat_whitespace(string);
+		str_a = _eat_whitespace(string);
 	else
 		str_a = string;
 
@@ -53,9 +53,9 @@ dlist_t *tokenize(bot_t * bot, char *string, int opt, char *sep)
 		bz(buf);
 
 		if (opt & TOKENIZE_EATWHITESPACE)
-			str_a = eat_whitespace(str_a);
+			str_a = _eat_whitespace(str_a);
 
-		if (!sNULL(str_a))
+		if (!_sNULL(str_a))
 			break;
 
 		if (!(opt & TOKENIZE_LEAVEQUOTES)) {
@@ -72,7 +72,7 @@ dlist_t *tokenize(bot_t * bot, char *string, int opt, char *sep)
 				       sep_prefix_len : str_a, sep);
 		} else if (opt & TOKENIZE_MATCHANY) {
 			str_b =
-			    strchr_str(sep !=
+			    _strchr_str(sep !=
 				       sep_orig ? str_a +
 				       sep_prefix_len : str_a, sep, &sep_len);
 		} else {
@@ -83,7 +83,7 @@ dlist_t *tokenize(bot_t * bot, char *string, int opt, char *sep)
 		}
 
 		if (!str_b) {
-			str_b = string + fn_strlen(string);
+			str_b = string + _strlen(string);
 			need_break = 1;
 		}
 
@@ -97,7 +97,7 @@ dlist_t *tokenize(bot_t * bot, char *string, int opt, char *sep)
 							     str_a) : (str_b -
 								       str_a));
 
-			if (fn_strlen(buf) > 0) {
+			if (_strlen(buf) > 0) {
 				buf_dup = strdup(buf);
 				if (buf_dup) {
 					dlist_Dinsert_after(&dl, buf_dup);
@@ -147,7 +147,7 @@ char **tokenize_array(bot_t * bot, char *string, int opt, char *sep,
 	array = NULL;
 	array_size = 0;
 
-	if (!sNULL(string) || !sNULL(sep) || !expecting)
+	if (!_sNULL(string) || !_sNULL(sep) || !expecting)
 		return NULL;
 
 	dl = tokenize(bot, string, opt, sep);

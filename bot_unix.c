@@ -38,7 +38,7 @@ int bot_unix_fd_send(bot_t * bot, int fd, bot_gmod_elm_t * gmod)
 
 	debug(NULL, "bot_unix_fd_send: Entered: %s\n", gi->fd_unix_path);
 
-	if (!sNULL(global_info.fd_unix_path) || fd < 0)
+	if (!_sNULL(global_info.fd_unix_path) || fd < 0)
 		return -1;
 
 	bz2(un);
@@ -65,7 +65,7 @@ int bot_unix_fd_send(bot_t * bot, int fd, bot_gmod_elm_t * gmod)
 	snprintf_buf(tag, "%s,%i", bot->tag, bot->ID);
 
 	if (gmod) {
-		if (sNULL(gmod->trigger_ext)) {
+		if (_sNULL(gmod->trigger_ext)) {
 			strlcatfmt_buf(tag, ",%s", gmod->trigger_ext);
 		}
 	}
@@ -117,7 +117,7 @@ int bot_unix_init(void)
 	if (global_info.fd_unix > 0)
 		return 0;
 
-	if (!sNULL(global_info.fd_unix_path))
+	if (!_sNULL(global_info.fd_unix_path))
 		strlcat_buf(global_info.fd_unix_path,
 			    str_unite_static("%s/%s", gi->confdir,
 					     BOT_UNIX_SOCKPATH));
@@ -130,7 +130,7 @@ int bot_unix_init(void)
 		unlink(global_info.fd_unix_path);
 	}
 
-	memset(un, 0, sizeof(struct sockaddr_un));
+	_memset(un, 0, sizeof(struct sockaddr_un));
 	un->sun_family = AF_UNIX;
 	strlcpy_buf(un->sun_path, global_info.fd_unix_path);
 

@@ -20,7 +20,7 @@ enum
 };
 
 int
-strstrip_nl (char *s)
+_strstrip_nl (char *s)
 {
   while (*s)
     {
@@ -61,7 +61,7 @@ x = 1;
 
 
 char *
-eat_whitespace (char *s)
+_eat_whitespace (char *s)
 {
   if (!s)
     return NULL;
@@ -228,10 +228,10 @@ main (int argc, char *argv[])
 
   while (1)
     {
-      memset (buf, 0, sizeof (buf));
+      _memset (buf, 0, sizeof (buf));
       if (fgets (buf, sizeof (buf) - 10, fp) == NULL)
 	break;
-      strstrip_nl (buf);
+      _strstrip_nl (buf);
 
 if(vflag)
 printf(":::rawbuf=[%s]\n",buf);
@@ -259,11 +259,11 @@ puts(":::type=NOCONVO, setting=INCONVO");
 	      str_ptr = buf;
 	      if (str_ptr)
 		{
-		  if (str_allcaps (eat_whitespace(str_ptr)))
+		  if (str_allcaps (_eat_whitespace(str_ptr)))
 		    {
 if(vflag)
 puts(":::ALL_CAPS");
-		      memset (convo_nick, 0, sizeof (convo_nick));
+		      _memset (convo_nick, 0, sizeof (convo_nick));
 		      strlcpy_buf (convo_nick, str_ptr, sizeof (convo_nick) - 1);
 		    }
 
@@ -291,15 +291,15 @@ puts(":::ALL_CAPS");
 		  shrink_all_spaces (convo_nick);
 
 //puts("---");
-if(!strcasecmp(convo_nick_prev, convo_nick) && str_allcaps(eat_whitespace(convo_nick))) {
-printf(" %s", eat_whitespace(convo));
+if(!strcasecmp(convo_nick_prev, convo_nick) && str_allcaps(_eat_whitespace(convo_nick))) {
+printf(" %s", _eat_whitespace(convo));
 }
 else {
-memset(convo_nick_prev,0,sizeof(convo_nick_prev));
+_memset(convo_nick_prev,0,sizeof(convo_nick_prev));
 strlcpy_buf(convo_nick_prev, convo_nick, sizeof(convo_nick_prev)-1);
-if(str_allcaps(eat_whitespace(convo_nick))){
-		  printf ("\n%s:%s", eat_whitespace (convo_nick),
-			  eat_whitespace (convo));
+if(str_allcaps(_eat_whitespace(convo_nick))){
+		  printf ("\n%s:%s", _eat_whitespace (convo_nick),
+			  _eat_whitespace (convo));
 }
 		}
 
@@ -311,7 +311,7 @@ if(vflag)
 puts(":::type=INCONVO, setting=NOCONVO);");
  
 	  script_type = SCRIPT_NOCONVO;
-	  memset (&convo, 0, sizeof (convo));
+	  _memset (&convo, 0, sizeof (convo));
 	  continue;
 	}
 

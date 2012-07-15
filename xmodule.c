@@ -122,7 +122,7 @@ void *xmodule_sort_traverse(void *pa, void *pb)
 	if (!module)
 		return NULL;
 
-	if (!sNULL(module->trigger))
+	if (!_sNULL(module->trigger))
 		return NULL;
 
 	module->tmp_stat_count = stat_retcnt(NULL, module->trigger);
@@ -193,7 +193,7 @@ module_t *xmodule_load(int type, char *name)
 
 	debug(NULL, "xmodule_load: Entered: %s\n", name);
 
-	if (!sNULL(name))
+	if (!_sNULL(name))
 		return NULL;
 
 	dl_pointer = xmodule_type_to_dl(type);
@@ -315,7 +315,7 @@ module_t *xmodule_load_dlso(module_t * module)
 /*
   for (i = 0; i < MODULE_SUBTRIG_MAX; i++)
     {
-      if (sNULL(module_sym->subtrigs[i]))
+      if (_sNULL(module_sym->subtrigs[i]))
 {
 strlcpy_buf(module->subtrigs[i], module_sym->subtrigs[i]);
 }
@@ -411,7 +411,7 @@ module_t *xmodule_unload(int type, module_t * module, char *name)
 	}
 
 /*
-  for (i = 0; sNULL(module->subtrigs[i]) != NULL; i++)
+  for (i = 0; _sNULL(module->subtrigs[i]) != NULL; i++)
     {
 ret = xmodule_unload(type, NULL, module->subtrigs[i]);
 if(ret) {
@@ -506,7 +506,7 @@ void *xmodule_iolist_traverse(void *pa, void *pb)
 
 	if (!module)
 		return NULL;
-	if (!sNULL(module->trigger))
+	if (!_sNULL(module->trigger))
 		return NULL;
 
 	dl_text = (dlist_t **) v_dl[0];
@@ -577,7 +577,7 @@ void *xmodule_timerlist_traverse(void *pa, void *pb)
 
 	if (!module)
 		return NULL;
-	if (!sNULL(module->trigger))
+	if (!_sNULL(module->trigger))
 		return NULL;
 
 	dl_text = (dlist_t **) v_dl[0];
@@ -669,7 +669,7 @@ void *xmodule_list_traverse(void *pa, void *pb)
 
 	if (!module)
 		return NULL;
-	if (!sNULL(module->trigger))
+	if (!_sNULL(module->trigger))
 		return NULL;
 
 	dl_text_run = (dlist_t **) v_dl[0];
@@ -927,7 +927,7 @@ void console_xmodload(int type, char *arg)
 	if (!arg)
 		return;
 
-	strstrip_nl(arg);
+	_strstrip_nl(arg);
 
 	dl_pointer = xmodule_type_to_dl(type);
 
@@ -957,7 +957,7 @@ void console_xmodunload(int type, char *arg)
 	if (!arg)
 		return;
 
-	strstrip_nl(arg);
+	_strstrip_nl(arg);
 
 	dl_pointer = xmodule_type_to_dl(type);
 
@@ -992,7 +992,7 @@ void console_xmodreload(int type, char *arg)
 	if (!arg)
 		return;
 
-	strstrip_nl(arg);
+	_strstrip_nl(arg);
 
 	dl_pointer = xmodule_type_to_dl(type);
 
@@ -1029,7 +1029,7 @@ module_t * mod_subtrig=NULL;
 /*
   for (i = 0; i < MODULE_SUBTRIG_MAX; i++)
     {
-      if (!sNULL(m->subtrigs[i]))
+      if (!_sNULL(m->subtrigs[i]))
 	{
 	strlcpy_buf(  m->subtrigs[i], subtrig);
 	  break;
@@ -1064,7 +1064,7 @@ dlist_t *xmodule_find_by_trig_dptr(int type, char *name)
 
 	debug(NULL, "xmodule_find_by_trig_dptr: Entered: %s\n", name);
 
-	if (!sNULL(name))
+	if (!_sNULL(name))
 		return NULL;
 
 	dl_pointer = xmodule_type_to_dl(type);
@@ -1087,7 +1087,7 @@ dlist_t *xmodule_find_by_trig_dptr(int type, char *name)
 			if (!module)
 				continue;
 
-			if (!sNULL(module->trigger))
+			if (!_sNULL(module->trigger))
 				continue;
 
 			if (!strcasecmp(module->trigger, name))
@@ -1118,7 +1118,7 @@ module_t *xmodule_find_by_name(int type, char *name)
 
 	debug(NULL, "xmodule_find_by_name: Entered: name=%s\n", name);
 
-	if (!sNULL(name))
+	if (!_sNULL(name))
 		return NULL;
 
 	dl_pointer = xmodule_type_to_dl(type);
@@ -1148,7 +1148,7 @@ void *xmodule_tree_match_by_name(void *pa, void *pb)
 	if (!mod)
 		return NULL;
 
-	if (!sNULL(mod->name))
+	if (!_sNULL(mod->name))
 		return NULL;
 
 	if (!strcasecmp(mod->name, a)) {
@@ -1194,7 +1194,7 @@ void xmodule_update(int type, module_t * mod_struct, char *trig)
 
 	debug(NULL, "xmodule_update: Entered\n");
 
-	if (!sNULL(trig) || !mod_struct)
+	if (!_sNULL(trig) || !mod_struct)
 		return;
 
 	mod = xmodule_find_by_trig(type, trig);
@@ -1286,7 +1286,7 @@ int xmodule_avl_compare(const void *pa, const void *pb, void *param)
 	if (!a || !b)
 		return -1;
 
-	if (!sNULL(a->trigger) || !sNULL(b->trigger))
+	if (!_sNULL(a->trigger) || !_sNULL(b->trigger))
 		return -1;
 
 	n = strcasecmp(a->trigger, b->trigger);
@@ -1363,7 +1363,7 @@ void xmodule_del_timer(module_t * mod_parent, char *trig)
 
 	debug(NULL, "xmodule_del_timer: Entered\n");
 
-	if (!mod_parent || !sNULL(trig))
+	if (!mod_parent || !_sNULL(trig))
 		return;
 
 	dl_pointer = xmodule_typetimer_to_dl(mod_parent->type);
@@ -1394,7 +1394,7 @@ dlist_t *xmodule_find_timer(module_t * mod, char *trig)
 
 	debug(NULL, "xmodule_find_timer: Entered\n");
 
-	if (!mod || !sNULL(trig))
+	if (!mod || !_sNULL(trig))
 		return NULL;
 
 	dl_pointer = xmodule_typetimer_to_dl(mod->type);
@@ -1454,7 +1454,7 @@ void xmodule_del_iohook(module_t * mod_parent, char *trig)
 
 	debug(NULL, "xmodule_del_iohook: Entered\n");
 
-	if (!mod_parent || !sNULL(trig)) {
+	if (!mod_parent || !_sNULL(trig)) {
 		return;
 	}
 
@@ -1490,7 +1490,7 @@ dlist_t *xmodule_find_iohook(module_t * mod, char *trig)
 
 	debug(NULL, "xmodule_find_iohook: Entered\n");
 
-	if (!mod || !sNULL(trig))
+	if (!mod || !_sNULL(trig))
 		return NULL;
 
 	dl_pointer = xmodule_typeio_to_dl(mod->type);
@@ -1552,7 +1552,7 @@ module_t *xmodule_dup_mirror(module_t * mod, char *name, char *trig,
 	debug(NULL, "xmodule_dup_mirror: Entered: name=%s , trig=%s\n", name,
 	      trig);
 
-	if (!mod || !sNULL(name) || !sNULL(trig))
+	if (!mod || !_sNULL(name) || !_sNULL(trig))
 		return NULL;
 
 	mod_mir = (module_t *) calloc(1, sizeof(module_t));
@@ -1610,7 +1610,7 @@ module_t *xmodule_load_subtrigs(module_t * mod)
 		return NULL;
 
 /*
-for(i=0;sNULL(mod->subtrigs[i])!=NULL;i++) {
+for(i=0;_sNULL(mod->subtrigs[i])!=NULL;i++) {
 
 dptr_mod = xmodule_find_by_trig_dptr(mod->type, mod->subtrigs[i]);
 */

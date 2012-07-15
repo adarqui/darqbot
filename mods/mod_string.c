@@ -33,15 +33,15 @@ void __string_init__(void)
 
 	module_add_subtrigs(&mod_string_info, "^strzero");
 	module_add_subtrigs(&mod_string_info, "^strlen");
-	module_add_subtrigs(&mod_string_info, "^strchr");
-	module_add_subtrigs(&mod_string_info, "^strrchr");
+	module_add_subtrigs(&mod_string_info, "^_strchr");
+	module_add_subtrigs(&mod_string_info, "^_strrchr");
 	module_add_subtrigs(&mod_string_info, "^strstr");
 	module_add_subtrigs(&mod_string_info, "^subchar");
 	module_add_subtrigs(&mod_string_info, "^strcasestr");
 	module_add_subtrigs(&mod_string_info, "^strprepend");
 	module_add_subtrigs(&mod_string_info, "^index");
 	module_add_subtrigs(&mod_string_info, "^rindex");
-	module_add_subtrigs(&mod_string_info, "^memset");
+	module_add_subtrigs(&mod_string_info, "^_memset");
 	module_add_subtrigs(&mod_string_info, "^space");
 	module_add_subtrigs(&mod_string_info, "^reverse");
 	module_add_subtrigs(&mod_string_info, "^unquote");
@@ -112,7 +112,7 @@ bot_t *string_run(dlist_t * dlist_node, bot_t * bot)
 	      "string_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	sub = MOD_STRING;
@@ -122,9 +122,9 @@ bot_t *string_run(dlist_t * dlist_node, bot_t * bot)
 		sub = MOD_STRING_STRZERO;
 	} else if (!strcasecmp(bot->trig_called, "^strlen")) {
 		sub = MOD_STRING_STRLEN;
-	} else if (!strcasecmp(bot->trig_called, "^strchr")) {
+	} else if (!strcasecmp(bot->trig_called, "^_strchr")) {
 		sub = MOD_STRING_STRCHR;
-	} else if (!strcasecmp(bot->trig_called, "^strrchr")) {
+	} else if (!strcasecmp(bot->trig_called, "^_strrchr")) {
 		sub = MOD_STRING_STRRCHR;
 	} else if (!strcasecmp(bot->trig_called, "^strstr")) {
 		sub = MOD_STRING_STRSTR;
@@ -138,7 +138,7 @@ bot_t *string_run(dlist_t * dlist_node, bot_t * bot)
 		sub = MOD_STRING_RINDEX;
 	} else if (!strcasecmp(bot->trig_called, "^subchar")) {
 		sub = MOD_STRING_SUBCHAR;
-	} else if (!strcasecmp(bot->trig_called, "^memset")) {
+	} else if (!strcasecmp(bot->trig_called, "^_memset")) {
 		sub = MOD_STRING_MEMSET;
 	} else if (!strcasecmp(bot->trig_called, "^space")) {
 		sub = MOD_STRING_SPACE;
@@ -189,14 +189,14 @@ bot_t *string_run(dlist_t * dlist_node, bot_t * bot)
 		{
 			l_new_str =
 			    string_op_AstrAint(bot, l_str_ptr, opt_str, opt,
-					       strchr);
+					       _strchr);
 			break;
 		}
 	case MOD_STRING_STRRCHR:
 		{
 			l_new_str =
 			    string_op_AstrAint(bot, l_str_ptr, opt_str, opt,
-					       strrchr);
+					       _strrchr);
 			break;
 		}
 	case MOD_STRING_INDEX:
@@ -292,7 +292,7 @@ char *string_op_strlen(bot_t * bot, char *string, char *opt_str, int opt)
 
 	debug(NULL, "string_op_strlen: Entered\n");
 
-	if (!bot || !sNULL(opt_str))
+	if (!bot || !_sNULL(opt_str))
 		return NULL;
 
 	len = atoi(opt_str);
@@ -359,7 +359,7 @@ char *string_op_AstrAint(bot_t * bot, char *string, char *opt_str, int opt,
 
 	debug(NULL, "string_op_AstrAint: Entered\n");
 
-	if (!bot || !sNULL(opt_str))
+	if (!bot || !_sNULL(opt_str))
 		return NULL;
 
 	bz2(bot2);
@@ -372,7 +372,7 @@ char *string_op_AstrAint(bot_t * bot, char *string, char *opt_str, int opt,
 	ptr_end = ptr_base + str_len;
 	ptr_middle = ptr_base + str_len;
 
-//str = strchr(ptr_base, opt_str[0]);
+//str = _strchr(ptr_base, opt_str[0]);
 	str = fn(ptr_base, opt_str[0]);
 	if (!str) {
 		strzero_bot(bot->txt_data_out);
@@ -418,7 +418,7 @@ char *string_op_AstrAstr(bot_t * bot, char *string, char *opt_str, int opt,
 
 	debug(NULL, "string_op_AstrAstr: Entered\n");
 
-	if (!bot || !sNULL(opt_str) || !fn)
+	if (!bot || !_sNULL(opt_str) || !fn)
 		return NULL;
 
 	bz2(bot2);
@@ -499,7 +499,7 @@ char *string_op_space(bot_t * bot, char *string, char *opt_str, int opt)
 
 	strzero_bot(bot->txt_data_out);
 
-	if (sNULL(buf) != NULL) {
+	if (_sNULL(buf) != NULL) {
 		strlcat_bot(bot->txt_data_out, buf);
 	}
 
@@ -559,7 +559,7 @@ char *string_op_unquote(bot_t * bot, char *string, char *opt_str, int opt)
 {
 	debug(NULL, "string_op_unquote: Entered\n");
 
-	if (!sNULL(string))
+	if (!_sNULL(string))
 		return NULL;
 
 	str_shrink_quotes(string);
@@ -581,7 +581,7 @@ char *string_strprepend(const char *s, const char *b)
 char *string_memset(const char *s, int c)
 {
 
-	memset((char *)s, c, strlen(s));
+	_memset((char *)s, c, strlen(s));
 
 	return (char *)s;
 }

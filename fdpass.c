@@ -135,7 +135,7 @@ fdpass_control_t *fdpass_init(char *tag, char *tag_ext)
 {
 	fdpass_control_t *fc = NULL;
 
-	if (!sNULL(tag))
+	if (!_sNULL(tag))
 		return NULL;
 
 	fc = (fdpass_control_t *) calloc(1, sizeof(fdpass_control_t));
@@ -143,7 +143,7 @@ fdpass_control_t *fdpass_init(char *tag, char *tag_ext)
 		return NULL;
 
 	strlcpy_buf(fc->op.tag, tag);
-	if (sNULL(tag_ext))
+	if (_sNULL(tag_ext))
 		strlcpy_buf(fc->op.tag_ext, tag_ext);
 
 	fc->iov[0].iov_len = sizeof(fdpass_control_op_t);
@@ -174,7 +174,7 @@ void fdpass_fini(fdpass_control_t ** fc)
 	if (!(*fc))
 		return;
 
-	memset(*fc, 0, sizeof(fdpass_control_t));
+	_memset(*fc, 0, sizeof(fdpass_control_t));
 	free(*fc);
 
 	*fc = NULL;

@@ -88,7 +88,7 @@ bot_t *uu_run(dlist_t * dlist_node, bot_t * bot)
 	      "uu_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = MOD_UU_ENC;
@@ -104,12 +104,12 @@ bot_t *uu_run(dlist_t * dlist_node, bot_t * bot)
 
 	MOD_OPTIONS_BOTTOM_HALF;
 
-	l_str_ptr = eat_whitespace(dl_module_arg_after_options);
+	l_str_ptr = _eat_whitespace(dl_module_arg_after_options);
 	if (!l_str_ptr || !strlen(l_str_ptr)) {
 		l_str_ptr = bot->txt_data_out;
 		l_should_strzero = 1;
 	}
-	if (!sNULL(l_str_ptr))
+	if (!_sNULL(l_str_ptr))
 		return bot;
 	l_new_str = uu_change_string(l_str_ptr, opt, &new_len);
 	if (l_new_str != NULL) {
@@ -141,7 +141,7 @@ char *uu_change_string(char *string, int opt, int *new_len)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	strlcpy_buf(buf, string);
 
@@ -186,7 +186,7 @@ char *xxencode(char *in, int in_sz)
 
 	out = malloc(p);
 
-	memset(out, 0, p);
+	_memset(out, 0, p);
 
 	n = in_sz;
 

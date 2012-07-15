@@ -87,7 +87,7 @@ bot_t *bin_run(dlist_t * dlist_node, bot_t * bot)
 	      "bin_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	MOD_OPTIONS_TOP_HALF;
@@ -151,13 +151,13 @@ char *bin_op_run(bot_t * bot, char *prog, char *options, char *input,
 
 	debug(NULL, "bin_op_run: Entered: %s %s %s\n", prog, options, input);
 
-	if (!bot || !sNULL(prog))
+	if (!bot || !_sNULL(prog))
 		return NULL;
 
 	if (!str_apply_is(prog, isprog))
 		return NULL;
 
-	if (!sNULL(options))
+	if (!_sNULL(options))
 		options = "";
 	path =
 	    str_unite_static("%s/mods/mod_bin_files/%s %s", gi->confdir, prog,

@@ -86,11 +86,11 @@ bot_t *rainbow_run(dlist_t * dlist_node, bot_t * bot)
 	      "rainbow_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = rc_index = 0;
-	memset(rc, 0, sizeof(rc));
+	_memset(rc, 0, sizeof(rc));
 
 	MOD_OPTIONS_TOP_HALF;
 
@@ -155,7 +155,7 @@ char *rainbow_change_string(char *string, int opt, rainbow_colors_t * rc,
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	i = 0;
 	start_color = 0;
@@ -184,7 +184,7 @@ char *rainbow_change_string(char *string, int opt, rainbow_colors_t * rc,
 
 			strlcat_bot(buf, rc[i].type);
 
-			if (!strcmp(rc[i].type, IRC_COLOR_REVERSE2_STR)) {
+			if (!_strcmp(rc[i].type, IRC_COLOR_REVERSE2_STR)) {
 				strlcat_bot(buf, IRC_COLOR_COLOR_STR);
 			}
 
@@ -199,7 +199,7 @@ char *rainbow_change_string(char *string, int opt, rainbow_colors_t * rc,
 					charcat_bot(buf, ' ');
 			}
 
-			if (!strcmp(rc[i].type, IRC_COLOR_REVERSE2_STR)) {
+			if (!_strcmp(rc[i].type, IRC_COLOR_REVERSE2_STR)) {
 				strlcat_bot(buf, IRC_COLOR_RESET_STR);
 			}
 		}

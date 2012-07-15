@@ -94,7 +94,7 @@ bot_t *html_run(dlist_t * dlist_node, bot_t * bot)
 	      "html_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	if (bot->var_nesting_cur > mod_html_info.max_nesting)
@@ -357,7 +357,7 @@ html_info_t *html_finix(bot_t * bot, html_info_t * si)
 
 	dl_str_destroy(&si->dl_text);
 
-	memset(si, 0, sizeof(si));
+	_memset(si, 0, sizeof(si));
 	free(si);
 
 	return NULL;

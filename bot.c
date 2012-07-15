@@ -47,7 +47,6 @@ bot_t *bot_init(void)
 
 void bot_fini_subs(void *bot_arg)
 {
-	dlist_t *dptr_sub = NULL, *dptr_sub_tmp = NULL;
 	bot_t *bot = (bot_t *) bot_arg;
 
 	if (!bot)
@@ -58,12 +57,15 @@ void bot_fini_subs(void *bot_arg)
 	if (bot->node_type != BOT_NODE_TYPE_ROOT)
 		return;
 
+/*
 	dlist_fornext_retarded(bot->dl_subs, dptr_sub, dptr_sub_tmp) {
 		if (!dptr_sub)
 			break;
 		bot = (bot_t *) dlist_data(dptr_sub);
 		bot_fini(bot);
 	}
+*/
+dlist_fini(&bot->dl_subs, bot_fini);
 
 	return;
 }
@@ -99,7 +101,7 @@ void bot_fini(void *bot_arg)
 
 		gmodule_off(bot);
 
-		memset(bot, 0, sizeof(bot_t));
+		_memset(bot, 0, sizeof(bot_t));
 
 		free(bot);
 	} else if (bot->node_type == BOT_NODE_TYPE_SUB) {
@@ -235,7 +237,7 @@ int bot_line_clear(bot_t * bot)
 
 	debug(bot, "bot_line_clear: Entered\n");
 
-/* FIX, too much memsetting */
+/* FIX, too much _memsetting */
 	bz(bot->irc_command);
 	bz(bot->txt_nick);
 	bz(bot->txt_ident);
@@ -271,7 +273,7 @@ int bot_line_clear_bufs(bot_t * bot)
 
 	debug(bot, "bot_line_clear_bufs: Entered\n");
 
-/* FIX, too much memsetting */
+/* FIX, too much _memsetting */
 	bz(bot->txt_data_in);
 	bz(bot->txt_data_out);
 
@@ -313,16 +315,16 @@ void bot_find_and_set_fd(char *tag, int fd)
 
 	debug(NULL, "bot_find_and_set_fd: Entred: tag=%s\n", tag);
 
-	if (!sNULL(tag) || fd < 0) {
+	if (!_sNULL(tag) || fd < 0) {
 		return;
 	}
 
 	tok_tag = strtok(tag, ",");
-	if (!sNULL(tok_tag))
+	if (!_sNULL(tok_tag))
 		return;
 
 	tok_id = strtok(NULL, ",");
-	if (!sNULL(tok_id))
+	if (!_sNULL(tok_id))
 		return;
 
 	tok_id_val = atoi(tok_id);
@@ -343,7 +345,7 @@ void bot_find_and_set_fd(char *tag, int fd)
 		control_add_fdpass(control, fd);
 		dptr_control = control_bot_add(bot, control);
 
-		if (sNULL(tok_tag_ext)) {
+		if (_sNULL(tok_tag_ext)) {
 			dptr_gmod =
 			    gmodule_find_gmod_dptr(bot, NULL, tok_tag_ext);
 			if (dptr_gmod) {
@@ -372,7 +374,7 @@ bot_t *bot_init_and_turn_on(char *tag)
 		tag = str_unite_static("%s.conf");
 	}
 
-	if (!sNULL(tag))
+	if (!_sNULL(tag))
 		return NULL;
 
 	bz(filepath);
@@ -622,7 +624,7 @@ bot_t *bot_find_tag(char *tag)
 
 	debug(NULL, "bot_find_tag: Entered: tag=%s\n", tag);
 
-	if (!sNULL(tag))
+	if (!_sNULL(tag))
 		return NULL;
 
 	dlist_fornext(gi->bots, dptr) {
@@ -646,7 +648,7 @@ bot_t *bot_find_sub_by_tag(bot_t * the_bot, char *tag)
 
 	debug(NULL, "bot_find_sub_by_tag: Entered: tag=%s\n", tag);
 
-	if (!sNULL(tag) || !the_bot)
+	if (!_sNULL(tag) || !the_bot)
 		return NULL;
 
 	dlist_fornext(the_bot->dl_subs, dptr) {
@@ -774,7 +776,7 @@ void bot_fork_clean_exit(bot_t * bot)
 	close(1);
 	close(2);
 
-	exit(0);
+	_exit(0);
 	return;
 }
 
@@ -824,27 +826,27 @@ bot_copy_values(bot_t * bot, char *nick, char *ident, char *host,
 
 	bot_line_clear(bot);
 
-	if (sNULL(nick)) {
+	if (_sNULL(nick)) {
 		strlcpy_buf(bot->txt_nick, nick);
 	}
 
-	if (sNULL(ident)) {
+	if (_sNULL(ident)) {
 		strlcpy_buf(bot->txt_ident, ident);
 	}
 
-	if (sNULL(host)) {
+	if (_sNULL(host)) {
 		strlcpy_buf(bot->txt_host, host);
 	}
 
-	if (sNULL(to)) {
+	if (_sNULL(to)) {
 		strlcpy_buf(bot->txt_to, to);
 	}
 
-	if (sNULL(in)) {
+	if (_sNULL(in)) {
 		strlcpy_buf(bot->txt_data_in, in);
 		bot->txt_data_in_sz = strlen(in);
 	}
-	if (sNULL(out)) {
+	if (_sNULL(out)) {
 		strlcpy_buf(bot->txt_data_out, out);
 		bot->txt_data_out_sz = strlen(out);
 	}
@@ -889,12 +891,12 @@ bot_daemon(int flags, char **mod_names, bot_t ** bots,
 
 		if (flags & BOT_DAEMON_REMOVE_MODULES) {
 			if (mod_names) {
-				for (i = 0; sNULL(mod_names[i]) != NULL; i++) {
+				for (i = 0; _sNULL(mod_names[i]) != NULL; i++) {
 					zmodule_lock_arg(mod_names[i]);
 				}
 				xmodule_unload_everything();
 				zmodule_prune();
-				for (i = 0; sNULL(mod_names[i]) != NULL; i++) {
+				for (i = 0; _sNULL(mod_names[i]) != NULL; i++) {
 					zmodule_unlock_arg(mod_names[i]);
 				}
 			}

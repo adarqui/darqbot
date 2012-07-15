@@ -84,14 +84,14 @@ bot_t *cat_run(dlist_t * dlist_node, bot_t * bot)
 	      "cat_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = MOD_CAT_OPT_READ;
 
 	MOD_OPTIONS_TOP_HALF;
 
-	dl_options_ptr = eat_whitespace(dl_options_ptr);
+	dl_options_ptr = _eat_whitespace(dl_options_ptr);
 
 	if (!strcasecmp(dl_options_ptr, "<")) {
 		opt = MOD_CAT_OPT_READ;
@@ -218,7 +218,7 @@ char *cat_op_read(char *files)
 		debug(NULL, "cat_op_read: fname=%s\n", fname);
 
 		while (1) {
-			memset(buf, 0, sizeof(buf));
+			_memset(buf, 0, sizeof(buf));
 			if (fgets(buf, sizeof(buf) - 1, fp) == NULL)
 				break;
 			buf_str = strdup(buf);
@@ -242,7 +242,7 @@ int cat_illegal_fname(char *f)
 	if (!f)
 		return 1;
 
-	s = strchr(f, '/');
+	s = _strchr(f, '/');
 	if (s)
 		return 1;
 

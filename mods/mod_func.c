@@ -55,6 +55,10 @@ bot_t *func_init(dlist_t * dlist_node, bot_t * bot)
 bot_t *func_fini(dlist_t * dlist_node, bot_t * bot)
 {
 	debug(bot, "func_fini: Entered\n");
+
+/* important since this module will be used to hook various functions */
+fns_load_defaults();
+
 	return NULL;
 }
 
@@ -88,7 +92,7 @@ bot_t *func_run(dlist_t * dlist_node, bot_t * bot)
 	      "func_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -165,7 +169,27 @@ bot_t *func_run(dlist_t * dlist_node, bot_t * bot)
 		opt = MOD_FUNC_JMP;
 	} else if (!strncasecmp_len(dl_options_ptr, "bswap")) {
 		opt = MOD_FUNC_BSWAP;
-	} else if (!strncasecmp_len(dl_options_ptr, "isupper")) {
+	}
+else if(!strncasecmp_len(dl_options_ptr, "bsf")) {
+opt = MOD_FUNC_BSF;
+}
+else if(!strncasecmp_len(dl_options_ptr, "bsr")) {
+opt = MOD_FUNC_BSR;
+}
+else if(!strncasecmp_len(dl_options_ptr, "btc")) {
+opt = MOD_FUNC_BTC;
+}
+else if(!strncasecmp_len(dl_options_ptr, "btr")) {
+opt = MOD_FUNC_BTR;
+}
+else if(!strncasecmp_len(dl_options_ptr, "bts")) {
+opt = MOD_FUNC_BTS;
+}
+else if(!strncasecmp_len(dl_options_ptr, "bt")) {
+opt = MOD_FUNC_BT;
+}
+
+ else if (!strncasecmp_len(dl_options_ptr, "isupper")) {
 		opt = MOD_FUNC_ISUPPER;
 	} else if (!strncasecmp_len(dl_options_ptr, "islower")) {
 		opt = MOD_FUNC_ISLOWER;
@@ -197,7 +221,23 @@ bot_t *func_run(dlist_t * dlist_node, bot_t * bot)
 		opt = MOD_FUNC_ISXDIGIT;
 	} else if (!strncasecmp_len(dl_options_ptr, "isgraph")) {
 		opt = MOD_FUNC_ISGRAPH;
-	} else if (!strncasecmp_len(dl_options_ptr, "exit")) {
+	}
+
+else if(!strncasecmp_len(dl_options_ptr, "snull")) {
+opt = MOD_FUNC_SNULL;
+}
+else if(!strncasecmp_len(dl_options_ptr, "strstrip_nl")) {
+opt = MOD_FUNC_STRSTRIP_NL;
+}
+else if(!strncasecmp_len(dl_options_ptr, "strstrip_chars")) {
+opt = MOD_FUNC_STRSTRIP_CHARS;
+}
+else if(!strncasecmp_len(dl_options_ptr, "eat_whitespace")) {
+opt = MOD_FUNC_EAT_WHITESPACE;
+}
+
+
+ else if (!strncasecmp_len(dl_options_ptr, "exit")) {
 		opt = MOD_FUNC_EXIT;
 	}
 
@@ -299,10 +339,41 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 			return NULL;
 			break;
 		}
+case MOD_FUNC_SNULL: {
+
+printf("XXX: %s\n", string);
+res_str = func_sNULL(string);
+if(!res_str) {
+res_str = "NULL";
+}
+
+break;
+}
+case MOD_FUNC_STRSTRIP_NL:{ 
+res_int = func_strstrip_nl(string);
+//res_int_set = 1;
+debug(NULL, "XXX: func_strstrip_nl: res_int=%i\n", res_int);
+res_str = string;
+break;
+}
+case MOD_FUNC_STRSTRIP_CHARS: {
+
+if(_sNULL(opt_val)) {
+res_int = func_strstrip_chars(string, opt_val);
+res_str = string;
+debug(NULL, "XXX: func_strstrip_chars: res_int=%i\n", res_int);
+}
+
+break;
+}
+case MOD_FUNC_EAT_WHITESPACE:{ 
+res_str = func_eat_whitespace(string);
+break;
+}
+
 	case MOD_FUNC_EFLAGS:
 		{
-			res_uint = func_eflags();
-			res_uint_set = 1;
+			res_str = func_eflags();
 			break;
 		}
 	case MOD_FUNC_JMP:{
@@ -337,11 +408,11 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 			char *sa, *sb;
 			unsigned int a, b;
 
-			if (!sNULL(opt_val))
+			if (!_sNULL(opt_val))
 				return NULL;
 			sa = strtok(opt_val, " ");
 
-			if (!sNULL(sa))
+			if (!_sNULL(sa))
 				return NULL;
 
 			if (opt == MOD_FUNC_ISUPPER) {
@@ -417,7 +488,7 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 			}
 
 			sb = strtok(NULL, "");
-			if (!sNULL(sb))
+			if (!_sNULL(sb))
 				return NULL;
 
 			if (opt == MOD_FUNC_STRNCMP) {
@@ -470,14 +541,20 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 	case MOD_FUNC_ROR:
 	case MOD_FUNC_ROL:
 	case MOD_FUNC_BSWAP:
+case MOD_FUNC_BSF:
+case MOD_FUNC_BSR:
+case MOD_FUNC_BT:
+case MOD_FUNC_BTC:
+case MOD_FUNC_BTR:
+case MOD_FUNC_BTS:
 		{
 			char *sa, *sb;
 			int a, b;
 
-			if (!sNULL(opt_val))
+			if (!_sNULL(opt_val))
 				return NULL;
 			sa = strtok(opt_val, " ");
-			if (!sNULL(sa))
+			if (!_sNULL(sa))
 				return NULL;
 
 			if (opt == MOD_FUNC_NEG) {
@@ -493,8 +570,20 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 				res_int_set = 1;
 				break;
 			}
+else if(opt == MOD_FUNC_BSF) {
+res_int = func_bsf(atoi(sa));
+res_int_set = 1;
+break;
+}
+else if(opt == MOD_FUNC_BSR) {
+res_int = func_bsr(atoi(sa));
+res_int_set = 1;
+break;
+}
+
+
 			sb = strtok(NULL, "");
-			if (!sNULL(sb))
+			if (!_sNULL(sb))
 				return NULL;
 
 			a = atoi(sa);
@@ -543,6 +632,18 @@ char *func_change_string(bot_t * bot, char *string, int opt, char *opt_val)
 			case MOD_FUNC_ROL:
 				res_int = func_rol(a, b);
 				break;
+case MOD_FUNC_BT:
+res_int = func_bt(a, b);
+break;
+case MOD_FUNC_BTC:
+res_int = func_btc(a, b);
+break;
+case MOD_FUNC_BTR:
+res_int = func_btr(a, b);
+break;
+case MOD_FUNC_BTS:
+res_int = func_bts(a, b);
+break;
 			default:
 				break;
 			}
@@ -576,7 +677,7 @@ void func_switch(char *type)
 {
 	int rand_val = 0;
 
-	if (!sNULL(type))
+	if (!_sNULL(type))
 		return;
 
 	rand_val = rand();
@@ -624,6 +725,13 @@ void func_switch(char *type)
 		func_rol = c_rol;
 
 		func_bswap = c_bswap;
+func_bsf = c_bsf;
+func_bsr = c_bsr;
+func_bt = c_bt;
+func_btc = c_btc;
+func_btr = c_btr;
+func_bts = c_bts;
+
 
 		func_isupper = c_isupper;
 		func_islower = c_islower;
@@ -675,7 +783,7 @@ void func_switch(char *type)
 		func_imod = intel_imod;
 
 		func_neg = intel_neg;
-		func_eflags = intel_eflags;
+		func_eflags = c_eflags;
 
 		func_and = intel_and;
 		func_or = intel_or;
@@ -690,6 +798,13 @@ void func_switch(char *type)
 		func_rol = intel_rol;
 
 		func_bswap = intel_bswap;
+func_bsf = intel_bsf;
+func_bsr = intel_bsr;
+func_bt = intel_bt;
+func_btc = intel_btc;
+func_btr = intel_btr;
+func_bts = intel_bts;
+
 
 		func_isupper = intel_isupper;
 		func_islower = intel_islower;
@@ -709,6 +824,7 @@ func_isprint = intel_isprint;
 func_isxdigit = intel_isxdigit;
 func_isgraph = intel_isgraph;
 */
+
 
 		func_exit = intel_linux_exit;
 	} else if (!strcasecmp(type, "intel2")) {
@@ -745,7 +861,7 @@ func_isgraph = intel_isgraph;
 		func_imod = intel2_imod;
 
 		func_neg = intel2_neg;
-		func_eflags = intel2_eflags;
+		func_eflags = c_eflags;
 
 		func_and = intel2_and;
 		func_or = intel2_or;
@@ -760,6 +876,13 @@ func_isgraph = intel_isgraph;
 		func_rol = intel2_rol;
 
 		func_bswap = intel2_bswap;
+func_bsf = intel2_bsf;
+func_bsr = intel2_bsr;
+func_bt = intel2_bt;
+func_btc = intel2_btc;
+func_btr = intel2_btr;
+func_bts = intel2_bts;
+
 
 		func_isupper = intel2_isupper;
 		func_islower = intel2_islower;
@@ -779,6 +902,12 @@ func_isprint = intel2_isprint;
 func_isxdigit = intel2_isxdigit;
 func_isgraph = intel2_isgraph;
 */
+
+/* misc.c */
+func_sNULL = intel2_sNULL;
+func_strstrip_nl = intel2_strstrip_nl;
+func_strstrip_chars = intel2_strstrip_chars;
+func_eat_whitespace = intel2_eat_whitespace;
 
 		func_exit = intel2_linux_exit;
 
@@ -825,6 +954,9 @@ func_isgraph = intel2_isgraph;
 		func_rol = c_rol;
 
 		func_bswap = c_bswap;
+func_bsf = c_bsf;
+func_bsr = c_bsr;
+func_bt = c_bt;
 
 		func_isupper = isupper;
 		func_islower = islower;
@@ -842,6 +974,12 @@ func_isgraph = intel2_isgraph;
 		func_isprint = isprint;
 		func_isxdigit = isxdigit;
 		func_isgraph = isgraph;
+
+/* misc.c */
+func_sNULL = sNULL;
+func_strstrip_nl = strstrip_nl;
+func_strstrip_chars = strstrip_chars;
+func_eat_whitespace = eat_whitespace;
 
 		func_exit = exit;
 	} else if (!strcasecmp(type, "c2")) {

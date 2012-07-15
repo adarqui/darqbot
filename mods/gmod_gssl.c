@@ -129,7 +129,7 @@ bot_t *gssl_run(dlist_t * dlist_node, bot_t * bot)
 	      "gssl_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	printf("dl_module_arg=%s\n", bot->dl_module_arg);
@@ -187,7 +187,7 @@ char *gssl_process_options(gssl_t * gssl, char *string)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	dl = tokenize(NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES,
 		      "...");
@@ -242,7 +242,7 @@ char *gssl_change_string(bot_t * bot, char *string, int opt)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	return str;
 }
@@ -269,7 +269,7 @@ bot_t *gssl_output(dlist_t * dlist_node, bot_t * bot)
 		return NULL;
 	}
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	debug(NULL, "gssl_output: in=[%s], out=[%s]\n", bot->txt_data_in,
 	      bot->txt_data_out);
@@ -318,7 +318,7 @@ bot_t *gssl_input(dlist_t * dlist_node, bot_t * bot)
 		return NULL;
 	}
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	if (bot->txt_data_in_sz > 0) {
 		n = BIO_write(gssl->ibio, bot->txt_data_in,
@@ -500,7 +500,7 @@ int gssl_handshake(gssl_t * gssl)
 	if (!gssl)
 		return -1;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	n = BIO_read(gssl->obio, gssl->bot->txt_data_out,
 		     sizeof(gssl->bot->txt_data_out) - 1);
@@ -516,7 +516,7 @@ int gssl_handshake(gssl_t * gssl)
 		ERR_print_errors_fp(stderr);
 	}
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	n = BIO_read(gssl->obio, gssl->bot->txt_data_out,
 		     sizeof(gssl->bot->txt_data_out) - 1);

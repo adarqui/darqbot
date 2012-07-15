@@ -91,7 +91,7 @@ bot_t *cmph_run(dlist_t * dlist_node, bot_t * bot)
 	      "cmph_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -188,7 +188,7 @@ fclose(cmphx_ptr->fp);
 cmph_destroy(cmphx_ptr->hash);
 */
 
-	memset(cmphx_ptr, 0, sizeof(cmphx_t));
+	_memset(cmphx_ptr, 0, sizeof(cmphx_t));
 //free(cmphx_ptr);
 //*cmphx = NULL;
 
@@ -243,7 +243,7 @@ char *cmph_op_build(bot_t * bot, cmphx_t ** cmphx, char *string)
 
 	debug(NULL, "cmph_op_build: Entered: %p %p %p\n", bot, cmphx, string);
 
-	if (!bot || !cmphx || !sNULL(string))
+	if (!bot || !cmphx || !_sNULL(string))
 		return NULL;
 
 	cmphx_ptr = *cmphx;
@@ -325,7 +325,7 @@ char *cmph_op_find(bot_t * bot, cmphx_t ** cmphx, char *string)
 
 	debug(NULL, "cmph_op_find: Entered\n");
 
-	if (!bot || !cmphx || !sNULL(string))
+	if (!bot || !cmphx || !_sNULL(string))
 		return NULL;
 
 	cmphx_ptr = *cmphx;

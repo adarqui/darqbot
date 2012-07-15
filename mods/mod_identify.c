@@ -92,7 +92,7 @@ bot_t *identify_run(dlist_t * dlist_node, bot_t * bot)
 	      "identify_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = IDENTIFY_OPT_RUN;
@@ -212,8 +212,8 @@ char *identify_return_user(dlist_t * dlist_node, bot_t * bot)
 		return NULL;
 
 	memcpy(&bot_tmp, bot, sizeof(bot_t));
-	memset(bot_tmp.txt_data_in, 0, sizeof(bot_tmp.txt_data_in));
-	memset(bot_tmp.txt_data_out, 0, sizeof(bot_tmp.txt_data_out));
+	_memset(bot_tmp.txt_data_in, 0, sizeof(bot_tmp.txt_data_in));
+	_memset(bot_tmp.txt_data_out, 0, sizeof(bot_tmp.txt_data_out));
 	bot_tmp.dl_module_arg = bot_tmp.txt_data_in;
 
 	bot_ptr = identify_run(dlist_node, &bot_tmp);
@@ -281,7 +281,7 @@ char *identify_op_run(bot_t * bot)
 	if (!pcre_change_string_fn)
 		pcre_change_string_fn = identify_change_string_fn_null;
 
-	memset(&tmp_bot, 0, sizeof(tmp_bot));
+	_memset(&tmp_bot, 0, sizeof(tmp_bot));
 	snprintf_buf(tmp_bot.txt_data_out, "%s!%s@%s",
 		     bot->txt_nick, bot->txt_ident, bot->txt_host);
 

@@ -85,7 +85,7 @@ bot_t *internals_run(dlist_t * dlist_node, bot_t * bot)
 	      "internals_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -332,14 +332,14 @@ int internals_op_trig_prefix(dlist_t ** dl_text, bot_t * bot, char *trig_prefix)
 	else
 		c = "";
 
-	if (!sNULL(trig_prefix)) {
+	if (!_sNULL(trig_prefix)) {
 		str = str_unite("%strig_prefix=%s", c, bot->trig_prefix);
 		if (!str)
 			return -1;
 
 		dlist_Dinsert_after(dl_text, str);
 	} else {
-		if (sNULL(bot->trig_prefix))
+		if (_sNULL(bot->trig_prefix))
 			bz(bot->trig_prefix);
 		strlcpy_buf(bot->trig_prefix, trig_prefix);
 	}

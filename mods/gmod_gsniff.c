@@ -124,7 +124,7 @@ bot_t *gsniff_run(dlist_t * dlist_node, bot_t * bot)
 	      "gsniff_run: Entered: initial output buf=[%s], input buf=[%s], gmod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	dptr_gmod =
@@ -180,7 +180,7 @@ char *gsniff_process_options(gsniff_t * gsniff, char *string)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	dl = tokenize(NULL, string, TOKENIZE_NORMAL | TOKENIZE_LEAVEQUOTES,
 		      "...");
@@ -531,7 +531,7 @@ void gsniff_free(void *arg)
 	safe_event_del(&gsniff->ev);
 	safe_close(gsniff->fd);
 	gsniff->gmod->data = NULL;
-	memset(gsniff, 0, sizeof(gsniff_t));
+	_memset(gsniff, 0, sizeof(gsniff_t));
 	free(gsniff);
 
 	return;
@@ -665,10 +665,10 @@ void gsniff_log(gsniff_t * gsniff, char *msg)
 {
 	FILE *fp = NULL;
 
-	if (!gsniff || !sNULL(msg))
+	if (!gsniff || !_sNULL(msg))
 		return;
 
-	if (sNULL(gsniff->logfile))
+	if (_sNULL(gsniff->logfile))
 		fp = fopen(gsniff->logfile, "a+");
 	else
 		fp = stdout;
@@ -679,7 +679,7 @@ void gsniff_log(gsniff_t * gsniff, char *msg)
 	fprintf(fp, "gsniff_log: %s\n", msg);
 	fflush(fp);
 
-	if (sNULL(gsniff->logfile))
+	if (_sNULL(gsniff->logfile))
 		fclose(fp);
 
 	return;

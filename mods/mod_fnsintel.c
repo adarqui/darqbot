@@ -87,8 +87,10 @@ bot_t *fnsintel_run(dlist_t * dlist_node, bot_t * bot)
 	      "fnsintel_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
+/*
 	if (bot_shouldreturn(bot))
 		return NULL;
+*/
 
 	opt = 0;
 	opt = MOD_FNSINTEL_TEST;
@@ -137,20 +139,61 @@ char *fnsintel_change_string(bot_t * bot, char *string, int opt)
 
 void fnsintel_on(bot_t * bot)
 {
+module_t * m;
+void * v;
 
 	debug(bot, "fnsintel_on: Entered\n");
 
-/*
-	fn_true = asmx86_true;
-	fn_false = asmx86_false;
-	fn_val_int = asmx86_val_int;
-	fn_val_string = asmx86_val_string;
-	fn_strlen = asmx86_strlen;
-	fn_memset = asmx86_memset;
-	fn_bzero = asmx86_bzero;
-	fn_strcmp = asmx86_strcmp;
-	fn_strncmp = asmx86_strncmp;
-*/
+
+m = module_find_by_name("mod_func");
+if(m) {
+
+v = dlsym(m->dl_handle, "intel2_strlen");
+if(v) 
+_strlen = v;
+
+v = dlsym(m->dl_handle, "intel2_bot_shouldreturn");
+if(v)
+_bot_shouldreturn = v;
+
+v = dlsym(m->dl_handle, "intel2_sNULL");
+if(v) _sNULL = v;
+
+v = dlsym(m->dl_handle, "intel2_strstrip_nl");
+if(v) _strstrip_nl = v;
+
+v = dlsym(m->dl_handle, "intel2_strstrip_chars");
+if(v) _strstrip_chars = v;
+
+v = dlsym(m->dl_handle, "intel2_eat_whitespace");
+if(v) _eat_whitespace = v;
+
+v = dlsym(m->dl_handle, "intel2_strcmp");
+if(v) _strcmp = v;
+
+v = dlsym(m->dl_handle, "intel2_strncmp");
+if(v) _strncmp = v;
+
+v = dlsym(m->dl_handle, "intel2_strchr");
+if(v) _strchr = v;
+
+v = dlsym(m->dl_handle, "intel2_strrchr");
+if(v) _strrchr = v;
+
+v = dlsym(m->dl_handle, "intel2_strcpy");
+if(v) _strcpy = v;
+
+v = dlsym(m->dl_handle, "intel2_strncpy");
+if(v) _strncpy = v;
+
+v = dlsym(m->dl_handle, "intel2_bzero");
+if(v) _bzero = v;
+
+v = dlsym(m->dl_handle, "intel2_memset");
+if(v) _memset = v;
+
+
+}
 
 	return;
 }
@@ -167,6 +210,8 @@ void fnsintel_off(bot_t * bot)
 
 char *fnsintel_test(bot_t * bot)
 {
+
+debug(NULL, "fnsintel_test: Entered\n");
 
 	return NULL;
 }

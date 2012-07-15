@@ -96,7 +96,7 @@ bot_t *env_run(dlist_t * dlist_node, bot_t * bot)
 	      "env_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = MOD_ENV_GETENV;
@@ -152,7 +152,7 @@ char *env_change_string(bot_t * bot, char *string, int opt)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	bu = unique_create(bot, &dl_mod_env_unique,
 			   UNIQUE_ID_TAG | UNIQUE_ID_CHAN);
@@ -218,11 +218,11 @@ char *env_op_setenv(struct avl_table **tree, char *string)
 	}
 
 	tok_name = strtok(string, "=");
-	if (!sNULL(tok_name))
+	if (!_sNULL(tok_name))
 		return NULL;
 
 	tok_value = strtok(NULL, "");
-	if (!sNULL(tok_value))
+	if (!_sNULL(tok_value))
 		return NULL;
 
 	e = (env_t *) calloc(1, sizeof(env_t));

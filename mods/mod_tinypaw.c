@@ -84,7 +84,7 @@ bot_t *tinypaw_run(dlist_t * dlist_node, bot_t * bot)
 	      "tinypaw_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -120,7 +120,7 @@ char *tinypaw_change_string(bot_t * bot, char *string, int opt)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	ptr = strstr(string, "://");
 	if (!ptr)
@@ -140,7 +140,7 @@ char *tinypaw_change_string(bot_t * bot, char *string, int opt)
 
 	str_keywords = strtok(NULL, "");
 	if (!str_keywords) {
-		if (!sNULL(bot->txt_data_out))
+		if (!_sNULL(bot->txt_data_out))
 			return NULL;
 		strlcat_bot(buf, bot->txt_data_out);
 	} else {

@@ -43,6 +43,8 @@ char *func_change_string(bot_t *, char *, int, char *);
 
 void __func_init__(void) __attribute__ ((constructor));
 
+unsigned long i_eflags;
+
 enum mod_func_ops {
 	MOD_FUNC_SWITCH = 1,
 	MOD_FUNC_TRUE,
@@ -79,6 +81,12 @@ enum mod_func_ops {
 	MOD_FUNC_ROR,
 	MOD_FUNC_ROL,
 	MOD_FUNC_BSWAP,
+	MOD_FUNC_BSF,
+	MOD_FUNC_BSR,
+	MOD_FUNC_BT,
+	MOD_FUNC_BTC,
+	MOD_FUNC_BTR,
+	MOD_FUNC_BTS,
 	MOD_FUNC_ISUPPER,
 	MOD_FUNC_ISLOWER,
 	MOD_FUNC_TOUPPER,
@@ -94,6 +102,12 @@ enum mod_func_ops {
 	MOD_FUNC_ISPRINT,
 	MOD_FUNC_ISXDIGIT,
 	MOD_FUNC_ISGRAPH,
+
+/* misc.c stuff */
+MOD_FUNC_SNULL,
+MOD_FUNC_STRSTRIP_NL,
+MOD_FUNC_STRSTRIP_CHARS,
+MOD_FUNC_EAT_WHITESPACE,
 
 /* syscalls */
 	MOD_FUNC_EXIT,
@@ -128,7 +142,7 @@ unsigned int (*func_mod) (unsigned int, unsigned int);
 int (*func_imod) (int, int);
 
 int (*func_neg) (int);
-unsigned int (*func_eflags) (void);
+char * (*func_eflags) (void);
 
 int (*func_and) (int, int);
 int (*func_or) (int, int);
@@ -143,6 +157,12 @@ int (*func_ror) (int, int);
 int (*func_rol) (int, int);
 
 int (*func_bswap) (int);
+int (*func_bsf)(int);
+int (*func_bsr)(int);
+int (*func_bt)(int, int);
+int (*func_btc)(int, int);
+int (*func_btr)(int, int);
+int (*func_bts)(int, int);
 
 int (*func_isupper) (int);
 int (*func_islower) (int);
@@ -159,6 +179,12 @@ int (*func_isspace) (int);
 int (*func_isprint) (int);
 int (*func_isxdigit) (int);
 int (*func_isgraph) (int);
+
+/* misc.c stuff */
+char * (*func_sNULL)(char *);
+int (*func_strstrip_nl)(char *);
+int (*func_strstrip_chars)(char *, char *);
+char * (*func_eat_whitespace)(char *);
 
 /* syscalls */
 void (*func_exit) (int);

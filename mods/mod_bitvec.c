@@ -94,7 +94,7 @@ bot_t *bitvec_run(dlist_t * dlist_node, bot_t * bot)
 	      "bitvec_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -434,7 +434,7 @@ char *bitvec_op_eq(mod_bv_data_t * mbvd, char *string)
 	if (!bv_ptr)
 		return NULL;
 
-	strstrip_chars(tok_num, " \r\n");
+	_strstrip_chars(tok_num, " \r\n");
 
 	bit_vec_from_str(bv_ptr, tok_num);
 
@@ -501,7 +501,7 @@ char *bitvec_op_copy(mod_bv_data_t * mbvd, char *string)
 	if (!tok_bv_1)
 		return NULL;
 
-	strstrip_chars(tok_bv_1, " \r\n");
+	_strstrip_chars(tok_bv_1, " \r\n");
 
 	bv_ptr_1 = bitvec_which(mbvd, tok_bv_1);
 	if (!bv_ptr_1)
@@ -509,7 +509,7 @@ char *bitvec_op_copy(mod_bv_data_t * mbvd, char *string)
 
 	tok_bv_2 = strtok(NULL, "");
 
-	strstrip_chars(tok_bv_2, " \r\n");
+	_strstrip_chars(tok_bv_2, " \r\n");
 
 	bv_ptr_2 = bitvec_which(mbvd, tok_bv_2);
 	if (!bv_ptr_2)

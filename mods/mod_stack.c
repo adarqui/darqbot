@@ -95,7 +95,7 @@ bot_t *stack_run(dlist_t * dlist_node, bot_t * bot)
 	      "stack_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -185,7 +185,7 @@ char *stack_change_string(bot_t * bot, char *string, int opt)
 		strlcat_buf(buf, "[bottom]\n");
 	}
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;

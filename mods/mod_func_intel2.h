@@ -35,6 +35,12 @@ unsigned int intel2_shl(int, int);
 int intel2_ror(int, int);
 int intel2_rol(int, int);
 int intel2_bswap(int);
+int intel2_bsf(int);
+int intel2_bsr(int);
+int intel2_bt(int,int);
+int intel2_btc(int, int);
+int intel2_btr(int, int);
+int intel2_bts(int, int);
 int intel2_isupper(int);
 int intel2_islower(int);
 int intel2_toupper(int);
@@ -50,6 +56,12 @@ int intel2_isspace(int);
 int intel2_isxdigit(int);
 int intel2_isgraph(int);
 int intel2_isprint(int);
+
+/* misc.c */
+char * intel2_sNULL(char *);
+int intel2_strstrip_nl(char *);
+int intel2_strstrip_chars(char *, char *);
+char * intel2_eat_whitespace(char *);
 
 /* syscalls */
 void intel2_linux_exit(int);

@@ -84,7 +84,7 @@ bot_t *vuln_run(dlist_t * dlist_node, bot_t * bot)
 	      "vuln_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -113,9 +113,9 @@ char *vuln_change_string(char *string, int opt)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;
@@ -124,7 +124,7 @@ char *vuln_change_string(char *string, int opt)
 void mod_vuln_offby1_1(char *s)
 {
 	char buf[15];
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 	strcat(buf, s);		// Final parameter should be: sizeof(buf)-1
 	return;
 }
@@ -132,7 +132,7 @@ void mod_vuln_offby1_1(char *s)
 void mod_vuln_malloc_1(char *s)
 {
 	char *n = malloc(sizeof(s) + 1);
-	strcpy(n, s);
+	_strcpy(n, s);
 	return;
 }
 
@@ -146,7 +146,7 @@ void mod_vuln_overflow_1(char *s)
 {
 	char buf[132];
 
-	strcpy(buf, s);
+	_strcpy(buf, s);
 	return;
 }
 

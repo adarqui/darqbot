@@ -84,7 +84,7 @@ bot_t *backtrace_run(dlist_t * dlist_node, bot_t * bot)
 	      "backtrace_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 7;
@@ -117,9 +117,9 @@ char *backtrace_change_string(char *string, int opt)
 	if (opt <= 0)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
-	memset(bt_array, 0, (opt + 1) * sizeof(void *));
+	_memset(bt_array, 0, (opt + 1) * sizeof(void *));
 	bt_size = backtrace(bt_array, opt);
 
 	bt_strings = backtrace_symbols(bt_array, bt_size);
@@ -133,7 +133,7 @@ char *backtrace_change_string(char *string, int opt)
 
  cleanup:
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	if (bt_strings)

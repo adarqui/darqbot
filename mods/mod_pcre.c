@@ -84,7 +84,7 @@ bot_t *pcre_run(dlist_t * dlist_node, bot_t * bot)
 	      "pcre_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -180,23 +180,23 @@ char *pcre_change_string(bot_t * bot, char *string, int opt)
 	debug(bot, "pcre_change_string: Entered: %s\n", bot->txt_data_out);
 
 	buf[0] = '\0';
-	memset(lbuf, 0, sizeof(lbuf));
+	_memset(lbuf, 0, sizeof(lbuf));
 
 	txt_ptr = bot->txt_data_out;
 	sep_ptr = str_find_sep(txt_ptr);
 	if (sep_ptr)
 		txt_ptr = sep_ptr;
 
-	string = strchr(string, '/');
+	string = _strchr(string, '/');
 	if (!string)
 		return NULL;
 	string++;
 
-	t_ptr = strrchr(string, '/');
+	t_ptr = _strrchr(string, '/');
 	if (!t_ptr)
 		return NULL;
 
-	t_ptr_2 = eat_whitespace(t_ptr + 1);
+	t_ptr_2 = _eat_whitespace(t_ptr + 1);
 	if (t_ptr_2 && strlen(t_ptr_2)) {
 		strlcat_bot(txt_ptr, t_ptr_2);
 	}
@@ -269,16 +269,16 @@ char *pcre_change_string(bot_t * bot, char *string, int opt)
 		j++;
 	}
 
-	if (sNULL(buf) != NULL) {
+	if (_sNULL(buf) != NULL) {
 		if (!(opt & OPT_EXTRACT))
 			strlcat_bot(lbuf, bot->txt_data_out + offset_pcre);
 	}
 
-	if ((opt & OPT_REMOVE) && sNULL(buf) == NULL) {
+	if ((opt & OPT_REMOVE) && _sNULL(buf) == NULL) {
 		strlcat_bot(lbuf, bot->txt_data_out + offset_pcre);
 	}
 
-	if (sNULL(lbuf) != NULL)
+	if (_sNULL(lbuf) != NULL)
 		str = strdup(lbuf);
 
 	return str;

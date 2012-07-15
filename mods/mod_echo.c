@@ -86,7 +86,7 @@ bot_t *echo_run(dlist_t * dlist_node, bot_t * bot)
 
 	stat_inc(bot, bot->trig_called);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	MOD_OPTIONS_TOP_HALF;

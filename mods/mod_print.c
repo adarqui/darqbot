@@ -87,14 +87,14 @@ bot_t *print_run(dlist_t * dlist_node, bot_t * bot)
 	      "print_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = opt_2 = 0;
 
 	MOD_OPTIONS_TOP_HALF;
 
-	str = eat_whitespace(dl_options_ptr);
+	str = _eat_whitespace(dl_options_ptr);
 	if (strlen(str) == 0)
 		return NULL;
 
@@ -209,7 +209,7 @@ char *print_op_binary_forward(int c_op, char *string)
 
 	debug(NULL, "print_op_binary_forward: Entered\n");
 
-	if (c_op < 0 || !sNULL(string))
+	if (c_op < 0 || !_sNULL(string))
 		return NULL;
 
 	switch (c_op) {
@@ -241,7 +241,7 @@ char *print_op_binary_forward_char(char *string)
 	if (!string)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	for (i = 0; i < strlen(string); i++) {
 		for (j = 0; j < 8; j++) {
@@ -250,7 +250,7 @@ char *print_op_binary_forward_char(char *string)
 		}
 	}
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;
@@ -275,7 +275,7 @@ char *print_op_binary_forward_num(char *num)
 	bit_vec_fini(&bv);
 
 	if (str) {
-		b_index_ptr = strrchr(str, '1');
+		b_index_ptr = _strrchr(str, '1');
 		if (b_index_ptr) {
 			b_index = b_index_ptr - str;
 			for (i = b_index; str[i] != '\0'; i++) {
@@ -343,7 +343,7 @@ char *print_op_binary_reverse_char(char *string)
 	if (!string)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	byte = 0;
 	j = 0;
@@ -373,7 +373,7 @@ char *print_op_binary_reverse_char(char *string)
 
 	}
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;

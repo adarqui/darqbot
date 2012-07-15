@@ -132,8 +132,8 @@ Version 1.0 Checklist:
 
 Version 2.0 Checklist:
 ---------------------'
-[-] SPARC & Intel inline assembly "fns" hooks for various functions (libc)
-[-] Reincorporate "everything as function pointers" via a script which can modify/unmodify the entire source in one go. Complete patching.
+[/] SPARC & Intel inline assembly "fns" hooks for various functions (libc)
+[/] Reincorporate "everything as function pointers" via a script which can modify/unmodify the entire source in one go. Complete patching.
 [-] Incorporation of various machine learning components.
 [-] Console based video screen cap module.
 [-] Ability to communicate on more mediums, FB,twitter,gmail,other forums,aim etc.
@@ -490,8 +490,8 @@ fdpassd.conf - example fd passing daemon (responds to an fd request from fdpassc
 Very quick overview. Before we get started, 4 very important triggers:
 
 
-mod_sep.c: ^: ^! ^# ^()
------------------------
+mod_sep.c: ^: ^! ^# ^() ^[)
+---------------------------
 
 ^: <- This trigger protects all of the data prior to it's usage:
 
@@ -526,6 +526,17 @@ mod_sep.c: ^: ^! ^# ^()
 < dbot> aaa
 < kx> ^e ^(^caps(^(low)) AAA) |^^(^e md5)   <-- becomes ^caps(low) AAA |^md5
 < dbot> 47bce5c74f589f4867dbd57e9ca9f808
+
+
+^[) <-- this turns into ^() after being initially processed, that way it will show up as ^() in timers & aliases
+
+  < kx> ^timer(add) 30:ttt:FOREVER:ttt: \|^bin(pic2ascii,^[^pop)  -W 30)\|^e\|^multi
+  < kx> ^timer(list)|^e
+  < uas> id=-1 {interval=30, count=-1, chan=#darqbot, cmd=|^bin(pic2ascii,^(^pop)  -W 30)|^e|^multi}
+
+notice that ^[^pop) has become ^(pop)
+
+
 
 
 
@@ -1080,7 +1091,13 @@ mod_fnsc.c: ^fnsc, ^fnsc(test)
 
 mod_fnsintel.c: ^fnsintel, ^fnsintel(test)
 ---------------------------------------------
-- ...
+- turns on/off the intel function hooks
+
+^fnsintel(on)
+- hooks tons of functions with their "INTEL ASM" backends.. libc funcs such as strlen/str*/etc get hooked, so do various bot_ functions etc.. eventually nearly everything will have ASM variations.
+
+^fnsintel(off)
+- re-hooks everything into stdc/normal primary variations.
 
 ^fnsintel(test)
 
@@ -1334,6 +1351,93 @@ mod_func.c: ^intel, ^intel((true,false,self,strlen,strcmp,bzero,memset,mul,imul,
 ^func(switch,c) <- custom C
 ^func(switch,intel) <- custom INTEL ASM
 ^func(switch,stdc) <- standard C lib
+
+
+
+
+
+  <@kx> bsf=|^:|^func(bsf,100)|^e | | ^p(b/n) 100
+  <+uas> bsf=2 00100110
+  <@kx> bsf=|^:|^func(bsf,50)|^e | | ^p(b/n) 50
+  <+uas> bsf=1 01001100
+  <@kx> bsf=|^:|^func(bsf,200)|^e | | ^p(b/n) 200
+  <+uas> bsf=3 00010011
+  <@kx> bsf=|^:|^func(bsf,2000)|^e | | ^p(b/n) 2000
+  <+uas> bsf=4 0000101111100000
+
+
+
+  <@kx> bsr=|^:|^func(switch,intel2)|^func(bsr,2000)|^e | | ^p(b/n) 2000
+  < uas> bsr=10 0000101111100000
+  <@kx> bsr=|^:|^func(bsr,2000)|^e | | ^p(b/n) 2000
+  < uas> bsr=10 0000101111100000
+
+
+  <@kx> ^p(b/n) 100| |^:|^func(switch,intel)|^func(btc,100 5)|^e|^p(b/n)
+  < uas> 00100110 00100010
+  <@kx> ^p(b/n) 100| |^:|^func(switch,intel)|^func(btc,100 1)|^e|^p(b/n)
+  < uas> 00100110 01100110
+  <@kx> ^p(b/n) 100| |^:|^func(switch,intel)|^func(btc,100 0)|^e|^p(b/n)
+  < uas> 00100110 10100110
+  <@kx> ^p(b/n) 100| |^:|^func(switch,intel)|^func(btc,100 8)|^e|^p(b/n)
+  < uas> 00100110 0010011010000000
+  <@kx> ^p(b/n) 100| |^:|^func(switch,intel)|^func(btc,100 12)|^e|^p(b/n)
+  < uas> 00100110 0010011000001000
+  <@kx> ^p(b/n) 100| |^:|^func(switch,intel)|^func(btr,100 12)|^e|^p(b/n)
+  < uas> 00100110 00100110
+  <@kx> ^p(b/n) 100| |^:|^func(switch,intel)|^func(btr,100 2)|^e|^p(b/n)
+  < uas> 00100110 00000110
+  <@kx> ^p(b/n) 100| |^:|^func(switch,intel)|^func(bts,100 2)|^e|^p(b/n)
+  < uas> 00100110 00100110
+  <@kx> ^p(b/n) 100| |^:|^func(switch,intel)|^func(bts,100 3)|^e|^p(b/n)
+  < uas> 00100110 00110110
+  <@kx> ^p(b/n) 100| |^:|^func(switch,c)|^func(btc,100 2)|^e|^p(b/n)
+  < uas> 00100110 00000110
+  <@kx> ^p(b/n) 100| |^:|^func(switch,c)|^func(btc,100 2)|^e|^p(b/n)
+  < uas> 00100110 00000110
+  <@kx> ^p(b/n) 100| |^:|^func(switch,c)|^func(bts,100 3)|^e|^p(b/n)
+  < uas> 00100110 00110110
+  <@kx> ^p(b/n) 100| |^:|^func(switch,c)|^func(btr,100 2)|^e|^p(b/n)
+  < uas> 00100110 00000110
+
+
+
+testing intel/intel2 instructions and examining EFLAGS:
+
+  <@kx> ^func(switch,intel2)|^func(bt,100 2)|^strzero|^e||^:|^func(eflags)|^multi
+  < uas> |CF|1|PF|0|AF|0|ZF|SF|TF|IF|DF|OF|1|1|NT|1|RF|VM|AC|VIF|VIP|ID|0... 0x200297 [2097815]
+  < uas> |01|1|01|0|01|0|00|01|00|01|00|00|1|1|00|1|00|00|00|000|000|01|0... 0x200297 [2097815]
+  <@kx> ^func(switch,intel2)|^func(bt,100 0)|^strzero|^e||^:|^func(eflags)|^multi
+  < uas> |CF|1|PF|0|AF|0|ZF|SF|TF|IF|DF|OF|1|1|NT|1|RF|VM|AC|VIF|VIP|ID|0... 0x200246 [2097734]
+  < uas> |00|1|01|0|00|0|01|00|00|01|00|00|1|1|00|1|00|00|00|000|000|01|0... 0x200246 [2097734]
+
+
+
+eat_whitespace:
+  <@kx>   hi |^func(switch,intel2)|^func(eat_whitespace)|^e
+  < uas> hi
+
+
+
+sNULL:
+  <@kx> k|^func(switch,intel2)|^func(sNULL)|^e
+  < uas> k
+  <@kx> |^func(switch,intel2)|^func(sNULL)|^e
+  < uas> NULL
+
+
+
+strstrip_nl:
+  <@kx> ^func(eflags)|^e|^multi|^func(switch,intel2)|^func(strstrip_nl)|^e
+  < uas> |CF|1|PF|0|AF|0|ZF|SF|TF|IF|DF|OF|1|1|NT|1|RF|VM|AC|VIF|VIP|ID|0... 0x200246 [2097734]
+  <@kx> ^func(eflags)|^e|^multi
+  < uas> |CF|1|PF|0|AF|0|ZF|SF|TF|IF|DF|OF|1|1|NT|1|RF|VM|AC|VIF|VIP|ID|0... 0x200246 [2097734]
+  < uas> |00|1|01|0|00|0|01|00|00|01|00|00|1|1|00|1|00|00|00|000|000|01|0... 0x200246 [2097734]
+
+
+strstrip_chars:
+  <@kx> hello oko kokokdoo|^func(switch,intel2)|^func(strstrip_chars,bcd)|^e
+  < uas> hello oko kokok
 
 
 
@@ -2109,6 +2213,85 @@ mod_timer.c: ^timer, ^timer(add:del:list:clear)
 
 
 
+an example of pic2ascii'n random pictures (from a file full of jpg/png urls):
+-------
+
+^bin(googimg,pyramid)|^cat(>>) urls
+^bin(googimg,square)|^cat(>>) urls
+^bin(googimg,cube)|^cat(>>) urls
+^bin(googimg,galaxy)|^cat(>>) urls
+^bin(googimg,universe)|^cat(>>) urls
+^bin(googimg,matrix)|^cat(>>) urls
+^bin(googimg,icon)|^cat(>>) urls
+^bin(googimg,emoticon)|^cat(>>) urls
+^bin(googimg,aurora)|^cat(>>) urls
+^bin(googimg,fire)|^cat(>>) urls
+^bin(googimg,explosion)|^cat(>>) urls
+^bin(googimg,nuclear)|^cat(>>) urls
+^bin(googimg,sun)|^cat(>>) urls
+^bin(googimg,supernova)|^cat(>>) urls
+^bin(googimg,binary)|^cat(>>) urls
+
+
+
+prior to ^[) you had to do it this way:
+^timer(add) 30:ttt:FOREVER:ttt: \|^cat(<) urls\|^rand(line)\|^push\|^e\|^cat(<) urls\|^rand(line)\|^push
+^timer(add) 30:ttt:FOREVER:ttt: \|^#\|^bin(pic2ascii,^[^pop)  -W 30)\|^e\|^#\|^cmds\|^e\|^pcre(-V) /\^#/\|^multi\|^exec
+ 
+
+now with ^[), it's much easier: (small pictures)
+
+^timer(add) 1:ttt:FOREVER:ttt: \|^cat(<) urls\|^rand(line)\|^push\|^e\|^strzero
+^timer(add) 1:ttt:FOREVER:ttt: \|^bin(pic2ascii,^[^pop)  -W 30)\|^e\|^multi
+  < kx> ^timer(list)|^e|^multi
+  < uas> id=-1 {interval=30, count=-1, chan=#darqbot, cmd=|^cat(<) urls|^rand(line)|^push|^e|^cat(<) urls|^rand(line)|^push}
+  < uas> id=-1 {interval=30, count=-1, chan=#darqbot, cmd=|^bin(pic2ascii,^(^pop)  -W 30)|^e|^multi}
+
+
+
+large pictures:
+^timer(add) 1:ttt:FOREVER:ttt: \|^cat(<) urls\|^rand(line)\|^push\|^e\|^strzero
+^timer(add) 1:ttt:FOREVER:ttt: \|^bin(pic2ascii,^[^pop)  -W 80)\|^e\|^multi
+
+
+
+cool:
+http://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Hexahedron.svg/240px-Hexahedron.svg.png <-- SICK............
+http://www.scorpionagency.com/downloads/sae/sae1.png
+http://static.guim.co.uk/sys-images/Guardian/Pix/pictures/2009/9/18/1253287439918/Emoticon-001.jpg
+http://gimp.pixtuts.com/images/tutorials/fire-explosion/fire-explosion.jpg
+http://richardsonwireless.com/blog/wp-content/uploads/2012/03/pet-tracking.jpg
+http://www.world-nuclear.org/images/info/us_nuclear_map.jpg
+http://samsykes.com/wp/wp-content/uploads/2012/05/Kitten.jpg
+http://img.instructables.com/files/deriv/FS4/TFPN/FPBKY7FI/FS4TFPNFPBKY7FI.SMALL.jpg <-- nice cube
+http://alieneyes.files.wordpress.com/2008/04/explosion.jpg
+http://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Pyramid.svg/240px-Pyramid.svg.png <-- use -W 80
+http://www.toptenz.net/wp-content/uploads/2008/08/darkmatter.jpg
+http://scaredmonkeys.com/wp-content/uploads/2012/01/emoticon_surprised.jpg
+http://www.faludi.com/images/blog/cube.jpg
+http://blogs.oregonstate.edu/jdhamblin/files/2011/11/nuclear-logo.jpg
+http://2.bp.blogspot.com/-cpTlq-NY5Mc/Td3vaD02_fI/AAAAAAAALqI/firyPV_ztIk/s1600/american-eskimo-dog-pictures-3.jpg
+http://www.universetoday.com/wp-content/uploads/2010/06/Spiral-Galaxy-M81.jpg
+http://images.nationalgeographic.com/wpf/media-live/photos/000/010/cache/milky-way_1090_600x450.jpg
+http://i.imgur.com/mvy23.png <- trollface
+http://www.korthalsaltes.com/photo/Cheops_pyramid_model.jpg
+http://www.centralnewyorkinjurylawyer.com/explosions.jpg
+http://www.universetoday.com/wp-content/uploads/2010/06/Spiral-Galaxy-M81.jpg
+http://www.cavstheblog.com/wp-content/uploads/2012/02/explosion.jpg
+http://en.gtwallpaper.com/fondecran/matrix/matrix_07.jpg
+http://www.softplayandthings.co.uk/images/cube.jpg
+http://www.inkity.com/catalog/img/2/10737/1.jpg
+http://www.webbyfreebies.com/wp-content/uploads/2009/12/icon_a.png <-- HAH!
+http://www.origami-instructions.com/images/jackson-cube/thumbnails/01-jackson-cube.jpg
+http://www.dvd-ppt-slideshow.com/blog/wp-content/uploads/2010/08/universe-wallpaper-18.jpg
+http://screenshots.en.sftcdn.net/en/scrn/40000/40234/3d-matrix-corridors-screensaver-2.jpg <- 3d matrix
+http://farm4.staticflickr.com/3157/3064038199_d7fa509e52.jpg
+http://odin.gi.alaska.edu/FAQ/jupiter_aurora.jpg
+
+
+
+^bin(pic2ascii,http://samsykes.com/wp/wp-content/uploads/2012/05/Kitten.jpg -W 70)|^e|^multi
+:D
 
 
 mod_tiny.c: ^tiny, ^tiny <url>

@@ -83,7 +83,7 @@ bot_t *pmme_run(dlist_t * dlist_node, bot_t * bot)
 	      "pmme_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	MOD_OPTIONS_TOP_HALF;

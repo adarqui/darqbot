@@ -99,7 +99,7 @@ bot_t *sp_run(dlist_t * dlist_node, bot_t * bot)
 	      "sp_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	if (bot->var_nesting_cur > mod_sp_info.max_nesting)
@@ -132,15 +132,15 @@ bot_t *sp_run(dlist_t * dlist_node, bot_t * bot)
 	MOD_OPTIONS_BOTTOM_HALF;
 
 	if (opt & OPT_INFO) {
-		sp_run_info(bot, eat_whitespace(dl_module_arg_after_options));
+		sp_run_info(bot, _eat_whitespace(dl_module_arg_after_options));
 		return bot;
 	}
 
-	str_ptr = eat_whitespace(dl_module_arg_after_options);
+	str_ptr = _eat_whitespace(dl_module_arg_after_options);
 	if (!str_ptr)
 		str_ptr = "";
 
-	if (sNULL(bot->txt_data_out) != NULL) {
+	if (_sNULL(bot->txt_data_out) != NULL) {
 		new_str = str_unite("%s%s\n", bot->txt_data_out, str_ptr);
 	} else
 		new_str = str_unite("%s\n", str_ptr);
@@ -154,10 +154,10 @@ bot_t *sp_run(dlist_t * dlist_node, bot_t * bot)
 
 			sleep(1);
 
-			memset(buf, 0, sizeof(buf));
+			_memset(buf, 0, sizeof(buf));
 
 			n = read(sp_info.pipefd_b[0], buf, sizeof(buf) - 1);
-			buf_ptr = strchr(buf, ':');
+			buf_ptr = _strchr(buf, ':');
 			if (buf_ptr) {
 				if (strlen(buf_ptr) > 4) {
 					strzero_bot(bot->txt_data_out);
@@ -194,7 +194,7 @@ void sp_fill_info(bot_t * bot)
 
 	str = str_unite_static("%s/mods/mod_sp_files/conf", gi->confdir);
 
-	if (!sNULL(str))
+	if (!_sNULL(str))
 		goto cleanup;
 
 	sp_info.fp = fopen(str, "r");
@@ -205,11 +205,11 @@ void sp_fill_info(bot_t * bot)
 	str = NULL;
 
 	while (1) {
-		memset(buf, 0, sizeof(buf));
+		_memset(buf, 0, sizeof(buf));
 		if (fgets(buf, sizeof(buf) - 1, sp_info.fp) == NULL)
 			break;
 
-		strstrip_nl(buf);
+		_strstrip_nl(buf);
 
 		if (!strncasecmp(buf, "exec", 4)) {
 
@@ -288,7 +288,8 @@ int sp_run_on(bot_t * bot)
 
 		execve(sp_info.argv[0], sp_info.argv, environ);
 		perror("execve: ");
-		exit(0);
+	/*	exit(0); */
+bot_fork_clean_exit(NULL);
 	} else {
 		char buf[10024];
 

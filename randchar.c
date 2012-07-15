@@ -101,25 +101,25 @@ int randchar_str(char *str)
     }
 */
 
-	if (!strncasecmp(str, "RASCII", fn_strlen("RASCII"))) {
+	if (!strncasecmp(str, "RASCII", _strlen("RASCII"))) {
 		x = RANDCHAR_ASCII;
-	} else if (!strncasecmp(str, "RALPHA", fn_strlen("RALPHA"))) {
+	} else if (!strncasecmp(str, "RALPHA", _strlen("RALPHA"))) {
 		x = RANDCHAR_ALPHA;
-	} else if (!strncasecmp(str, "RALNUM", fn_strlen("RALNUM"))) {
+	} else if (!strncasecmp(str, "RALNUM", _strlen("RALNUM"))) {
 		x = RANDCHAR_ALNUM;
-	} else if (!strncasecmp(str, "RDIGIT", fn_strlen("RDIGIT"))) {
+	} else if (!strncasecmp(str, "RDIGIT", _strlen("RDIGIT"))) {
 		x = RANDCHAR_DIGIT;
-	} else if (!strncasecmp(str, "RLOWER", fn_strlen("RLOWER"))) {
+	} else if (!strncasecmp(str, "RLOWER", _strlen("RLOWER"))) {
 		x = RANDCHAR_LOWER;
-	} else if (!strncasecmp(str, "RUPPER", fn_strlen("RUPPER"))) {
+	} else if (!strncasecmp(str, "RUPPER", _strlen("RUPPER"))) {
 		x = RANDCHAR_UPPER;
-	} else if (!strncasecmp(str, "RPUNCT", fn_strlen("RPUNCT"))) {
+	} else if (!strncasecmp(str, "RPUNCT", _strlen("RPUNCT"))) {
 		x = RANDCHAR_PUNCT;
-	} else if (!strncasecmp(str, "RBINARY", fn_strlen("RBINARY"))) {
+	} else if (!strncasecmp(str, "RBINARY", _strlen("RBINARY"))) {
 		x = RANDCHAR_BINARY;
-	} else if (!strncasecmp(str, "RSPACE", fn_strlen("RSPACE"))) {
+	} else if (!strncasecmp(str, "RSPACE", _strlen("RSPACE"))) {
 		x = RANDCHAR_SPACE;
-	} else if (!strncasecmp(str, "RSAME", fn_strlen("RSAME"))) {
+	} else if (!strncasecmp(str, "RSAME", _strlen("RSAME"))) {
 		x = RANDCHAR_SAME;
 	}
 

@@ -88,7 +88,7 @@ bot_t *mongotestfmt_run(dlist_t * dlist_node, bot_t * bot)
 	      "mongotestfmt_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -145,8 +145,8 @@ char *mongotestfmt_change_string(bot_t * bot, char *string, int opt)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
-	memset(&arg, 0, sizeof(arg));
+	_memset(buf, 0, sizeof(buf));
+	_memset(&arg, 0, sizeof(arg));
 
 	if (opt == MONGOTESTFMT_ADD) {
 
@@ -250,7 +250,7 @@ char *mongotestfmt_change_string(bot_t * bot, char *string, int opt)
 		str_ptr = string;
 		arg.name = strdup(str_ptr);
 
-		str_ptr = strchr(arg.name, '=');
+		str_ptr = _strchr(arg.name, '=');
 		if (!str_ptr)
 			goto cleanup;
 
@@ -302,7 +302,7 @@ mongodb_bson_insert(bot, "test.darqbottestmongo", &b2);
 		str_ptr = string;
 		arg.name = strdup(str_ptr);
 
-		str_ptr = strchr(arg.name, '=');
+		str_ptr = _strchr(arg.name, '=');
 		if (!str_ptr)
 			goto cleanup;
 
@@ -332,7 +332,7 @@ mongodb_bson_insert(bot, "test.darqbottestmongo", &b2);
 		str_ptr = string;
 		arg.name = strdup(str_ptr);
 
-		str_ptr = strchr(arg.name, '=');
+		str_ptr = _strchr(arg.name, '=');
 		if (!str_ptr)
 			goto cleanup;
 
@@ -374,7 +374,7 @@ mongodb_bson_insert(bot, "test.darqbottestmongo", &b2);
 	if (arg.arg_str) ;
 	free(arg.arg_str);
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;

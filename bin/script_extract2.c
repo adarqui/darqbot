@@ -12,7 +12,7 @@
 
 
 int
-strstrip_nl (char *s)
+_strstrip_nl (char *s)
 {
   while (*s)
     {
@@ -52,7 +52,7 @@ x = 1;
 
 
 char *
-eat_whitespace (char *s)
+_eat_whitespace (char *s)
 {
   if (!s)
     return NULL;
@@ -252,10 +252,10 @@ exit(0);
 cptr_cur = NULL;
   while (1)
     {
-      memset (buf, 0, sizeof (buf));
+      _memset (buf, 0, sizeof (buf));
       if (fgets (buf, sizeof (buf) - 10, fp) == NULL)
         break;
-      strstrip_nl (buf);
+      _strstrip_nl (buf);
 
 
 space_count = leading_space_count(buf);
@@ -266,7 +266,7 @@ str_ptr = buf + space_count;
 
 if(str_allcaps(str_ptr)){ 
 cptr = (convo_t *)calloc(1,sizeof(convo_t));
-cptr->nick = strdup(eat_whitespace(str_ptr));
+cptr->nick = strdup(_eat_whitespace(str_ptr));
 cptr->spaces = space_count;
 dlist_Dinsert_after(&dl, cptr);
 cptr_cur = cptr;
@@ -289,7 +289,7 @@ if(cptr_cur->text) {
 cptr_cur->text = (char *)calloc(1,strlen(buf)+1);
 }
 strlcat_buf(cptr_cur->text, " ");
-strlcat_buf(cptr_cur->text, eat_whitespace(buf)); 
+strlcat_buf(cptr_cur->text, _eat_whitespace(buf)); 
 }
 
 
@@ -350,7 +350,7 @@ fill_brackets(cptr->nick);
 shrink_all_spaces(cptr->nick);
 
 //printf("%i. %s. [%s]\n", cptr->spaces, cptr->nick, cptr->text);
-printf("%s:%s\n", cptr->nick, eat_whitespace(cptr->text));
+printf("%s:%s\n", cptr->nick, _eat_whitespace(cptr->text));
 }
  
 return 0;

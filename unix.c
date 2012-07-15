@@ -286,7 +286,7 @@ void xsetproctitle(char *new_name)
 	if (!gi->argv[0])
 		return;
 
-	memset(gi->argv[0], 0, strlen(gi->argv[0]));
+	_memset(gi->argv[0], 0, strlen(gi->argv[0]));
 	strlcpy(gi->argv[0], new_name, strlen(gi->argv[0]) - 1);
 	return;
 }
@@ -318,7 +318,7 @@ void clean_environ(void)
 	int x;
 
 	for (x = 0; environ[x] != (NULL); x++) {
-		memset(environ[x], 0, strlen(environ[x]));
+		_memset(environ[x], 0, strlen(environ[x]));
 		environ[x] = NULL;
 	}
 

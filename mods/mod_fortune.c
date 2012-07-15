@@ -94,7 +94,7 @@ bot_t *fortune_run(dlist_t * dlist_node, bot_t * bot)
 
 	stat_inc(bot, bot->trig_called);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	if (!strcasecmp(bot->trig_called, "^forkfortune")) {
@@ -104,7 +104,7 @@ bot_t *fortune_run(dlist_t * dlist_node, bot_t * bot)
 	MOD_OPTIONS_TOP_HALF;
 	MOD_OPTIONS_BOTTOM_HALF;
 
-	memset(local_arg_buf, 0, sizeof(local_arg_buf));
+	_memset(local_arg_buf, 0, sizeof(local_arg_buf));
 
 	strlcpy_buf(local_arg_buf, "fortune");
 

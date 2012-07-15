@@ -84,7 +84,7 @@ bot_t *relinkd_run(dlist_t * dlist_node, bot_t * bot)
 	      "relinkd_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -208,7 +208,7 @@ char *relinkd_op_query_links(bot_t * bot, int fd)
 	if (!bot || fd <= 0)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	rlpkt = (relink_control_pkt_t *) buf;
 	n = relink_req_pack_buf_query_links(buf, 0);
@@ -224,7 +224,7 @@ char *relinkd_op_query_links(bot_t * bot, int fd)
 
 	alarm(2);
 	while (1) {
-		memset(buf, 0, sizeof(buf));
+		_memset(buf, 0, sizeof(buf));
 		n = recv(fd, buf, sizeof(buf) - 1, 0);
 		if (n <= 0)
 			break;
@@ -285,7 +285,7 @@ char *relinkd_op_query_subs(bot_t * bot, int fd)
 	if (!bot || fd <= 0)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	rlpkt = (relink_control_pkt_t *) buf;
 	n = relink_req_pack_buf_query_subs(buf, 0);
@@ -301,7 +301,7 @@ char *relinkd_op_query_subs(bot_t * bot, int fd)
 
 	alarm(10);
 	while (1) {
-		memset(buf, 0, sizeof(buf));
+		_memset(buf, 0, sizeof(buf));
 		n = recv(fd, buf, sizeof(buf) - 1, 0);
 		if (n <= 0)
 			break;
@@ -364,7 +364,7 @@ char *relinkd_op_destroy_link(bot_t * bot, int fd, int link_id)
 	if (!bot || fd <= 0)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	rlpkt = (relink_control_pkt_t *) buf;
 	n = relink_req_pack_buf_destroy_link(buf, 0, link_id);
@@ -391,7 +391,7 @@ char *relinkd_op_destroy_sub(bot_t * bot, int fd, int sub_id)
 	if (!bot || fd <= 0)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	rlpkt = (relink_control_pkt_t *) buf;
 	n = relink_req_pack_buf_destroy_sub(buf, 0, sub_id);
@@ -418,7 +418,7 @@ char *relinkd_op_destroy_all(bot_t * bot, int fd)
 	if (!bot || fd <= 0)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	rlpkt = (relink_control_pkt_t *) buf;
 	n = relink_req_pack_buf_destroy_all(buf, 0);
@@ -445,7 +445,7 @@ char *relinkd_op_reload(bot_t * bot, int fd)
 	if (!bot || fd <= 0)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	rlpkt = (relink_control_pkt_t *) buf;
 	n = relink_req_pack_buf_reload(buf);

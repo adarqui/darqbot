@@ -97,7 +97,7 @@ bot_t *mod_chan_run(dlist_t * dlist_node, bot_t * bot)
 	      "mod_chan_run: Entered: initial hook buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -200,7 +200,7 @@ char *chan_change_string(bot_t * bot, char *string, int opt, char *opt_str)
 		string = sep_ptr;
 
 	if (opt_str) {
-		if (strchr(opt_str, ':')) {
+		if (_strchr(opt_str, ':')) {
 			tag = strtok(opt_str, ":");
 			if (tag) {
 				channel = strtok(NULL, "");
@@ -295,12 +295,12 @@ bot_t *mod_chan_input(dlist_t * dlist_node, bot_t * bot)
 				channel_t *channel_new = NULL;
 				char *channel_new_sep, *channel_new_sep_2;
 
-				channel_new_sep = strchr(data_dup, '#');
+				channel_new_sep = _strchr(data_dup, '#');
 				if (!channel_new_sep)
 					goto cleanup;
 
 				channel_new_sep_2 =
-				    strchr(channel_new_sep, ' ');
+				    _strchr(channel_new_sep, ' ');
 				if (!channel_new_sep_2)
 					goto cleanup;
 
@@ -392,7 +392,7 @@ bot_t *mod_chan_input(dlist_t * dlist_node, bot_t * bot)
       nick = dlist_data (bot->dl_nick_cur);
 */
 		if (nick) {
-			nick_ptr = strchr(bot->txt_data_in, ' ');
+			nick_ptr = _strchr(bot->txt_data_in, ' ');
 			if (nick_ptr)
 				*nick_ptr = '\0';
 			nick_ptr = bot->txt_data_in;
@@ -426,7 +426,7 @@ bot_t *mod_chan_input(dlist_t * dlist_node, bot_t * bot)
       nick = dlist_data (bot->dl_nick_cur);
 */
 		if (nick) {
-			nick_ptr = strchr(bot->txt_nick, ' ');
+			nick_ptr = _strchr(bot->txt_nick, ' ');
 			if (nick_ptr)
 				*nick_ptr = '\0';
 			nick_ptr = bot->txt_nick;
@@ -497,7 +497,7 @@ bot_t *mod_chan_input(dlist_t * dlist_node, bot_t * bot)
       nick = dlist_data (bot->dl_nick_cur);
 */
 		if (nick) {
-			nick_ptr = strchr(bot->txt_nick, ' ');
+			nick_ptr = _strchr(bot->txt_nick, ' ');
 			if (nick_ptr)
 				*nick_ptr = '\0';
 			nick_ptr = bot->txt_nick;
@@ -539,7 +539,7 @@ bot_t *mod_chan_input(dlist_t * dlist_node, bot_t * bot)
 					break;
 			}
 
-			strstrip_nl(nick_ptr);
+			_strstrip_nl(nick_ptr);
 
 /* XXX
 	  dlist_fornext (bot->dl_channel, dptr)
@@ -578,7 +578,7 @@ char *chan_list(bot_t * bot, char *servertag)
 		return NULL;
 
 /* XXX
-  memset (buf, 0, sizeof (buf));
+  _memset (buf, 0, sizeof (buf));
 
   dlist_fornext (bot->dl_channel, dptr)
   {
@@ -608,7 +608,7 @@ char *chan_mode(bot_t * bot, char *channel, char *string)
 
 	debug(bot, "chan_op: Entered\n");
 
-	memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
+	_memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
 	strlcatfmt_bot(bot->txt_data_out, "MODE %s %s\n", channel, string);
 
 	return str;
@@ -627,7 +627,7 @@ char *chan_nick(bot_t * bot, char *nick)
 
 	nick_add(bot, nick, nick, nick, nick, nick);
 
-	memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
+	_memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
 	strlcatfmt_bot(bot->txt_data_out, "NICK %s\n", nick);
 	return str;
 }
@@ -641,7 +641,7 @@ char *chan_quit(bot_t * bot, char *msg)
 
 	debug(bot, "chan_quit: Entered, msg=%s\n", msg);
 
-	memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
+	_memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
 	strlcatfmt_bot(bot->txt_data_out, "QUIT :%s\n", msg);
 	return str;
 }
@@ -655,7 +655,7 @@ char *chan_join(bot_t * bot, char *channels)
 
 	debug(bot, "chan_join: Entered\n");
 
-	memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
+	_memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
 	strlcatfmt_bot(bot->txt_data_out, "JOIN %s\n", channels);
 	return str;
 }
@@ -669,7 +669,7 @@ char *chan_part(bot_t * bot, char *channels)
 
 	debug(bot, "chan_part: Entered\n");
 
-	memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
+	_memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
 	strlcatfmt_bot(bot->txt_data_out, "PART %s\n", channels);
 
 	return str;
@@ -687,7 +687,7 @@ char *chan_users(bot_t * bot, char *channel_name)
 	if (!bot)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	if (!channel_name)
 		channel_name = bot->txt_to;
@@ -719,14 +719,14 @@ char *chan_topic(bot_t * bot, char *channel_name, char *new_topic)
 	if (!bot)
 		return NULL;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	if (!channel_name)
 		channel_name = bot->txt_to;
 
 	if (new_topic) {
 		if (strlen(new_topic)) {
-			memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
+			_memset(bot->txt_data_out, 0, sizeof(bot->txt_data_out));
 			strlcatfmt_bot(bot->txt_data_out, "TOPIC %s :%s\n",
 				       channel_name, new_topic);
 			return NULL;

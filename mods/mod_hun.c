@@ -87,7 +87,7 @@ bot_t *hun_run(dlist_t * dlist_node, bot_t * bot)
 	      "hun_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -131,7 +131,7 @@ char *hun_change_string(char *string, int opt, char *opt_2)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	hun_clean_path(opt_2);
 
@@ -140,12 +140,12 @@ char *hun_change_string(char *string, int opt, char *opt_2)
 
 	strlcpy_buf(hunh_path_1,
 		    str_unite_static("%s/%s.aff", MOD_HUNH_DIR, opt_2));
-	if (!sNULL(hunh_path_1))
+	if (!_sNULL(hunh_path_1))
 		return NULL;
 
 	strlcpy_buf(hunh_path_2,
 		    str_unite_static("%s/%s.dic", MOD_HUNH_DIR, opt_2));
-	if (!sNULL(hunh_path_2))
+	if (!_sNULL(hunh_path_2))
 		return NULL;
 
 	hunh = Hunspell_create(hunh_path_1, hunh_path_2);
@@ -185,7 +185,7 @@ char *hun_change_string(char *string, int opt, char *opt_2)
 
 	Hunspell_destroy(hunh);
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;

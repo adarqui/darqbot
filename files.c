@@ -53,8 +53,8 @@ void files_get_listing_run(bot_t * bot, char *dir, int opts, dlist_t ** dl)
 		if (!dirp_e)
 			break;
 
-		if (!strcmp(dirp_e->d_name, ".")
-		    || !strcmp(dirp_e->d_name, "..")
+		if (!_strcmp(dirp_e->d_name, ".")
+		    || !_strcmp(dirp_e->d_name, "..")
 		    || dirp_e->d_type == DT_LNK)
 			continue;
 

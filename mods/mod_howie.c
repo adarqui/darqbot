@@ -43,7 +43,7 @@ void __howie_init__(void)
 
 	debug(NULL, "__howie_init__: Loaded mod_howie\n");
 
-	memset(&howie_info, 0, sizeof(howie_info));
+	_memset(&howie_info, 0, sizeof(howie_info));
 
 	return;
 }
@@ -99,7 +99,7 @@ bot_t *howie_run(dlist_t * dlist_node, bot_t * bot)
 	      "howie_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	if (bot->var_nesting_cur > mod_howie_info.max_nesting)
@@ -120,11 +120,11 @@ bot_t *howie_run(dlist_t * dlist_node, bot_t * bot)
 
 	MOD_OPTIONS_BOTTOM_HALF;
 
-	str_ptr = eat_whitespace(dl_module_arg_after_options);
+	str_ptr = _eat_whitespace(dl_module_arg_after_options);
 	if (!str_ptr)
 		str_ptr = "";
 
-	if (sNULL(bot->txt_data_out) != NULL) {
+	if (_sNULL(bot->txt_data_out) != NULL) {
 		new_str =
 		    str_unite("%s: %s%s\n", bot->txt_nick, bot->txt_data_out,
 			      str_ptr);
@@ -140,9 +140,9 @@ bot_t *howie_run(dlist_t * dlist_node, bot_t * bot)
 
 			usleep(50000);
 
-			memset(buf, 0, sizeof(buf));
+			_memset(buf, 0, sizeof(buf));
 			n = read(howie_info.pipefd_b[0], buf, sizeof(buf) - 1);
-			buf_ptr = strchr(buf, ':');
+			buf_ptr = _strchr(buf, ':');
 			if (buf_ptr) {
 				if (strlen(buf_ptr) > 4) {
 					strzero_bot(bot->txt_data_out);
@@ -179,7 +179,7 @@ void howie_fill_info(bot_t * bot)
 
 	str = str_unite_static("%s/mods/mod_howie_files/conf", gi->confdir);
 
-	if (!sNULL(str))
+	if (!_sNULL(str))
 		goto cleanup;
 
 	howie_info.fp = fopen(str, "r");
@@ -188,11 +188,11 @@ void howie_fill_info(bot_t * bot)
 		goto cleanup;
 
 	while (1) {
-		memset(buf, 0, sizeof(buf));
+		_memset(buf, 0, sizeof(buf));
 		if (fgets(buf, sizeof(buf) - 1, howie_info.fp) == NULL)
 			break;
 
-		strstrip_nl(buf);
+		_strstrip_nl(buf);
 
 		if (!strncasecmp(buf, "exec", 4)) {
 
@@ -285,7 +285,8 @@ int howie_run_on(bot_t * bot)
 
 		execve(howie_info.argv[0], howie_info.argv, environ);
 		perror("execve: ");
-		exit(0);
+/* exit(0) */
+		bot_fork_clean_exit(NULL);
 	} else {
 		close(howie_info.pipefd[0]);
 		close(howie_info.pipefd_b[1]);

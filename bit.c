@@ -96,7 +96,7 @@ void bit_vec_fini(bit_vector_t ** arg)
 	if (bv_ptr->vec)
 		free(bv_ptr->vec);
 
-	memset(bv_ptr, 0, sizeof(bit_vector_t));
+	_memset(bv_ptr, 0, sizeof(bit_vector_t));
 	free(bv_ptr);
 
 	*bv = NULL;
@@ -147,7 +147,7 @@ void bit_vec_zero(bit_vector_t * bv)
 {
 	if (!bv)
 		return;
-	memset(bv->vec, 0, bv->sz * 8);
+	_memset(bv->vec, 0, bv->sz * 8);
 	return;
 }
 
@@ -235,7 +235,7 @@ char *bit_vec_to_str(bit_vector_t * bv)
 		}
 	}
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;

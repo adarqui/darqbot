@@ -84,7 +84,7 @@ bot_t *sysvbanner_run(dlist_t * dlist_node, bot_t * bot)
 	      "sysvbanner_run: Entered: initial output buf=[%s], input buf=[%s], mod_arg=[%s]\n",
 	      bot->txt_data_out, bot->txt_data_in, bot->dl_module_arg);
 
-	if (bot_shouldreturn(bot))
+	if (_bot_shouldreturn(bot))
 		return NULL;
 
 	opt = 0;
@@ -120,7 +120,7 @@ char *sysvbanner_change_string(char *string, int opt)
 	if (sep_ptr)
 		string = sep_ptr;
 
-	memset(buf, 0, sizeof(buf));
+	_memset(buf, 0, sizeof(buf));
 
 	line_begin = line_end = NULL;
 
@@ -129,7 +129,7 @@ char *sysvbanner_change_string(char *string, int opt)
 	if (len > 10)
 		len = 10;
 	for (a = 0; a < 7; a++) {
-		memset(line, 0, sizeof(line));
+		_memset(line, 0, sizeof(line));
 		charcat_safe(line, ' ', sizeof(line) - 1);
 		for (b = 0; b < len; b++) {
 			if ((ind = (string)[b] - ' ') < 0)
@@ -193,7 +193,7 @@ char *sysvbanner_change_string(char *string, int opt)
 	}
 	charcat_safe(buf, '\n', sizeof(buf) - 1);
 
-	if (sNULL(buf) != NULL)
+	if (_sNULL(buf) != NULL)
 		str = strdup(buf);
 
 	return str;
